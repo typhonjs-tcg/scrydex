@@ -1,0 +1,13 @@
+.idea
+.DS_Store
+npm-debug.log
+*-debug.log
+*-error.log
+/.dts
+/coverage
+/html
+/db
+/manabox-csv
+/node_modules
+/test/fixture/output
+

@@ -1,0 +1,33 @@
+{
+  "name": "@typhonjs-mtg/scrybox",
+  "version": "0.0.0",
+  "description": "Tools for working with Scryfall and Manabox.",
+  "type": "module",
+  "bin": "./src/cli/index.js",
+  "imports": {
+    "#data": "./src/data/index.js",
+    "#util": "./src/util/index.js"
+  },
+  "scripts": {
+    "eslint": "eslint .",
+    "test": "node ./src/cli/index.js convert ./test/fixture/data --loglevel verbose --indent 2 --output ./test/fixture/output/collection-small.json --db ./test/fixture/data/db-small.json",
+    "xlsx": "node ./src/cli/test.js"
+  },
+  "author": "",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "@typhonjs-utils/file-util": "^0.1.0",
+    "@typhonjs-utils/logger-color": "^0.1.0",
+    "@typhonjs-utils/object": "^0.4.0",
+    "@typhonjs-utils/package-json": "^0.7.0",
+    "csv-parser": "^3.2.0",
+    "sade": "^1.8.1",
+    "stream-chain": "^3.4.0",
+    "stream-json": "^1.9.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "@typhonjs-config/eslint-config": "^0.6.3",
+    "eslint": "^8.57.1"
+  }
+}
