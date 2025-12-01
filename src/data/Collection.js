@@ -80,12 +80,16 @@ export class Collection
 
             collection.#index.push(ImportedIndex.fromCSV(file));
          }
+
+         logger.info('Done extracting ManaBox collections.');
       }
       else
       {
          logger.verbose(`Loading file path: ${path}`);
 
          collection.#index.push(ImportedIndex.fromCSV(path));
+
+         logger.info('Done extracting ManaBox collection.');
       }
 
       return collection;

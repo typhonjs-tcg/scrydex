@@ -47,10 +47,6 @@ export class ImportedIndex
             collection.set(entry.scryfall_id, entry);
          }
       })
-      .on('end', () =>
-      {
-         logger.info('Done extracting ManaBox collection.');
-      });
 
       return collection;
    }
