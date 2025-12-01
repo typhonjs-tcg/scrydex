@@ -21,7 +21,7 @@ export class ImportedIndex
 
    static fromCSV(filepath)
    {
-      const filename = path.basename(filepath);
+      const filename = path.basename(filepath, '.csv');
 
       const collection = new ImportedIndex();
 
