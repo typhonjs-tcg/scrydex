@@ -22,8 +22,8 @@ export async function commandConvert(input, opts)
 {
    // TODO: process options.
 
-   console.log(`!!! CLI-convert - 0 - input: ${input}`);
-   console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
+   // console.log(`!!! CLI-convert - 0 - input: ${input}`);
+   // console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
 
    const config = {
       input,
