@@ -12,7 +12,7 @@ import { logger }    from '#util';
 /**
  * Invokes `convert` with the given config and `dotenv` options.
  *
- * @param {string}   input - Archidekt collection CSV input file path.
+ * @param {string}   input - Manabox collection CSV input file path or directory path.
  *
  * @param {object}   opts - CLI options.
  *
@@ -22,8 +22,8 @@ export async function commandConvert(input, opts)
 {
    // TODO: process options.
 
-   console.log(`!!! CLI-convert - 0 - input: ${input}`);
-   console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
+   // console.log(`!!! CLI-convert - 0 - input: ${input}`);
+   // console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
 
    const config = {
       input,
