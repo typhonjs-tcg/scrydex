@@ -3,8 +3,6 @@ import path       from 'node:path';
 
 import csv        from 'csv-parser';
 
-import { logger } from '#util';
-
 /**
  * Parses and stores intermediate card data from a single ManaBox CSV file.
  *
@@ -33,6 +31,7 @@ export class ImportedIndex
          const entry = {
             object: 'card',
             quantity: Number(row['Quantity']),
+            name: row['Name'] ?? '',
             tags: row['Tags'],
             scryfall_id: row['Scryfall ID'],
             filename
@@ -66,9 +65,25 @@ export class ImportedIndex
       return this.#data.delete(key);
    }
 
+   /**
+    * @returns {MapIterator<[string, Object]>}
+    */
+   entries()
+   {
+      return this.#data.entries();
+   }
+
    has(key)
    {
       return this.#data.has(key);
+   }
+
+   /**
+    * @returns {MapIterator<string>}
+    */
+   keys()
+   {
+      return this.#data.keys();
    }
 
    get(key)
@@ -80,5 +95,13 @@ export class ImportedIndex
    {
       this.#data.set(key, value);
       return this;
+   }
+
+   /**
+    * @returns {MapIterator<object>}
+    */
+   values()
+   {
+      return this.#data.values();
    }
 }

@@ -38,6 +38,20 @@ export class Collection
       }
    }
 
+   /**
+    * @returns {Generator<[string,Object], void, *>}
+    */
+   *entries()
+   {
+      for (let i = 0; i < this.#index.length; i++)
+      {
+         for (const entry of this.#index[i].entries())
+         {
+            yield entry;
+         }
+      }
+   }
+
    has(key)
    {
       for (let i = 0; i < this.#index.length; i++)
@@ -46,6 +60,20 @@ export class Collection
       }
 
       return false;
+   }
+
+   /**
+    * @returns {Generator<string, void, *>}
+    */
+   *keys()
+   {
+      for (let i = 0; i < this.#index.length; i++)
+      {
+         for (const key of this.#index[i].keys())
+         {
+            yield key;
+         }
+      }
    }
 
    get(key)
@@ -60,6 +88,20 @@ export class Collection
       }
 
       return result.length ? result : void 0;
+   }
+
+   /**
+    * @returns {Generator<object, void, *>}
+    */
+   *values()
+   {
+      for (let i = 0; i < this.#index.length; i++)
+      {
+         for (const value of this.#index[i].values())
+         {
+            yield value;
+         }
+      }
    }
 
    // Internal Implementation ----------------------------------------------------------------------------------------
