@@ -5,9 +5,13 @@
 //
 // import { logger }    from '#util';
 
-import { convert }   from '../convert/index.js';
+import { isDirectory }  from '@typhonjs-utils/file-util';
 
-import { logger }    from '#util';
+import {
+   convert,
+   sort }               from '#commands';
+
+import { logger }       from '#util';
 
 /**
  * Invokes `convert` with the given config and `dotenv` options.
@@ -37,6 +41,55 @@ export async function commandConvert(input, opts)
 
    await convert(config);
 }
+
+/**
+ * Invokes `sort` with the given config and `dotenv` options.
+ *
+ * @param {string}   input - Scryfall converted card DB.
+ *
+ * @param {object}   opts - CLI options.
+ *
+ * @returns {Promise<void>}
+ */
+export async function commandSort(input, opts)
+{
+   // TODO: process options.
+
+   console.log(`!!! CLI-sort - 0 - input: ${input}`);
+   console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
+
+   if (!isDirectory(opts.output))
+   {
+      exit(`'output' option is not a directory: ${opts.output}`);
+   }
+
+   if (typeof opts.formats !== 'string')
+   {
+      exit(`'formats' option is not defined`);
+   }
+
+   const formats = opts.formats.split(':');
+
+   for (const format of formats)
+   {
+      if (!s_VALID_FORMATS.has(format))
+      {
+         exit(`'formats' option contains an invalid format: ${format}`);
+      }
+   }
+
+   const config = {
+      input,
+      output: opts.output,
+      formats
+   };
+
+   if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
+
+   await sort(config);
+}
+
+
 
 // /**
 //  * @param {string}   input - Source / input file
@@ -105,13 +158,38 @@ export async function commandConvert(input, opts)
 //    return config;
 // }
 
-// /**
-//  * @param {string} message - A message.
-//  *
-//  * @param {boolean} [exit=true] - Invoke `process.exit`.
-//  */
-// function exit(message, exit = true)
-// {
-//    console.error(`[31m[scrydekt] ${message}[0m`);
-//    if (exit) { process.exit(1); }
-// }
+/**
+ * @param {string} message - A message.
+ *
+ * @param {boolean} [exit=true] - Invoke `process.exit`.
+ */
+function exit(message, exit = true)
+{
+   console.error(`[31m[scrydekt] ${message}[0m`);
+   if (exit) { process.exit(1); }
+}
+
+const s_VALID_FORMATS = new Set([
+   'standard',
+   'future',
+   'historic',
+   'timeless',
+   'gladiator',
+   'pioneer',
+   'explorer',
+   'modern',
+   'legacy',
+   'pauper',
+   'vintage',
+   'penny',
+   'commander',
+   'oathbreaker',
+   'standardbrawl',
+   'brawl',
+   'alchemy',
+   'paupercommander',
+   'duel',
+   'oldschool',
+   'premodern',
+   'predh'
+]);

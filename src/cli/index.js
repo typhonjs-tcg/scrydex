@@ -2,7 +2,9 @@
 import { getPackage }      from '@typhonjs-utils/package-json';
 import sade                from 'sade';
 
-import { commandConvert }  from './functions.js';
+import {
+   commandConvert,
+   commandSort }  from './functions.js';
 
 // Retrieve the `esm-d-ts` package.
 const packageObj = getPackage({ filepath: import.meta.url });
@@ -20,8 +22,16 @@ program
 .option('--compact', `Output JSON DB will contain a card per row.`)
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
 .option('--indent', `Defines the JSON output indentation.`)
-.option('--output', 'Provide a file path to generated collection output.')
+.option('--output', 'Provide a file path for generated collection output.')
 .example('scrybox convert ./collection.csv --output ./collection.json -db ./scryfall.json')
 .action(commandConvert);
+
+program
+.command('sort [input]', 'Sort')
+.describe(`Sorts a converted Scryfall card DB by format legalities outputting spreadsheets.`)
+.option('--formats', 'Provide a colon separated list of formats for sorting.')
+.option('--output', 'Provide a directory path for generated spreadsheets.')
+.example('scrybox sort ./collection.json --output ./spreadsheets')
+.action(commandSort);
 
 program.parse(process.argv);
