@@ -22,13 +22,14 @@ export async function commandConvert(input, opts)
 {
    // TODO: process options.
 
-   // console.log(`!!! CLI-convert - 0 - input: ${input}`);
-   // console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
+   console.log(`!!! CLI-convert - 0 - input: ${input}`);
+   console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
 
    const config = {
       input,
       output: opts.output,
       db: opts.db,
+      compact: typeof opts.compact === 'boolean' ? opts.compact : false,
       indent: typeof opts.indent === 'number' ? opts.indent : null // TODO Sanity check
    };
 

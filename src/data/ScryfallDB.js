@@ -69,8 +69,22 @@ export class ScryfallDB
 
       if (outputDB.length > 0)
       {
-         fs.writeFileSync(config.output, typeof config.indent === 'number' ?
-          JSON.stringify(outputDB, null, config.indent) : JSON.stringify(outputDB), 'utf-8');
+         if (typeof config.compact === 'boolean' && config.compact)
+         {
+            let output = `[\n`;
+            for (const card of outputDB)
+            {
+               output += `  ${JSON.stringify(card)}\n`;
+            }
+            output += `]\n`;
+
+            fs.writeFileSync(config.output, output, 'utf-8');
+         }
+         else
+         {
+            fs.writeFileSync(config.output, typeof config.indent === 'number' ?
+             JSON.stringify(outputDB, null, config.indent) : JSON.stringify(outputDB), 'utf-8');
+         }
       }
       else
       {

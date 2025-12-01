@@ -17,6 +17,7 @@ const program = sade('scrybox')
 program
 .command('convert [input]', 'Convert')
 .describe(`Converts the ManaBox collection CSV output to a compact Scryfall card collection.`)
+.option('--compact', `Output JSON DB will contain a card per row.`)
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
 .option('--indent', `Defines the JSON output indentation.`)
 .option('--output', 'Provide a file path to generated collection output.')
