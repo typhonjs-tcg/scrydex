@@ -24,6 +24,8 @@ export class ScryfallDB
          new StreamArray()
       ]);
 
+      let totalQuantity = 0;
+
       for await (const { value } of pipeline)
       {
          if (value.object !== 'card') { continue; }
@@ -54,17 +56,24 @@ export class ScryfallDB
             card.collector_number = value.collector_number;
             card.legalities = value.legalities ?? {};
 
+            totalQuantity += card.quantity;
+
             outputDB.push(card);
          }
 
          collection.delete(value.id);
       }
 
-      logger.info(`Finished processing ${outputDB.length} entries.`);
+      logger.info(`Finished processing ${outputDB.length} unique cards / total quantity: ${totalQuantity}`);
 
       if (collection.size !== 0)
       {
-         logger.warn(`Remaining collection / card map unprocessed: ${collection.size + 1}`);
+         logger.warn(`Remaining collection / card map unprocessed: ${collection.size}`);
+         for (const card of collection.values())
+         {
+            logger.warn(`Name: ${card.name ?? '<UNKNOWN>'}; Scryfall ID: ${
+             card.scryfall_id ?? '<UNKNOWN>'}; Filename: ${card.filename ?? '<UNKNOWN>'}`);
+         }
       }
 
       if (outputDB.length > 0)
