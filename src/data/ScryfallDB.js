@@ -83,7 +83,7 @@ export class ScryfallDB
             let output = `[\n`;
             for (const card of outputDB)
             {
-               output += `  ${JSON.stringify(card)}\n`;
+               output += `  ${JSON.stringify(card)},\n`;
             }
             output += `]\n`;
 
