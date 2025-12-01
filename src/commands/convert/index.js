@@ -1,6 +1,6 @@
-import {
-   Collection,
-   ScryfallDB }   from '#data';
+import { Collection }   from '#data';
+
+import { ScryfallDB }   from './ScryfallDB.js';
 
 /**
  * Converts the ManaBox CSV collection output to Scryfall card data.
