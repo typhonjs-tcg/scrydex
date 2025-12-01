@@ -81,9 +81,10 @@ export class ScryfallDB
          if (typeof config.compact === 'boolean' && config.compact)
          {
             let output = `[\n`;
-            for (const card of outputDB)
+            for (let i = 0; i < outputDB.length; i++)
             {
-               output += `  ${JSON.stringify(card)},\n`;
+               const notLast = i !== outputDB.length - 1;
+               output += `  ${JSON.stringify(outputDB[i])}${notLast ? ',': ''}\n`;
             }
             output += `]\n`;
 
