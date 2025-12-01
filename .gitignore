@@ -8,6 +8,7 @@ npm-debug.log
 /html
 /db
 /manabox-csv
+/manabox-sort
 /node_modules
 /test/fixture/output
 
