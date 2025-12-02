@@ -1,19 +1,19 @@
 /**
- * Creates a compact / single card per line string to serialize a card list.
+ * Creates a compact / single entry per line string to serialize an object list.
  *
- * @param {object[]} cards - Cards to serialize.
+ * @param {object[]} source - A list of objects to serialize.
  *
- * @returns {string} JSON card list as compact string.
+ * @returns {string} JSON list as compact string.
  */
-export function stringifyCompact(cards)
+export function stringifyCompact(source)
 {
    let output = `[\n`;
 
-   for (let i = 0; i < cards.length; i++)
+   for (let i = 0; i < source.length; i++)
    {
-      const notLast = i !== cards.length - 1;
+      const notLast = i !== source.length - 1;
 
-      output += `  ${JSON.stringify(cards[i])}${notLast ? ',': ''}\n`;
+      output += `  ${JSON.stringify(source[i])}${notLast ? ',': ''}\n`;
    }
 
    output += `]\n`;
