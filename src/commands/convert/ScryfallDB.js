@@ -1,9 +1,11 @@
-import fs                  from 'node:fs';
-import chain               from 'stream-chain';
-import parser              from 'stream-json';
-import StreamArray         from 'stream-json/streamers/StreamArray.js';
+import fs               from 'node:fs';
+import chain            from 'stream-chain';
+import parser           from 'stream-json';
+import StreamArray      from 'stream-json/streamers/StreamArray.js';
 
-import { logger }          from '#util';
+import {
+   logger,
+   stringifyCompact }   from '#util';
 
 export class ScryfallDB
 {
@@ -80,15 +82,7 @@ export class ScryfallDB
       {
          if (typeof config.compact === 'boolean' && config.compact)
          {
-            let output = `[\n`;
-            for (let i = 0; i < outputDB.length; i++)
-            {
-               const notLast = i !== outputDB.length - 1;
-               output += `  ${JSON.stringify(outputDB[i])}${notLast ? ',': ''}\n`;
-            }
-            output += `]\n`;
-
-            fs.writeFileSync(config.output, output, 'utf-8');
+            fs.writeFileSync(config.output, stringifyCompact(outputDB), 'utf-8');
          }
          else
          {
