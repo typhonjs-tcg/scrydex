@@ -1,7 +1,7 @@
 export class SortedFormat
 {
    /**
-    * @type {object[]}
+    * @type {import('#types').Card[]}
     */
    #cards;
 
@@ -11,9 +11,14 @@ export class SortedFormat
    #format;
 
    /**
+    * @type {Map<string, SortedRarity>}
+    */
+   #rarity;
+
+   /**
     * @param {string} format -
     *
-    * @param {object[]} cards -
+    * @param {import('#types').Card[]} cards -
     */
    constructor(format, cards)
    {
@@ -21,11 +26,17 @@ export class SortedFormat
       this.#format = format;
    }
 
+   /**
+    * @returns {import('#types').Card[]} All cards for the format.
+    */
    get cards()
    {
       return this.#cards;
    }
 
+   /**
+    * @returns {string} Format name / ID.
+    */
    get format()
    {
       return this.#format;

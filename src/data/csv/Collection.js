@@ -76,6 +76,11 @@ export class Collection
       }
    }
 
+   /**
+    * @param key
+    *
+    * @returns {*[]|*}
+    */
    get(key)
    {
       let result = [];

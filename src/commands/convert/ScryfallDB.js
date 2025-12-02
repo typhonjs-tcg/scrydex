@@ -18,6 +18,9 @@ export class ScryfallDB
     */
    static async exportCollection(config, collection)
    {
+      /**
+       * @type {import('#types').Card[]}
+       */
       const outputDB = [];
 
       const pipeline = chain([
@@ -42,20 +45,21 @@ export class ScryfallDB
          {
             card.name = value.name;
             card.rarity = value.rarity;
-            card.released_at = value.released_at;
-            card.mana_cost = value.mana_cost;
-            card.type_line = value.type_line;
-            card.oracle_text = value.oracle_text;
-            card.colors = value.colors;
-            card.color_identity = value.color_identity;
-            card.keywords = value.keywords;
-            card.produced_mana = value.produced_mana;
-            card.reserved = value.reserved;
-            card.game_changer = value.game_changer;
             card.set = value.set;
             card.set_name = value.set_name;
             card.set_type = value.set_type;
             card.collector_number = value.collector_number;
+            card.reserved = value.reserved;
+            card.game_changer = value.game_changer;
+            card.keywords = value.keywords;
+            card.type_line = value.type_line;
+            card.mana_cost = value.mana_cost;
+            card.cmc = value.cmc;
+            card.colors = value.colors;
+            card.color_identity = value.color_identity;
+            card.released_at = value.released_at;
+            card.oracle_text = value.oracle_text;
+            card.produced_mana = value.produced_mana;
             card.legalities = value.legalities ?? {};
 
             totalQuantity += card.quantity;

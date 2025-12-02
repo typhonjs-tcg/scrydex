@@ -4,8 +4,6 @@ import { SortedFormat } from '#data';
 
 import { logger }       from '#util';
 
-const s_validLegality = new Set(['legal', 'restricted']);
-
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
  *
@@ -18,10 +16,7 @@ export async function sort(config)
    logger.info(`Sorting Scryfall card collection: ${config.input}`);
    logger.info(`Formats: ${config.formats.join(', ')}`);
 
-
-
-   // console.log(`!!! TEST:\n${JSON.stringify(Object.fromEntries(collection), null, 2)}`);
-   // console.log(`!!! Unsorted:\n${JSON.stringify(collection.get('unsorted'), null, 2)}`);
+   const sortedCards = formatSort(config);
 }
 
 /**
@@ -31,13 +26,16 @@ export async function sort(config)
  */
 function formatSort(config)
 {
+   const s_validLegality = new Set(['legal', 'restricted']);
+
    /**
-    * @type {Map<string, object[]>}
+    * @type {Map<string, import('#types').Card[]>}
     */
    const presortFormat = new Map(config.formats.map((entry) => [entry, []]));
 
    presortFormat.set('unsorted', []);
 
+   /** @type {import('#types').Card[]} */
    const db = JSON.parse(fs.readFileSync(config.input, 'utf8'));
 
    for (const card of db)
