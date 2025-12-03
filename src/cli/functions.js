@@ -58,6 +58,11 @@ export async function commandConvert(input, opts)
    }
    catch (err)
    {
+      if (logger.isLevelEnabled('debug'))
+      {
+         console.error(err);
+      }
+
       exit(err?.message);
    }
 }
@@ -112,6 +117,11 @@ export async function commandSort(input, opts)
    }
    catch (err)
    {
+      if (logger.isLevelEnabled('debug'))
+      {
+         console.error(err);
+      }
+
       exit(err?.message);
    }
 }
