@@ -1,3 +1,5 @@
+import { SortedRarity } from './SortedRarity.js';
+
 export class SortedFormat
 {
    /**
@@ -24,6 +26,10 @@ export class SortedFormat
    {
       this.#cards = cards;
       this.#format = format;
+
+      this.#rarity = new Map();
+
+      this.#sortRarity(cards);
    }
 
    /**
@@ -37,8 +43,60 @@ export class SortedFormat
    /**
     * @returns {string} Format name / ID.
     */
-   get format()
+   get name()
    {
       return this.#format;
+   }
+
+   /**
+    * @returns {number} Count of cards in this format.
+    */
+   get size()
+   {
+      return this.#cards.length;
+   }
+
+   /**
+    * @returns {MapIterator<[string, SortedRarity]>} Rarity groups.
+    */
+   entries()
+   {
+      return this.#rarity.entries();
+   }
+
+   /**
+    * @returns {MapIterator<SortedRarity>}
+    */
+   values()
+   {
+      return this.#rarity.values();
+   }
+
+   // Internal Implementation ----------------------------------------------------------------------------------------
+
+   /**
+    * @param {import('#types').Card[]} cards -
+    */
+   #sortRarity(cards)
+   {
+      for (const card of cards)
+      {
+         // For just the PreModern format `mythic rare` reprints are treated as `rare`.
+         const rarity = this.#format === 'premodern' && card.rarity === 'mythic' ? 'rare' : card.rarity;
+
+         let sortRarity = this.#rarity.has(rarity) ? this.#rarity.get(rarity) : void 0;
+         if (!sortRarity)
+         {
+            sortRarity = new SortedRarity(rarity);
+            this.#rarity.set(rarity, sortRarity);
+         }
+
+         sortRarity.add(card);
+      }
+
+      for (const sortRarity of this.#rarity.values())
+      {
+         sortRarity.sortAlpha();
+      }
    }
 }
