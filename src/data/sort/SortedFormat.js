@@ -81,8 +81,9 @@ export class SortedFormat
    {
       for (const card of cards)
       {
-         // For just the PreModern format `mythic rare` reprints are treated as `rare`.
-         const rarity = this.#format === 'premodern' && card.rarity === 'mythic' ? 'rare' : card.rarity;
+         // For just the PreModern format `mythic rare` or `special` rarity reprints use original rarity.
+         const rarity = this.#format === 'premodern' && (card.rarity === 'mythic' || card.rarity === 'special') ?
+          card.orig_rarity : card.rarity;
 
          let sortRarity = this.#rarity.has(rarity) ? this.#rarity.get(rarity) : void 0;
          if (!sortRarity)

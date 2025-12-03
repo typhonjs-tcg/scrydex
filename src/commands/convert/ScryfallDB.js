@@ -18,10 +18,11 @@ export class ScryfallDB
     */
    static async exportCollection(config, collection)
    {
-      /**
-       * @type {import('#types').Card[]}
-       */
+      /** @type {import('#types').Card[]} */
       const outputDB = [];
+
+      /** @type {Map<string, { rarity: string, released_at: number }>} */
+      const oracleRarityMap = new Map();
 
       const pipeline = chain([
          fs.createReadStream(config.db),
@@ -31,44 +32,54 @@ export class ScryfallDB
 
       let totalQuantity = 0;
 
-      for await (const { value } of pipeline)
+      for await (const { value: scryCard } of pipeline)
       {
-         if (value.object !== 'card') { continue; }
+         if (scryCard.object !== 'card') { continue; }
 
-         const csvCards = collection.get(value.id);
+         // Save original rarity for earliest oracle ID.
+         const oracle_id = scryCard.oracle_id;
+         if (typeof oracle_id === 'string' && (!oracleRarityMap.has(oracle_id) || (oracleRarityMap.has(oracle_id) &&
+          Date.parse(scryCard.released_at) < oracleRarityMap.get(oracle_id).released_at)))
+         {
+            oracleRarityMap.set(oracle_id, { rarity: scryCard.rarity, released_at: Date.parse(scryCard.released_at) });
+         }
+
+         const csvCards = collection.get(scryCard.id);
 
          if (!csvCards) { continue; }
 
-         logger.verbose(`Processing: ${value.name}`);
+         logger.verbose(`Processing: ${scryCard.name}`);
 
          for (const csvCard of csvCards)
          {
             /** @type {import('#types').Card} */
             const card = {
                object: 'card',
-               name: value.printed_name ?? value.name,
-               lang: value.lang,
-               rarity: value.rarity,
+               name: scryCard.printed_name ?? scryCard.name,
+               lang: scryCard.lang,
+               rarity: scryCard.rarity,
                quantity: csvCard.quantity,
                foil: csvCard.foil,
                filename: csvCard.filename,
-               set: value.set,
-               set_name: value.set_name,
-               set_type: value.set_type,
-               collector_number: value.collector_number,
-               reserved: value.reserved,
-               game_changer: value.game_changer,
-               keywords: value.keywords,
-               type_line: value.type_line,
-               mana_cost: value.mana_cost,
-               cmc: value.cmc,
-               colors: value.colors,
-               color_identity: value.color_identity,
-               released_at: value.released_at,
-               oracle_text: value.oracle_text,
-               produced_mana: value.produced_mana,
-               legalities: value.legalities ?? {},
+               set: scryCard.set,
+               set_name: scryCard.set_name,
+               set_type: scryCard.set_type,
+               collector_number: scryCard.collector_number,
+               reserved: scryCard.reserved,
+               game_changer: scryCard.game_changer,
+               keywords: scryCard.keywords,
+               type_line: scryCard.type_line,
+               mana_cost: scryCard.mana_cost,
+               cmc: scryCard.cmc,
+               colors: scryCard.colors,
+               color_identity: scryCard.color_identity,
+               released_at: scryCard.released_at,
+               oracle_text: scryCard.oracle_text,
+               produced_mana: scryCard.produced_mana,
+               legalities: scryCard.legalities ?? {},
+               oracle_id: scryCard.oracle_id,
                scryfall_id: csvCard.scryfall_id,
+               scryfall_uri: scryCard.scryfall_uri
             };
 
             totalQuantity += card.quantity;
@@ -76,7 +87,14 @@ export class ScryfallDB
             outputDB.push(card);
          }
 
-         collection.delete(value.id);
+         collection.delete(scryCard.id);
+      }
+
+      // Second pass to set original / first print rarity.
+      for (const card of outputDB)
+      {
+         card.orig_rarity = oracleRarityMap.has(card.oracle_id) ? oracleRarityMap.get(card.oracle_id).rarity :
+          card.rarity;
       }
 
       logger.info(`Finished processing ${outputDB.length} unique cards / total quantity: ${totalQuantity}`);
