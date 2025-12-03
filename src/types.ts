@@ -74,11 +74,6 @@ interface Card extends CSVCard
    oracle_text: string;
 
    /**
-    * Rarity of original / first printing.
-    */
-   orig_rarity: string;
-
-   /**
     * Colors of mana that this card could produce.
     */
    produced_mana: Colors;
@@ -87,6 +82,16 @@ interface Card extends CSVCard
     * This card’s rarity. One of `common`, `uncommon`, `rare`, `special`, `mythic`, or `bonus`.
     */
    rarity: string;
+
+   /**
+    * Rarity of original / first printing.
+    */
+   rarity_orig: string;
+
+   /**
+    * Rarity of recent / latest printing that isn't in high value (secret lair) / promo sets or is a promo card.
+    */
+   rarity_recent: string;
 
    /**
     * The date this card was first released.

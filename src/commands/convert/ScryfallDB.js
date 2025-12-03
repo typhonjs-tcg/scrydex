@@ -7,6 +7,8 @@ import {
    logger,
    stringifyCompact }   from '#util';
 
+import { excludedSetTypesHighRarity } from "#data";
+
 export class ScryfallDB
 {
    /**
@@ -21,8 +23,20 @@ export class ScryfallDB
       /** @type {import('#types').Card[]} */
       const outputDB = [];
 
-      /** @type {Map<string, { rarity: string, released_at: number }>} */
-      const oracleRarityMap = new Map();
+      /**
+       * Tracks original / earliest rarity for same printings. This may be used when sorting older formats like
+       * `premodern`.
+       *
+       * @type {Map<string, { rarity: string, released_at: number }>}
+       */
+      const originalRarityMap = new Map();
+
+      /**
+       * Tracks recent / latest rarity for same printings. This may be used when sorting cards by more modern formats.
+       *
+       * @type {Map<string, { rarity: string, released_at: number }>}
+       */
+      const recentRarityMap = new Map();
 
       const pipeline = chain([
          fs.createReadStream(config.db),
@@ -38,10 +52,29 @@ export class ScryfallDB
 
          // Save original rarity for earliest oracle ID.
          const oracle_id = scryCard.oracle_id;
-         if (typeof oracle_id === 'string' && (!oracleRarityMap.has(oracle_id) || (oracleRarityMap.has(oracle_id) &&
-          Date.parse(scryCard.released_at) < oracleRarityMap.get(oracle_id).released_at)))
+
+         if (typeof oracle_id === 'string')
          {
-            oracleRarityMap.set(oracle_id, { rarity: scryCard.rarity, released_at: Date.parse(scryCard.released_at) });
+            // Track lowest / original rarity for unique card printing.
+            if (!originalRarityMap.has(oracle_id) || (originalRarityMap.has(oracle_id) &&
+             Date.parse(scryCard.released_at) < originalRarityMap.get(oracle_id).released_at))
+            {
+               originalRarityMap.set(oracle_id, {
+                  rarity: scryCard.rarity,
+                  released_at: Date.parse(scryCard.released_at)
+               });
+            }
+
+            // Track most recent rarity for unique card printing that isn't in a special set.
+            if (!excludedSetTypesHighRarity.has(scryCard.set_type) && scryCard.rarity !== 'special' &&
+             (!recentRarityMap.has(oracle_id) || (recentRarityMap.has(oracle_id) && Date.parse(scryCard.released_at) >
+              recentRarityMap.get(oracle_id).released_at)))
+            {
+               recentRarityMap.set(oracle_id, {
+                  rarity: scryCard.rarity,
+                  released_at: Date.parse(scryCard.released_at)
+               });
+            }
          }
 
          const csvCards = collection.get(scryCard.id);
@@ -93,7 +126,10 @@ export class ScryfallDB
       // Second pass to set original / first print rarity.
       for (const card of outputDB)
       {
-         card.orig_rarity = oracleRarityMap.has(card.oracle_id) ? oracleRarityMap.get(card.oracle_id).rarity :
+         card.rarity_orig = originalRarityMap.has(card.oracle_id) ? originalRarityMap.get(card.oracle_id).rarity :
+          card.rarity;
+
+         card.rarity_recent = recentRarityMap.has(card.oracle_id) ? recentRarityMap.get(card.oracle_id).rarity :
           card.rarity;
       }
 
