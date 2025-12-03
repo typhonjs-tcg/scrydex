@@ -22,7 +22,7 @@ export async function sort(config)
 
    const sortedCards = formatSort(config);
 
-   ExportSpreadsheet.export(config, sortedCards);
+   await ExportSpreadsheet.export(config, sortedCards);
 }
 
 /**

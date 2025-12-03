@@ -1,11 +1,9 @@
 import fs               from 'node:fs';
 import path             from 'node:path';
 
-import XLSX             from 'xlsx';
+import Excel            from 'exceljs';
 
 import { isDirectory }  from '@typhonjs-utils/file-util';
-
-XLSX.set_fs(fs);
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
@@ -17,11 +15,11 @@ export class ExportSpreadsheet
     *
     * @param {SortedFormat[]} formats -
     */
-   static export(config, formats)
+   static async export(config, formats)
    {
       for (const format of formats)
       {
-         if (format.size > 0) { this.#exportFormat(config, format); }
+         if (format.size > 0) { await this.#exportFormat(config, format); }
       }
    }
 
@@ -30,11 +28,11 @@ export class ExportSpreadsheet
     *
     * @param {SortedFormat}   format -
     */
-   static #exportFormat(config, format)
+   static async #exportFormat(config, format)
    {
       for (const rarity of format.values())
       {
-         if (rarity.size > 0) { this.#exportFormatRarity(config, format.name, rarity); }
+         if (rarity.size > 0) { await this.#exportFormatRarity(config, format.name, rarity); }
       }
    }
 
@@ -46,7 +44,7 @@ export class ExportSpreadsheet
     *
     * @param {SortedRarity}   rarity -
     */
-   static #exportFormatRarity(config, formatName, rarity)
+   static async #exportFormatRarity(config, formatName, rarity)
    {
       // Store spreadsheets in format subdirectories.
       const formatDirPath = path.resolve(config.output, formatName);
@@ -54,38 +52,134 @@ export class ExportSpreadsheet
       // Create format subdirectory if it doesn't exist already.
       if (!isDirectory(formatDirPath)) { fs.mkdirSync(formatDirPath); }
 
-      const wb = XLSX.utils.book_new();
+      const wb = new Excel.Workbook();
 
       for (const [category, cards] of rarity.entries())
       {
          if (cards.length <= 0) { continue; }
 
-         const sheet = [];
+         const ws = wb.addWorksheet(category);
+
+         // Column definitions + alignment rules
+         ws.columns = [
+            { header: 'Name', key: 'Name', width: 32, alignment: { horizontal: 'left' } },
+            { header: 'Quantity', key: 'Quantity', width: 8, alignment: { horizontal: 'center' } },
+            { header: 'Filename', key: 'Filename', width: 28, alignment: { horizontal: 'center' } },
+            { header: 'Type Line', key: 'Type Line', width: 28, alignment: { horizontal: 'center' } },
+            { header: 'Set', key: 'Set', width: 8, alignment: { horizontal: 'center' } },
+            { header: 'Set Name', key: 'Set Name', width: 28, alignment: { horizontal: 'center' } },
+            { header: 'Collector #', key: 'Collector #', width: 12, alignment: { horizontal: 'center' } },
+            { header: 'Mana Cost', key: 'Mana Cost', width: 10, alignment: { horizontal: 'center' } },
+            { header: 'CMC', key: 'CMC', width: 6, alignment: { horizontal: 'center' } },
+            { header: 'Colors', key: 'Colors', width: 10, alignment: { horizontal: 'center' } },
+            { header: 'Color Identity', key: 'Color Identity', width: 14, alignment: { horizontal: 'center' } },
+            { header: 'Scryfall Link', key: 'Scryfall Link', width: 20, alignment: { horizontal: 'center' } }
+         ];
 
          for (const card of cards)
          {
-            sheet.push({
+            const row = ws.addRow({
                Name: card.name,
-               Quantity: card.quantity,
+               Quantity: Number(card.quantity),
                Filename: card.filename,
-               "Type Line": card.type_line,
+               'Type Line': card.type_line,
                Set: card.set,
-               "Set Name": card.set_name,
-               "Collector #": card.collector_number,
-               "Mana Cost": card.mana_cost,
-               CMC: card.cmc,
+               'Set Name': card.set_name,
+               'Collector #': Number(card.collector_number),
+               'Mana Cost': card.mana_cost,
+               CMC: Number(card.cmc),
                Colors: card.colors?.join(', ') ?? '',
-               "Color Identity": card.color_identity?.join(', ') ?? '',
-               Reserved: card.reserved,
-               "Game Changer": card.game_changer
+               'Color Identity': card.color_identity?.join(', ') ?? '',
+               'Scryfall Link': card.scryfall_uri
             });
+
+            // Turn the link into a real hyperlink
+            const linkCell = row.getCell('Scryfall Link');
+            if (linkCell.value)
+            {
+               linkCell.value = {
+                  text: `Open ${card.name}`,
+                  hyperlink: card.scryfall_uri
+               };
+               linkCell.font = { color: { argb: 'FF0000FF' }, underline: true };
+            }
          }
 
-         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), category);
+         // Apply Arial + centered alignment rules.
+         ws.eachRow({ includeEmpty: false }, (row) =>
+         {
+            row.eachCell({ includeEmpty: true }, (cell, colNumber) =>
+            {
+               cell.font = { name: 'Arial', size: 12 };
+
+               // Name column stays left aligned, others center.
+               const isNameColumn = colNumber === 1;
+               cell.alignment = {
+                  horizontal: isNameColumn ? 'left' : 'center',
+                  vertical: 'middle'
+               };
+            });
+         });
+
+         // Bold headers.
+         ws.getRow(1).font = { name: 'Arial', size: 13, bold: true };
+
+         // Freeze first row.
+         ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+         // Shade rows 2..N.
+         ws.eachRow({ includeEmpty: false }, (row, rowNum) =>
+         {
+            if (rowNum === 1) return; // skip header row
+
+            if (rowNum % 2 === 0)
+            {
+               row.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: 'FFEFEFEF' } // light gray
+               };
+            }
+         });
+
+         // Auto size to actual content.
+         this.#autosize(ws);
       }
 
       const outputPath = path.resolve(formatDirPath, `${formatName}-${rarity.name}.xlsx`);
 
-      XLSX.writeFile(wb, outputPath);
+      await wb.xlsx.writeFile(outputPath);
+   }
+
+   /**
+    * Auto sizes sheet columns to contained content.
+    *
+    * @param {import('exceljs').Worksheet}   ws -
+    */
+   static #autosize(ws)
+   {
+      ws.columns.forEach((col) =>
+      {
+         let max = col.header.length;
+
+         col.eachCell({ includeEmpty: true }, (cell) =>
+         {
+            if (!cell.value) return;
+
+            let text;
+            if (typeof cell.value === 'object' && cell.value.text)
+            {
+               text = cell.value.text; // hyperlink visible label.
+            }
+            else
+            {
+               text = String(cell.value);
+            }
+
+            max = Math.max(max, text.length);
+         });
+
+         col.width = Math.min(60, max + 4);
+      });
    }
 }
