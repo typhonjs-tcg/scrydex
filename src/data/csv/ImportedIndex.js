@@ -77,6 +77,7 @@ export class ImportedIndex
                filename
             };
 
+            // TODO: Must consider foil state.
             if (collection.has(entry.scryfall_id))
             {
                collection.get(entry.scryfall_id).quantity += entry.quantity;
@@ -112,6 +113,9 @@ export class ImportedIndex
     * @param {string}   key - Scryfall ID.
     *
     * @returns {boolean} Was the card deleted.
+    *
+    * @privateRemarks
+    * TODO: Must consider foil state.
     */
    delete(key)
    {
@@ -130,6 +134,9 @@ export class ImportedIndex
     * @param {string}   key - Scryfall ID
     *
     * @returns {boolean} Does this index contain the card?
+    *
+    * @privateRemarks
+    * TODO: Must consider foil state.
     */
    has(key)
    {
@@ -148,6 +155,9 @@ export class ImportedIndex
     * @param {string}   key - Scryfall ID
     *
     * @returns {import('#types').CSVCard} CSVCard data.
+    *
+    * @privateRemarks
+    * TODO: Must consider foil state.
     */
    get(key)
    {
