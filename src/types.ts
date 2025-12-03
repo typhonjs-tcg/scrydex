@@ -40,6 +40,11 @@ interface Card extends CSVCard
    keywords: string[];
 
    /**
+    * Language code.
+    */
+   lang: string;
+
+   /**
     * An object describing the legality of this card across play formats. Possible legalities are `legal`, `not_legal`,
     * `restricted`, and `banned`.
     */
@@ -116,6 +121,11 @@ interface CSVCard
     * Associated CSV filename
     */
    filename: string;
+
+   /**
+    * Foil variation if any.
+    */
+   foil: string | null;
 
    /**
     * Total count of this card.

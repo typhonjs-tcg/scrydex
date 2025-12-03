@@ -51,6 +51,8 @@ export class ScryfallDB
                lang: value.lang,
                rarity: value.rarity,
                quantity: csvCard.quantity,
+               foil: csvCard.foil,
+               filename: csvCard.filename,
                set: value.set,
                set_name: value.set_name,
                set_type: value.set_type,

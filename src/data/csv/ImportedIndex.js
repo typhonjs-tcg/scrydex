@@ -54,6 +54,7 @@ export class ImportedIndex
 
             const quantity = Number(row['Quantity']);
             const scryfall_id = row['Scryfall ID'];
+            const foil = row['Foil'] ?? null;
 
             if (!Number.isInteger(quantity) || quantity < 1)
             {
@@ -67,8 +68,10 @@ export class ImportedIndex
                 new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
             }
 
+            /** @type {import('#types').CSVCard} */
             const entry = {
                object: 'card',
+               foil,
                quantity,
                scryfall_id,
                filename
