@@ -1,15 +1,17 @@
-import fs            from 'node:fs';
+import fs                     from 'node:fs';
+
+import { ExportSpreadsheet }  from './ExportSpreadsheet.js';
 
 import {
    SortedFormat,
-   validLegality }   from '#data';
+   validLegality }            from '#data';
 
-import { logger }    from '#util';
+import { logger }             from '#util';
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
  *
- * @param {object}   config - Config options.
+ * @param {import('#types-command').ConfigSort}   config - Config options.
  *
  * @returns {Promise<void>}
  */
@@ -19,10 +21,12 @@ export async function sort(config)
    logger.info(`Formats: ${config.formats.join(', ')}`);
 
    const sortedCards = formatSort(config);
+
+   ExportSpreadsheet.export(config, sortedCards);
 }
 
 /**
- * @param config -
+ * @param {import('#types-command').ConfigSort} config -
  *
  * @returns {SortedFormat[]}
  */
