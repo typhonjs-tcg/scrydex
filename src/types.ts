@@ -1,7 +1,9 @@
 /**
+ * Defines the enriched, but reduced set of card data transferred from the Scryfall DB.
+ *
  * @see https://scryfall.com/docs/api/cards
  */
-interface Card
+interface Card extends CSVCard
 {
    /**
     * This card’s collector number. Note that collector numbers can contain non-numeric characters, such as letters or
@@ -66,11 +68,6 @@ interface Card
    produced_mana: Colors;
 
    /**
-    * Total count of this card.
-    */
-   quantity: number;
-
-   /**
     * This card’s rarity. One of `common`, `uncommon`, `rare`, `special`, `mythic`, or `bonus`.
     */
    rarity: string;
@@ -109,6 +106,29 @@ interface Card
 }
 
 /**
+ * Defines the base card data loaded from CSV files.
+ */
+interface CSVCard
+{
+   object: 'card';
+
+   /**
+    * Associated CSV filename
+    */
+   filename: string;
+
+   /**
+    * Total count of this card.
+    */
+   quantity: number;
+
+   /**
+    * Scryfall ID / UUID.
+    */
+   scryfall_id: string;
+}
+
+/**
  * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase, single-character
  * abbreviations for those colors. For example, `["W","U"]` represents something that is both white and blue. Colorless
  * sources are denoted with an empty array `[]`.
@@ -119,5 +139,6 @@ type Colors = string[];
 
 export {
    type Card,
+   type CSVCard,
    type Colors
 }

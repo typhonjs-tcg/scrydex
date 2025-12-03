@@ -16,11 +16,21 @@ export class Collection
       this.#index = [];
    }
 
+   /**
+    * Load collection.
+    *
+    * @param {string}   path - A single CSV file path or a directory path to load all `.csv` files.
+    *
+    * @returns {Promise<Collection>} A new collection of all CSV card data.
+    */
    static async load(path)
    {
       return this.#loadPath(path);
    }
 
+   /**
+    * @returns {number} Total count of all unique cards in the collection
+    */
    get size()
    {
       let result = 0;
@@ -30,6 +40,11 @@ export class Collection
       return result;
    }
 
+   /**
+    * Deletes card from all collection indexes.
+    *
+    * @param {string}   key - Scryfall ID.
+    */
    delete(key)
    {
       for (let i = 0; i < this.#index.length; i++)
@@ -39,7 +54,7 @@ export class Collection
    }
 
    /**
-    * @returns {Generator<[string,Object], void, *>}
+    * @returns {Generator<[string,import('#types').CSVCard], void, *>}
     */
    *entries()
    {
@@ -52,6 +67,11 @@ export class Collection
       }
    }
 
+   /**
+    * @param {string} key - Scryfall ID
+    *
+    * @returns {boolean} Does any collection index have the given card.
+    */
    has(key)
    {
       for (let i = 0; i < this.#index.length; i++)
@@ -63,23 +83,31 @@ export class Collection
    }
 
    /**
-    * @returns {Generator<string, void, *>}
+    * @returns {Generator<string, void, *>} All unique Scryfall IDs contained in this collection.
     */
    *keys()
    {
+      const seen = new Set();
+
       for (let i = 0; i < this.#index.length; i++)
       {
          for (const key of this.#index[i].keys())
          {
-            yield key;
+            if (!seen.has(key))
+            {
+               seen.add(key);
+               yield key;
+            }
          }
       }
    }
 
    /**
-    * @param key
+    * Get all CSV card entries across all CSV indexed files for the given Scryfall ID.
     *
-    * @returns {*[]|*}
+    * @param {string}   key - Scryfall ID.
+    *
+    * @returns {import('#types').CSVCard[] | undefined} An array of all CSV card entries matching the given key.
     */
    get(key)
    {
@@ -96,7 +124,8 @@ export class Collection
    }
 
    /**
-    * @returns {Generator<object, void, *>}
+    * @returns {Generator<import('#types').CSVCard, void, *>} All CSV card entries stored in this collection. May
+    *          contain duplicate cards from separate CSV index files.
     */
    *values()
    {
@@ -111,6 +140,13 @@ export class Collection
 
    // Internal Implementation ----------------------------------------------------------------------------------------
 
+   /**
+    * Load collection.
+    *
+    * @param {string}   path - A single CSV file path or a directory path to load all `.csv` files.
+    *
+    * @returns {Promise<Collection>} A new collection of all CSV card data.
+    */
    static async #loadPath(path)
    {
       const collection = new Collection();
@@ -125,7 +161,7 @@ export class Collection
          {
             logger.verbose(`Loading file path: ${file}`);
 
-            collection.#index.push(ImportedIndex.fromCSV(file));
+            collection.#index.push(await ImportedIndex.fromCSV(file));
          }
 
          logger.info('Done extracting ManaBox collections.');
@@ -134,7 +170,7 @@ export class Collection
       {
          logger.verbose(`Loading file path: ${path}`);
 
-         collection.#index.push(ImportedIndex.fromCSV(path));
+         collection.#index.push(await ImportedIndex.fromCSV(path));
 
          logger.info('Done extracting ManaBox collection.');
       }

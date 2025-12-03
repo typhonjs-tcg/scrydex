@@ -35,32 +35,37 @@ export class ScryfallDB
       {
          if (value.object !== 'card') { continue; }
 
-         const cards = collection.get(value.id);
+         const csvCards = collection.get(value.id);
 
-         if (!cards) { continue; }
+         if (!csvCards) { continue; }
 
          logger.verbose(`Processing: ${value.name}`);
 
-         for (const card of cards)
+         for (const csvCard of csvCards)
          {
-            card.name = value.name;
-            card.rarity = value.rarity;
-            card.set = value.set;
-            card.set_name = value.set_name;
-            card.set_type = value.set_type;
-            card.collector_number = value.collector_number;
-            card.reserved = value.reserved;
-            card.game_changer = value.game_changer;
-            card.keywords = value.keywords;
-            card.type_line = value.type_line;
-            card.mana_cost = value.mana_cost;
-            card.cmc = value.cmc;
-            card.colors = value.colors;
-            card.color_identity = value.color_identity;
-            card.released_at = value.released_at;
-            card.oracle_text = value.oracle_text;
-            card.produced_mana = value.produced_mana;
-            card.legalities = value.legalities ?? {};
+            /** @type {import('#types').Card} */
+            const card = {
+               ...csvCard,
+
+               name: value.name,
+               rarity: value.rarity,
+               set: value.set,
+               set_name: value.set_name,
+               set_type: value.set_type,
+               collector_number: value.collector_number,
+               reserved: value.reserved,
+               game_changer: value.game_changer,
+               keywords: value.keywords,
+               type_line: value.type_line,
+               mana_cost: value.mana_cost,
+               cmc: value.cmc,
+               colors: value.colors,
+               color_identity: value.color_identity,
+               released_at: value.released_at,
+               oracle_text: value.oracle_text,
+               produced_mana: value.produced_mana,
+               legalities: value.legalities ?? {}
+            };
 
             totalQuantity += card.quantity;
 

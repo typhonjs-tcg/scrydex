@@ -39,7 +39,14 @@ export async function commandConvert(input, opts)
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
-   await convert(config);
+   try
+   {
+      await convert(config);
+   }
+   catch (err)
+   {
+      exit(err?.message);
+   }
 }
 
 /**
@@ -55,8 +62,8 @@ export async function commandSort(input, opts)
 {
    // TODO: process options.
 
-   console.log(`!!! CLI-sort - 0 - input: ${input}`);
-   console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
+   // console.log(`!!! CLI-sort - 0 - input: ${input}`);
+   // console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
 
    if (!isDirectory(opts.output))
    {
@@ -86,7 +93,14 @@ export async function commandSort(input, opts)
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
-   await sort(config);
+   try
+   {
+      await sort(config);
+   }
+   catch (err)
+   {
+      exit(err?.message);
+   }
 }
 
 
@@ -165,7 +179,7 @@ export async function commandSort(input, opts)
  */
 function exit(message, exit = true)
 {
-   console.error(`[31m[scrydekt] ${message}[0m`);
+   console.error(`[31m[scrytool] ${message}[0m`);
    if (exit) { process.exit(1); }
 }
 
