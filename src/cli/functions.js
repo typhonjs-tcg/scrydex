@@ -179,7 +179,7 @@ export async function commandSort(input, opts)
  */
 function exit(message, exit = true)
 {
-   console.error(`[31m[scrytool] ${message}[0m`);
+   console.error(`[31m[scrydex] ${message}[0m`);
    if (exit) { process.exit(1); }
 }
 

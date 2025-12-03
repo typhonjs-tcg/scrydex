@@ -9,7 +9,7 @@ import {
 // Retrieve the `esm-d-ts` package.
 const packageObj = getPackage({ filepath: import.meta.url });
 
-const program = sade('scrybox')
+const program = sade('scrydex')
 .version(packageObj?.version)
 
    // Global options
@@ -18,12 +18,12 @@ const program = sade('scrybox')
 
 program
 .command('convert [input]', 'Convert')
-.describe(`Converts the ManaBox collection CSV output to a compact Scryfall card collection.`)
+.describe(`Converts CSV collection files to a compact Scryfall card collection.`)
 .option('--compact', `Output JSON DB will contain a card per row.`)
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
 .option('--indent', `Defines the JSON output indentation.`)
 .option('--output', 'Provide a file path for generated collection output.')
-.example('scrybox convert ./collection.csv --output ./collection.json -db ./scryfall.json')
+.example('scrydex convert ./collection.csv --output ./collection.json -db ./scryfall.json')
 .action(commandConvert);
 
 program
@@ -31,7 +31,7 @@ program
 .describe(`Sorts a converted Scryfall card DB by format legalities outputting spreadsheets.`)
 .option('--formats', 'Provide a colon separated list of formats for sorting.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
-.example('scrybox sort ./collection.json --output ./spreadsheets')
+.example('scrydex sort ./collection.json --output ./spreadsheets')
 .action(commandSort);
 
 program.parse(process.argv);

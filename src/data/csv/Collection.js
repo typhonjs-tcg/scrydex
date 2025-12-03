@@ -164,7 +164,7 @@ export class Collection
             collection.#index.push(await ImportedIndex.fromCSV(file));
          }
 
-         logger.info('Done extracting ManaBox collections.');
+         logger.info('Done extracting CSV collection files.');
       }
       else
       {
@@ -172,7 +172,7 @@ export class Collection
 
          collection.#index.push(await ImportedIndex.fromCSV(path));
 
-         logger.info('Done extracting ManaBox collection.');
+         logger.info('Done extracting CSV collection file.');
       }
 
       return collection;
