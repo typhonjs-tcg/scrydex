@@ -85,7 +85,7 @@ export class ExportSpreadsheet
                'Type Line': card.type_line,
                Set: card.set,
                'Set Name': card.set_name,
-               'Collector #': Number(card.collector_number),
+               'Collector #': card.collector_number,
                'Mana Cost': card.mana_cost,
                CMC: Number(card.cmc),
                Colors: card.colors?.join(', ') ?? '',
@@ -179,7 +179,7 @@ export class ExportSpreadsheet
             max = Math.max(max, text.length);
          });
 
-         col.width = Math.min(60, max + 4);
+         col.width = Math.min(65, max + 6);
       });
    }
 }
