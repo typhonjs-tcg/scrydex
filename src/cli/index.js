@@ -1,10 +1,15 @@
 #!/usr/bin/env node
-import { getPackage }      from '@typhonjs-utils/package-json';
-import sade                from 'sade';
+import sade                   from 'sade';
+
+import { getPackage }         from '@typhonjs-utils/package-json';
 
 import {
    commandConvert,
-   commandSort }  from './functions.js';
+   commandSort }              from './functions.js';
+
+import { wrap }               from './wrap.js';
+
+import { supportedFormats }   from '#data';
 
 // Retrieve the `esm-d-ts` package.
 const packageObj = getPackage({ filepath: import.meta.url });
@@ -12,9 +17,9 @@ const packageObj = getPackage({ filepath: import.meta.url });
 const program = sade('scrydex')
 .version(packageObj?.version)
 
-   // Global options
-   .option('-l, --loglevel', `Specify logging level: 'off', 'fatal', 'error', 'warn', 'info', 'debug', 'verbose', ` +
-      `'trace', or 'all'.`);
+// Global options
+.option('-l, --loglevel', `Specify logging level: 'off', 'fatal', 'error', 'warn', 'info', 'debug', 'verbose', ` +
+ `'trace', or 'all'.`);
 
 program
 .command('convert [input]', 'Convert')
@@ -23,15 +28,19 @@ program
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
 .option('--indent', `Defines the JSON output indentation.`)
 .option('--output', 'Provide a file path for generated collection output.')
-.example('scrydex convert ./collection.csv --output ./collection.json -db ./scryfall.json')
+.example('convert ./collection.csv --compact --output ./collection.json -db ./scryfall.json')
 .action(commandConvert);
+
+program.command('formats', `List all supported Scryfall game 'formats'.`)
+.action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
 
 program
 .command('sort [input]', 'Sort')
 .describe(`Sorts a converted Scryfall card DB by format legalities outputting spreadsheets.`)
 .option('--formats', 'Provide a colon separated list of formats for sorting.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
-.example('scrydex sort ./collection.json --output ./spreadsheets')
+.example('sort ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
+.example('sort ./collection.json --formats predh:commander --output ./spreadsheets')
 .action(commandSort);
 
 program.parse(process.argv);

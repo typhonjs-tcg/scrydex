@@ -1,17 +1,16 @@
-// import path          from 'node:path';
-//
-// import { isFile }    from '@typhonjs-utils/file-util';
-// import { isObject }  from '@typhonjs-utils/object';
-//
-// import { logger }    from '#util';
+import path                   from 'node:path';
 
-import { isDirectory }  from '@typhonjs-utils/file-util';
+import {
+   isDirectory,
+   isFile }                   from '@typhonjs-utils/file-util';
 
 import {
    convert,
-   sort }               from '#commands';
+   sort }                     from '#commands';
 
-import { logger }       from '#util';
+import { supportedFormats }   from '#data';
+
+import { logger }             from '#util';
 
 /**
  * Invokes `convert` with the given config and `dotenv` options.
@@ -28,6 +27,20 @@ export async function commandConvert(input, opts)
 
    // console.log(`!!! CLI-convert - 0 - input: ${input}`);
    // console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
+
+   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
+   if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
+
+   if (opts.indent !== void 0 && typeof opts.indent !== 'number') { exit(`'indent' option is not a number.`); }
+   if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
+
+   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   if (opts.compact !== void 0 && typeof opts.compact !== 'boolean') { exit(`'compact' option is not a boolean.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if(!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
    const config = {
       input,
@@ -65,24 +78,24 @@ export async function commandSort(input, opts)
    // console.log(`!!! CLI-sort - 0 - input: ${input}`);
    // console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
 
-   if (!isDirectory(opts.output))
-   {
-      exit(`'output' option is not a directory: ${opts.output}`);
-   }
+   if (opts.indent !== void 0 && typeof opts.indent !== 'number') { exit(`'indent' option is not a number.`); }
+   if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
 
-   if (typeof opts.formats !== 'string')
-   {
-      exit(`'formats' option is not defined`);
-   }
+   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   if (opts.compact !== void 0 && typeof opts.compact !== 'boolean') { exit(`'compact' option is not a boolean.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (!isDirectory(opts.output)) { exit(`'output' option is not a directory: ${opts.output}`); }
+
+   if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined`); }
 
    const formats = opts.formats.split(':');
 
    for (const format of formats)
    {
-      if (!s_VALID_FORMATS.has(format))
-      {
-         exit(`'formats' option contains an invalid format: ${format}`);
-      }
+      if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
    }
 
    const config = {
@@ -103,75 +116,6 @@ export async function commandSort(input, opts)
    }
 }
 
-
-
-// /**
-//  * @param {string}   input - Source / input file
-//  *
-//  * @param {object}   opts - CLI options.
-//  *
-//  * @returns {Promise<object|undefined>} Processed options.
-//  */
-// async function processOptions(input, opts)
-// {
-//    // Invalid / no options for source file path or config file.
-//    if (typeof input !== 'string' && opts.config === void 0)
-//    {
-//       exit('Invalid options: missing `[input]` and no config file option provided.');
-//    }
-//
-//    if (typeof opts?.loglevel === 'string')
-//    {
-//       if (!logger.isValidLevel(opts.loglevel))
-//       {
-//          exit(`Invalid options: log level '${
-//             opts.loglevel}' must be 'off', 'fatal', 'error', 'warn', 'info', 'debug', 'verbose', 'trace', or 'all'.`);
-//       }
-//
-//       logger.setLogLevel(opts.loglevel);
-//    }
-//
-//    const dirname = path.dirname(process.cwd());
-//
-//    let config;
-//
-//    if (opts.config)
-//    {
-//       switch (typeof opts.config)
-//       {
-//          // Load specific config.
-//          case 'string':
-//          {
-//             const configPath = path.resolve(opts.config);
-//
-//             if (!isFile(configPath)) { exit(`No config file available at: ${configPath}`); }
-//
-//             logger.verbose(`Loading config from path: ${configPath}`);
-//
-//             // config = loadConfig(configPath);
-//
-//             break;
-//          }
-//       }
-//
-//       if (isObject(config))
-//       {
-//          if (typeof opts?.loglevel === 'string') { config.logLevel = opts.loglevel; }
-//       }
-//    }
-//    else
-//    {
-//       // Verify `input` file.
-//       if (typeof input === 'string')
-//       {
-//          const inputpath = path.resolve(input);
-//          if (!isFile(inputpath)) { exit(`No input / entry point file exists for: ${input}`); }
-//       }
-//    }
-//
-//    return config;
-// }
-
 /**
  * @param {string} message - A message.
  *
@@ -182,28 +126,3 @@ function exit(message, exit = true)
    console.error(`[31m[scrydex] ${message}[0m`);
    if (exit) { process.exit(1); }
 }
-
-const s_VALID_FORMATS = new Set([
-   'standard',
-   'future',
-   'historic',
-   'timeless',
-   'gladiator',
-   'pioneer',
-   'explorer',
-   'modern',
-   'legacy',
-   'pauper',
-   'vintage',
-   'penny',
-   'commander',
-   'oathbreaker',
-   'standardbrawl',
-   'brawl',
-   'alchemy',
-   'paupercommander',
-   'duel',
-   'oldschool',
-   'premodern',
-   'predh'
-]);
