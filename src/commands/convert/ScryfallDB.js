@@ -6,6 +6,7 @@ import StreamArray      from 'stream-json/streamers/StreamArray.js';
 import {
    logger,
    stringifyCompact }   from '#util';
+import csv from "csv-parser";
 
 export class ScryfallDB
 {
@@ -45,10 +46,11 @@ export class ScryfallDB
          {
             /** @type {import('#types').Card} */
             const card = {
-               ...csvCard,
-
-               name: value.name,
+               object: 'card',
+               name: value.printed_name ?? value.name,
+               lang: value.lang,
                rarity: value.rarity,
+               quantity: csvCard.quantity,
                set: value.set,
                set_name: value.set_name,
                set_type: value.set_type,
@@ -64,7 +66,8 @@ export class ScryfallDB
                released_at: value.released_at,
                oracle_text: value.oracle_text,
                produced_mana: value.produced_mana,
-               legalities: value.legalities ?? {}
+               legalities: value.legalities ?? {},
+               scryfall_id: csvCard.scryfall_id,
             };
 
             totalQuantity += card.quantity;
