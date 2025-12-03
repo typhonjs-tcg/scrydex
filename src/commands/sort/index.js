@@ -1,8 +1,10 @@
-import fs               from 'node:fs';
+import fs            from 'node:fs';
 
-import { SortedFormat } from '#data';
+import {
+   SortedFormat,
+   validLegality }   from '#data';
 
-import { logger }       from '#util';
+import { logger }    from '#util';
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
@@ -26,8 +28,6 @@ export async function sort(config)
  */
 function formatSort(config)
 {
-   const s_validLegality = new Set(['legal', 'restricted']);
-
    /**
     * @type {Map<string, import('#types').Card[]>}
     */
@@ -44,7 +44,7 @@ function formatSort(config)
 
       for (const format of config.formats)
       {
-         if (s_validLegality.has(card.legalities?.[format]))
+         if (validLegality.has(card.legalities?.[format]))
          {
             presortFormat.get(format).push(card);
             sorted = true;
