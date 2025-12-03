@@ -1,4 +1,7 @@
 import fs                     from 'node:fs';
+import path                   from 'node:path';
+
+import { isDirectory }        from '@typhonjs-utils/file-util';
 
 import { ExportSpreadsheet }  from './ExportSpreadsheet.js';
 
@@ -6,7 +9,9 @@ import {
    SortedFormat,
    validLegality }            from '#data';
 
-import { logger }             from '#util';
+import {
+   logger,
+   stringifyCompact }         from '#util';
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
@@ -20,9 +25,31 @@ export async function sort(config)
    logger.info(`Sorting Scryfall card collection: ${config.input}`);
    logger.info(`Formats: ${config.formats.join(', ')}`);
 
-   const sortedCards = formatSort(config);
+   const sortedFormats = formatSort(config);
 
-   await ExportSpreadsheet.export(config, sortedCards);
+   for (const format of sortedFormats)
+   {
+      if (format.size > 0)
+      {
+         // Store spreadsheets in format subdirectories.
+         const formatDirPath = path.resolve(config.output, format.name);
+
+         // Create format subdirectory if it doesn't exist already.
+         if (!isDirectory(formatDirPath)) { fs.mkdirSync(formatDirPath); }
+
+         // Export format cards to JSON DB.
+         fs.writeFileSync(path.resolve(formatDirPath, `${format.name}-all.json`), stringifyCompact(format.cards),
+          'utf-8');
+
+         for (const rarity of format.values())
+         {
+            if (rarity.size > 0)
+            {
+               await ExportSpreadsheet.exportFormatRarity(config, format, rarity, formatDirPath);
+            }
+         }
+      }
+   }
 }
 
 /**

@@ -1,9 +1,6 @@
-import fs               from 'node:fs';
 import path             from 'node:path';
 
 import Excel            from 'exceljs';
-
-import { isDirectory }  from '@typhonjs-utils/file-util';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
@@ -13,45 +10,14 @@ export class ExportSpreadsheet
    /**
     * @param {import('#types-command').ConfigSort} config -
     *
-    * @param {SortedFormat[]} formats -
-    */
-   static async export(config, formats)
-   {
-      for (const format of formats)
-      {
-         if (format.size > 0) { await this.#exportFormat(config, format); }
-      }
-   }
-
-   /**
-    * @param {import('#types-command').ConfigSort} config -
-    *
     * @param {SortedFormat}   format -
-    */
-   static async #exportFormat(config, format)
-   {
-      for (const rarity of format.values())
-      {
-         if (rarity.size > 0) { await this.#exportFormatRarity(config, format.name, rarity); }
-      }
-   }
-
-   /**
-    *
-    * @param {import('#types-command').ConfigSort} config -
-    *
-    * @param {string}   formatName -
     *
     * @param {SortedRarity}   rarity -
+    *
+    * @param {string}   formatDirPath -
     */
-   static async #exportFormatRarity(config, formatName, rarity)
+   static async exportFormatRarity(config, format, rarity, formatDirPath)
    {
-      // Store spreadsheets in format subdirectories.
-      const formatDirPath = path.resolve(config.output, formatName);
-
-      // Create format subdirectory if it doesn't exist already.
-      if (!isDirectory(formatDirPath)) { fs.mkdirSync(formatDirPath); }
-
       const wb = new Excel.Workbook();
 
       for (const [category, cards] of rarity.entries())
@@ -60,7 +26,7 @@ export class ExportSpreadsheet
 
          const ws = wb.addWorksheet(category);
 
-         // Column definitions + alignment rules
+         // Column definitions + alignment rules.
          ws.columns = [
             { header: 'Name', key: 'Name', width: 32, alignment: { horizontal: 'left' } },
             { header: 'Quantity', key: 'Quantity', width: 8, alignment: { horizontal: 'center' } },
@@ -93,7 +59,7 @@ export class ExportSpreadsheet
                'Scryfall Link': card.scryfall_uri
             });
 
-            // Turn the link into a real hyperlink
+            // Turn the link into a real hyperlink.
             const linkCell = row.getCell('Scryfall Link');
             if (linkCell.value)
             {
@@ -146,7 +112,7 @@ export class ExportSpreadsheet
          this.#autosize(ws);
       }
 
-      const outputPath = path.resolve(formatDirPath, `${formatName}-${rarity.name}.xlsx`);
+      const outputPath = path.resolve(formatDirPath, `${format.name}-${rarity.name}.xlsx`);
 
       await wb.xlsx.writeFile(outputPath);
    }
