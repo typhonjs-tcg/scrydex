@@ -6,12 +6,11 @@ import StreamArray      from 'stream-json/streamers/StreamArray.js';
 import {
    logger,
    stringifyCompact }   from '#util';
-import csv from "csv-parser";
 
 export class ScryfallDB
 {
    /**
-    * @param {object}   config -
+    * @param {import('#types-command').ConfigConvert}   config -
     *
     * @param {Collection}  collection -
     *

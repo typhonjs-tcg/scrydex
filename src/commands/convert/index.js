@@ -5,7 +5,7 @@ import { ScryfallDB }   from './ScryfallDB.js';
 /**
  * Converts the CSV collection output to compact Scryfall card data.
  *
- * @param {object}   config - Config options.
+ * @param {import('#types-command').ConfigConvert}   config - Config options.
  *
  * @returns {Promise<void>}
  */

@@ -42,12 +42,13 @@ export async function commandConvert(input, opts)
 
    if(!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
+   /** @type {import('#types-command').ConfigConvert} */
    const config = {
       input,
       output: opts.output,
       db: opts.db,
       compact: typeof opts.compact === 'boolean' ? opts.compact : false,
-      indent: typeof opts.indent === 'number' ? opts.indent : null // TODO Sanity check
+      indent: typeof opts.indent === 'number' ? opts.indent : null
    };
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
@@ -103,6 +104,7 @@ export async function commandSort(input, opts)
       if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
    }
 
+   /** @type {import('#types-command').ConfigSort} */
    const config = {
       input,
       output: opts.output,
