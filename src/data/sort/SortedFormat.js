@@ -1,5 +1,7 @@
 import { SortedRarity } from './SortedRarity.js';
 
+import { logger }       from '#util';
+
 export class SortedFormat
 {
    /**
@@ -100,5 +102,7 @@ export class SortedFormat
       {
          sortRarity.sortAlpha();
       }
+
+      logger.verbose(`Sorting format '${this.name}' - card count: ${this.#cards.length}`);
    }
 }
