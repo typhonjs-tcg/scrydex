@@ -63,9 +63,20 @@ interface Card extends CSVCard
    name: string;
 
    /**
+    * A unique ID for this card’s oracle identity. This value is consistent across reprinted card editions, and unique
+    * among different cards with the same name.
+    */
+   oracle_id: string;
+
+   /**
     * The Oracle text for this card, if any.
     */
    oracle_text: string;
+
+   /**
+    * Rarity of original / first printing.
+    */
+   orig_rarity: string;
 
    /**
     * Colors of mana that this card could produce.
@@ -91,6 +102,11 @@ interface Card extends CSVCard
     * True if this card is on the Reserved List.
     */
    reserved: boolean;
+
+   /**
+    * Scryfall URL for card.
+    */
+   scryfall_uri: string;
 
    /**
     * This card’s set code.
