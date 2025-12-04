@@ -2,6 +2,8 @@ import path             from 'node:path';
 
 import Excel            from 'exceljs';
 
+import { ManaCostNote } from './ManaCostNote.js';
+
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
  */
@@ -68,6 +70,11 @@ export class ExportSpreadsheet
                   hyperlink: card.scryfall_uri
                };
                linkCell.font = { color: { argb: 'FF0000FF' }, underline: true };
+            }
+
+            if (typeof card.mana_cost === 'string' && card.mana_cost.length)
+            {
+               row.getCell('Mana Cost').note = ManaCostNote.translate(card.mana_cost)
             }
          }
 
