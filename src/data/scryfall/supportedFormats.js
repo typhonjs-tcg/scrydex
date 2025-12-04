@@ -15,22 +15,38 @@ const supportedFormats = Object.freeze(new Set(['standard', 'future', 'historic'
 const validLegality = Object.freeze(new Set(['legal', 'restricted']));
 
 /**
- * These set types are excluded from determining a cards highest rarity. Over time a card such as `Force of Will`
+ * These set types are excluded from determining a cards recent rarity. Over time a card such as `Force of Will`
  * and `Demonic Tutor` have gone from `Uncommon` to `Rare` / `Mythic Rare`. Ignore these set types in determining
  * highest rarity for a card.
  *
- * @type {Readonly<Set<string>>}
+ * @type {ReadonlySet<string>}
  */
-const excludedSetTypesHighRarity = Object.freeze(new Set(['duel_deck',
+const excludedSetTypesRecentRarity = Object.freeze(new Set([
+   'duel_deck',
    'from_the_vault',
+   'memorabilia',
    'premium_deck',
    'promo',
    'sld',   // Secret Lair
    'spellbook',
    'starter'
-]))
+]));
+
+/**
+ * These early sets are excluded from determining a cards recent rarity.
+ *
+ * @type {ReadonlySet<string>}
+ */
+const excludedSetsRecentRarity = Object.freeze(new Set([
+   'sum',   // Summer Magic
+   'bchr',  // Chronicles Foreign Black Border
+   'ced',   // Collector's Edition
+   'cei',   // International Collector's Edition
+   'fbb'    // Foreign Black Border
+]));
 
 export {
-   excludedSetTypesHighRarity,
+   excludedSetsRecentRarity,
+   excludedSetTypesRecentRarity,
    supportedFormats,
    validLegality };
