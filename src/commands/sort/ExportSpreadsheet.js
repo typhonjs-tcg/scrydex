@@ -22,6 +22,8 @@ export class ExportSpreadsheet
    {
       const wb = new Excel.Workbook();
 
+      const byType = config.sortByType;
+
       for (const [category, cards] of rarity.entries())
       {
          if (cards.length <= 0) { continue; }
@@ -45,6 +47,8 @@ export class ExportSpreadsheet
             { header: 'Scryfall Link', key: 'Scryfall Link', width: 20, alignment: { horizontal: 'center' } }
          ];
 
+         let prevType = void 0;
+
          for (const card of cards)
          {
             const row = ws.addRow({
@@ -62,6 +66,21 @@ export class ExportSpreadsheet
                'Color Identity': card.color_identity?.join(', ') ?? '',
                'Scryfall Link': card.scryfall_uri
             });
+
+            // Embellish type separation by setting a colored border.
+            if (byType && prevType !== card.type)
+            {
+               // Potentially, skip top border for first category.
+               if (prevType !== void 0)
+               {
+                  row.eachCell((cell) =>
+                  {
+                     cell.border = { top: { style: 'thick', color: { argb: 'FFD6C6FF' } } };
+                  });
+               }
+
+               prevType = card.type;
+            }
 
             // Turn the link into a real hyperlink.
             const linkCell = row.getCell('Scryfall Link');
