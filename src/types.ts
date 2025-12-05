@@ -99,6 +99,11 @@ interface Card extends CSVCard
    released_at: string;
 
    /**
+    * Normalized card type based on `type line` parsing.
+    */
+   type: string;
+
+   /**
     * The type line of this card.
     */
    type_line: string;
