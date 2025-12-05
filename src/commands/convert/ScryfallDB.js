@@ -9,7 +9,8 @@ import {
 
 import {
    excludedSetsRecentRarity,
-   excludedSetTypesRecentRarity } from "#data";
+   excludedSetTypesRecentRarity,
+   TypeLineParse }      from '#data';
 
 export class ScryfallDB
 {
@@ -97,29 +98,30 @@ export class ScryfallDB
                object: 'card',
                name: scryCard.printed_name ?? scryCard.name,
                lang: scryCard.lang,
+               type: TypeLineParse.resolve(scryCard.type_line),
                rarity: scryCard.rarity,
                quantity: csvCard.quantity,
-               foil: csvCard.foil,
                filename: csvCard.filename,
                set: scryCard.set,
                set_name: scryCard.set_name,
                set_type: scryCard.set_type,
                collector_number: scryCard.collector_number,
-               reserved: scryCard.reserved,
-               game_changer: scryCard.game_changer,
-               keywords: scryCard.keywords,
-               type_line: scryCard.type_line,
-               mana_cost: scryCard.mana_cost,
                cmc: scryCard.cmc,
                colors: scryCard.colors,
                color_identity: scryCard.color_identity,
-               released_at: scryCard.released_at,
+               foil: csvCard.foil,
+               game_changer: scryCard.game_changer,
+               keywords: scryCard.keywords,
+               reserved: scryCard.reserved,
+               mana_cost: scryCard.mana_cost,
                oracle_text: scryCard.oracle_text,
                produced_mana: scryCard.produced_mana,
+               released_at: scryCard.released_at,
+               type_line: scryCard.type_line,
                legalities: scryCard.legalities ?? {},
+               scryfall_uri: scryCard.scryfall_uri,
                oracle_id: scryCard.oracle_id,
-               scryfall_id: csvCard.scryfall_id,
-               scryfall_uri: scryCard.scryfall_uri
+               scryfall_id: csvCard.scryfall_id
             };
 
             totalQuantity += card.quantity;
