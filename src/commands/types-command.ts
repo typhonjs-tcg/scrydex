@@ -48,6 +48,11 @@ interface ConfigSort
     * Output directory for spreadsheets.
     */
    output: string;
+
+   /**
+    * When true, sort by type of card after alpha sorting.
+    */
+   sortByType: boolean;
 }
 
 export {

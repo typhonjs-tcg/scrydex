@@ -37,6 +37,7 @@ program.command('formats', `List all supported Scryfall game 'formats'.`)
 program
 .command('sort [input]', 'Sort')
 .describe(`Sorts a converted Scryfall card DB by format legalities outputting spreadsheets.`)
+.option('--by-type', 'Sorts alphabetically then by type of card.')
 .option('--formats', 'Provide a colon separated list of formats for sorting.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
 .example('sort ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')

@@ -105,6 +105,14 @@ export class SortedRarity
       }
    }
 
+   sortType()
+   {
+      for (const cards of this.#categories.values())
+      {
+         cards.sort((a, b) => a.type.localeCompare(b.type));
+      }
+   }
+
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**

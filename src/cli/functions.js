@@ -81,13 +81,18 @@ export async function commandSort(input, opts)
 {
    // TODO: process options.
 
-   // console.log(`!!! CLI-sort - 0 - input: ${input}`);
-   // console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
+    console.log(`!!! CLI-sort - 0 - input: ${input}`);
+    console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
 
    if (opts.indent !== void 0 && typeof opts.indent !== 'number') { exit(`'indent' option is not a number.`); }
    if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   if (opts['by-type'] !== void 0 && typeof opts['by-type'] !== 'boolean')
+   {
+      exit(`'by-type' option is not a boolean.`);
+   }
 
    if (opts.compact !== void 0 && typeof opts.compact !== 'boolean') { exit(`'compact' option is not a boolean.`); }
 
@@ -108,7 +113,8 @@ export async function commandSort(input, opts)
    const config = {
       input,
       output: opts.output,
-      formats
+      formats,
+      sortByType: opts['by-type'] ?? false
    };
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }

@@ -20,18 +20,20 @@ export class SortedFormat
    #rarity;
 
    /**
+    * @param {import('#types-command').ConfigSort} config -
+    *
     * @param {string} format -
     *
     * @param {import('#types').Card[]} cards -
     */
-   constructor(format, cards)
+   constructor(config, format, cards)
    {
       this.#cards = cards;
       this.#format = format;
 
       this.#rarity = new Map();
 
-      this.#sortRarity(cards);
+      this.#sortRarity(config, cards);
    }
 
    /**
@@ -77,9 +79,11 @@ export class SortedFormat
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
+    * @param {import('#types-command').ConfigSort} config -
+    *
     * @param {import('#types').Card[]} cards -
     */
-   #sortRarity(cards)
+   #sortRarity(config, cards)
    {
       for (const card of cards)
       {
@@ -101,6 +105,14 @@ export class SortedFormat
       for (const sortRarity of this.#rarity.values())
       {
          sortRarity.sortAlpha();
+      }
+
+      if (config.sortByType)
+      {
+         for (const sortRarity of this.#rarity.values())
+         {
+            sortRarity.sortType();
+         }
       }
 
       logger.verbose(`Sorting format '${this.name}' - card count: ${this.#cards.length}`);

@@ -96,7 +96,7 @@ function formatSort(config)
     */
    const sortedFormats = [];
 
-   for (const [format, cards] of presortFormat) { sortedFormats.push(new SortedFormat(format, cards)) }
+   for (const [format, cards] of presortFormat) { sortedFormats.push(new SortedFormat(config, format, cards)) }
 
    return sortedFormats;
 }
