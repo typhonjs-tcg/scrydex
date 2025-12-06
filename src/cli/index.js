@@ -39,6 +39,7 @@ program
 .describe(`Sorts a converted Scryfall card DB by format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by type of card.')
 .option('--formats', 'Provide a colon separated list of formats for sorting.')
+.option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
 .example('sort ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
 .example('sort ./collection.json --formats predh:commander --output ./spreadsheets')

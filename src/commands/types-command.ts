@@ -45,6 +45,11 @@ interface ConfigSort
    input: string;
 
    /**
+    * A set of CSV file names in the conversion process to mark / highlight for merging.
+    */
+   mark: Set<string>;
+
+   /**
     * Output directory for spreadsheets.
     */
    output: string;

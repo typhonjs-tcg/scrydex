@@ -109,11 +109,16 @@ export async function commandSort(input, opts)
       if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
    }
 
+   if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined`); }
+
+   const mark = typeof opts.mark === 'string' ? new Set(opts.mark.split(':')) : new Set();
+
    /** @type {import('#types-command').ConfigSort} */
    const config = {
       input,
       output: opts.output,
       formats,
+      mark,
       sortByType: opts['by-type'] ?? false
    };
 

@@ -67,6 +67,39 @@ export class ExportSpreadsheet
                'Scryfall Link': card.scryfall_uri
             });
 
+            if (config.mark.has(card.filename))
+            {
+               // Indicate that this row has been colored.
+               row._marked = true;
+
+               row.eachCell((cell) =>
+               {
+                  // Orange - attention required.
+                  // cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF4CC' } };
+                  //
+                  // cell.border = {
+                  //    top:    { style: 'thin', color: { argb: 'FFCC8800' }},
+                  //    bottom: { style: 'thin', color: { argb: 'FFCC8800' }},
+                  // };
+
+                  // Green - merge OK.
+                  // cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE6FFCC' } };
+                  //
+                  // cell.border = {
+                  //    top:    { style: 'thin', color: { argb: 'FF88AA55' }},
+                  //    bottom: { style: 'thin', color: { argb: 'FF88AA55' }},
+                  // };
+
+                  // Red - Needs attention.
+                  cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFCCCC' } };
+
+                  cell.border = {
+                     top:    { style: 'thin', color: { argb: 'FFCC6666' }},
+                     bottom: { style: 'thin', color: { argb: 'FFCC6666' }},
+                  };
+               });
+            }
+
             // Embellish type separation by setting a colored border.
             if (byType && prevType !== card.type)
             {
@@ -112,6 +145,12 @@ export class ExportSpreadsheet
                   horizontal: isNameColumn ? 'left' : 'center',
                   vertical: 'middle'
                };
+
+               cell.border = {
+                  ...(cell.border ?? {}),
+                  left:  { style: 'thin', color: { argb: 'FF999999' } },
+                  right: { style: 'thin', color: { argb: 'FF999999' } }
+               };
             });
          });
 
@@ -124,15 +163,20 @@ export class ExportSpreadsheet
          // Shade rows 2..N.
          ws.eachRow({ includeEmpty: false }, (row, rowNum) =>
          {
+            if (typeof row._marked === 'boolean' && row._marked) { return; }   // Skip `marked` overrides.
+
             if (rowNum === 1) return; // skip header row
 
             if (rowNum % 2 === 0)
             {
-               row.fill = {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFEFEFEF' } // light gray
-               };
+               row.eachCell({ includeEmpty: true }, (cell) =>
+               {
+                  cell.fill = {
+                     type: 'pattern',
+                     pattern: 'solid',
+                     fgColor: { argb: 'FFEFEFEF' } // light gray
+                  };
+               });
             }
          });
 
