@@ -7,6 +7,7 @@ npm-debug.log
 /coverage
 /html
 /db
+/dist
 /manabox-csv
 /manabox-sort
 /node_modules
