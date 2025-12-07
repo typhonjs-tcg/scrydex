@@ -3,6 +3,7 @@ import path             from 'node:path';
 import Excel            from 'exceljs';
 
 import { ManaCostNote } from './ManaCostNote.js';
+import { Theme }        from './Theme.js';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
@@ -23,6 +24,8 @@ export class ExportSpreadsheet
       const wb = new Excel.Workbook();
 
       const byType = config.sortByType;
+
+      const theme = Theme.get(config);
 
       for (const [category, cards] of rarity.entries())
       {
@@ -67,6 +70,8 @@ export class ExportSpreadsheet
                'Scryfall Link': card.scryfall_uri
             });
 
+            row.fill = theme.row.fill.default;
+
             if (config.mark.has(card.filename))
             {
                // Indicate that this row has been colored.
@@ -75,28 +80,8 @@ export class ExportSpreadsheet
                row.eachCell((cell) =>
                {
                   // Orange - attention required.
-                  // cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF4CC' } };
-                  //
-                  // cell.border = {
-                  //    top:    { style: 'thin', color: { argb: 'FFCC8800' }},
-                  //    bottom: { style: 'thin', color: { argb: 'FFCC8800' }},
-                  // };
-
-                  // Green - merge OK.
-                  // cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE6FFCC' } };
-                  //
-                  // cell.border = {
-                  //    top:    { style: 'thin', color: { argb: 'FF88AA55' }},
-                  //    bottom: { style: 'thin', color: { argb: 'FF88AA55' }},
-                  // };
-
-                  // Red - Needs attention.
-                  cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFCCCC' } };
-
-                  cell.border = {
-                     top:    { style: 'thin', color: { argb: 'FFCC6666' }},
-                     bottom: { style: 'thin', color: { argb: 'FFCC6666' }},
-                  };
+                  cell.fill = theme.mark.ok.fill;
+                  cell.border = theme.mark.ok.border;
                });
             }
 
@@ -106,10 +91,7 @@ export class ExportSpreadsheet
                // Potentially, skip top border for first category.
                if (prevType !== void 0)
                {
-                  row.eachCell((cell) =>
-                  {
-                     cell.border = { top: { style: 'thick', color: { argb: 'FFD6C6FF' } } };
-                  });
+                  row.eachCell((cell) => cell.border = theme.sortByType.border);
                }
 
                prevType = card.type;
@@ -119,11 +101,8 @@ export class ExportSpreadsheet
             const linkCell = row.getCell('Scryfall Link');
             if (linkCell.value)
             {
-               linkCell.value = {
-                  text: `Open ${card.name}`,
-                  hyperlink: card.scryfall_uri
-               };
-               linkCell.font = { color: { argb: 'FF0000FF' }, underline: true };
+               linkCell.value = { text: `Open ${card.name}`, hyperlink: card.scryfall_uri };
+               linkCell.font = theme.fonts.link;
             }
 
             if (typeof card.mana_cost === 'string' && card.mana_cost.length)
@@ -137,25 +116,23 @@ export class ExportSpreadsheet
          {
             row.eachCell({ includeEmpty: true }, (cell, colNumber) =>
             {
-               cell.font = { name: 'Arial', size: 12 };
+               cell.font = theme.fonts.main;
 
                // Name column stays left aligned, others center.
                const isNameColumn = colNumber === 1;
-               cell.alignment = {
-                  horizontal: isNameColumn ? 'left' : 'center',
-                  vertical: 'middle'
-               };
+               cell.alignment = { horizontal: isNameColumn ? 'left' : 'center', vertical: 'middle' };
 
                cell.border = {
                   ...(cell.border ?? {}),
-                  left:  { style: 'thin', color: { argb: 'FF999999' } },
-                  right: { style: 'thin', color: { argb: 'FF999999' } }
+                  ...theme.cell.border
                };
             });
          });
 
          // Bold headers.
-         ws.getRow(1).font = { name: 'Arial', size: 13, bold: true };
+         const headerRow = ws.getRow(1);
+         headerRow.fill = theme.row.fill.default;
+         headerRow.font = theme.fonts.header;
 
          // Freeze first row.
          ws.views = [{ state: 'frozen', ySplit: 1 }];
@@ -165,20 +142,23 @@ export class ExportSpreadsheet
          {
             if (typeof row._marked === 'boolean' && row._marked) { return; }   // Skip `marked` overrides.
 
-            if (rowNum === 1) return; // skip header row
+            if (rowNum === 1) { return; } // Skip header row.
 
             if (rowNum % 2 === 0)
             {
-               row.eachCell({ includeEmpty: true }, (cell) =>
-               {
-                  cell.fill = {
-                     type: 'pattern',
-                     pattern: 'solid',
-                     fgColor: { argb: 'FFEFEFEF' } // light gray
-                  };
-               });
+               row.eachCell({ includeEmpty: true }, (cell) => cell.fill = theme.row.fill.alternate);
             }
          });
+
+         // Add additional dummy rows for theme expansion beyond table.
+         if (config.theme === 'dark')
+         {
+            for (let i = 0; i < 200; i++)
+            {
+               const row = ws.addRow({});
+               row.fill = theme.row.fill.default;
+            }
+         }
 
          // Auto size to actual content.
          this.#autosize(ws);

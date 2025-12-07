@@ -41,6 +41,7 @@ program
 .option('--formats', 'Provide a colon separated list of formats for sorting.')
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
+.option('--theme', 'Options are `light` or `dark`; light theme is default.')
 .example('sort ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
 .example('sort ./collection.json --formats predh:commander --output ./spreadsheets')
 .action(commandSort);

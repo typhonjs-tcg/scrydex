@@ -113,13 +113,23 @@ export async function commandSort(input, opts)
 
    const mark = typeof opts.mark === 'string' ? new Set(opts.mark.split(':')) : new Set();
 
+   if (opts.theme !== void 0)
+   {
+      if (typeof opts.theme !== 'string') { exit(`'theme' option is not defined.`); }
+
+      if (opts.theme !== 'light' && opts.theme !== 'dark') { exit(`'theme' option is invalid: '${opts.theme}'.`); }
+   }
+
+   const theme = opts.theme === 'dark' ? 'dark' : 'light';
+
    /** @type {import('#types-command').ConfigSort} */
    const config = {
       input,
       output: opts.output,
       formats,
       mark,
-      sortByType: opts['by-type'] ?? false
+      sortByType: opts['by-type'] ?? false,
+      theme
    };
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }

@@ -1,3 +1,7 @@
+import type { Borders, Fill, Font } from 'exceljs';
+
+import type { ExportSpreadsheet }   from './sort/ExportSpreadsheet';
+
 /**
  * Config object for the `convert` command.
  */
@@ -58,8 +62,47 @@ interface ConfigSort
     * When true, sort by type of card after alpha sorting.
     */
    sortByType: boolean;
+
+   /**
+    * Theme name.
+    */
+   theme: 'light' | 'dark';
+}
+
+/**
+ * Defines theming data used by {@link ExportSpreadsheet}.
+ */
+interface ThemeData
+{
+   get cell(): {
+      border: Partial<Borders>
+   }
+
+   get fonts(): {
+      header: Partial<Font>,
+      link: Partial<Font>,
+      main: Partial<Font>
+   }
+
+   get row(): {
+      fill: {
+         alternate: Fill,
+         default: Fill
+      }
+   }
+
+   get mark(): {
+      error: { fill: Fill, border: Partial<Borders> }
+      ok: { fill: Fill, border: Partial<Borders> }
+      warning: { fill: Fill, border: Partial<Borders> }
+   }
+
+   get sortByType(): {
+      border: Partial<Borders>
+   }
 }
 
 export {
    type ConfigConvert,
-   type ConfigSort };
+   type ConfigSort,
+   type ThemeData };
