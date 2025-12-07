@@ -72,16 +72,16 @@ export class ExportSpreadsheet
 
             row.fill = theme.row.fill.default;
 
-            if (config.mark.has(card.filename))
+            // Potentially mark merge status for marked filenames / cards.
+            if (config.mark.has(card.filename) && typeof card.mark === 'string')
             {
                // Indicate that this row has been colored.
                row._marked = true;
 
                row.eachCell((cell) =>
                {
-                  // Orange - attention required.
-                  cell.fill = theme.mark.ok.fill;
-                  cell.border = theme.mark.ok.border;
+                  cell.fill = theme.mark[card.mark].fill;
+                  cell.border = theme.mark[card.mark].border;
                });
             }
 

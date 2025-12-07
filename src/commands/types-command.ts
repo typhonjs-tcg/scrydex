@@ -1,6 +1,19 @@
 import type { Borders, Fill, Font } from 'exceljs';
 
+import type { Card }                from '#types';
+
 import type { ExportSpreadsheet }   from './sort/ExportSpreadsheet';
+
+/**
+ * Additional data added to cards when sorting.
+ */
+interface CardSorted extends Card
+{
+   /**
+    * For marked files indicate merge status.
+    */
+   mark?: 'error' | 'ok' | 'warning';
+}
 
 /**
  * Config object for the `convert` command.

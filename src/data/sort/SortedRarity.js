@@ -1,7 +1,7 @@
 export class SortedRarity
 {
    /**
-    * @type {Map<string, import('#types').Card[]>}
+    * @type {Map<string, import('#types-command').CardSorted[]>}
     */
    #categories = new Map();
 
@@ -59,7 +59,7 @@ export class SortedRarity
    }
 
    /**
-    * @param {import('#types').Card}   card - Card to add.
+    * @param {import('#types-command').CardSorted}   card - Card to add.
     */
    add(card)
    {
@@ -90,7 +90,7 @@ export class SortedRarity
    }
 
    /**
-    * @returns {MapIterator<[string, import('#types').Card[]]>}
+    * @returns {MapIterator<[string, import('#types-command').CardSorted[]]>}
     */
    entries()
    {
@@ -116,7 +116,7 @@ export class SortedRarity
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
-    * @param {import('#types').Card}   card -
+    * @param {import('#types-command').CardSorted}   card -
     */
    #sortColorless(card)
    {
@@ -139,7 +139,7 @@ export class SortedRarity
    }
 
    /**
-    * @param {import('#types').Card}   card -
+    * @param {import('#types-command').CardSorted}   card -
     *
     * @param {string[]} colorSource -
     */
@@ -153,7 +153,7 @@ export class SortedRarity
    }
 
    /**
-    * @param {import('#types').Card}   card -
+    * @param {import('#types-command').CardSorted}   card -
     */
    #sortMulti(card)
    {

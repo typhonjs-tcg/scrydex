@@ -5,7 +5,7 @@ import { logger }       from '#util';
 export class SortedFormat
 {
    /**
-    * @type {import('#types').Card[]}
+    * @type {import('#types-command').CardSorted[]}
     */
    #cards;
 
@@ -24,7 +24,7 @@ export class SortedFormat
     *
     * @param {string} format -
     *
-    * @param {import('#types').Card[]} cards -
+    * @param {import('#types-command').CardSorted[]} cards -
     */
    constructor(config, format, cards)
    {
@@ -34,10 +34,15 @@ export class SortedFormat
       this.#rarity = new Map();
 
       this.#sortRarity(config, cards);
+
+      if (config.mark.size)
+      {
+         this.#calculateMarked(config, cards);
+      }
    }
 
    /**
-    * @returns {import('#types').Card[]} All cards for the format.
+    * @returns {import('#types-command').CardSorted[]} All cards for the format.
     */
    get cards()
    {
@@ -81,7 +86,73 @@ export class SortedFormat
    /**
     * @param {import('#types-command').ConfigSort} config -
     *
-    * @param {import('#types').Card[]} cards -
+    * @param {import('#types-command').CardSorted[]} cards -
+    */
+   #calculateMarked(config, cards)
+   {
+      /**
+       * @type {Map<string, { count: number }>}
+       */
+      const oracleMap = new Map();
+
+      /**
+       * @type {Map<string, { count: number }>}
+       */
+      const idMap = new Map();
+
+      const mark = config.mark;
+
+      for (const card of cards)
+      {
+         // Skip marked filenames.
+         if (mark.has(card.filename)) { continue; }
+
+         if (oracleMap.has(card.oracle_id))
+         {
+            oracleMap.get(card.oracle_id).count += card.quantity;
+         }
+         else
+         {
+            oracleMap.set(card.oracle_id, { count: card.quantity });
+         }
+
+         if (idMap.has(card.scryfall_id))
+         {
+            idMap.get(card.scryfall_id).count += card.quantity;
+         }
+         else
+         {
+            idMap.set(card.scryfall_id, { count: card.quantity });
+         }
+      }
+
+      for (const card of cards)
+      {
+         if (!mark.has(card.filename)) { continue; }
+
+         if (!oracleMap.has(card.oracle_id))
+         {
+            card.mark = 'ok';
+            continue;
+         }
+
+         if (idMap.has(card.scryfall_id) && idMap.get(card.scryfall_id).count >= 4)
+         {
+            card.mark = 'error';
+            continue;
+         }
+
+         if (oracleMap.has(card.oracle_id))
+         {
+            card.mark = 'warning';
+         }
+      }
+   }
+
+   /**
+    * @param {import('#types-command').ConfigSort} config -
+    *
+    * @param {import('#types-command').CardSorted[]} cards -
     */
    #sortRarity(config, cards)
    {
