@@ -3,6 +3,8 @@ import path       from 'node:path';
 
 import csv        from 'csv-parser';
 
+import type { CSVCard } from "#types";
+
 /**
  * Parses and stores intermediate card data from a single CSV file.
  *
@@ -12,24 +14,20 @@ export class ImportedIndex
 {
    /**
     * Basic 8-4-4-4-12 hexadecimal UUID test.
-    *
-    * @type {RegExp}
     */
-   static #regexUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+   static #regexUUID: RegExp = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
    /**
     * Stores the imported card data by Scryfall ID.
-    *
-    * @type {Map<string, import('#types').CSVCard>}
     */
-   #data = new Map();
+   #data: Map<string, CSVCard> = new Map();
 
    /**
-    * @param {string}   filepath - CSV filepath to load.
+    * @param filepath - CSV filepath to load.
     *
-    * @returns {Promise<ImportedIndex>} Import index of CSV card data.
+    * @returns Import index of CSV card data.
     */
-   static async fromCSV(filepath)
+   static async fromCSV(filepath: string): Promise<ImportedIndex>
    {
       return new Promise((resolve, reject) =>
       {

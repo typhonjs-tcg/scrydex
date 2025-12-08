@@ -66,11 +66,11 @@ export class TypeLineParse
    /**
     * Resolves a Scryfall type_line into a normalized card category.
     *
-    * @param {string} typeLine - Raw type_line text from Scryfall.
+    * @param typeLine - Raw type_line text from Scryfall.
     *
-    * @returns {string} Type category classification.
+    * @returns Type category classification.
     */
-   static resolve(typeLine)
+   static resolve(typeLine: string): string
    {
       // LAND handling -----------------------------------------------------------------------------------------------
 

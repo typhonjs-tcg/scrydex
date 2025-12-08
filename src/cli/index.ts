@@ -7,7 +7,7 @@ import {
    commandConvert,
    commandSort }              from './functions.js';
 
-import { wrap }               from './wrap.js';
+import { wrap }               from './wrap';
 
 import { supportedFormats }   from '#data';
 

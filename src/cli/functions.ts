@@ -15,13 +15,11 @@ import { logger }             from '#util';
 /**
  * Invokes `convert` with the given config and `dotenv` options.
  *
- * @param {string}   input - Manabox collection CSV input file path or directory path.
+ * @param input - Manabox collection CSV input file path or directory path.
  *
- * @param {object}   opts - CLI options.
- *
- * @returns {Promise<void>}
+ * @param opts - CLI options.
  */
-export async function commandConvert(input, opts)
+export async function commandConvert(input: string, opts: Record<string, any>): Promise<void>
 {
    // TODO: process options.
 
@@ -57,7 +55,7 @@ export async function commandConvert(input, opts)
    {
       await convert(config);
    }
-   catch (err)
+   catch (err: unknown)
    {
       if (logger.isLevelEnabled('debug'))
       {
@@ -77,7 +75,7 @@ export async function commandConvert(input, opts)
  *
  * @returns {Promise<void>}
  */
-export async function commandSort(input, opts)
+export async function commandSort(input: string, opts: Record<string, any>): Promise<void>
 {
    // TODO: process options.
 
@@ -150,11 +148,11 @@ export async function commandSort(input, opts)
 }
 
 /**
- * @param {string} message - A message.
+ * @param message - A message.
  *
- * @param {boolean} [exit=true] - Invoke `process.exit`.
+ * @param [exit=true] - Invoke `process.exit`.
  */
-function exit(message, exit = true)
+function exit(message: string, exit: boolean = true)
 {
    console.error(`[31m[scrydex] ${message}[0m`);
    if (exit) { process.exit(1); }

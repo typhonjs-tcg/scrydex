@@ -1,27 +1,21 @@
 /**
  * Supported Scryfall formats for legality checks.
- *
- * @type {ReadonlySet<string>}
  */
-const supportedFormats = Object.freeze(new Set(['standard', 'future', 'historic', 'timeless', 'gladiator', 'pioneer',
- 'modern', 'legacy', 'pauper', 'vintage', 'penny', 'commander', 'oathbreaker', 'standardbrawl', 'brawl', 'alchemy',
-  'paupercommander', 'duel', 'oldschool', 'premodern', 'predh']));
+const supportedFormats: ReadonlySet<string> = Object.freeze(new Set(['standard', 'future', 'historic', 'timeless',
+ 'gladiator', 'pioneer', 'modern', 'legacy', 'pauper', 'vintage', 'penny', 'commander', 'oathbreaker', 'standardbrawl',
+  'brawl', 'alchemy', 'paupercommander', 'duel', 'oldschool', 'premodern', 'predh']));
 
 /**
  * Legality values for a valid card in a given format.
- *
- * @type {ReadonlySet<string>}
  */
-const validLegality = Object.freeze(new Set(['legal', 'restricted']));
+const validLegality: ReadonlySet<string> = Object.freeze(new Set(['legal', 'restricted']));
 
 /**
  * These set types are excluded from determining a cards recent rarity. Over time a card such as `Force of Will`
  * and `Demonic Tutor` have gone from `Uncommon` to `Rare` / `Mythic Rare`. Ignore these set types in determining
  * highest rarity for a card.
- *
- * @type {ReadonlySet<string>}
  */
-const excludedSetTypesRecentRarity = Object.freeze(new Set([
+const excludedSetTypesRecentRarity: ReadonlySet<string> = Object.freeze(new Set([
    'duel_deck',
    'from_the_vault',
    'memorabilia',
@@ -34,10 +28,8 @@ const excludedSetTypesRecentRarity = Object.freeze(new Set([
 
 /**
  * These early sets are excluded from determining a cards recent rarity.
- *
- * @type {ReadonlySet<string>}
  */
-const excludedSetsRecentRarity = Object.freeze(new Set([
+const excludedSetsRecentRarity: ReadonlySet<string> = Object.freeze(new Set([
    'sum',   // Summer Magic
    'bchr',  // Chronicles Foreign Black Border
    'ced',   // Collector's Edition

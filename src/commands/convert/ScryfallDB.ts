@@ -12,6 +12,13 @@ import {
    excludedSetTypesRecentRarity,
    TypeLineParse }      from '#data';
 
+import type {
+   Collection
+} from '#data';
+
+import type {
+   Card } from "#types";
+
 export class ScryfallDB
 {
    /**
