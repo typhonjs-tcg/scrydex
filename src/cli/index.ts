@@ -23,12 +23,12 @@ const program = sade('scrydex')
 
 program
 .command('convert [input]', 'Convert')
-.describe(`Converts CSV collection files to a compact Scryfall card collection.`)
-.option('--compact', `Output JSON DB will contain a card per row.`)
+.describe(`Converts CSV card collection files to a compact Scryfall card DB.`)
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
-.option('--indent', `Defines the JSON output indentation.`)
+.option('--indent', `Defines the JSON output indentation (0-8).`)
 .option('--output', 'Provide a file path for generated collection output.')
-.example('convert ./collection.csv --compact --output ./collection.json -db ./scryfall.json')
+.example('convert ./collection.csv --output ./collection.json -db ./scryfall.json')
+.example('convert ./collection-dir --output ./collection-all.json -db ./scryfall.json')
 .action(commandConvert);
 
 program.command('formats', `List all supported Scryfall game 'formats'.`)

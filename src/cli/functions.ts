@@ -48,11 +48,14 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
       input,
       output: opts.output,
       db: opts.db,
-      compact: typeof opts.compact === 'boolean' ? opts.compact : false,
+      compact: typeof opts.indent !== 'number', // Compact format by default when `indent` not defined.
       indent: typeof opts.indent === 'number' ? opts.indent : null
    };
 
-   if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    try
    {
@@ -86,17 +89,12 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
     console.log(`!!! CLI-sort - 0 - input: ${input}`);
     console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
 
-   if (opts.indent !== void 0 && typeof opts.indent !== 'number') { exit(`'indent' option is not a number.`); }
-   if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
-
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts['by-type'] !== void 0 && typeof opts['by-type'] !== 'boolean')
    {
       exit(`'by-type' option is not a boolean.`);
    }
-
-   if (opts.compact !== void 0 && typeof opts.compact !== 'boolean') { exit(`'compact' option is not a boolean.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
@@ -133,7 +131,10 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
       theme
    };
 
-   if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    try
    {
