@@ -50,6 +50,7 @@ export class ImportedIndex
                 new Error(`CSV file does not have required 'Quantity' or 'Scryfall ID' fields:\n${filepath}`));
             }
 
+            const name = row['Name'];
             const quantity = Number(row['Quantity']);
             const scryfall_id = row['Scryfall ID'];
             const foil = row['Foil'] ?? null;
@@ -66,23 +67,23 @@ export class ImportedIndex
                 new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
             }
 
-            /** @type {import('#types').CSVCard} */
-            const entry = {
-               object: 'card',
-               foil,
-               quantity,
-               scryfall_id,
-               filename
-            };
+            const existingCard = collection.get(scryfall_id);
 
             // TODO: Must consider foil state.
-            if (collection.has(entry.scryfall_id))
+            if (existingCard)
             {
-               collection.get(entry.scryfall_id).quantity += entry.quantity;
+               existingCard.quantity += quantity;
             }
             else
             {
-               collection.set(entry.scryfall_id, entry);
+               collection.set(scryfall_id, {
+                  object: 'card',
+                  name,
+                  foil,
+                  quantity,
+                  scryfall_id,
+                  filename
+               });
             }
          });
 
@@ -108,78 +109,77 @@ export class ImportedIndex
    }
 
    /**
-    * @param {string}   key - Scryfall ID.
+    * @param key - Scryfall ID.
     *
-    * @returns {boolean} Was the card deleted.
+    * @returns Was the card deleted.
     *
     * @privateRemarks
     * TODO: Must consider foil state.
     */
-   delete(key)
+   delete(key: string): boolean
    {
       return this.#data.delete(key);
    }
 
    /**
-    * @returns {MapIterator<[string, import('#types').CSVCard]>}
+    * @returns Iterator over entries.
     */
-   entries()
+   entries(): MapIterator<[string, CSVCard]>
    {
       return this.#data.entries();
    }
 
    /**
-    * @param {string}   key - Scryfall ID
+    * @param key - Scryfall ID.
     *
-    * @returns {boolean} Does this index contain the card?
+    * @returns Does this index contain the card?
     *
     * @privateRemarks
     * TODO: Must consider foil state.
     */
-   has(key)
+   has(key: string): boolean
    {
       return this.#data.has(key);
    }
 
    /**
-    * @returns {MapIterator<string>} Scryfall ID iterator.
+    * @returns Scryfall ID iterator.
     */
-   keys()
+   keys(): MapIterator<string>
    {
       return this.#data.keys();
    }
 
    /**
-    * @param {string}   key - Scryfall ID
+    * @param key - Scryfall ID
     *
-    * @returns {import('#types').CSVCard} CSVCard data.
+    * @returns CSVCard data.
     *
     * @privateRemarks
     * TODO: Must consider foil state.
     */
-   get(key)
+   get(key: string): CSVCard | undefined
    {
       return this.#data.get(key);
    }
 
    /**
+    * @param key - Scryfall ID.
     *
-    * @param {string}   key - Scryfall ID
+    * @param value - CSVCard data.
     *
-    * @param {import('#types').CSVCard}   value - CSVCard data.
-    *
-    * @returns {this} This instance.
+    * @returns This instance.
     */
-   set(key, value)
+   set(key: string, value: CSVCard): this
    {
       this.#data.set(key, value);
       return this;
    }
 
    /**
-    * @returns {MapIterator<import('#types').CSVCard>} CSVCard iterator.
+    * @returns CSVCard iterator.
     */
-   values()
+   values(): MapIterator<CSVCard>
    {
       return this.#data.values();
    }

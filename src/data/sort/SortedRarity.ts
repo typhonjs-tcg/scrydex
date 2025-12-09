@@ -1,25 +1,25 @@
+import type {
+   CardSorted } from '#types-command';
+
 export class SortedRarity
 {
    /**
-    * @type {Map<string, import('#types-command').CardSorted[]>}
     */
-   #categories = new Map();
+   #categories: Map<string, CardSorted[]> = new Map();
 
    /**
     * Rarity value for this collection of cards.
-    *
-    * @type {string}
     */
-   #rarity;
+   readonly #rarity: string;
 
    #regexArtifact = /\bartifact\b/i;
    #regexBasicLand = /\bbasic\s+land\b/i;
    #regexLand = /\bland\b/i
 
    /**
-    * @param {string}   rarity - Rarity value for this collection of cards.
+    * @param rarity - Rarity value for this collection of cards.
     */
-   constructor(rarity)
+   constructor(rarity: string)
    {
       this.#rarity = rarity;
 
@@ -39,17 +39,17 @@ export class SortedRarity
    }
 
    /**
-    * @returns {string} Name for this group of cards.
+    * @returns Rarity name for this group of cards.
     */
-   get name()
+   get name(): string
    {
       return this.#rarity;
    }
 
    /**
-    * @returns {number} The total amount of cards at this rarity.
+    * @returns The total amount of cards at this rarity.
     */
-   get size()
+   get size(): number
    {
       let result = 0;
 
@@ -59,13 +59,13 @@ export class SortedRarity
    }
 
    /**
-    * @param {import('#types-command').CardSorted}   card - Card to add.
+    * @param card - Card to add.
     */
-   add(card)
+   add(card: CardSorted)
    {
       if (!Array.isArray(card.colors))
       {
-         this.#categories.get('Unsorted').push(card);
+         this.#categories.get('Unsorted')?.push(card);
          return;
       }
 
@@ -90,13 +90,16 @@ export class SortedRarity
    }
 
    /**
-    * @returns {MapIterator<[string, import('#types-command').CardSorted[]]>}
+    * @returns Entry iterator for category / cards.
     */
-   entries()
+   entries(): MapIterator<[string, CardSorted[]]>
    {
       return this.#categories.entries();
    }
 
+   /**
+    * Sort all categories by alpha / name.
+    */
    sortAlpha()
    {
       for (const cards of this.#categories.values())
@@ -105,6 +108,9 @@ export class SortedRarity
       }
    }
 
+   /**
+    * Sort all categories by normalized type line.
+    */
    sortType()
    {
       for (const cards of this.#categories.values())
@@ -116,49 +122,49 @@ export class SortedRarity
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
-    * @param {import('#types-command').CardSorted}   card -
+    * @param card -
     */
-   #sortColorless(card)
+   #sortColorless(card: CardSorted)
    {
       if (this.#regexArtifact.test(card.type_line))
       {
-         this.#categories.get('Artifact (Colorless)').push(card);
+         this.#categories.get('Artifact (Colorless)')?.push(card);
       }
       else if (this.#regexBasicLand.test(card.type_line))
       {
-         this.#categories.get('Basic Land').push(card);
+         this.#categories.get('Basic Land')?.push(card);
       }
       else if (this.#regexLand.test(card.type_line))
       {
-         this.#categories.get('Non-basic Land').push(card);
+         this.#categories.get('Non-basic Land')?.push(card);
       }
       else
       {
-         this.#categories.get('Non-artifact (Colorless)').push(card);
+         this.#categories.get('Non-artifact (Colorless)')?.push(card);
       }
    }
 
    /**
-    * @param {import('#types-command').CardSorted}   card -
+    * @param card -
     *
-    * @param {string[]} colorSource -
+    * @param colorSource -
     */
-   #sortMono(card, colorSource)
+   #sortMono(card: CardSorted, colorSource: string[])
    {
       const color = colorSource[0];
 
       const category = this.#categories.get(color.toUpperCase());
 
-      category.push(card);
+      category?.push(card);
    }
 
    /**
-    * @param {import('#types-command').CardSorted}   card -
+    * @param card -
     */
-   #sortMulti(card)
+   #sortMulti(card: CardSorted)
    {
       const category = this.#categories.get('Multicolor');
 
-      category.push(card);
+      category?.push(card);
    }
 }

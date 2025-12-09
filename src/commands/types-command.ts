@@ -97,17 +97,17 @@ interface ThemeData
       main: Partial<Font>
    }
 
+   get mark(): {
+      error: { fill: Fill, border: Partial<Borders> }
+      ok: { fill: Fill, border: Partial<Borders> }
+      warning: { fill: Fill, border: Partial<Borders> }
+   }
+
    get row(): {
       fill: {
          alternate: Fill,
          default: Fill
       }
-   }
-
-   get mark(): {
-      error: { fill: Fill, border: Partial<Borders> }
-      ok: { fill: Fill, border: Partial<Borders> }
-      warning: { fill: Fill, border: Partial<Borders> }
    }
 
    get sortByType(): {
@@ -116,6 +116,7 @@ interface ThemeData
 }
 
 export {
+   type CardSorted,
    type ConfigConvert,
    type ConfigSort,
    type ThemeData };

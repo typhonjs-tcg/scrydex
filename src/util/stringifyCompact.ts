@@ -1,11 +1,11 @@
 /**
  * Creates a compact / single entry per line string to serialize an object list.
  *
- * @param {object[]} source - A list of objects to serialize.
+ * @param source - A list of objects to serialize.
  *
- * @returns {string} JSON list as compact string.
+ * @returns JSON list as compact string.
  */
-export function stringifyCompact(source)
+export function stringifyCompact(source: object[]): string
 {
    let output = `[\n`;
 

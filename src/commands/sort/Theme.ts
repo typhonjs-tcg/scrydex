@@ -1,11 +1,20 @@
+import type {
+   Borders,
+   Fill,
+   Font }      from 'exceljs';
+
+import type {
+   ConfigSort,
+   ThemeData } from '#types-command';
+
 export class Theme
 {
    /**
-    * @param {import('#types-command').ConfigSort} config -
+    * @param config -
     *
-    * @returns {import('#types-command').ThemeData} Theme data.
+    * @returns Theme data.
     */
-   static get(config)
+   static get(config: ConfigSort): ThemeData
    {
       switch (config.theme)
       {
@@ -17,13 +26,21 @@ export class Theme
    }
 }
 
-class ThemeDark
+class ThemeDark implements ThemeData
 {
-   #cell;
-   #fonts;
-   #mark;
-   #row;
-   #sortByType;
+   readonly #cell: { border: Partial<Borders> };
+
+   readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font> };
+
+   readonly #mark: {
+      error: { fill: Fill, border: Partial<Borders> }
+      ok: { fill: Fill, border: Partial<Borders> }
+      warning: { fill: Fill, border: Partial<Borders> }
+   };
+
+   readonly #row: { fill: { alternate: Fill, default: Fill } };
+
+   readonly #sortByType: { border: Partial<Borders> };
 
    constructor()
    {
@@ -114,13 +131,21 @@ class ThemeDark
    }
 }
 
-class ThemeLight
+class ThemeLight implements ThemeData
 {
-   #cell;
-   #fonts;
-   #mark;
-   #row;
-   #sortByType;
+   readonly #cell: { border: Partial<Borders> };
+
+   readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font> };
+
+   readonly #mark: {
+      error: { fill: Fill, border: Partial<Borders> }
+      ok: { fill: Fill, border: Partial<Borders> }
+      warning: { fill: Fill, border: Partial<Borders> }
+   };
+
+   readonly #row: { fill: { alternate: Fill, default: Fill } };
+
+   readonly #sortByType: { border: Partial<Borders> };
 
    constructor()
    {

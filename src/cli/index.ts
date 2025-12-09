@@ -5,7 +5,7 @@ import { getPackage }         from '@typhonjs-utils/package-json';
 
 import {
    commandConvert,
-   commandSort }              from './functions.js';
+   commandSort }              from './functions';
 
 import { wrap }               from './wrap';
 
@@ -15,7 +15,7 @@ import { supportedFormats }   from '#data';
 const packageObj = getPackage({ filepath: import.meta.url });
 
 const program = sade('scrydex')
-.version(packageObj?.version)
+.version((packageObj as any)?.version)
 
 // Global options
 .option('-l, --loglevel', `Specify logging level: 'off', 'fatal', 'error', 'warn', 'info', 'debug', 'verbose', ` +

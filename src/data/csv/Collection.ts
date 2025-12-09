@@ -2,14 +2,15 @@ import {
    getFileList,
    isDirectory }           from '@typhonjs-utils/file-util';
 
-import { ImportedIndex }   from './ImportedIndex.js';
+import { ImportedIndex }   from './ImportedIndex';
 
 import { logger }          from "#util";
 
+import type { CSVCard }    from '#types';
+
 export class Collection
 {
-   /** @type {ImportedIndex[]} */
-   #index;
+   #index: ImportedIndex[];
 
    constructor()
    {
@@ -19,19 +20,19 @@ export class Collection
    /**
     * Load collection.
     *
-    * @param {string}   path - A single CSV file path or a directory path to load all `.csv` files.
+    * @param path - A single CSV file path or a directory path to load all `.csv` files.
     *
-    * @returns {Promise<Collection>} A new collection of all CSV card data.
+    * @returns A new collection of all CSV card data.
     */
-   static async load(path)
+   static async load(path: string): Promise<Collection>
    {
       return this.#loadPath(path);
    }
 
    /**
-    * @returns {number} Total count of all unique cards in the collection
+    * @returns Total count of all unique cards in the collection
     */
-   get size()
+   get size(): number
    {
       let result = 0;
 
@@ -43,9 +44,9 @@ export class Collection
    /**
     * Deletes card from all collection indexes.
     *
-    * @param {string}   key - Scryfall ID.
+    * @param key - Scryfall ID.
     */
-   delete(key)
+   delete(key: string)
    {
       for (let i = 0; i < this.#index.length; i++)
       {
@@ -54,9 +55,9 @@ export class Collection
    }
 
    /**
-    * @returns {Generator<[string,import('#types').CSVCard], void, *>}
+    * @returns Entries iterator.
     */
-   *entries()
+   *entries(): IterableIterator<[string, CSVCard]>
    {
       for (let i = 0; i < this.#index.length; i++)
       {
@@ -68,11 +69,11 @@ export class Collection
    }
 
    /**
-    * @param {string} key - Scryfall ID
+    * @param key - Scryfall ID.
     *
-    * @returns {boolean} Does any collection index have the given card.
+    * @returns Does any collection index have the given card.
     */
-   has(key)
+   has(key: string): boolean
    {
       for (let i = 0; i < this.#index.length; i++)
       {
@@ -83,9 +84,9 @@ export class Collection
    }
 
    /**
-    * @returns {Generator<string, void, *>} All unique Scryfall IDs contained in this collection.
+    * @returns Iterator for all unique Scryfall IDs contained in this collection.
     */
-   *keys()
+   *keys(): IterableIterator<string>
    {
       const seen = new Set();
 
@@ -105,11 +106,11 @@ export class Collection
    /**
     * Get all CSV card entries across all CSV indexed files for the given Scryfall ID.
     *
-    * @param {string}   key - Scryfall ID.
+    * @param key - Scryfall ID.
     *
-    * @returns {import('#types').CSVCard[] | undefined} An array of all CSV card entries matching the given key.
+    * @returns An array of all CSV card entries matching the given key.
     */
-   get(key)
+   get(key: string): CSVCard[] | undefined
    {
       let result = [];
 
@@ -124,10 +125,10 @@ export class Collection
    }
 
    /**
-    * @returns {Generator<import('#types').CSVCard, void, *>} All CSV card entries stored in this collection. May
-    *          contain duplicate cards from separate CSV index files.
+    * @returns Iterator for all CSV card entries stored in this collection. May contain duplicate cards from separate
+    * CSV index files.
     */
-   *values()
+   *values(): IterableIterator<CSVCard>
    {
       for (let i = 0; i < this.#index.length; i++)
       {
@@ -143,11 +144,11 @@ export class Collection
    /**
     * Load collection.
     *
-    * @param {string}   path - A single CSV file path or a directory path to load all `.csv` files.
+    * @param path - A single CSV file path or a directory path to load all `.csv` files.
     *
-    * @returns {Promise<Collection>} A new collection of all CSV card data.
+    * @returns A new collection of all CSV card data.
     */
-   static async #loadPath(path)
+   static async #loadPath(path: string): Promise<Collection>
    {
       const collection = new Collection();
 

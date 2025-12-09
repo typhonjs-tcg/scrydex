@@ -1,32 +1,27 @@
-import { SortedRarity } from './SortedRarity.js';
+import { SortedRarity } from './SortedRarity';
 
 import { logger }       from '#util';
 
+import type {
+   CardSorted,
+   ConfigSort }         from '#types-command';
+
 export class SortedFormat
 {
-   /**
-    * @type {import('#types-command').CardSorted[]}
-    */
-   #cards;
+   readonly #cards: CardSorted[];
+
+   readonly #format: string;
+
+   #rarity: Map<string, SortedRarity>;
 
    /**
-    * @type {string}
-    */
-   #format;
-
-   /**
-    * @type {Map<string, SortedRarity>}
-    */
-   #rarity;
-
-   /**
-    * @param {import('#types-command').ConfigSort} config -
+    * @param config -
     *
-    * @param {string} format -
+    * @param format -
     *
-    * @param {import('#types-command').CardSorted[]} cards -
+    * @param cards -
     */
-   constructor(config, format, cards)
+   constructor(config: ConfigSort, format: string, cards: CardSorted[])
    {
       this.#cards = cards;
       this.#format = format;
@@ -42,41 +37,41 @@ export class SortedFormat
    }
 
    /**
-    * @returns {import('#types-command').CardSorted[]} All cards for the format.
+    * @returns All cards for the format.
     */
-   get cards()
+   get cards(): CardSorted[]
    {
       return this.#cards;
    }
 
    /**
-    * @returns {string} Format name / ID.
+    * @returns Format name / ID.
     */
-   get name()
+   get name(): string
    {
       return this.#format;
    }
 
    /**
-    * @returns {number} Count of cards in this format.
+    * @returns Count of cards in this format.
     */
-   get size()
+   get size(): number
    {
       return this.#cards.length;
    }
 
    /**
-    * @returns {MapIterator<[string, SortedRarity]>} Rarity groups.
+    * @returns Entry iterator of rarity groups.
     */
-   entries()
+   entries(): MapIterator<[string, SortedRarity]>
    {
       return this.#rarity.entries();
    }
 
    /**
-    * @returns {MapIterator<SortedRarity>}
+    * @returns Iterator of rarity groups.
     */
-   values()
+   values(): MapIterator<SortedRarity>
    {
       return this.#rarity.values();
    }
@@ -84,21 +79,21 @@ export class SortedFormat
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
-    * @param {import('#types-command').ConfigSort} config -
+    * @param config -
     *
-    * @param {import('#types-command').CardSorted[]} cards -
+    * @param cards -
     */
-   #calculateMarked(config, cards)
+   #calculateMarked(config: ConfigSort, cards: CardSorted[])
    {
       /**
-       * @type {Map<string, { count: number }>}
+       * Scryfall oracle ID map.
        */
-      const oracleMap = new Map();
+      const oracleMap: Map<string, { count: number }> = new Map();
 
       /**
-       * @type {Map<string, { count: number }>}
+       * Scryfall card ID map.
        */
-      const idMap = new Map();
+      const idMap: Map<string, { count: number }> = new Map();
 
       const mark = config.mark;
 
@@ -107,18 +102,22 @@ export class SortedFormat
          // Skip marked filenames.
          if (mark.has(card.filename)) { continue; }
 
-         if (oracleMap.has(card.oracle_id))
+         const existingOracleCard = oracleMap.get(card.oracle_id);
+
+         if (existingOracleCard)
          {
-            oracleMap.get(card.oracle_id).count += card.quantity;
+            existingOracleCard.count += card.quantity;
          }
          else
          {
             oracleMap.set(card.oracle_id, { count: card.quantity });
          }
 
-         if (idMap.has(card.scryfall_id))
+         const existingIDCard = idMap.get(card.scryfall_id);
+
+         if (existingIDCard)
          {
-            idMap.get(card.scryfall_id).count += card.quantity;
+            existingIDCard.count += card.quantity;
          }
          else
          {
@@ -136,7 +135,9 @@ export class SortedFormat
             continue;
          }
 
-         if (idMap.has(card.scryfall_id) && idMap.get(card.scryfall_id).count >= 4)
+         const existingIDCard = idMap.get(card.scryfall_id);
+
+         if (existingIDCard && existingIDCard.count >= 4)
          {
             card.mark = 'error';
             continue;
@@ -150,11 +151,11 @@ export class SortedFormat
    }
 
    /**
-    * @param {import('#types-command').ConfigSort} config -
+    * @param config -
     *
-    * @param {import('#types-command').CardSorted[]} cards -
+    * @param cards -
     */
-   #sortRarity(config, cards)
+   #sortRarity(config: ConfigSort, cards: CardSorted[])
    {
       for (const card of cards)
       {

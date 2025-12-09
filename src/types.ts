@@ -154,6 +154,11 @@ interface CSVCard
    foil: string | null;
 
    /**
+    * Card name when defined in CSV file.
+    */
+   name?: string;
+
+   /**
     * Total count of this card.
     */
    quantity: number;

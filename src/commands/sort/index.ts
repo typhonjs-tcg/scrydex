@@ -3,7 +3,7 @@ import path                   from 'node:path';
 
 import { isDirectory }        from '@typhonjs-utils/file-util';
 
-import { ExportSpreadsheet }  from './ExportSpreadsheet.js';
+import { ExportSpreadsheet }  from './ExportSpreadsheet';
 
 import {
    SortedFormat,
@@ -13,14 +13,15 @@ import {
    logger,
    stringifyCompact }         from '#util';
 
+import type { Card }          from '#types';
+import type { ConfigSort }    from '#types-command';
+
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
  *
- * @param {import('#types-command').ConfigSort}   config - Config options.
- *
- * @returns {Promise<void>}
+ * @param config - Config options.
  */
-export async function sort(config)
+export async function sort(config: ConfigSort): Promise<void>
 {
    logger.info(`Sorting Scryfall card collection: ${config.input}`);
    logger.info(`Formats: ${config.formats.join(', ')}`);
@@ -53,21 +54,21 @@ export async function sort(config)
 }
 
 /**
- * @param {import('#types-command').ConfigSort} config -
+ * @param config -
  *
- * @returns {SortedFormat[]}
+ * @returns All sorted formats.
  */
-function formatSort(config)
+function formatSort(config: ConfigSort): SortedFormat[]
 {
    /**
-    * @type {Map<string, import('#types').Card[]>}
     */
-   const presortFormat = new Map(config.formats.map((entry) => [entry, []]));
+   const presortFormat: Map<string, Card[]> = new Map(config.formats.map((entry) => [entry, []]));
 
    presortFormat.set('unsorted', []);
 
-   /** @type {import('#types').Card[]} */
-   const db = JSON.parse(fs.readFileSync(config.input, 'utf8'));
+   /**
+    */
+   const db: Card[] = JSON.parse(fs.readFileSync(config.input, 'utf8'));
 
    for (const card of db)
    {
@@ -77,18 +78,21 @@ function formatSort(config)
       {
          if (validLegality.has(card.legalities?.[format]))
          {
-            presortFormat.get(format).push(card);
+            presortFormat.get(format)?.push(card);
             sorted = true;
             break;
          }
       }
 
-      if (!sorted) { presortFormat.get('unsorted').push(card); }
+      if (!sorted) { presortFormat.get('unsorted')?.push(card); }
    }
 
    for (const format of presortFormat.keys())
    {
-      presortFormat.set(format, presortFormat.get(format).sort((a, b) => a.name.localeCompare(b.name)))
+      const formatSort = presortFormat.get(format);
+      if (!formatSort) { continue; }
+
+      presortFormat.set(format, formatSort.sort((a, b) => a.name.localeCompare(b.name)))
    }
 
    /**

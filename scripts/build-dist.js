@@ -6,7 +6,7 @@ import { $ }   from 'bun';
 // Builds binary distributable for current platform.
 
 const APP_NAME = 'scrydex';
-const ENTRY = 'src/cli/index.js';
+const ENTRY = 'src/cli/index.ts';
 const OUT_DIR = 'dist';
 
 // Resolve paths.
@@ -38,7 +38,7 @@ switch (arch)
 }
 
 // Temp output name (bun always writes with its own name).
-const tempOut = path.resolve(distDir, APP_NAME + (os === 'windows' ? '.exe' : ''));
+const tempOut = path.resolve(distDir, `${APP_NAME}${os === 'windows' ? '.exe' : ''}`);
 
 // Final output name.
 const outFile = path.resolve(distDir,`${APP_NAME}-${os}-${arch}${os === 'windows' ? '.exe' : ''}`);

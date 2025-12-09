@@ -5,10 +5,8 @@ export class ManaCostNote
 {
    /**
     * Maps single mana symbols to English names.
-    *
-    * @type {Record<string, string>}
     */
-   static #COLOR_NAMES = {
+   static #COLOR_NAMES: Record<string, string> = {
       W: 'white',
       U: 'blue',
       B: 'black',
@@ -20,19 +18,17 @@ export class ManaCostNote
 
    /**
     * Detects color name.
-    *
-    * @type {RegExp}
     */
    static #regexColors = /\b(white|blue|black|red|green|colorless|snow)\b/;
 
    /**
     * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
     *
-    * @param {string} manaCost - Card mana cost string to translate.
+    * @param manaCost - Card mana cost string to translate.
     *
-    * @returns {string} English description.
+    * @returns English description.
     */
-   static translate(manaCost)
+   static translate(manaCost: string): string
    {
       // Extract symbols between `{}`.
       const tokens = Array.from(manaCost.matchAll(/\{([^}]+)\}/g)).map((m) => m[1]);
@@ -41,10 +37,8 @@ export class ManaCostNote
 
       /**
        * Count occurrences.
-       *
-       * @type {Map<string, number>}
        */
-      const counts = new Map();
+      const counts: Map<string, number> = new Map();
 
       for (const token of tokens) { counts.set(token, (counts.get(token) ?? 0) + 1); }
 
@@ -81,11 +75,11 @@ export class ManaCostNote
    /**
     * Translates a single Scryfall mana symbol; IE `W`, `2/W`, `W/P`, `X`.
     *
-    * @param {string} symbol -
+    * @param symbol -
     *
-    * @returns {string} English description.
+    * @returns English description.
     */
-   static #describeUnit(symbol)
+   static #describeUnit(symbol: string): string
    {
       // `X` / unbounded generic.
       if (symbol === 'X') { return '𝗫 generic'; }

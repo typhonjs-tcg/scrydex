@@ -2,8 +2,18 @@ import path             from 'node:path';
 
 import Excel            from 'exceljs';
 
-import { ManaCostNote } from './ManaCostNote.js';
-import { Theme }        from './Theme.js';
+import { ManaCostNote } from './ManaCostNote';
+import { Theme }        from './Theme';
+
+import type {
+   Worksheet }          from 'exceljs';
+
+import type {
+   SortedFormat,
+   SortedRarity }       from '#data';
+
+import type {
+   ConfigSort }         from '#types-command';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
@@ -11,15 +21,16 @@ import { Theme }        from './Theme.js';
 export class ExportSpreadsheet
 {
    /**
-    * @param {import('#types-command').ConfigSort} config -
+    * @param config -
     *
-    * @param {SortedFormat}   format -
+    * @param format -
     *
-    * @param {SortedRarity}   rarity -
+    * @param rarity -
     *
-    * @param {string}   formatDirPath -
+    * @param formatDirPath -
     */
-   static async exportFormatRarity(config, format, rarity, formatDirPath)
+   static async exportFormatRarity(config: ConfigSort, format: SortedFormat, rarity: SortedRarity,
+    formatDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
 
@@ -50,7 +61,7 @@ export class ExportSpreadsheet
             { header: 'Scryfall Link', key: 'Scryfall Link', width: 20, alignment: { horizontal: 'center' } }
          ];
 
-         let prevType = void 0;
+         let prevType: string | undefined = void 0;
 
          for (const card of cards)
          {
@@ -76,12 +87,14 @@ export class ExportSpreadsheet
             if (config.mark.has(card.filename) && typeof card.mark === 'string')
             {
                // Indicate that this row has been colored.
-               row._marked = true;
+               (row as any)._marked = true;
+
+               const mark = card.mark;
 
                row.eachCell((cell) =>
                {
-                  cell.fill = theme.mark[card.mark].fill;
-                  cell.border = theme.mark[card.mark].border;
+                  cell.fill = theme.mark[mark].fill;
+                  cell.border = theme.mark[mark].border;
                });
             }
 
@@ -140,7 +153,7 @@ export class ExportSpreadsheet
          // Shade rows 2..N.
          ws.eachRow({ includeEmpty: false }, (row, rowNum) =>
          {
-            if (typeof row._marked === 'boolean' && row._marked) { return; }   // Skip `marked` overrides.
+            if (typeof (row as any)._marked === 'boolean' && (row as any)._marked) { return; }   // Skip `marked` overrides.
 
             if (rowNum === 1) { return; } // Skip header row.
 
@@ -172,22 +185,24 @@ export class ExportSpreadsheet
    /**
     * Auto sizes sheet columns to contained content.
     *
-    * @param {import('exceljs').Worksheet}   ws -
+    * @param ws -
     */
-   static #autosize(ws)
+   static #autosize(ws: Worksheet)
    {
-      ws.columns.forEach((col) =>
+      for (const col of ws.columns)
       {
-         let max = col.header.length;
+         if (!col || !col.eachCell) { continue; }
+
+         let max = col?.header?.length ?? 0;
 
          col.eachCell({ includeEmpty: true }, (cell) =>
          {
-            if (!cell.value) return;
+            if (!cell.value) { return; }
 
             let text;
-            if (typeof cell.value === 'object' && cell.value.text)
+            if (typeof cell.value === 'object' && (cell.value as Excel.Cell).text)
             {
-               text = cell.value.text; // hyperlink visible label.
+               text = (cell.value as Excel.Cell).text; // hyperlink visible label.
             }
             else
             {
@@ -198,6 +213,6 @@ export class ExportSpreadsheet
          });
 
          col.width = Math.min(65, max + 6);
-      });
+      }
    }
 }

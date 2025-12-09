@@ -1,0 +1,15 @@
+{
+  "compilerOptions" : {
+    "baseUrl": ".",
+    "lib": ["ES2022", "DOM"],
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "customConditions": ["node"],
+
+    "strict": true
+  },
+  "include": [
+    "./**/*"
+  ]
+}

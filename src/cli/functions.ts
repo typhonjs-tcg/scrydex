@@ -12,6 +12,10 @@ import { supportedFormats }   from '#data';
 
 import { logger }             from '#util';
 
+import type {
+   ConfigConvert,
+   ConfigSort }               from '#types-command';
+
 /**
  * Invokes `convert` with the given config and `dotenv` options.
  *
@@ -40,8 +44,7 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
 
    if(!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
-   /** @type {import('#types-command').ConfigConvert} */
-   const config = {
+   const config: ConfigConvert = {
       input,
       output: opts.output,
       db: opts.db,
@@ -57,12 +60,13 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    }
    catch (err: unknown)
    {
-      if (logger.isLevelEnabled('debug'))
-      {
-         console.error(err);
-      }
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
 
-      exit(err?.message);
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
    }
 }
 
@@ -109,7 +113,7 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
 
    if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined`); }
 
-   const mark = typeof opts.mark === 'string' ? new Set(opts.mark.split(':')) : new Set();
+   const mark: Set<string> = typeof opts.mark === 'string' ? new Set(opts.mark.split(':')) : new Set();
 
    if (opts.theme !== void 0)
    {
@@ -120,8 +124,7 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
 
    const theme = opts.theme === 'dark' ? 'dark' : 'light';
 
-   /** @type {import('#types-command').ConfigSort} */
-   const config = {
+   const config: ConfigSort = {
       input,
       output: opts.output,
       formats,
@@ -138,12 +141,13 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
    }
    catch (err)
    {
-      if (logger.isLevelEnabled('debug'))
-      {
-         console.error(err);
-      }
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
 
-      exit(err?.message);
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
    }
 }
 
