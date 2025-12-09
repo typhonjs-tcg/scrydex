@@ -13,7 +13,7 @@ import {
    logger,
    stringifyCompact }               from '#util';
 
-import type { Collection }          from '#data';
+import type { CSVCollection }       from '#data';
 import type { Card }                from '#types';
 import type { ConfigConvert }       from '#types-command';
 
@@ -24,7 +24,7 @@ export class ScryfallDB
     *
     * @param collection -
     */
-   static async exportCollection(config: ConfigConvert, collection: Collection): Promise<void>
+   static async exportCollection(config: ConfigConvert, collection: CSVCollection): Promise<void>
    {
       const outputDB: Card[] = [];
 

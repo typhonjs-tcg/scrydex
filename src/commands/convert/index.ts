@@ -1,4 +1,4 @@
-import { Collection }   from '#data';
+import { CSVCollection }   from '#data';
 
 import { ScryfallDB }   from './ScryfallDB';
 
@@ -12,7 +12,7 @@ import type {
  */
 export async function convert(config: ConfigConvert): Promise<void>
 {
-   const collection = await Collection.load(config.input);
+   const collection = await CSVCollection.load(config.input);
 
    await ScryfallDB.exportCollection(config, collection);
 }

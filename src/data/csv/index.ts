@@ -1,2 +1,2 @@
-export * from './Collection';
-export * from './ImportedIndex';
+export * from './CSVCollection';
+export * from './CSVCardIndex';

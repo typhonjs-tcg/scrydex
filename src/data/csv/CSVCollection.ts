@@ -2,15 +2,15 @@ import {
    getFileList,
    isDirectory }           from '@typhonjs-utils/file-util';
 
-import { ImportedIndex }   from './ImportedIndex';
+import { CSVCardIndex }    from './CSVCardIndex';
 
 import { logger }          from "#util";
 
 import type { CSVCard }    from '#types';
 
-export class Collection
+export class CSVCollection
 {
-   #index: ImportedIndex[];
+   #index: CSVCardIndex[];
 
    constructor()
    {
@@ -24,7 +24,7 @@ export class Collection
     *
     * @returns A new collection of all CSV card data.
     */
-   static async load(path: string): Promise<Collection>
+   static async load(path: string): Promise<CSVCollection>
    {
       return this.#loadPath(path);
    }
@@ -148,9 +148,9 @@ export class Collection
     *
     * @returns A new collection of all CSV card data.
     */
-   static async #loadPath(path: string): Promise<Collection>
+   static async #loadPath(path: string): Promise<CSVCollection>
    {
-      const collection = new Collection();
+      const collection = new CSVCollection();
 
       if (isDirectory(path))
       {
@@ -162,7 +162,7 @@ export class Collection
          {
             logger.verbose(`Loading file path: ${file}`);
 
-            collection.#index.push(await ImportedIndex.fromCSV(file));
+            collection.#index.push(await CSVCardIndex.fromCSV(file));
          }
 
          logger.info('Done extracting CSV collection files.');
@@ -171,7 +171,7 @@ export class Collection
       {
          logger.verbose(`Loading file path: ${path}`);
 
-         collection.#index.push(await ImportedIndex.fromCSV(path));
+         collection.#index.push(await CSVCardIndex.fromCSV(path));
 
          logger.info('Done extracting CSV collection file.');
       }

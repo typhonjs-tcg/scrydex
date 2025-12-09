@@ -10,7 +10,7 @@ import type { CSVCard } from "#types";
  *
  * Stores the imported card data by Scryfall ID and combines quantity for duplicate entries.
  */
-export class ImportedIndex
+export class CSVCardIndex
 {
    /**
     * Basic 8-4-4-4-12 hexadecimal UUID test.
@@ -27,13 +27,13 @@ export class ImportedIndex
     *
     * @returns Import index of CSV card data.
     */
-   static async fromCSV(filepath: string): Promise<ImportedIndex>
+   static async fromCSV(filepath: string): Promise<CSVCardIndex>
    {
       return new Promise((resolve, reject) =>
       {
          const filename = path.basename(filepath, '.csv');
 
-         const collection = new ImportedIndex();
+         const collection = new CSVCardIndex();
 
          // Read and extract Scryfall IDs.
          const stream = fs.createReadStream(filepath).pipe(csv());
