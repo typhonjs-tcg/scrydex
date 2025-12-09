@@ -1,20 +1,21 @@
-import fs                     from 'node:fs';
-import chain                  from 'stream-chain';
-import parser                 from 'stream-json';
-import StreamArray            from 'stream-json/streamers/StreamArray.js';
+import fs                           from 'node:fs';
+import chain                        from 'stream-chain';
+import parser                       from 'stream-json';
+import StreamArray                  from 'stream-json/streamers/StreamArray.js';
 
-import {
-   logger,
-   stringifyCompact }         from '#util';
+import { TypeLineParse }            from './TypeLineParse';
 
 import {
    excludedSetsRecentRarity,
-   excludedSetTypesRecentRarity,
-   TypeLineParse }            from '#data';
+   excludedSetTypesRecentRarity }   from '#data';
 
-import type { Collection }    from '#data';
-import type { Card }          from '#types';
-import type { ConfigConvert } from '#types-command';
+import {
+   logger,
+   stringifyCompact }               from '#util';
+
+import type { Collection }          from '#data';
+import type { Card }                from '#types';
+import type { ConfigConvert }       from '#types-command';
 
 export class ScryfallDB
 {
