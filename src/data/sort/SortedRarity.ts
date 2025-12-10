@@ -33,8 +33,8 @@ export class SortedRarity
       this.#categories.set('Multicolor', []);
       this.#categories.set('Artifact (Colorless)', []);
       this.#categories.set('Non-artifact (Colorless)', []);
-      this.#categories.set('Basic Land', []);
-      this.#categories.set('Non-basic Land', []);
+      this.#categories.set('Land', []);
+      this.#categories.set('Land (Basic)', []);
       this.#categories.set('Unsorted', []);
    }
 
@@ -132,11 +132,11 @@ export class SortedRarity
       }
       else if (this.#regexBasicLand.test(card.type_line))
       {
-         this.#categories.get('Basic Land')?.push(card);
+         this.#categories.get('Land (Basic)')?.push(card);
       }
       else if (this.#regexLand.test(card.type_line))
       {
-         this.#categories.get('Non-basic Land')?.push(card);
+         this.#categories.get('Land')?.push(card);
       }
       else
       {
