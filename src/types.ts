@@ -40,7 +40,7 @@ interface Card extends CSVCard
    keywords: string[];
 
    /**
-    * Language code.
+    * Scryfall language code.
     */
    lang: string;
 
@@ -72,6 +72,11 @@ interface Card extends CSVCard
     * The Oracle text for this card, if any.
     */
    oracle_text: string;
+
+   /**
+    * The card name as printed in associated language.
+    */
+   printed_name: string;
 
    /**
     * Colors of mana that this card could produce.
@@ -152,6 +157,11 @@ interface CSVCard
     * Foil variation if any.
     */
    foil: string | null;
+
+   /**
+    * Language code from CSV file.
+    */
+   lang_csv?: string;
 
    /**
     * Card name when defined in CSV file.

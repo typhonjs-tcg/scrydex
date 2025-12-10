@@ -96,18 +96,16 @@ export class ScryfallDB
          {
             const card: Card = {
                object: 'card',
-               name: scryCard.printed_name ?? scryCard.name,
-               lang: scryCard.lang,
+               name: scryCard.name,
                type: TypeLineParse.resolve(scryCard.type_line),
                rarity: scryCard.rarity,
-               rarity_orig: scryCard.rarity,
-               rarity_recent: scryCard.rarity,
                quantity: csvCard.quantity,
-               filename: csvCard.filename,
                set: scryCard.set,
                set_name: scryCard.set_name,
                set_type: scryCard.set_type,
                collector_number: scryCard.collector_number,
+               lang: scryCard.lang,
+               lang_csv: csvCard.lang_csv,
                cmc: scryCard.cmc,
                colors: scryCard.colors,
                color_identity: scryCard.color_identity,
@@ -120,6 +118,10 @@ export class ScryfallDB
                produced_mana: scryCard.produced_mana,
                released_at: scryCard.released_at,
                type_line: scryCard.type_line,
+               filename: csvCard.filename,
+               printed_name: scryCard.printed_name,
+               rarity_orig: scryCard.rarity,
+               rarity_recent: scryCard.rarity,
                legalities: scryCard.legalities ?? {},
                scryfall_uri: scryCard.scryfall_uri,
                oracle_id: scryCard.oracle_id,
@@ -132,6 +134,9 @@ export class ScryfallDB
          }
 
          collection.delete(scryCard.id);
+
+         // Early out if there are no more cards to match.
+         if (collection.size === 0) { break; }
       }
 
       /**

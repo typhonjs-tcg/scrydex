@@ -1,35 +1,26 @@
+import { CardFields }   from '#data';
+
+import { Card }         from '#types';
+
 /**
- * Helper to translate card mana cost to English phrase. Used in spreadsheet for note / comment on each mana cost cell.
+ * Helper to create additional cell notes used in spreadsheet for note / comment on applicable cells.
+ *
+ * - Translate card mana cost to English phrase.
+ * - Translate foreign card name to English.
  */
-export class ManaCostNote
+export class Notes
 {
-   /**
-    * Maps single mana symbols to English names.
-    */
-   static #COLOR_NAMES: Record<string, string> = {
-      W: 'white',
-      U: 'blue',
-      B: 'black',
-      R: 'red',
-      G: 'green',
-      C: 'colorless',
-      S: 'snow'
-   };
-
-   /**
-    * Detects color name.
-    */
-   static #regexColors = /\b(white|blue|black|red|green|colorless|snow)\b/;
-
    /**
     * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
     *
-    * @param manaCost - Card mana cost string to translate.
+    * @param card - Card to convert mana cost to string note.
     *
     * @returns English description.
     */
-   static translate(manaCost: string): string
+   static manaCost(card: Card): string
    {
+      const manaCost = card.mana_cost;
+
       // Extract symbols between `{}`.
       const tokens = Array.from(manaCost.matchAll(/\{([^}]+)\}/g)).map((m) => m[1]);
 
@@ -70,7 +61,37 @@ export class ManaCostNote
       return `➤ ${fragments.join('\n➤ ')}`;
    }
 
-   // Internal Implementation ----------------------------------------------------------------------------------------
+   /**
+    * @param card - Card to provide any foreign name and original language code.
+    */
+   static nameForeign(card: Card): string
+   {
+      const lang = CardFields.langCode(card);
+
+      const name = card.lang !== lang ? '' : `${card.printed_name ?? card.name}\n`;
+
+      return `${name}Language: ${CardFields.langName(card)}`;
+   }
+
+   // Internal Implementation (`manaCost`) ---------------------------------------------------------------------------
+
+   /**
+    * Maps single mana symbols to English names.
+    */
+   static #COLOR_NAMES: Record<string, string> = {
+      W: 'white',
+      U: 'blue',
+      B: 'black',
+      R: 'red',
+      G: 'green',
+      C: 'colorless',
+      S: 'snow'
+   };
+
+   /**
+    * Detects color name.
+    */
+   static #regexColors = /\b(white|blue|black|red|green|colorless|snow)\b/;
 
    /**
     * Translates a single Scryfall mana symbol; IE `W`, `2/W`, `W/P`, `X`.
@@ -114,4 +135,3 @@ export class ManaCostNote
       return symbol;
    }
 }
-

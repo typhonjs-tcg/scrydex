@@ -2,8 +2,10 @@ import path             from 'node:path';
 
 import Excel            from 'exceljs';
 
-import { ManaCostNote } from './ManaCostNote';
+import { Notes }        from './Notes';
 import { Theme }        from './Theme';
+
+import { CardFields }   from '#data';
 
 import type {
    Worksheet }          from 'exceljs';
@@ -66,7 +68,7 @@ export class ExportSpreadsheet
          for (const card of cards)
          {
             const row = ws.addRow({
-               Name: card.name,
+               Name: CardFields.name(card),
                Quantity: Number(card.quantity),
                Filename: card.filename,
                Type: card.type,
@@ -118,9 +120,16 @@ export class ExportSpreadsheet
                linkCell.font = theme.fonts.link;
             }
 
+            // Add natural language note for mana cost.
             if (typeof card.mana_cost === 'string' && card.mana_cost.length)
             {
-               row.getCell('Mana Cost').note = ManaCostNote.translate(card.mana_cost)
+               row.getCell('Mana Cost').note = Notes.manaCost(card)
+            }
+
+            // Add English language note for foreign card name.
+            if (CardFields.langCode(card) !== 'en')
+            {
+               row.getCell('Name').note = Notes.nameForeign(card);
             }
          }
 

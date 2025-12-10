@@ -1,9 +1,11 @@
-import fs         from 'node:fs';
-import path       from 'node:path';
+import fs                  from 'node:fs';
+import path                from 'node:path';
 
-import csv        from 'csv-parser';
+import csv                 from 'csv-parser';
 
-import type { CSVCard } from "#types";
+import { supportedLang }   from '#data';
+
+import type { CSVCard }    from "#types";
 
 /**
  * Parses and stores intermediate card data from a single CSV file.
@@ -54,6 +56,7 @@ export class CSVCardIndex
             const quantity = Number(row['Quantity']);
             const scryfall_id = row['Scryfall ID'];
             const foil = row['Foil'] ?? null;
+            const lang_csv = supportedLang.get(row['Language']);
 
             if (!Number.isInteger(quantity) || quantity < 1)
             {
@@ -80,6 +83,7 @@ export class CSVCardIndex
                   object: 'card',
                   name,
                   foil,
+                  lang_csv,
                   quantity,
                   scryfall_id,
                   filename
