@@ -172,6 +172,15 @@ export class ExportSpreadsheet
             }
          });
 
+         // Set last row bottom border to complete the table only when there already isn't a border defined.
+         ws.lastRow?.eachCell((cell) =>
+         {
+            if (!cell.border.bottom)
+            {
+               cell.border = { ...cell.border, ...theme.row.lastRow.border };
+            }
+         });
+
          // Add additional dummy rows for theme expansion beyond table.
          if (config.theme === 'dark')
          {

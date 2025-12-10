@@ -107,6 +107,10 @@ interface ThemeData
       fill: {
          alternate: Fill,
          default: Fill
+      },
+
+      lastRow: {
+         border: Partial<Borders>
       }
    }
 

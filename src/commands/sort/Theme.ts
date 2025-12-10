@@ -38,7 +38,7 @@ class ThemeDark implements ThemeData
       warning: { fill: Fill, border: Partial<Borders> }
    };
 
-   readonly #row: { fill: { alternate: Fill, default: Fill } };
+   readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
 
    readonly #sortByType: { border: Partial<Borders> };
 
@@ -95,6 +95,12 @@ class ThemeDark implements ThemeData
                pattern: 'solid',
                fgColor: { argb: 'FF1A1A1A' }
             }
+         },
+
+         lastRow: {
+            border: {
+               bottom:  { style: 'thin', color: { argb: 'FF777777' } }
+            }
          }
       };
 
@@ -143,7 +149,7 @@ class ThemeLight implements ThemeData
       warning: { fill: Fill, border: Partial<Borders> }
    };
 
-   readonly #row: { fill: { alternate: Fill, default: Fill } };
+   readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
 
    readonly #sortByType: { border: Partial<Borders> };
 
@@ -206,6 +212,12 @@ class ThemeLight implements ThemeData
                type: 'pattern',
                pattern: 'solid',
                fgColor: { argb: 'FFFFFFFF' } // white
+            }
+         },
+
+         lastRow: {
+            border: {
+               bottom:  { style: 'thin', color: { argb: 'FF777777' } }
             }
          }
       };
