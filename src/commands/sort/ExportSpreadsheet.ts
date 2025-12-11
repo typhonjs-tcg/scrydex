@@ -173,7 +173,7 @@ export class ExportSpreadsheet
          });
 
          // Set last row bottom border to complete the table only when there already isn't a border defined.
-         ws.lastRow?.eachCell((cell) =>
+         ws.lastRow?.eachCell({ includeEmpty: true }, (cell) =>
          {
             if (!cell.border.bottom)
             {
