@@ -187,6 +187,6 @@ export class SortedFormat
          }
       }
 
-      logger.verbose(`Sorting format '${this.name}' - card count: ${this.#cards.length}`);
+      logger.verbose(`Sorting format '${this.name}' - unique card count: ${this.#cards.length}`);
    }
 }
