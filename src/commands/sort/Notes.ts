@@ -8,8 +8,11 @@ import { Card }         from '#types';
  * - Translate card mana cost to English phrase.
  * - Translate foreign card name to English.
  */
-export class Notes
+export abstract class Notes
 {
+   // Extract symbols between `{}`.
+   static #regexManaCost = /\{([^}]+)/g;
+
    /**
     * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
     *
@@ -19,10 +22,31 @@ export class Notes
     */
    static manaCost(card: Card): string
    {
-      const manaCost = card.mana_cost;
+      if (card.card_faces.length)
+      {
+         const manaCost: string[] = [];
+         for (const face of card.card_faces)
+         {
+            manaCost.push(this.#manaCostImpl(face.mana_cost));
+         }
+         return manaCost.join('\n//\n');
+      }
+      else
+      {
+         return this.#manaCostImpl(card.mana_cost);
+      }
+   }
 
-      // Extract symbols between `{}`.
-      const tokens = Array.from(manaCost.matchAll(/\{([^}]+)\}/g)).map((m) => m[1]);
+   /**
+    * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
+    *
+    * @param manaCost - A card / card face mana cost to string note.
+    *
+    * @returns English description.
+    */
+   static #manaCostImpl(manaCost: string): string
+   {
+      const tokens = Array.from(manaCost.matchAll(this.#regexManaCost)).map((m) => m[1]);
 
       if (!tokens.length) { return 'No mana cost'; }
 

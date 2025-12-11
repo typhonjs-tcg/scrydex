@@ -67,6 +67,8 @@ export class ExportSpreadsheet
 
          for (const card of cards)
          {
+            const cardManaCost = CardFields.manaCost(card);
+
             const row = ws.addRow({
                Name: CardFields.name(card),
                Quantity: Number(card.quantity),
@@ -76,9 +78,9 @@ export class ExportSpreadsheet
                Set: card.set,
                'Set Name': card.set_name,
                'Collector #': card.collector_number,
-               'Mana Cost': card.mana_cost,
+               'Mana Cost': cardManaCost,
                CMC: Number(card.cmc),
-               Colors: card.colors?.join(', ') ?? '',
+               Colors: CardFields.colors(card),
                'Color Identity': card.color_identity?.join(', ') ?? '',
                'Scryfall Link': card.scryfall_uri
             });
@@ -121,7 +123,7 @@ export class ExportSpreadsheet
             }
 
             // Add natural language note for mana cost.
-            if (typeof card.mana_cost === 'string' && card.mana_cost.length)
+            if (cardManaCost.length)
             {
                row.getCell('Mana Cost').note = Notes.manaCost(card)
             }

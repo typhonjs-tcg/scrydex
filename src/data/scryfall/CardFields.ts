@@ -5,6 +5,23 @@ import type { Card }       from '#types';
 export abstract class CardFields
 {
    /**
+    *
+    */
+   static colors(card: Card): string
+   {
+      if (card.card_faces.length)
+      {
+         const colors: string[] = [];
+         for (const face of card.card_faces) { colors.push(face.colors?.join(', ') ?? ''); }
+         return colors.join(' // ');
+      }
+      else
+      {
+         return card.colors?.join(', ') ?? '';
+      }
+   }
+
+   /**
     * Defer to original CSV language code if available and differs from the Scryfall card `lang` field.
     *
     * Alas, currently most online MTG collection services do not associate cards w/ foreign language Scryfall IDs.
@@ -51,12 +68,33 @@ export abstract class CardFields
     *
     * @returns Normalized card name.
     */
-   static name(card: Card)
+   static name(card: Card): string
    {
       const name = card.name ?? card.printed_name ?? '<Unknown>';
 
       const lang = this.langCode(card);
 
       return `${name}${lang !== 'en' ? ` [${lang}]` : ''}`;
+   }
+
+   /**
+    * The mana cost string. Multi-face cards potentially have multiple mana cost seperated by ` // `.
+    *
+    * @param card -
+    *
+    * @returns The mana cost string.
+    */
+   static manaCost(card: Card): string
+   {
+      if (card.card_faces.length)
+      {
+         const manaCost: string[] = [];
+         for (const face of card.card_faces) { manaCost.push(face.mana_cost); }
+         return manaCost.join(' // ');
+      }
+      else
+      {
+         return card.mana_cost;
+      }
    }
 }
