@@ -22,7 +22,7 @@ export abstract class Notes
     */
    static manaCost(card: Card): string
    {
-      if (card.card_faces.length)
+      if (card.card_faces)
       {
          const manaCost: string[] = [];
          for (const face of card.card_faces)

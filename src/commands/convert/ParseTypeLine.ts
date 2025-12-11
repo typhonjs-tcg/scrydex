@@ -72,10 +72,20 @@ export class ParseTypeLine
     *
     * @returns Type category classification.
     */
-   static resolve(card: Card): string
+   static resolve(card: Card | string): string
    {
-      const typeLine = Array.isArray(card.card_faces) && card.card_faces.length ? card.card_faces[0].type_line :
-       card.type_line;
+      let typeLine: string;
+
+      if (typeof card === 'string')
+      {
+         typeLine = card;
+      }
+      else
+      {
+         typeLine = Array.isArray(card.card_faces) && card.card_faces.length ? card.card_faces[0].type_line :
+          card.type_line;
+      }
+
 
       if (typeof typeLine !== 'string' || typeLine.length === 0) { return ''; }
 

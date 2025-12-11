@@ -9,7 +9,7 @@ export abstract class CardFields
     */
    static colors(card: Card): string
    {
-      if (card.card_faces.length)
+      if (card.card_faces)
       {
          const colors: string[] = [];
          for (const face of card.card_faces) { colors.push(face.colors?.join(', ') ?? ''); }
@@ -86,7 +86,7 @@ export abstract class CardFields
     */
    static manaCost(card: Card): string
    {
-      if (card.card_faces.length)
+      if (card.card_faces)
       {
          const manaCost: string[] = [];
          for (const face of card.card_faces) { manaCost.push(face.mana_cost); }

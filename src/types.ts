@@ -5,7 +5,7 @@
  */
 interface Card extends CSVCard
 {
-   card_faces: CardFace[];
+   card_faces?: CardFace[] | null;
 
    /**
     * This card’s collector number. Note that collector numbers can contain non-numeric characters, such as letters or

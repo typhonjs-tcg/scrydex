@@ -65,7 +65,7 @@ export class SortedRarity
    add(card: CardSorted)
    {
       // Calculate union for colors with card faces.
-      if (card.card_faces.length)
+      if (card.card_faces)
       {
          let faceColors: Set<string> = new Set<string>();
          for (const face of card.card_faces)
@@ -174,7 +174,7 @@ export class SortedRarity
    {
       let colors: Set<string>;
 
-      if (card.card_faces.length)
+      if (card.card_faces)
       {
          colors = new Set();
 

@@ -4,11 +4,11 @@ import type { CardFace }   from '#types';
 
 export abstract class ParseCardFaces
 {
-   static resolve(faces: Record<string, any>[]): CardFace[]
+   static resolve(faces: Record<string, any>[]): CardFace[] | undefined
    {
       const result: CardFace[] = [];
 
-      if (!Array.isArray(faces) || faces.length === 0) { return result; }
+      if (!Array.isArray(faces)) { return void 0; }
 
       for (const face of faces)
       {
