@@ -1,23 +1,27 @@
-import path                   from 'node:path';
+import path             from 'node:path';
 
 import {
    isDirectory,
-   isFile }                   from '@typhonjs-utils/file-util';
+   isFile }             from '@typhonjs-utils/file-util';
 
 import {
    convert,
-   sort }                     from '#commands';
+   filter,
+   sort }               from '#commands';
 
-import { supportedFormats }   from '#data';
+import {
+   parseManaCostColors,
+   supportedFormats }   from '#data';
 
-import { logger }             from '#util';
+import { logger }       from '#util';
 
 import type {
    ConfigConvert,
-   ConfigSort }               from '#types-command';
+   ConfigFilter,
+   ConfigSort }         from '#types-command';
 
 /**
- * Invokes `convert` with the given config and `dotenv` options.
+ * Invokes `convert` with the given config.
  *
  * @param input - Manabox collection CSV input file path or directory path.
  *
@@ -37,8 +41,6 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
-
-   if (opts.compact !== void 0 && typeof opts.compact !== 'boolean') { exit(`'compact' option is not a boolean.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
@@ -60,6 +62,89 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    try
    {
       await convert(config);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
+ * Invokes `filter` with the given config.
+ *
+ * @param input - Existing JSON card DB.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandFilter(input: string, opts: Record<string, any>): Promise<void>
+{
+   // TODO: process options.
+
+   if (!isFile(input)) { exit(`'input' option is not a file.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (isDirectory(opts.output)) { exit(`'output' option is an already existing directory.`); }
+
+   if(!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
+
+   if (opts.indent !== void 0 && typeof opts.indent !== 'number') { exit(`'indent' option is not a number.`); }
+   if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
+
+   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
+
+   const formats = (opts.formats ?? '').split(':');
+
+   for (const format of formats)
+   {
+      if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
+   }
+
+   if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
+   {
+      exit(`'color-identity' option must be a string.`);
+   }
+
+   let colorIdentity: Set<string> | null;
+
+   if (opts['color-identity'])
+   {
+      colorIdentity = parseManaCostColors(opts['color-identity']);
+      if (colorIdentity.size === 0)
+      {
+         exit(`'color-identity' option contains no valid WUBRG colors: ${opts['color-identity']}`);
+      }
+   }
+   else
+   {
+      colorIdentity = null;
+   }
+
+   const config: ConfigFilter = {
+      input,
+      output: opts.output,
+      colorIdentity,
+      compact: typeof opts.indent !== 'number', // Compact format by default when `indent` not defined.
+      formats,
+      indent: typeof opts.indent === 'number' ? opts.indent : null
+   };
+
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   try
+   {
+      await filter(config);
    }
    catch (err: unknown)
    {
@@ -109,7 +194,7 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
       if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
    }
 
-   if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined`); }
+   if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined.`); }
 
    const mark: Set<string> = typeof opts.mark === 'string' ? new Set(opts.mark.split(':')) : new Set();
 

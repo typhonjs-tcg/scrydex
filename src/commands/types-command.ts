@@ -47,6 +47,42 @@ interface ConfigConvert
 }
 
 /**
+ * Config object for the `filter` command.
+ */
+interface ConfigFilter
+{
+   /**
+    * WUBRG color identity set.
+    */
+   colorIdentity: Set<string> | null;
+
+   /**
+    * Export a compacted JSON DB w/ a card entry per row.
+    */
+   compact: boolean;
+
+   /**
+    * Scryfall game formats.
+    */
+   formats: string[];
+
+   /**
+    * When not `compact` this value provide JSON stringify indent value.
+    */
+   indent: number | null;
+
+   /**
+    * Input card JSON DB file.
+    */
+   input: string;
+
+   /**
+    * Output file path for filtered card JSON DB.
+    */
+   output: string;
+}
+
+/**
  * Config object for the `sort` command.
  */
 interface ConfigSort
@@ -122,5 +158,6 @@ interface ThemeData
 export {
    type CardSorted,
    type ConfigConvert,
+   type ConfigFilter,
    type ConfigSort,
    type ThemeData };

@@ -5,6 +5,7 @@ import { getPackage }         from '@typhonjs-utils/package-json';
 
 import {
    commandConvert,
+   commandFilter,
    commandSort }              from './functions';
 
 import { wrap }               from './wrap';
@@ -30,6 +31,15 @@ program
 .example('convert ./collection.csv --output ./collection.json -db ./scryfall.json')
 .example('convert ./collection-dir --output ./collection-all.json -db ./scryfall.json')
 .action(commandConvert);
+
+program
+.command('filter [input]', 'Filter')
+.describe(`Filters an existing JSON card DB by game formats and / or color identity.`)
+.option('--indent', `Defines the JSON output indentation (0-8).`)
+.option('--output', 'Provide a file path for filtered JSON DB output.')
+.example('filter ./collection.json --formats premodern --output ./just-premodern.json')
+.example('filter ./collection.json --formats commander --color-identity {W}{U}{G} --output ./commander-wug.json')
+.action(commandFilter);
 
 program.command('formats', `List all supported Scryfall game 'formats'.`)
 .action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
