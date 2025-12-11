@@ -98,7 +98,7 @@ export class ScryfallDB
             const card: Card = {
                object: 'card',
                name: scryCard.name,
-               type: ParseTypeLine.resolve(scryCard.type_line),
+               type: ParseTypeLine.resolve(scryCard),
                rarity: scryCard.rarity,
                quantity: csvCard.quantity,
                set: scryCard.set,

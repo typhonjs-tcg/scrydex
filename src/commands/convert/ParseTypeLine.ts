@@ -1,3 +1,5 @@
+import type { Card } from '#types';
+
 /**
  * Resolves a Scryfall type_line into a normalized card category.
  *
@@ -66,12 +68,15 @@ export class ParseTypeLine
    /**
     * Resolves a Scryfall type_line into a normalized card category.
     *
-    * @param typeLine - Raw type_line text from Scryfall.
+    * @param card -
     *
     * @returns Type category classification.
     */
-   static resolve(typeLine: string): string
+   static resolve(card: Card): string
    {
+      const typeLine = Array.isArray(card.card_faces) && card.card_faces.length ? card.card_faces[0].type_line :
+       card.type_line;
+
       if (typeof typeLine !== 'string' || typeLine.length === 0) { return ''; }
 
       // LAND handling -----------------------------------------------------------------------------------------------
