@@ -29,11 +29,6 @@ import type {
  */
 export async function commandConvert(input: string, opts: Record<string, any>): Promise<void>
 {
-   // TODO: process options.
-
-   // console.log(`!!! CLI-convert - 0 - input: ${input}`);
-   // console.log(`!!! CLI-convert - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
-
    if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
 
@@ -84,8 +79,6 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
  */
 export async function commandFilter(input: string, opts: Record<string, any>): Promise<void>
 {
-   // TODO: process options.
-
    if (!isFile(input)) { exit(`'input' option is not a file.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
@@ -101,12 +94,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 
-   const formats = (opts.formats ?? '').split(':');
-
-   for (const format of formats)
-   {
-      if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
-   }
+   const formats = validateFormats(opts.formats ?? '');
 
    if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
    {
@@ -169,11 +157,6 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
  */
 export async function commandSort(input: string, opts: Record<string, any>): Promise<void>
 {
-   // TODO: process options.
-
-    console.log(`!!! CLI-sort - 0 - input: ${input}`);
-    console.log(`!!! CLI-sort - 1 - opts:\n${JSON.stringify(opts, null, 2)}`);
-
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts['by-type'] !== void 0 && typeof opts['by-type'] !== 'boolean')
@@ -187,12 +170,9 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
 
    if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined`); }
 
-   const formats = opts.formats.split(':');
+   const formats = validateFormats(opts.formats);
 
-   for (const format of formats)
-   {
-      if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
-   }
+   if (formats.length === 0) { exit(`'formats' option is empty.`); }
 
    if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined.`); }
 
@@ -246,4 +226,27 @@ function exit(message: string, exit: boolean = true)
 {
    console.error(`[31m[scrydex] ${message}[0m`);
    if (exit) { process.exit(1); }
+}
+
+/**
+ * Parse and validate game formats.
+ *
+ * @param formats -
+ */
+function validateFormats(formats: string): string[]
+{
+   const result = formats.split(':');
+
+   const seen: Set<string> = new Set();
+
+   for (const format of result)
+   {
+      if (seen.has(format)) { exit(`'formats' option contains duplicate format: ${format}`); }
+
+      if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
+
+      seen.add(format);
+   }
+
+   return result;
 }

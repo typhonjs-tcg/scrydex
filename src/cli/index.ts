@@ -34,7 +34,9 @@ program
 
 program
 .command('filter [input]', 'Filter')
-.describe(`Filters an existing JSON card DB by game formats and / or color identity.`)
+.describe(`Filters an existing JSON card DB by game formats and other card attributes.`)
+.option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to filter by color identity.')
+.option('--formats', 'Provide a colon separated list of game formats for filtering.')
 .option('--indent', `Defines the JSON output indentation (0-8).`)
 .option('--output', 'Provide a file path for filtered JSON DB output.')
 .example('filter ./collection.json --formats premodern --output ./just-premodern.json')
@@ -46,9 +48,9 @@ program.command('formats', `List all supported Scryfall game 'formats'.`)
 
 program
 .command('sort [input]', 'Sort')
-.describe(`Sorts a converted Scryfall card DB by format legalities outputting spreadsheets.`)
+.describe(`Sorts a converted Scryfall card DB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by type of card.')
-.option('--formats', 'Provide a colon separated list of formats for sorting.')
+.option('--formats', 'Provide a colon separated list of game formats for sorting.')
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
 .option('--theme', 'Options are `light` or `dark`; light theme is default.')
