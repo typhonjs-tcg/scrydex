@@ -5,6 +5,8 @@
  */
 interface Card extends CSVCard
 {
+   card_faces: CardFace[];
+
    /**
     * This card’s collector number. Note that collector numbers can contain non-numeric characters, such as letters or
     * `★`.
@@ -141,6 +143,41 @@ interface Card extends CSVCard
    set_type: string;
 }
 
+interface CardFace
+{
+   object: 'card_face';
+
+   /**
+    * This card face colors.
+    */
+   colors: Colors;
+
+   /**
+    * The mana cost for this card. This value will be any empty string "" if the cost is absent.
+    */
+   mana_cost: string;
+
+   /**
+    * Card face name.
+    */
+   name: string;
+
+   /**
+    * The Oracle text for this card face, if any.
+    */
+   oracle_text: string;
+
+   /**
+    * Normalized card type based on `type line` parsing.
+    */
+   type: string;
+
+   /**
+    * The type line of this card face.
+    */
+   type_line: string;
+}
+
 /**
  * Defines the base card data loaded from CSV files.
  */
@@ -159,7 +196,7 @@ interface CSVCard
    foil: string | null;
 
    /**
-    * Language code from CSV file.
+    * Language code from CSV file. This is often
     */
    lang_csv?: string;
 
@@ -190,6 +227,7 @@ type Colors = string[];
 
 export {
    type Card,
+   type CardFace,
    type CSVCard,
    type Colors
 }

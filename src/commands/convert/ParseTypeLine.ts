@@ -44,7 +44,7 @@
  * Resolution precedence:
  *   Land > Artifact > Creature > Enchantment > Instant > Sorcery > Planeswalker > Battle
  */
-export class TypeLineParse
+export class ParseTypeLine
 {
    static #regexLand = /\bland\b/i;
    static #regexBasic = /\bbasic\b/i;
@@ -72,6 +72,8 @@ export class TypeLineParse
     */
    static resolve(typeLine: string): string
    {
+      if (typeof typeLine !== 'string' || typeLine.length === 0) { return ''; }
+
       // LAND handling -----------------------------------------------------------------------------------------------
 
       if (this.#regexLand.test(typeLine))

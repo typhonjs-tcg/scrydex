@@ -3,7 +3,8 @@ import chain                        from 'stream-chain';
 import parser                       from 'stream-json';
 import StreamArray                  from 'stream-json/streamers/StreamArray.js';
 
-import { TypeLineParse }            from './TypeLineParse';
+import { ParseCardFaces }           from './ParseCardFaces';
+import { ParseTypeLine }            from './ParseTypeLine';
 
 import {
    excludedSetsRecentRarity,
@@ -97,7 +98,7 @@ export class ScryfallDB
             const card: Card = {
                object: 'card',
                name: scryCard.name,
-               type: TypeLineParse.resolve(scryCard.type_line),
+               type: ParseTypeLine.resolve(scryCard.type_line),
                rarity: scryCard.rarity,
                quantity: csvCard.quantity,
                set: scryCard.set,
@@ -122,6 +123,7 @@ export class ScryfallDB
                printed_name: scryCard.printed_name,
                rarity_orig: scryCard.rarity,
                rarity_recent: scryCard.rarity,
+               card_faces: ParseCardFaces.resolve(scryCard.card_faces),
                legalities: scryCard.legalities ?? {},
                scryfall_uri: scryCard.scryfall_uri,
                oracle_id: scryCard.oracle_id,
