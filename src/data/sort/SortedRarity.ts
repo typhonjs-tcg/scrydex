@@ -67,13 +67,32 @@ export class SortedRarity
     */
    add(card: CardSorted)
    {
-      if (!Array.isArray(card.colors))
+      // Calculate union for colors with card faces.
+      if (card.card_faces.length)
       {
-         this.#categories.get('Unsorted')?.push(card);
-         return;
-      }
+         let faceColors: Set<string> = new Set<string>();
+         for (const face of card.card_faces)
+         {
+            faceColors = faceColors.union(new Set(face.colors));
+         }
 
-      switch(card.colors?.length)
+         this.#addImpl(card, [...faceColors]);
+      }
+      else
+      {
+         if (!Array.isArray(card.colors))
+         {
+            this.#categories.get('Unsorted')?.push(card);
+            return;
+         }
+
+         this.#addImpl(card, card.colors);
+      }
+   }
+
+   #addImpl(card: CardSorted, colors: string[])
+   {
+      switch(colors.length)
       {
          case 0:
          {
@@ -90,7 +109,7 @@ export class SortedRarity
          }
 
          case 1:
-            this.#sortMono(card, card.colors);
+            this.#sortMono(card, colors);
             break;
 
          default:
@@ -192,7 +211,18 @@ export class SortedRarity
 
    #sortManaCost(card: CardSorted)
    {
-      const colors = this.#parseManaCostColors(card.mana_cost);
+      let colors: Set<string>;
+
+      if (card.card_faces.length)
+      {
+         colors = new Set();
+
+         for (const face of card.card_faces) { colors = colors.union(this.#parseManaCostColors(face.mana_cost)); }
+      }
+      else
+      {
+         colors = this.#parseManaCostColors(card.mana_cost);
+      }
 
       switch (colors.size)
       {
