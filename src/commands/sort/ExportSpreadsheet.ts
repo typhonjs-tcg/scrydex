@@ -93,7 +93,7 @@ export class ExportSpreadsheet
 
                const mark = card.mark;
 
-               row.eachCell((cell) =>
+               row.eachCell({ includeEmpty: true }, (cell) =>
                {
                   cell.fill = theme.mark[mark].fill;
                   cell.border = theme.mark[mark].border;
@@ -106,7 +106,7 @@ export class ExportSpreadsheet
                // Potentially, skip top border for first category.
                if (prevType !== void 0)
                {
-                  row.eachCell((cell) => cell.border = theme.sortByType.border);
+                  row.eachCell({ includeEmpty: true }, (cell) => cell.border = theme.sortByType.border);
                }
 
                prevType = card.type;
