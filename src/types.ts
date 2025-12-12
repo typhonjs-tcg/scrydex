@@ -53,6 +53,11 @@ interface Card extends CSVCard
    legalities: Record<string, string>;
 
    /**
+    * This loyalty if any. Note that some cards have loyalties that are not numeric, such as X.
+    */
+   loyalty?: string | null;
+
+   /**
     * The mana cost for this card. This value will be any empty string "" if the cost is absent. Remember that per the
     * game rules, a missing mana cost and a mana cost of {0} are different values. Multi-faced cards will report this
     * value in card faces.
@@ -74,6 +79,11 @@ interface Card extends CSVCard
     * The Oracle text for this card, if any.
     */
    oracle_text: string;
+
+   /**
+    * This card’s power, if any. Note that some cards have powers that are not numeric, such as *.
+    */
+   power?: string | null;
 
    /**
     * The card name as printed in associated language.
@@ -104,6 +114,11 @@ interface Card extends CSVCard
     * The date this card was first released.
     */
    released_at: string;
+
+   /**
+    * This card’s toughness, if any. Note that some cards have toughnesses that are not numeric, such as *.
+    */
+   toughness?: string | null;
 
    /**
     * Normalized card type based on `type line` parsing.

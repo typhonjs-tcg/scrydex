@@ -122,6 +122,13 @@ export class ExportSpreadsheet
                linkCell.font = theme.fonts.link;
             }
 
+            const cardStats = Notes.cardStats(card);
+            if (cardStats)
+            {
+               row.getCell('Type').note = cardStats;
+               row.getCell('Type Line').note = cardStats;
+            }
+
             // Add natural language note for mana cost.
             if (cardManaCost.length)
             {

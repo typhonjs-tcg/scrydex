@@ -14,6 +14,34 @@ export abstract class Notes
    static #regexManaCost = /\{([^}]+)/g;
 
    /**
+    * Generates a note for creatures including power / toughness.
+    *
+    * @param card -
+    */
+   static cardStats(card: Card): string | undefined
+   {
+      let note = '';
+
+      if (typeof card.power === 'string' && typeof card.toughness === 'string')
+      {
+         note += `P/T: ${card.power} / ${card.toughness}\n`;
+      }
+
+      if (typeof card.loyalty === 'string')
+      {
+         note += `Loyalty: ${card.loyalty}\n`;
+      }
+
+      if (Array.isArray(card.keywords) && card.keywords.length)
+      {
+         note += `Keywords:\n`;
+         note += `➤ ${card.keywords.join('\n➤ ')}`;
+      }
+
+      return note.length ? note : void 0;
+   }
+
+   /**
     * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
     *
     * @param card - Card to convert mana cost to string note.
