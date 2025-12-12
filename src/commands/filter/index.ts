@@ -60,15 +60,7 @@ export async function filter(config: ConfigFilter): Promise<void>
 
    if (outputDB.length > 0)
    {
-      if (config.compact)
-      {
-         fs.writeFileSync(config.output, stringifyCompact(outputDB), 'utf-8');
-      }
-      else
-      {
-         fs.writeFileSync(config.output, typeof config.indent === 'number' ?
-          JSON.stringify(outputDB, null, config.indent) : JSON.stringify(outputDB), 'utf-8');
-      }
+      fs.writeFileSync(config.output, stringifyCompact(outputDB), 'utf-8');
 
       logger.info(`Finished filtering Scryfall card collection: ${config.output}`);
    }

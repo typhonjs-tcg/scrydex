@@ -21,19 +21,9 @@ interface CardSorted extends Card
 interface ConfigConvert
 {
    /**
-    * Export a compacted JSON DB w/ a card entry per row.
-    */
-   compact: boolean;
-
-   /**
     * File path to Scryfall JSON DB.
     */
    db: string;
-
-   /**
-    * When not `compact` this value provide JSON stringify indent value.
-    */
-   indent: number | null;
 
    /**
     * Input CSV file or directory path to CSV files.
@@ -57,19 +47,9 @@ interface ConfigFilter
    colorIdentity: Set<string> | null;
 
    /**
-    * Export a compacted JSON DB w/ a card entry per row.
-    */
-   compact: boolean;
-
-   /**
     * Scryfall game formats.
     */
    formats: string[];
-
-   /**
-    * When not `compact` this value provide JSON stringify indent value.
-    */
-   indent: number | null;
 
    /**
     * Input card JSON DB file.

@@ -32,9 +32,6 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
 
-   if (opts.indent !== void 0 && typeof opts.indent !== 'number') { exit(`'indent' option is not a number.`); }
-   if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
-
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
@@ -44,9 +41,7 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    const config: ConfigConvert = {
       input,
       output: opts.output,
-      db: opts.db,
-      compact: typeof opts.indent !== 'number', // Compact format by default when `indent` not defined.
-      indent: typeof opts.indent === 'number' ? opts.indent : null
+      db: opts.db
    };
 
    // Set default log level to verbose.
@@ -87,9 +82,6 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    if(!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
-   if (opts.indent !== void 0 && typeof opts.indent !== 'number') { exit(`'indent' option is not a number.`); }
-   if (opts.indent !== void 0 && (opts.indent < 0 || opts.indent > 8)) { exit(`'indent' option must be 0 - 8.`); }
-
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
@@ -126,9 +118,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
       input,
       output: opts.output,
       colorIdentity,
-      compact: typeof opts.indent !== 'number', // Compact format by default when `indent` not defined.
-      formats,
-      indent: typeof opts.indent === 'number' ? opts.indent : null
+      formats
    };
 
    // Set default log level to verbose.
