@@ -14,6 +14,18 @@ import type { ConfigFilter }  from '#types-command';
 
 export async function filter(config: ConfigFilter): Promise<void>
 {
+   logger.info(`Filtering Scryfall card collection: ${config.input}`);
+
+   if (config.formats.length)
+   {
+      logger.info(`Formats: ${config.formats.join(', ')}`);
+   }
+
+   if (config.colorIdentity)
+   {
+      logger.info(`Color Identity: ${[...config.colorIdentity].join(', ')}`);
+   }
+
    const pipeline = chain([
       fs.createReadStream(config.input),
       parser(),
@@ -57,6 +69,8 @@ export async function filter(config: ConfigFilter): Promise<void>
          fs.writeFileSync(config.output, typeof config.indent === 'number' ?
           JSON.stringify(outputDB, null, config.indent) : JSON.stringify(outputDB), 'utf-8');
       }
+
+      logger.info(`Finished filtering Scryfall card collection: ${config.output}`);
    }
    else
    {
