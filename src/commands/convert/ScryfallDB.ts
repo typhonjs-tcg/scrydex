@@ -110,6 +110,8 @@ export class ScryfallDB
                cmc: scryCard.cmc,
                colors: scryCard.colors,
                color_identity: scryCard.color_identity,
+               border_color: scryCard.border_color,
+               defense: scryCard.defense,
                foil: csvCard.foil,
                game_changer: scryCard.game_changer,
                in_deck: csvCard.in_deck,

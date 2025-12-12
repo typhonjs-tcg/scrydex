@@ -5,6 +5,14 @@
  */
 interface Card extends CSVCard
 {
+   /**
+    * This card’s border color: black, white, borderless, yellow, silver, or gold
+    */
+   border_color: string;
+
+   /**
+    * An array of Card Face objects, if this card is multifaced.
+    */
    card_faces?: CardFace[] | null;
 
    /**
@@ -28,6 +36,11 @@ interface Card extends CSVCard
     * The card’s mana value. Note that some funny cards have fractional mana costs.
     */
    cmc: number;
+
+   /**
+    * This card’s defense, if any. Battle cards.
+    */
+   defense?: string | null;
 
    /**
     * True if this card is on the Commander Game Changer list.
@@ -168,6 +181,16 @@ interface CardFace
    colors: Colors;
 
    /**
+    * This face’s defense, if any. Battle cards.
+    */
+   defense?: string | null;
+
+   /**
+    * This loyalty if any. Note that some cards have loyalties that are not numeric, such as X.
+    */
+   loyalty?: string | null;
+
+   /**
     * The mana cost for this card. This value will be any empty string "" if the cost is absent.
     */
    mana_cost: string;
@@ -181,6 +204,16 @@ interface CardFace
     * The Oracle text for this card face, if any.
     */
    oracle_text: string;
+
+   /**
+    * This face’s power, if any. Note that some cards have powers that are not numeric, such as *.
+    */
+   power?: string | null;
+
+   /**
+    * This face’s toughness, if any. Note that some cards have toughnesses that are not numeric, such as *.
+    */
+   toughness?: string | null;
 
    /**
     * Normalized card type based on `type line` parsing.

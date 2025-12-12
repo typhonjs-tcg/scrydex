@@ -5,6 +5,7 @@ import { Card }         from '#types';
 /**
  * Helper to create additional cell notes used in spreadsheet for note / comment on applicable cells.
  *
+ * - Additional card statistics / data.
  * - Translate card mana cost to English phrase.
  * - Translate foreign card name to English.
  */
@@ -22,14 +23,60 @@ export abstract class Notes
    {
       let note = '';
 
-      if (typeof card.power === 'string' && typeof card.toughness === 'string')
+      if (card.card_faces && card.card_faces.length >= 2)
       {
-         note += `P/T: ${card.power} / ${card.toughness}\n`;
+         const face1 = card.card_faces[0];
+         const face2 = card.card_faces[1];
+
+         if (face1.power || face1.toughness || face2.power || face2.toughness)
+         {
+            const ptFace1 = face1.power && face1.toughness ? `${face1.power}/${face1.toughness}` : '';
+            const ptFace2 = face2.power && face2.toughness ? `${face2.power}/${face2.toughness}` : '';
+
+            note += `P/T: ${ptFace1} // ${ptFace2}\n`;
+         }
+
+         if (face1.defense || face2.defense)
+         {
+            note += `Defense: ${face1.defense ?? ''} // ${face2.defense ?? ''}\n`;
+         }
+
+         if (face1.loyalty || face2.loyalty)
+         {
+            note += `Loyalty: ${face1.loyalty ?? ''} // ${face2.loyalty ?? ''}\n`;
+         }
+      }
+      else
+      {
+         if (typeof card.power === 'string' && typeof card.toughness === 'string')
+         {
+            note += `P/T: ${card.power}/${card.toughness}\n`;
+         }
+
+         if (typeof card.defense === 'string')
+         {
+            note += `Defense: ${card.defense}\n`;
+         }
+
+         if (typeof card.loyalty === 'string')
+         {
+            note += `Loyalty: ${card.loyalty}\n`;
+         }
       }
 
-      if (typeof card.loyalty === 'string')
+      if (typeof card.reserved === 'boolean' && card.reserved)
       {
-         note += `Loyalty: ${card.loyalty}\n`;
+         note += `Reserved List\n`;
+      }
+
+      if (typeof card.game_changer === 'boolean' && card.game_changer)
+      {
+         note += `Game Changer\n`;
+      }
+
+      if (typeof card.border_color === 'string')
+      {
+         note += `Border: ${card.border_color}\n`;
       }
 
       if (Array.isArray(card.keywords) && card.keywords.length)
@@ -38,7 +85,7 @@ export abstract class Notes
          note += `➤ ${card.keywords.join('\n➤ ')}`;
       }
 
-      return note.length ? note : void 0;
+      return note.length ? note.trim() : void 0;
    }
 
    /**
