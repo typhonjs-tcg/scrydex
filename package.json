@@ -1,30 +1,40 @@
 {
-  "name": "@typhonjs-mtg/scrybox",
+  "name": "@typhonjs-tcg/scrydex",
   "version": "0.0.0",
-  "description": "Tools for working with Scryfall and Manabox.",
+  "description": "Tools for working with Scryfall and CSV collection data from ManaBox and more.",
   "type": "module",
   "bin": "./src/cli/index.js",
   "imports": {
-    "#data": "./src/data/index.js",
-    "#util": "./src/util/index.js"
+    "#commands": "./src/commands/index.ts",
+    "#data": "./src/data/index.ts",
+    "#types": "./src/types.ts",
+    "#types-command": "./src/commands/types-command.ts",
+    "#util": "./src/util/index.ts"
   },
   "scripts": {
     "eslint": "eslint .",
-    "test": "node ./src/cli/index.js convert ./test/fixture/data --loglevel verbose --indent 2 --output ./test/fixture/output/collection-small.json --db ./test/fixture/data/db-small.json",
-    "xlsx": "node ./src/cli/test.js"
+    "build-dist": "bun scripts/build-dist.js",
+    "test-convert": "bun ./src/cli/index.js convert ./test/fixture/data --output ./test/fixture/output/collection-small.json --db ./test/fixture/data/db-small.json --loglevel debug",
+    "test-filter": "bun ./src/cli/index.js filter ./test/fixture/output/collection-small.json --border black:borderless --color-identity {W}{U}{G} --formats premodern --output ./test/fixture/output/collection-small-wug.json --loglevel debug",
+    "test-sort": "bun ./src/cli/index.js sort ./test/fixture/output/collection-small.json --formats premodern:oldschool:predh:commander --output ./test/fixture/output/sorted --loglevel debug",
+    "manabox-convert": "bun ./src/cli/index.js convert ./manabox-csv/collection --decks ./manabox-csv/decks --output ./manabox-sort/manabox-db.json --db ./db/scryfall.json",
+    "manabox-sort": "bun ./src/cli/index.js sort ./manabox-sort/manabox-db.json --theme dark --by-type --mark \"Kevin PM Commons\" --formats premodern:oldschool:predh:commander --output ./manabox-sort --loglevel debug",
+    "manabox-convert-foreign-test": "bun ./src/cli/index.js convert ./test/fixture/data/foreign-test.csv --output ./test/fixture/output/foreign-test.json --db ./db/scryfall-all.json",
+    "manabox-sort-foreign-test": "bun ./src/cli/index.js sort ./test/fixture/output/foreign-test.json --theme dark --by-type --formats commander --output ./test/fixture/output/sorted-foreign-test --loglevel debug"
   },
   "author": "",
   "license": "MPL-2.0",
   "dependencies": {
+    "@types/stream-json": "^1.7.8",
     "@typhonjs-utils/file-util": "^0.1.0",
     "@typhonjs-utils/logger-color": "^0.1.0",
     "@typhonjs-utils/object": "^0.4.0",
     "@typhonjs-utils/package-json": "^0.7.0",
     "csv-parser": "^3.2.0",
+    "exceljs": "^4.4.0",
     "sade": "^1.8.1",
     "stream-chain": "^3.4.0",
-    "stream-json": "^1.9.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    "stream-json": "^1.9.1"
   },
   "devDependencies": {
     "@typhonjs-config/eslint-config": "^0.6.3",
