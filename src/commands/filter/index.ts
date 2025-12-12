@@ -16,14 +16,19 @@ export async function filter(config: ConfigFilter): Promise<void>
 {
    logger.info(`Filtering Scryfall card collection: ${config.input}`);
 
-   if (config.formats.length)
+   if (config.border)
    {
-      logger.info(`Formats: ${config.formats.join(', ')}`);
+      logger.info(`Card borders: ${[...config.border].join(' or ')}`);
    }
 
    if (config.colorIdentity)
    {
       logger.info(`Color Identity: ${[...config.colorIdentity].join(', ')}`);
+   }
+
+   if (config.formats?.length)
+   {
+      logger.info(`Formats: ${config.formats.join(' and ')}`);
    }
 
    const pipeline = chain([
@@ -34,11 +39,22 @@ export async function filter(config: ConfigFilter): Promise<void>
 
    const outputDB: Card[] = [];
 
+   let totalUnique = 0;
+
    for await (const { value: card } of pipeline)
    {
       if (card.object !== 'card') { continue; }
 
-      if (config.formats.length)
+      totalUnique++;
+
+      if (config.border && !config.border.has(card.border_color)) { continue; }
+
+      if (config.colorIdentity && Array.isArray(card.color_identity))
+      {
+         if (!config.colorIdentity.isSupersetOf(new Set(card.color_identity))) { continue; }
+      }
+
+      if (config.formats?.length)
       {
          let valid = true;
 
@@ -50,11 +66,6 @@ export async function filter(config: ConfigFilter): Promise<void>
          if (!valid) { continue; }
       }
 
-      if (config.colorIdentity && Array.isArray(card.color_identity))
-      {
-         if (!config.colorIdentity.isSupersetOf(new Set(card.color_identity))) { continue; }
-      }
-
       outputDB.push(card);
    }
 
@@ -63,6 +74,7 @@ export async function filter(config: ConfigFilter): Promise<void>
       fs.writeFileSync(config.output, stringifyCompact(outputDB), 'utf-8');
 
       logger.info(`Finished filtering Scryfall card collection: ${config.output}`);
+      logger.info(`Filtered ${outputDB.length} / ${totalUnique} unique cards.`);
    }
    else
    {

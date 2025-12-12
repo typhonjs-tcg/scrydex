@@ -27,7 +27,7 @@ program
 .describe(`Converts CSV card collection files to a compact Scryfall card DB.`)
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
 .option('--decks', 'Provide a file or directory path of CSV card collections that are in decks / checked out.')
-.option('--output', 'Provide a file path for generated collection output.')
+.option('--output', 'Provide a file path for generated JSON card DB output.')
 .example('convert ./collection.csv --output ./collection.json -db ./scryfall.json')
 .example('convert ./collection-dir --output ./collection-all.json -db ./scryfall.json')
 .action(commandConvert);
@@ -35,11 +35,13 @@ program
 program
 .command('filter [input]', 'Filter')
 .describe(`Filters an existing JSON card DB by game formats and other card attributes.`)
+.option('--border', 'Provide a colon separated list of border colors including: black, white, borderless, yellow, silver, or gold.')
 .option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to filter by color identity.')
 .option('--formats', 'Provide a colon separated list of game formats for filtering.')
 .option('--output', 'Provide a file path for filtered JSON DB output.')
 .example('filter ./collection.json --formats premodern --output ./just-premodern.json')
 .example('filter ./collection.json --formats commander --color-identity {W}{U}{G} --output ./commander-wug.json')
+.example('filter ./collection.json --border black:borderless --output ./black-borderless.json')
 .action(commandFilter);
 
 program.command('formats', `List all supported Scryfall game 'formats'.`)

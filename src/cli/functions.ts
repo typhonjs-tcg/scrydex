@@ -90,9 +90,13 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
+   if (opts.border !== void 0 && typeof opts.border !== 'string') { exit(`'border' option is not defined.`); }
+
+   const border = opts.border ? validateBorder(opts.border) : null;
+
    if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 
-   const formats = opts.formats ? validateFormats(opts.formats) : [];
+   const formats = opts.formats ? validateFormats(opts.formats) : null;
 
    if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
    {
@@ -115,7 +119,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
    }
 
    // Abort as no filtering options are provided.
-   if (!colorIdentity && formats.length === 0)
+   if (!border && !colorIdentity && !formats)
    {
       exit(`Aborting as no filtering options provided.`);
    }
@@ -123,6 +127,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
    const config: ConfigFilter = {
       input,
       output: opts.output,
+      border,
       colorIdentity,
       formats
    };
@@ -228,6 +233,32 @@ function exit(message: string, exit: boolean = true)
 {
    console.error(`[31m[scrydex] ${message}[0m`);
    if (exit) { process.exit(1); }
+}
+
+
+/**
+ * Parse and validate border colors.
+ *
+ * @param borders -
+ */
+function validateBorder(borders: string): Set<string>
+{
+   const entries = borders.split(':');
+
+   const supportedBorder = new Set(['black', 'borderless', 'gold', 'silver', 'white', 'yellow']);
+
+   const seen: Set<string> = new Set();
+
+   for (const border of entries)
+   {
+      if (seen.has(border)) { exit(`'border' option contains duplicate border: ${border}`); }
+
+      if (!supportedBorder.has(border)) { exit(`'border' option contains an invalid format: ${border}`); }
+
+      seen.add(border);
+   }
+
+   return seen;
 }
 
 /**
