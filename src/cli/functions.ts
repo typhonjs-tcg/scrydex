@@ -94,7 +94,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 
-   const formats = validateFormats(opts.formats ?? '');
+   const formats = opts.formats ? validateFormats(opts.formats) : [];
 
    if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
    {
@@ -114,6 +114,12 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
    else
    {
       colorIdentity = null;
+   }
+
+   // Abort as no filtering options are provided.
+   if (!colorIdentity && formats.length === 0)
+   {
+      exit(`Aborting as no filtering options provided.`);
    }
 
    const config: ConfigFilter = {
