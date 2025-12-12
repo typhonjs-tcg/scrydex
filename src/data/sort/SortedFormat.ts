@@ -30,10 +30,7 @@ export class SortedFormat
 
       this.#sortRarity(config, cards);
 
-      if (config.mark.size)
-      {
-         this.#calculateMarked(config, cards);
-      }
+      if (config.mark.size) { this.#calculateMarked(config, cards); }
    }
 
    /**
@@ -99,7 +96,7 @@ export class SortedFormat
 
       for (const card of cards)
       {
-         // Skip marked filenames.
+         // Skip if is part of `marked` filenames.
          if (mark.has(card.filename)) { continue; }
 
          const existingOracleCard = oracleMap.get(card.oracle_id);

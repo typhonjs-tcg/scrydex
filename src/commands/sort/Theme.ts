@@ -33,9 +33,10 @@ class ThemeDark implements ThemeData
    readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font> };
 
    readonly #mark: {
-      error: { fill: Fill, border: Partial<Borders> }
-      ok: { fill: Fill, border: Partial<Borders> }
-      warning: { fill: Fill, border: Partial<Borders> }
+      error: { fill: Fill, border: Partial<Borders> };
+      ok: { fill: Fill, border: Partial<Borders> };
+      warning: { fill: Fill, border: Partial<Borders> };
+      in_deck: { fill: Fill, border: Partial<Borders> };
    };
 
    readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
@@ -80,6 +81,16 @@ class ThemeDark implements ThemeData
                bottom: { style: 'thin', color: { argb: 'FFCCAA66' }}
             },
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF3F2B00' }}
+         },
+
+         // Cyan - Card is in deck.
+         in_deck: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF5FB7C6' }},
+               bottom: { style: 'thin', color: { argb: 'FF5FB7C6' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF163C42' } }
          }
       };
 
@@ -144,9 +155,10 @@ class ThemeLight implements ThemeData
    readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font> };
 
    readonly #mark: {
-      error: { fill: Fill, border: Partial<Borders> }
-      ok: { fill: Fill, border: Partial<Borders> }
-      warning: { fill: Fill, border: Partial<Borders> }
+      error: { fill: Fill, border: Partial<Borders> };
+      ok: { fill: Fill, border: Partial<Borders> };
+      warning: { fill: Fill, border: Partial<Borders> };
+      in_deck: { fill: Fill, border: Partial<Borders> };
    };
 
    readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
@@ -197,6 +209,16 @@ class ThemeLight implements ThemeData
             },
 
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF4CC' } }
+         },
+
+         // Cyan - Card is in deck.
+         in_deck: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF4FA3B8' }},
+               bottom: { style: 'thin', color: { argb: 'FF4FA3B8' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD6F1F6' } }
          }
       }
 

@@ -87,6 +87,19 @@ export class ExportSpreadsheet
 
             row.fill = theme.row.fill.default;
 
+            // Potentially color / mark that the card is in a deck / outside main collection.
+            if (card.in_deck)
+            {
+               // Indicate that this row has been colored.
+               (row as any)._marked = true;
+
+               row.eachCell({ includeEmpty: true }, (cell) =>
+               {
+                  cell.fill = theme.mark.in_deck.fill;
+                  cell.border = theme.mark.in_deck.border;
+               });
+            }
+
             // Potentially mark merge status for marked filenames / cards.
             if (config.mark.has(card.filename) && typeof card.mark === 'string')
             {
@@ -191,13 +204,10 @@ export class ExportSpreadsheet
          });
 
          // Add additional dummy rows for theme expansion beyond table.
-         if (config.theme === 'dark')
+         for (let i = 0; i < 200; i++)
          {
-            for (let i = 0; i < 200; i++)
-            {
-               const row = ws.addRow({});
-               row.fill = theme.row.fill.default;
-            }
+            const row = ws.addRow({});
+            row.fill = theme.row.fill.default;
          }
 
          // Auto size to actual content.

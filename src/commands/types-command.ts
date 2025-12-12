@@ -122,6 +122,7 @@ interface ThemeData
       error: { fill: Fill, border: Partial<Borders> }
       ok: { fill: Fill, border: Partial<Borders> }
       warning: { fill: Fill, border: Partial<Borders> }
+      in_deck: { fill: Fill, border: Partial<Borders> }
    }
 
    get row(): {
