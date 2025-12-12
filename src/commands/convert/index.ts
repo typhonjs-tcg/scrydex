@@ -12,7 +12,7 @@ import type {
  */
 export async function convert(config: ConfigConvert): Promise<void>
 {
-   const collection = await CSVCollection.load(config.input);
+   const collection = await CSVCollection.load(config);
 
    await ScryfallDB.exportCollection(config, collection);
 }

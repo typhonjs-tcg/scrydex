@@ -26,6 +26,11 @@ interface ConfigConvert
    db: string;
 
    /**
+    * Input CSV file or directory path to CSV files for card collections in decks / checked out.
+    */
+   decks: string;
+
+   /**
     * Input CSV file or directory path to CSV files.
     */
    input: string;

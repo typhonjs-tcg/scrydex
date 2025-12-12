@@ -5,7 +5,7 @@ import csv                 from 'csv-parser';
 
 import { supportedLang }   from '#data';
 
-import type { CSVCard }    from "#types";
+import type { CSVCard }    from '#types';
 
 /**
  * Parses and stores intermediate card data from a single CSV file.
@@ -27,9 +27,11 @@ export class CSVCardIndex
    /**
     * @param filepath - CSV filepath to load.
     *
+    * @param [isDeck] - When true, this card index is marked as being in a `deck` / check out.
+    *
     * @returns Import index of CSV card data.
     */
-   static async fromCSV(filepath: string): Promise<CSVCardIndex>
+   static async fromCSV(filepath: string, isDeck = false): Promise<CSVCardIndex>
    {
       return new Promise((resolve, reject) =>
       {
@@ -83,6 +85,7 @@ export class CSVCardIndex
                   object: 'card',
                   name,
                   foil,
+                  in_deck: isDeck,
                   lang_csv,
                   quantity,
                   scryfall_id,
@@ -97,9 +100,9 @@ export class CSVCardIndex
    }
 
    /**
-    * @returns {number} Number of unique cards in index.
+    * @returns Number of unique cards in index.
     */
-   get size()
+   get size(): number
    {
       return this.#data.size;
    }

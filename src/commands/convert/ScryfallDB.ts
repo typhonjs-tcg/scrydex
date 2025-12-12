@@ -112,6 +112,7 @@ export class ScryfallDB
                color_identity: scryCard.color_identity,
                foil: csvCard.foil,
                game_changer: scryCard.game_changer,
+               in_deck: csvCard.in_deck,
                keywords: scryCard.keywords,
                loyalty: scryCard.loyalty,
                reserved: scryCard.reserved,

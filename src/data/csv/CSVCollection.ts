@@ -1,12 +1,15 @@
 import {
    getFileList,
-   isDirectory }           from '@typhonjs-utils/file-util';
+   isDirectory, isFile
+} from '@typhonjs-utils/file-util';
 
-import { CSVCardIndex }    from './CSVCardIndex';
+import { CSVCardIndex }       from './CSVCardIndex';
 
-import { logger }          from "#util";
+import { logger }             from "#util";
 
-import type { CSVCard }    from '#types';
+import type { CSVCard }       from '#types';
+
+import type { ConfigConvert } from '#types-command';
 
 export class CSVCollection
 {
@@ -20,13 +23,19 @@ export class CSVCollection
    /**
     * Load collection.
     *
-    * @param path - A single CSV file path or a directory path to load all `.csv` files.
+    * @param config -
     *
     * @returns A new collection of all CSV card data.
     */
-   static async load(path: string): Promise<CSVCollection>
+   static async load(config: ConfigConvert): Promise<CSVCollection>
    {
-      return this.#loadPath(path);
+      const collection = new CSVCollection();
+
+      await this.#loadPath({ path: config.input, collection });
+
+      if (config.decks) { await this.#loadPath({ path: config.decks, collection, isDeck: true }); }
+
+      return collection;
    }
 
    /**
@@ -144,14 +153,19 @@ export class CSVCollection
    /**
     * Load collection.
     *
-    * @param path - A single CSV file path or a directory path to load all `.csv` files.
+    * @param options - Options.
+    *
+    * @param options.path - A single CSV file path or a directory path to load all `.csv` files.
+    *
+    * @param [options.collection] - Existing collection to load CSV card data into.
+    *
+    * @param [options.isDeck] - Mark loaded CSV card data as in a `deck` / checked out.
     *
     * @returns A new collection of all CSV card data.
     */
-   static async #loadPath(path: string): Promise<CSVCollection>
+   static async #loadPath({ path, collection = new CSVCollection(), isDeck = false }: { path: string, collection?:
+    CSVCollection, isDeck?: boolean }): Promise<CSVCollection>
    {
-      const collection = new CSVCollection();
-
       if (isDirectory(path))
       {
          logger.verbose(`Loading directory path: ${path}`);
@@ -162,18 +176,22 @@ export class CSVCollection
          {
             logger.verbose(`Loading file path: ${file}`);
 
-            collection.#index.push(await CSVCardIndex.fromCSV(file));
+            collection.#index.push(await CSVCardIndex.fromCSV(file, isDeck));
          }
 
          logger.info('Done extracting CSV collection files.');
       }
-      else
+      else if (isFile(path))
       {
          logger.verbose(`Loading file path: ${path}`);
 
          collection.#index.push(await CSVCardIndex.fromCSV(path));
 
          logger.info('Done extracting CSV collection file.');
+      }
+      else
+      {
+         throw new TypeError(`Invalid path: ${path}`);
       }
 
       return collection;

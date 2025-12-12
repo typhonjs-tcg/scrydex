@@ -32,6 +32,11 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
 
+   if (opts.decks !== void 0 && !isFile(opts.decks) && !isDirectory(opts.decks))
+   {
+      exit(`'decks' option is not a file or directory path.`);
+   }
+
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
@@ -41,7 +46,8 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    const config: ConfigConvert = {
       input,
       output: opts.output,
-      db: opts.db
+      db: opts.db,
+      decks: opts.decks
    };
 
    // Set default log level to verbose.
