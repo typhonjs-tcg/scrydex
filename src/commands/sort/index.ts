@@ -66,6 +66,7 @@ function formatSort(config: ConfigSort): SortedFormat[]
     */
    const presortFormat: Map<string, Card[]> = new Map(config.formats.map((entry) => [entry, []]));
 
+   presortFormat.set('basic-land', []);
    presortFormat.set('unsorted', []);
 
    /**
@@ -74,6 +75,13 @@ function formatSort(config: ConfigSort): SortedFormat[]
 
    for (const card of db)
    {
+      // Separate all basic land.
+      if (card.type === 'Land - Basic')
+      {
+         presortFormat.get('basic-land')?.push(card);
+         continue;
+      }
+
       let sorted = false;
 
       for (const format of config.formats)
