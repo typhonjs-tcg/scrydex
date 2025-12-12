@@ -51,6 +51,8 @@ export async function sort(config: ConfigSort): Promise<void>
          }
       }
    }
+
+   logger.info(`Finished sorting Scryfall card collection: ${config.output}`);
 }
 
 /**
