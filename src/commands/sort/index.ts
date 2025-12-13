@@ -76,7 +76,7 @@ function formatSort(config: ConfigSort): SortedFormat[]
    for (const card of db)
    {
       // Separate all basic land.
-      if (card.type === 'Land - Basic')
+      if (card.type.startsWith('Land - Basic'))
       {
          presortFormat.get('basic-land')?.push(card);
          continue;

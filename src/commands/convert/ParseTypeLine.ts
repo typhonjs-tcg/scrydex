@@ -114,7 +114,8 @@ export class ParseTypeLine
          // Snow Lands.
          if (this.#regexSnow.test(typeLine))
          {
-            return 'Land - Snow';
+            // There should only be `basic snow` lands.
+            return this.#regexBasic.test(typeLine) ? 'Land - Basic - Snow' : 'Land - Snow';
          }
 
          // Basic Lands.

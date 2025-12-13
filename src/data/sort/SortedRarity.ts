@@ -14,7 +14,6 @@ export class SortedRarity
    readonly #rarity: string;
 
    #regexArtifact = /\bartifact\b/i;
-   #regexBasicLand = /\bbasic\s+land\b/i;
    #regexLand = /\bland\b/i
 
    /**
@@ -156,7 +155,7 @@ export class SortedRarity
       {
          this.#categories.get('Artifact (Colorless)')?.push(card);
       }
-      else if (this.#regexBasicLand.test(card.type_line))
+      else if (card.type.startsWith('Land - Basic'))
       {
          this.#categories.get('Land (Basic)')?.push(card);
       }
