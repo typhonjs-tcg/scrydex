@@ -57,7 +57,7 @@ export class CSVCardIndex
             const name = row['Name'];
             const quantity = Number(row['Quantity']);
             const scryfall_id = row['Scryfall ID'];
-            const foil = row['Foil'] ?? null;
+            const foil = row['Foil'] ?? 'normal';
             const lang_csv = supportedLang.get(row['Language']);
 
             if (!Number.isInteger(quantity) || quantity < 1)
