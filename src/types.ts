@@ -241,7 +241,7 @@ interface CSVCard
    /**
     * Foil variation if any.
     */
-   foil: string | null;
+   foil: string;
 
    /**
     * Language code from CSV file. This is often

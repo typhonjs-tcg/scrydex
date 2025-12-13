@@ -22,6 +22,27 @@ export abstract class CardFields
    }
 
    /**
+    * @param card -
+    *
+    * @returns The finish / foil icon embellishment for spreadsheet card name.
+    */
+   static finishIcon(card: Card): string
+   {
+      switch (card.foil)
+      {
+         case 'etched':
+            return ' ◈'
+
+         case 'foil':
+            return ' ◇'
+
+         default:
+         case 'normal':
+            return '';
+      }
+   }
+
+   /**
     * Defer to original CSV language code if available and differs from the Scryfall card `lang` field.
     *
     * Alas, currently most online MTG collection services do not associate cards w/ foreign language Scryfall IDs.
@@ -74,7 +95,9 @@ export abstract class CardFields
 
       const lang = this.langCode(card);
 
-      return `${name}${lang !== 'en' ? ` [${lang}]` : ''}`;
+      const finishIcon = this.finishIcon(card);
+
+      return `${name}${lang !== 'en' ? ` [${lang}]` : ''}${finishIcon}`;
    }
 
    /**

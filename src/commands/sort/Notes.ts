@@ -79,6 +79,11 @@ export abstract class Notes
          note += `Border: ${card.border_color}\n`;
       }
 
+      if (typeof card.foil === 'string')
+      {
+         note += `Finish: ${card.foil}\n`;
+      }
+
       if (Array.isArray(card.keywords) && card.keywords.length)
       {
          note += `Keywords:\n`;
