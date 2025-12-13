@@ -72,7 +72,9 @@ export class SortedRarity
             faceColors = faceColors.union(new Set(face.colors));
          }
 
-         this.#addImpl(card, [...faceColors]);
+         const colors = faceColors.size ? [...faceColors] : card.colors ?? [];
+
+         this.#addImpl(card, colors);
       }
       else
       {

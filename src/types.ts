@@ -183,7 +183,7 @@ interface CardFace
    /**
     * This card face colors.
     */
-   colors: Colors;
+   colors?: Colors | null;
 
    /**
     * This face’s defense, if any. Battle cards.
@@ -208,7 +208,7 @@ interface CardFace
    /**
     * The Oracle text for this card face, if any.
     */
-   oracle_text: string;
+   oracle_text?: string;
 
    /**
     * This face’s power, if any. Note that some cards have powers that are not numeric, such as *.
@@ -223,12 +223,12 @@ interface CardFace
    /**
     * Normalized card type based on `type line` parsing.
     */
-   type: string;
+   type?: string | null;
 
    /**
     * The type line of this card face.
     */
-   type_line: string;
+   type_line?: string | null;
 }
 
 /**

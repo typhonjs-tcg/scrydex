@@ -12,8 +12,13 @@ export abstract class CardFields
       if (card.card_faces)
       {
          const colors: string[] = [];
-         for (const face of card.card_faces) { colors.push(face.colors?.join(', ') ?? ''); }
-         return colors.join(' // ');
+         for (const face of card.card_faces)
+         {
+            if (Array.isArray(face.colors)) { colors.push(face.colors?.join(', ')); }
+         }
+
+         // Sometimes split cards that have `faces` have `colors` defined on the main card.
+         return colors.length ? colors.join(' // ') : card.colors?.join(', ') ?? '';
       }
       else
       {

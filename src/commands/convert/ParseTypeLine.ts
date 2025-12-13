@@ -72,22 +72,26 @@ export class ParseTypeLine
     *
     * @returns Type category classification.
     */
-   static resolve(card: Card | string): string
+   static resolve(card: Card | string | null | undefined): string | undefined
    {
-      let typeLine: string;
+      if (!card) { return void 0; }
+
+      let typeLine: string | null | undefined;
 
       if (typeof card === 'string')
       {
          typeLine = card;
       }
-      else
+      else if (typeof card === 'object')
       {
          typeLine = Array.isArray(card.card_faces) && card.card_faces.length ? card.card_faces[0].type_line :
           card.type_line;
+
+         // Last fallback possible for when a dual face card doesn't have a type line defined in first face.
+         if (!typeLine) { typeLine = card.type_line; }
       }
 
-
-      if (typeof typeLine !== 'string' || typeLine.length === 0) { return ''; }
+      if (typeof typeLine !== 'string' || typeLine.length === 0) { return void 0; }
 
       // LAND handling -----------------------------------------------------------------------------------------------
 
