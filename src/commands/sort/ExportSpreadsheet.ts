@@ -221,6 +221,8 @@ export class ExportSpreadsheet
       await wb.xlsx.writeFile(outputPath);
    }
 
+   // Internal Implementation ----------------------------------------------------------------------------------------
+
    /**
     * Auto sizes sheet columns to contained content.
     *
@@ -231,6 +233,9 @@ export class ExportSpreadsheet
       for (const col of ws.columns)
       {
          if (!col || !col.eachCell) { continue; }
+
+         // Centered columns receive more padding.
+         const pad = col.header === 'Name' ? 3 : 6;
 
          let max = col?.header?.length ?? 0;
 
@@ -251,7 +256,7 @@ export class ExportSpreadsheet
             max = Math.max(max, text.length);
          });
 
-         col.width = Math.min(65, max + 6);
+         col.width = Math.min(75, max + pad);
       }
    }
 }
