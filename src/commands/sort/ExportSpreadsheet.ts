@@ -60,6 +60,7 @@ export class ExportSpreadsheet
             { header: 'CMC', key: 'CMC', width: 6, alignment: { horizontal: 'center' } },
             { header: 'Colors', key: 'Colors', width: 10, alignment: { horizontal: 'center' } },
             { header: 'Color Identity', key: 'Color Identity', width: 14, alignment: { horizontal: 'center' } },
+            { header: 'Price USD', key: 'Price USD', width: 12, alignment: { horizontal: 'center' } },
             { header: 'Scryfall Link', key: 'Scryfall Link', width: 20, alignment: { horizontal: 'center' } }
          ];
 
@@ -82,6 +83,7 @@ export class ExportSpreadsheet
                CMC: Number(card.cmc),
                Colors: CardFields.colors(card),
                'Color Identity': card.color_identity?.join(', ') ?? '',
+               'Price USD': card.price ?? '',
                'Scryfall Link': card.scryfall_uri
             });
 

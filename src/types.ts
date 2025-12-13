@@ -99,6 +99,11 @@ interface Card extends CSVCard
    power?: string | null;
 
    /**
+    * Any USD price derived from Scryfall DB during conversion.
+    */
+   price: string | null;
+
+   /**
     * The card name as printed in associated language.
     */
    printed_name: string;
@@ -244,7 +249,8 @@ interface CSVCard
    foil: string;
 
    /**
-    * Language code from CSV file. This is often
+    * Language code from CSV file. This is meta-data and various online collection services allow this to be freely
+    * set by the user, so it may not correlate to actual associated Scryfall ID / data.
     */
    lang_csv?: string;
 

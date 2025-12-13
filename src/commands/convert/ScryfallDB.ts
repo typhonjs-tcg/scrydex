@@ -15,8 +15,9 @@ import {
    stringifyCompact }               from '#util';
 
 import type { CSVCollection }       from '#data';
-import type { Card }                from '#types';
+import type { Card, CSVCard }       from '#types';
 import type { ConfigConvert }       from '#types-command';
+import csv from "csv-parser";
 
 export class ScryfallDB
 {
@@ -121,6 +122,7 @@ export class ScryfallDB
                mana_cost: scryCard.mana_cost,
                oracle_text: scryCard.oracle_text,
                power: scryCard.power,
+               price: this.#priceLookup(scryCard, csvCard),
                produced_mana: scryCard.produced_mana,
                released_at: scryCard.released_at,
                toughness: scryCard.toughness,
@@ -245,5 +247,15 @@ export class ScryfallDB
       {
          logger.warn(`No output DB file to write.`);
       }
+   }
+
+   // Internal implementation ----------------------------------------------------------------------------------------
+
+   static #priceLookup(scryCard: Record<string, any>, csvCard: CSVCard): string | null
+   {
+      // Scryfall `prices` property.
+      const index = csvCard.foil === 'normal' ? 'usd' : `usd_${csvCard.foil}`;
+
+      return scryCard?.prices?.[index] ?? null;
    }
 }
