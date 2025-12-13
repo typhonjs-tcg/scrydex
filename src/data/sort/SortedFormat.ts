@@ -28,9 +28,12 @@ export class SortedFormat
 
       this.#rarity = new Map();
 
-      this.#sortRarity(config, cards);
+      if (cards.length)
+      {
+         this.#sortRarity(config, cards);
 
-      if (config.mark.size) { this.#calculateMarked(config, cards); }
+         if (config.mark.size) { this.#calculateMarked(config, cards); }
+      }
    }
 
    /**
@@ -184,6 +187,6 @@ export class SortedFormat
          }
       }
 
-      logger.verbose(`Sorting format '${this.name}' - unique card count: ${this.#cards.length}`);
+      logger.verbose(`Sorting format '${this.name}' - unique card count: ${cards.length}`);
    }
 }
