@@ -102,7 +102,7 @@ function formatSort(config: ConfigSort): SortedFormat[]
       const formatSort = presortFormat.get(format);
       if (!formatSort) { continue; }
 
-      presortFormat.set(format, formatSort.sort((a, b) => a.name.localeCompare(b.name)))
+      presortFormat.set(format, formatSort.sort((a, b) => a.name.localeCompare(b.name)));
    }
 
    const sortedFormats: SortedFormat[] = [];
@@ -111,9 +111,16 @@ function formatSort(config: ConfigSort): SortedFormat[]
    {
       const sortedFormat = new SortedFormat(config, format, cards);
 
-      if (config.mark.size) { sortedFormat.calculateMarked(config); }
+      if (config.mark.size)
+      {
+         const hasMarked = sortedFormat.calculateMarked(config);
+         if (hasMarked)
+         {
+            logger.verbose(`  - Some cards marked for merging.`);
+         }
+      }
 
-      sortedFormats.push(sortedFormat)
+      sortedFormats.push(sortedFormat);
    }
 
    return sortedFormats;

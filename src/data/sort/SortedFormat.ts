@@ -55,12 +55,14 @@ export class SortedFormat
       return this.#cards.length;
    }
 
-   calculateMarked(config: ConfigSort)
+   /**
+    * Calculate any `mark` merging.
+    *
+    * @param config -
+    */
+   calculateMarked(config: ConfigSort): boolean
    {
-      if (this.#cards.length)
-      {
-         this.#calculateMarked(config);
-      }
+      return this.#cards.length ? this.#calculateMarked(config) : false;
    }
 
    /**
@@ -83,9 +85,16 @@ export class SortedFormat
 
    /**
     * @param config -
+    *
+    * @returns Whether any cards were marked for this format.
     */
-   #calculateMarked(config: ConfigSort)
+   #calculateMarked(config: ConfigSort): boolean
    {
+      /**
+       * Tracks if any cards were marked in this format.
+       */
+      let result = false;
+
       /**
        * Scryfall oracle ID map.
        */
@@ -132,6 +141,7 @@ export class SortedFormat
 
          if (!oracleMap.has(card.oracle_id))
          {
+            result = true;
             card.mark = 'ok';
             continue;
          }
@@ -140,15 +150,19 @@ export class SortedFormat
 
          if (existingIDCard && existingIDCard.count >= 4)
          {
+            result = true;
             card.mark = 'error';
             continue;
          }
 
          if (oracleMap.has(card.oracle_id))
          {
+            result = true;
             card.mark = 'warning';
          }
       }
+
+      return result;
    }
 
    /**
