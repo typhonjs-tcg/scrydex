@@ -138,23 +138,16 @@ export class ExportSpreadsheet
             }
 
             const cardStats = Notes.cardStats(card);
-            if (cardStats)
-            {
-               row.getCell('Type').note = cardStats;
-               row.getCell('Type Line').note = cardStats;
-            }
+            if (cardStats) { row.getCell('Type').note = cardStats; }
+
+            const oracleText = Notes.oracleText(card);
+            if (oracleText) { row.getCell('Type Line').note = oracleText; }
 
             // Add natural language note for mana cost.
-            if (cardManaCost.length)
-            {
-               row.getCell('Mana Cost').note = Notes.manaCost(card)
-            }
+            if (cardManaCost.length) { row.getCell('Mana Cost').note = Notes.manaCost(card) }
 
-            // Add English language note for foreign card name.
-            if (CardFields.langCode(card) !== 'en')
-            {
-               row.getCell('Name').note = Notes.nameForeign(card);
-            }
+            // Add note for foreign card name.
+            if (CardFields.langCode(card) !== 'en') { row.getCell('Name').note = Notes.nameForeign(card); }
          }
 
          // Apply Arial + centered alignment rules.
