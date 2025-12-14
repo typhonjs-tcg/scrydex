@@ -11,11 +11,13 @@ import type {
    Worksheet }          from 'exceljs';
 
 import type {
-   SortedFormat,
-   SortedRarity }       from '#data';
+   SortedFormat }       from '#data';
 
 import type {
    ConfigSort }         from '#types-command';
+
+import type {
+   SortedCategories }   from '#types-data';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
@@ -27,11 +29,11 @@ export class ExportSpreadsheet
     *
     * @param format -
     *
-    * @param rarity -
+    * @param categories -
     *
     * @param formatDirPath -
     */
-   static async exportFormatRarity(config: ConfigSort, format: SortedFormat, rarity: SortedRarity,
+   static async exportFormatRarity(config: ConfigSort, format: SortedFormat, categories: SortedCategories,
     formatDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
@@ -40,7 +42,7 @@ export class ExportSpreadsheet
 
       const theme = Theme.get(config);
 
-      for (const [category, cards] of rarity.entries())
+      for (const [category, cards] of categories.entries())
       {
          if (cards.length <= 0) { continue; }
 
@@ -209,7 +211,7 @@ export class ExportSpreadsheet
          this.#autosize(ws);
       }
 
-      const outputPath = path.resolve(formatDirPath, `${format.name}-${rarity.name}.xlsx`);
+      const outputPath = path.resolve(formatDirPath, `${format.name}-${categories.name}.xlsx`);
 
       await wb.xlsx.writeFile(outputPath);
    }

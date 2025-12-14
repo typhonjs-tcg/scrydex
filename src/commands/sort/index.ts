@@ -42,11 +42,11 @@ export async function sort(config: ConfigSort): Promise<void>
          fs.writeFileSync(path.resolve(formatDirPath, `${format.name}-all.json`), stringifyCompact(format.cards),
           'utf-8');
 
-         for (const rarity of format.values())
+         for (const sortedCategory of format.values())
          {
-            if (rarity.size > 0)
+            if (sortedCategory.size > 0)
             {
-               await ExportSpreadsheet.exportFormatRarity(config, format, rarity, formatDirPath);
+               await ExportSpreadsheet.exportFormatRarity(config, format, sortedCategory, formatDirPath);
             }
          }
       }
@@ -109,7 +109,16 @@ function formatSort(config: ConfigSort): SortedFormat[]
 
    for (const [format, cards] of presortFormat)
    {
-      const sortedFormat = new SortedFormat(config, format, cards);
+      const sortedFormat = new SortedFormat(format, cards);
+
+      sortedFormat.sort({ alpha: true, type: config.sortByType });
+
+      logger.verbose(`Sorting format '${format}' - unique card entry count: ${cards.length}`);
+
+      // if (format !== 'basic-land' && format !== 'unsorted')
+      // {
+      //    sortedFormat.extractBinder();
+      // }
 
       if (config.mark.size)
       {

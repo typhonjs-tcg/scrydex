@@ -1,2 +1,2 @@
 export * from './SortedFormat';
-export * from './SortedRarity';
+export * from './SortedColor';

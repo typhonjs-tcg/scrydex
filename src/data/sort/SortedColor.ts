@@ -1,27 +1,29 @@
 import { parseManaCostColors }   from '#data';
 
-import type { CardSorted }       from '#types-command';
+import type {
+   CardSorted,
+   SortedCategories }            from '#types-data';
 
-export class SortedRarity
+export class SortedColor implements SortedCategories
 {
    /**
     */
    #categories: Map<string, CardSorted[]> = new Map();
 
    /**
-    * Rarity value for this collection of cards.
+    * Name for this collection of cards.
     */
-   readonly #rarity: string;
+   readonly #name: string;
 
    #regexArtifact = /\bartifact\b/i;
    #regexLand = /\bland\b/i
 
    /**
-    * @param rarity - Rarity value for this collection of cards.
+    * @param name - Name for this collection of cards.
     */
-   constructor(rarity: string)
+   constructor(name: string)
    {
-      this.#rarity = rarity;
+      this.#name = name;
 
       this.#categories = new Map();
 
@@ -43,7 +45,7 @@ export class SortedRarity
     */
    get name(): string
    {
-      return this.#rarity;
+      return this.#name;
    }
 
    /**
@@ -97,24 +99,28 @@ export class SortedRarity
    }
 
    /**
-    * Sort all categories by alpha / name.
+    * @param options -
+    *
+    * @param [options.alpha] - Sort by alphabetical name.
+    *
+    * @param [options.type] - Sort by normalized type.
     */
-   sortAlpha()
+   sort(options: { alpha?: boolean, type?: boolean })
    {
-      for (const cards of this.#categories.values())
+      if (options.alpha)
       {
-         cards.sort((a, b) => a.name.localeCompare(b.name));
+         for (const cards of this.#categories.values())
+         {
+            cards.sort((a, b) => a.name.localeCompare(b.name));
+         }
       }
-   }
 
-   /**
-    * Sort all categories by normalized type line.
-    */
-   sortType()
-   {
-      for (const cards of this.#categories.values())
+      if (options.type)
       {
-         cards.sort((a, b) => a.type.localeCompare(b.type));
+         for (const cards of this.#categories.values())
+         {
+            cards.sort((a, b) => a.type.localeCompare(b.type));
+         }
       }
    }
 
