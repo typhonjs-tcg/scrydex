@@ -28,12 +28,7 @@ export class SortedFormat
 
       this.#rarity = new Map();
 
-      if (cards.length)
-      {
-         this.#sortRarity(config, cards);
-
-         if (config.mark.size) { this.#calculateMarked(config, cards); }
-      }
+      if (cards.length) { this.#sortRarity(config, cards); }
    }
 
    /**
@@ -60,6 +55,14 @@ export class SortedFormat
       return this.#cards.length;
    }
 
+   calculateMarked(config: ConfigSort)
+   {
+      if (this.#cards.length)
+      {
+         this.#calculateMarked(config);
+      }
+   }
+
    /**
     * @returns Entry iterator of rarity groups.
     */
@@ -80,10 +83,8 @@ export class SortedFormat
 
    /**
     * @param config -
-    *
-    * @param cards -
     */
-   #calculateMarked(config: ConfigSort, cards: CardSorted[])
+   #calculateMarked(config: ConfigSort)
    {
       /**
        * Scryfall oracle ID map.
@@ -97,7 +98,7 @@ export class SortedFormat
 
       const mark = config.mark;
 
-      for (const card of cards)
+      for (const card of this.#cards)
       {
          // Skip if is part of `marked` filenames.
          if (mark.has(card.filename)) { continue; }
@@ -125,7 +126,7 @@ export class SortedFormat
          }
       }
 
-      for (const card of cards)
+      for (const card of this.#cards)
       {
          if (!mark.has(card.filename)) { continue; }
 

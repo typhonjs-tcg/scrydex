@@ -105,12 +105,16 @@ function formatSort(config: ConfigSort): SortedFormat[]
       presortFormat.set(format, formatSort.sort((a, b) => a.name.localeCompare(b.name)))
    }
 
-   /**
-    * @type {SortedFormat[]}
-    */
-   const sortedFormats = [];
+   const sortedFormats: SortedFormat[] = [];
 
-   for (const [format, cards] of presortFormat) { sortedFormats.push(new SortedFormat(config, format, cards)) }
+   for (const [format, cards] of presortFormat)
+   {
+      const sortedFormat = new SortedFormat(config, format, cards);
+
+      if (config.mark.size) { sortedFormat.calculateMarked(config); }
+
+      sortedFormats.push(sortedFormat)
+   }
 
    return sortedFormats;
 }
