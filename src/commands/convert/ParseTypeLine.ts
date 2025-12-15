@@ -72,9 +72,9 @@ export class ParseTypeLine
     *
     * @returns Type category classification.
     */
-   static resolve(card: Card | string | null | undefined): string | undefined
+   static resolve(card: Card | string | null | undefined): string
    {
-      if (!card) { return void 0; }
+      if (!card) { throw new Error(`'card' must be a card object or string.`); }
 
       let typeLine: string | null | undefined;
 
@@ -91,7 +91,11 @@ export class ParseTypeLine
          if (!typeLine) { typeLine = card.type_line; }
       }
 
-      if (typeof typeLine !== 'string' || typeLine.length === 0) { return void 0; }
+      if (typeof typeLine !== 'string' || typeLine.length === 0)
+      {
+         throw new Error(
+          `ParseTypeLine.resolve error: Could not determine type line from card:\n${JSON.stringify(card)}`);
+      }
 
       // LAND handling -----------------------------------------------------------------------------------------------
 

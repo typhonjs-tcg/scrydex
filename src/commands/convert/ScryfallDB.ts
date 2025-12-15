@@ -17,7 +17,6 @@ import {
 import type { CSVCollection }       from '#data';
 import type { Card, CSVCard }       from '#types';
 import type { ConfigConvert }       from '#types-command';
-import csv from "csv-parser";
 
 export class ScryfallDB
 {
