@@ -1,18 +1,17 @@
 import fs                           from 'node:fs';
 import chain                        from 'stream-chain';
 import parser                       from 'stream-json';
-import StreamArray                  from 'stream-json/streamers/StreamArray.js';
+import { streamArray }              from 'stream-json/streamers/StreamArray';
 
 import { ParseCardFaces }           from './ParseCardFaces';
 import { ParseTypeLine }            from './ParseTypeLine';
 
 import {
+   CardDB,
    excludedSetsRecentRarity,
    excludedSetTypesRecentRarity }   from '#data';
 
-import {
-   logger,
-   stringifyCompact }               from '#util';
+import { logger }                   from '#util';
 
 import type { CSVCollection }       from '#data';
 import type { Card, CSVCard }       from '#types';
@@ -43,7 +42,7 @@ export class ScryfallDB
       const pipeline = chain([
          fs.createReadStream(config.db),
          parser(),
-         new StreamArray()
+         streamArray()
       ]);
 
       let totalQuantity = 0;
@@ -99,8 +98,9 @@ export class ScryfallDB
                object: 'card',
                name: scryCard.name,
                type: ParseTypeLine.resolve(scryCard),
-               rarity: scryCard.rarity,
                quantity: csvCard.quantity,
+               filename: csvCard.filename,
+               rarity: scryCard.rarity,
                set: scryCard.set,
                set_name: scryCard.set_name,
                set_type: scryCard.set_type,
@@ -126,7 +126,6 @@ export class ScryfallDB
                released_at: scryCard.released_at,
                toughness: scryCard.toughness,
                type_line: scryCard.type_line,
-               filename: csvCard.filename,
                printed_name: scryCard.printed_name,
                rarity_orig: scryCard.rarity,
                rarity_recent: scryCard.rarity,
@@ -240,7 +239,11 @@ export class ScryfallDB
 
       if (outputDB.length > 0)
       {
-         fs.writeFileSync(config.output, stringifyCompact(outputDB), 'utf-8');
+         CardDB.save({
+            filepath: config.output,
+            cards: outputDB,
+            type: 'collection'
+         });
       }
       else
       {

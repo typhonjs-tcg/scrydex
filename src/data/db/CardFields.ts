@@ -1,4 +1,4 @@
-import { langCodeToName }  from './langCodeToName';
+import { langCodeToName }  from '#data';
 
 import type { Card }       from '#types';
 

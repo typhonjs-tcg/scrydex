@@ -17,7 +17,7 @@ export async function sortFormat(config: ConfigSortFormat): Promise<void>
    logger.info(`Sorting Scryfall card collection: ${config.input}`);
    logger.info(`Formats: ${config.formats.join(', ')}`);
 
-   await ExportCollection.generate(config, SortedFormat.generate(config));
+   await ExportCollection.generate(config, await SortedFormat.generate(config));
 
    logger.info(`Finished sorting Scryfall card collection: ${config.output}`);
 }

@@ -153,6 +153,12 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
    }
 }
 
+export async function commandFindFormat(input: string, directory: string)
+{
+   console.log(`!!! commandFindFormat - input: `, input);
+   console.log(`!!! commandFindFormat - directory: `, directory);
+}
+
 /**
  * Invokes `sort` with the given config and `dotenv` options.
  *
@@ -258,6 +264,14 @@ function validateBorder(borders: string): Set<string>
    }
 
    return seen;
+}
+
+/**
+ * Validates all common config options.
+ */
+function validateConfig(config: Record<string, any>)
+{
+
 }
 
 /**

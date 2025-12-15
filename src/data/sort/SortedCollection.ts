@@ -46,6 +46,11 @@ export abstract class SortedCollection
    }
 
    /**
+    * Implement in child class.
+    */
+   abstract get type(): string;
+
+   /**
     * Calculate any `mark` merging.
     *
     * @param config -

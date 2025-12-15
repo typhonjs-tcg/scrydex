@@ -1,13 +1,8 @@
-import fs                     from 'node:fs';
-import chain                  from 'stream-chain';
-import parser                 from 'stream-json';
-import StreamArray            from 'stream-json/streamers/StreamArray.js';
-
-import { validLegality }      from '#data';
-
 import {
-   logger,
-   stringifyCompact }         from '#util';
+   CardDB,
+   validLegality }            from '#data';
+
+import { logger }             from '#util';
 
 import type { Card }          from '#types';
 import type { ConfigFilter }  from '#types-command';
@@ -31,17 +26,13 @@ export async function filter(config: ConfigFilter): Promise<void>
       logger.info(`Formats: ${config.formats.join(' and ')}`);
    }
 
-   const pipeline = chain([
-      fs.createReadStream(config.input),
-      parser(),
-      new StreamArray()
-   ]);
+   const cards = await CardDB.loadStream({ filepath: config.input });
 
    const outputDB: Card[] = [];
 
    let totalUnique = 0;
 
-   for await (const { value: card } of pipeline)
+   for await (const card of cards.asStream())
    {
       if (card.object !== 'card') { continue; }
 
@@ -71,7 +62,12 @@ export async function filter(config: ConfigFilter): Promise<void>
 
    if (outputDB.length > 0)
    {
-      fs.writeFileSync(config.output, stringifyCompact(outputDB), 'utf-8');
+      CardDB.save({
+         filepath: config.output,
+         type: cards.type,
+         name: cards.name,
+         cards: outputDB
+      });
 
       logger.info(`Finished filtering Scryfall card collection: ${config.output}`);
       logger.info(`Filtered ${outputDB.length} / ${totalUnique} unique cards.`);

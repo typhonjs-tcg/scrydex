@@ -106,12 +106,12 @@ interface Card extends CSVCard
    /**
     * The card name as printed in associated language.
     */
-   printed_name: string;
+   printed_name?: string;
 
    /**
     * Colors of mana that this card could produce.
     */
-   produced_mana: Colors;
+   produced_mana?: Colors;
 
    /**
     * This card’s rarity. One of `common`, `uncommon`, `rare`, `special`, `mythic`, or `bonus`.
@@ -276,6 +276,53 @@ interface CSVCard
 }
 
 /**
+ * Describes collection / JSON card DB metadata.
+ */
+interface CollectionMetaData
+{
+   /**
+    * Type of card collection.
+    */
+   type: 'collection' | 'game_format',
+
+   /**
+    * Name of game format
+    */
+   name?: string;
+
+   /**
+    * Generating CLI version.
+    */
+   cliVersion: string;
+
+   /**
+    * Generating schema version.
+    */
+   schemaVersion: string;
+
+   /**
+    * Date generated in UTC.
+    */
+   generatedAt: string;
+}
+
+/**
+ * Defines the card collection JSON file format.
+ */
+interface CardCollection
+{
+   /**
+    * Metadata about this collection.
+    */
+   meta: CollectionMetaData;
+
+   /**
+    * List of associated cards.
+    */
+   cards: Card[];
+}
+
+/**
  * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase, single-character
  * abbreviations for those colors. For example, `["W","U"]` represents something that is both white and blue. Colorless
  * sources are denoted with an empty array `[]`.
@@ -286,7 +333,9 @@ type Colors = string[];
 
 export {
    type Card,
+   type CardCollection,
    type CardFace,
+   type CollectionMetaData,
+   type Colors,
    type CSVCard,
-   type Colors
 }

@@ -8,11 +8,9 @@ import { Notes }        from './Notes';
 import { Theme }        from './Theme';
 
 import {
+   CardDB,
    CardFields,
    SortedCollection }   from '#data';
-
-import {
-   stringifyCompact }   from '#util';
 
 import type {
    Worksheet }          from 'exceljs';
@@ -41,8 +39,12 @@ export abstract class ExportCollection
             if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath); }
 
             // Export collection cards to JSON DB.
-            fs.writeFileSync(path.resolve(collectionDirPath, `${collection.name}-all.json`),
-             stringifyCompact(collection.cards), 'utf-8');
+            CardDB.save({
+               filepath: path.resolve(collectionDirPath, `${collection.name}-all.json`),
+               type: collection.type,
+               name: collection.name,
+               cards: collection.cards
+            });
 
             for (const categories of collection.values())
             {

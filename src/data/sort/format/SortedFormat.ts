@@ -3,6 +3,7 @@ import fs                        from 'node:fs';
 import { SortedCollection }      from '../SortedCollection';
 
 import {
+   CardDB,
    SortedColor,
    validLegality }               from '#data';
 
@@ -28,13 +29,21 @@ export class SortedFormat extends SortedCollection
    }
 
    /**
+    * Returns the card collection type.
+    */
+   get type(): string
+   {
+      return 'game_format';
+   }
+
+   /**
     * Generates all game format sorted collections.
     *
     * @param config -
     *
     * @returns All game format sorted collections.
     */
-   static generate(config: ConfigSortFormat): SortedFormat[]
+   static async generate(config: ConfigSortFormat): Promise<SortedFormat[]>
    {
       /**
        */
@@ -43,11 +52,9 @@ export class SortedFormat extends SortedCollection
       presortFormat.set('basic-land', []);
       presortFormat.set('unsorted', []);
 
-      /**
-       */
-      const db: Card[] = JSON.parse(fs.readFileSync(config.input, 'utf8'));
+      const db = await CardDB.loadStream({ filepath: config.input });
 
-      for (const card of db)
+      for await (const card of db.asStream())
       {
          // Separate all basic land.
          if (card.type.startsWith('Land - Basic'))

@@ -1,22 +1,19 @@
 #!/usr/bin/env node
 import sade                   from 'sade';
 
-import { getPackage }         from '@typhonjs-utils/package-json';
-
 import {
    commandConvert,
    commandFilter,
+   commandFindFormat,
    commandSortFormat }        from './functions';
 
 import { wrap }               from './wrap';
 
 import { supportedFormats }   from '#data';
-
-// Retrieve the `esm-d-ts` package.
-const packageObj = getPackage({ filepath: import.meta.url });
+import { VERSION }            from '#version';
 
 const program = sade('scrydex')
-.version((packageObj as any)?.version)
+.version(VERSION.package)
 
 // Global options
 .option('-l, --loglevel', `Specify logging level: 'off', 'fatal', 'error', 'warn', 'info', 'debug', 'verbose', ` +
@@ -43,6 +40,12 @@ program
 .example('filter ./collection.json --formats commander --color-identity {W}{U}{G} --output ./commander-wug.json')
 .example('filter ./collection.json --border black:borderless --output ./black-borderless.json')
 .action(commandFilter);
+
+program
+.command('find-format [input] [directory]', 'Find Card')
+.describe(`Finds a card by name from a sorted format directory / JSON DBs.`)
+.example('find-format "Demonic Tutor" ./sorted-directory')
+.action(commandFindFormat);
 
 program.command('formats', `List all supported Scryfall game 'formats'.`)
 .action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
