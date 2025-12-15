@@ -98,47 +98,8 @@ interface ConfigSortFormat extends ConfigSort
    formats: string[];
 }
 
-/**
- * Defines theming data used by {@link ExportCollection}.
- */
-interface ThemeData
-{
-   get cell(): {
-      border: Partial<Borders>
-   }
-
-   get fonts(): {
-      header: Partial<Font>,
-      link: Partial<Font>,
-      main: Partial<Font>
-   }
-
-   get mark(): {
-      error: { fill: Fill, border: Partial<Borders> }
-      ok: { fill: Fill, border: Partial<Borders> }
-      warning: { fill: Fill, border: Partial<Borders> }
-      in_deck: { fill: Fill, border: Partial<Borders> }
-   }
-
-   get row(): {
-      fill: {
-         alternate: Fill,
-         default: Fill
-      },
-
-      lastRow: {
-         border: Partial<Borders>
-      }
-   }
-
-   get sortByType(): {
-      border: Partial<Borders>
-   }
-}
-
 export {
    type ConfigConvert,
    type ConfigFilter,
    type ConfigSort,
-   type ConfigSortFormat,
-   type ThemeData };
+   type ConfigSortFormat };

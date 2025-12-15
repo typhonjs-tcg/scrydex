@@ -1,11 +1,10 @@
 import type {
    Borders,
    Fill,
-   Font }      from 'exceljs';
+   Font }         from 'exceljs';
 
 import type {
-   ConfigSort,
-   ThemeData } from '#types-command';
+   ConfigSort }   from '#types-command';
 
 export class Theme
 {
@@ -272,5 +271,43 @@ class ThemeLight implements ThemeData
    get sortByType()
    {
       return this.#sortByType;
+   }
+}
+
+/**
+ * Defines theming data used by {@link ExportCollection}.
+ */
+interface ThemeData
+{
+   get cell(): {
+      border: Partial<Borders>
+   }
+
+   get fonts(): {
+      header: Partial<Font>,
+      link: Partial<Font>,
+      main: Partial<Font>
+   }
+
+   get mark(): {
+      error: { fill: Fill, border: Partial<Borders> }
+      ok: { fill: Fill, border: Partial<Borders> }
+      warning: { fill: Fill, border: Partial<Borders> }
+      in_deck: { fill: Fill, border: Partial<Borders> }
+   }
+
+   get row(): {
+      fill: {
+         alternate: Fill,
+         default: Fill
+      },
+
+      lastRow: {
+         border: Partial<Borders>
+      }
+   }
+
+   get sortByType(): {
+      border: Partial<Borders>
    }
 }
