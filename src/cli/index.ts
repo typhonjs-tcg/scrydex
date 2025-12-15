@@ -6,7 +6,7 @@ import { getPackage }         from '@typhonjs-utils/package-json';
 import {
    commandConvert,
    commandFilter,
-   commandSort }              from './functions';
+   commandSortFormat }        from './functions';
 
 import { wrap }               from './wrap';
 
@@ -48,15 +48,15 @@ program.command('formats', `List all supported Scryfall game 'formats'.`)
 .action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
 
 program
-.command('sort [input]', 'Sort')
+.command('sort-format [input]', 'Sort')
 .describe(`Sorts a converted Scryfall card DB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by type of card.')
 .option('--formats', 'Provide a colon separated list of game formats for sorting.')
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
 .option('--theme', 'Options are `light` or `dark`; light theme is default.')
-.example('sort ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
-.example('sort ./collection.json --formats predh:commander --output ./spreadsheets')
-.action(commandSort);
+.example('sort-format ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
+.example('sort-format ./collection.json --formats predh:commander --output ./spreadsheets')
+.action(commandSortFormat);
 
 program.parse(process.argv);

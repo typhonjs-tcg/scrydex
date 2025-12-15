@@ -1,6 +1,6 @@
 import type { Borders, Fill, Font } from 'exceljs';
 
-import type { ExportSpreadsheet }   from './sort/ExportSpreadsheet';
+import type { ExportCollection }   from './sort/ExportCollection';
 
 /**
  * Config object for the `convert` command.
@@ -65,11 +65,6 @@ interface ConfigFilter
 interface ConfigSort
 {
    /**
-    * Scryfall game formats and sort order.
-    */
-   formats: string[];
-
-   /**
     * Input JSON file post conversion.
     */
    input: string;
@@ -95,8 +90,16 @@ interface ConfigSort
    theme: 'light' | 'dark';
 }
 
+interface ConfigSortFormat extends ConfigSort
+{
+   /**
+    * Scryfall game formats and sort order.
+    */
+   formats: string[];
+}
+
 /**
- * Defines theming data used by {@link ExportSpreadsheet}.
+ * Defines theming data used by {@link ExportCollection}.
  */
 interface ThemeData
 {
@@ -137,4 +140,5 @@ export {
    type ConfigConvert,
    type ConfigFilter,
    type ConfigSort,
+   type ConfigSortFormat,
    type ThemeData };

@@ -7,7 +7,7 @@ import {
 import {
    convert,
    filter,
-   sort }               from '#commands';
+   sortFormat }         from '#commands';
 
 import {
    parseManaCostColors,
@@ -18,7 +18,7 @@ import { logger }       from '#util';
 import type {
    ConfigConvert,
    ConfigFilter,
-   ConfigSort }         from '#types-command';
+   ConfigSortFormat }   from '#types-command';
 
 /**
  * Invokes `convert` with the given config.
@@ -162,7 +162,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
  *
  * @returns {Promise<void>}
  */
-export async function commandSort(input: string, opts: Record<string, any>): Promise<void>
+export async function commandSortFormat(input: string, opts: Record<string, any>): Promise<void>
 {
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
@@ -194,7 +194,7 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
 
    const theme = opts.theme === 'dark' ? 'dark' : 'light';
 
-   const config: ConfigSort = {
+   const config: ConfigSortFormat = {
       input,
       output: opts.output,
       formats,
@@ -210,7 +210,7 @@ export async function commandSort(input: string, opts: Record<string, any>): Pro
 
    try
    {
-      await sort(config);
+      await sortFormat(config);
    }
    catch (err)
    {
@@ -234,7 +234,6 @@ function exit(message: string, exit: boolean = true)
    console.error(`[31m[scrydex] ${message}[0m`);
    if (exit) { process.exit(1); }
 }
-
 
 /**
  * Parse and validate border colors.

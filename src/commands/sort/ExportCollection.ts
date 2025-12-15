@@ -1,17 +1,21 @@
+import fs               from 'node:fs';
 import path             from 'node:path';
 
+import { isDirectory }  from '@typhonjs-utils/file-util';
 import Excel            from 'exceljs';
 
 import { Notes }        from './Notes';
 import { Theme }        from './Theme';
 
-import { CardFields }   from '#data';
+import {
+   CardFields,
+   SortedCollection }   from '#data';
+
+import {
+   stringifyCompact }   from '#util';
 
 import type {
    Worksheet }          from 'exceljs';
-
-import type {
-   SortedFormat }       from '#data';
 
 import type {
    ConfigSort }         from '#types-command';
@@ -22,19 +26,46 @@ import type {
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
  */
-export class ExportSpreadsheet
+export abstract class ExportCollection
 {
+   static async generate(config: ConfigSort, collections: Iterable<SortedCollection>): Promise<void>
+   {
+      for (const collection of collections)
+      {
+         if (collection.size > 0)
+         {
+            // Store spreadsheets in format subdirectories.
+            const collectionDirPath = path.resolve(config.output, collection.name);
+
+            // Create collection subdirectory if it doesn't exist already.
+            if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath); }
+
+            // Export collection cards to JSON DB.
+            fs.writeFileSync(path.resolve(collectionDirPath, `${collection.name}-all.json`),
+             stringifyCompact(collection.cards), 'utf-8');
+
+            for (const categories of collection.values())
+            {
+               if (categories.size > 0)
+               {
+                  await ExportCollection.#exportSpreadsheet(config, collection, categories, collectionDirPath);
+               }
+            }
+         }
+      }
+   }
+
    /**
     * @param config -
     *
-    * @param format -
+    * @param collection -
     *
     * @param categories -
     *
-    * @param formatDirPath -
+    * @param collectionDirPath -
     */
-   static async exportFormatRarity(config: ConfigSort, format: SortedFormat, categories: SortedCategories,
-    formatDirPath: string): Promise<void>
+   static async #exportSpreadsheet(config: ConfigSort, collection: SortedCollection, categories: SortedCategories,
+    collectionDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
 
@@ -211,7 +242,7 @@ export class ExportSpreadsheet
          this.#autosize(ws);
       }
 
-      const outputPath = path.resolve(formatDirPath, `${format.name}-${categories.name}.xlsx`);
+      const outputPath = path.resolve(collectionDirPath, `${collection.name}-${categories.name}.xlsx`);
 
       await wb.xlsx.writeFile(outputPath);
    }

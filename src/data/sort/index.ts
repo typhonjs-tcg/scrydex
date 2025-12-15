@@ -1,2 +1,3 @@
-export * from './SortedFormat';
+export * from './format/SortedFormat';
+export * from './SortedCollection';
 export * from './SortedColor';
