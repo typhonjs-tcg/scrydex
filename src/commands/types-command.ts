@@ -66,6 +66,11 @@ interface ConfigFind
     * Regular expression to evaluate on card names.
     */
    regex: RegExp;
+
+   /**
+    * The card fields to search.
+    */
+   regexFields: Set<string>;
 }
 
 /**

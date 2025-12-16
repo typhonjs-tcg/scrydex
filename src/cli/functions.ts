@@ -169,9 +169,44 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    if (typeof input !== 'string') { throw new TypeError(`'input' option must be a string.`); }
    if(!isDirectory(dirpath)) { exit(`'directory' option path is an invalid directory.`); }
 
+   // Verify pattern match fields.
    if (opts.b !== void 0 && typeof opts.b !== 'boolean') { throw new TypeError(`'b' option must be a boolean.`); }
    if (opts.i !== void 0 && typeof opts.i !== 'boolean') { throw new TypeError(`'i' option must be a boolean.`); }
-   if (opts.exact !== void 0 && typeof opts.exact !== 'boolean') { throw new TypeError(`'exact' option must be a boolean.`); }
+   if (opts.exact !== void 0 && typeof opts.exact !== 'boolean')
+   {
+      throw new TypeError(`'exact' option must be a boolean.`);
+   }
+
+   // Verify search surface fields.
+   if (opts.name !== void 0 && typeof opts.name !== 'boolean')
+   {
+      throw new TypeError(`'name' option must be a boolean.`);
+   }
+
+   if (opts.oracle !== void 0 && typeof opts.oracle !== 'boolean')
+   {
+      throw new TypeError(`'oracle' option must be a boolean.`);
+   }
+
+   if (opts.type !== void 0 && typeof opts.type !== 'boolean')
+   {
+      throw new TypeError(`'type' option must be a boolean.`);
+   }
+
+   const regexFields: string[] = [];
+
+   // Name field is searched by default when no options provided.
+   if (!opts.name && !opts.oracle && !opts.type)
+   {
+      regexFields.push('name');
+   }
+   else
+   {
+      // Specific fields requested.
+      if (opts.name) { regexFields.push('name'); }
+      if (opts.oracle) { regexFields.push('oracle_text'); }
+      if (opts.type) { regexFields.push('type_line'); }
+   }
 
    let searchText = input;
 
@@ -201,8 +236,10 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    if (!regex) { return; }
 
    const config: ConfigFind = {
+      dirpath,
       regex,
-      dirpath
+      // If there is no input string via `""` do not include regex fields.
+      regexFields: new Set(input.length ? regexFields : [])
    }
 
    await find(config);

@@ -47,6 +47,9 @@ program
 .option('-i', 'Case insensitive search')
 .option('-b', 'Enforce word boundaries on search')
 .option('--exact', 'Match the search text exactly')
+.option('--oracle', 'Match against the card oracle text.')
+.option('--name', 'Match against the card name (default).')
+.option('--type', 'Match against the card type line.')
 .example('find "Demonic Tutor" ./sorted-directory')
 .action(commandFindFormat);
 
