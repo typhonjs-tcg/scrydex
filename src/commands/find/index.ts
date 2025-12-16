@@ -4,7 +4,9 @@ import { ConfigFind }   from '#types-command';
 
 export async function find(config: ConfigFind)
 {
-   const cardStreams = await CardDB.loadAll({ dirpath: config.dirpath, type: 'game_format' });
+   const cardStreams = await CardDB.loadAll({ dirpath: config.dirpath, type: 'game_format', walk: true });
+
+   console.log(`!!! find - cardStreams.length: ${cardStreams.length}`);
 
    for (const cardStream of cardStreams)
    {

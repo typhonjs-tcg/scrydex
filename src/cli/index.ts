@@ -43,7 +43,10 @@ program
 
 program
 .command('find [input] [dirpath]', 'Find Card')
-.describe(`Finds a card by name or regular expression from a sorted format directory.`)
+.describe(`Finds a card by text / regular expression from a sorted format directory.`)
+.option('-i', 'Case insensitive search')
+.option('-b', 'Enforce word boundaries on search')
+.option('--exact', 'Match the search text exactly')
 .example('find "Demonic Tutor" ./sorted-directory')
 .action(commandFindFormat);
 

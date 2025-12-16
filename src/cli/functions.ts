@@ -161,16 +161,31 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
  * @param input - Search text / regular expression.
  *
  * @param dirpath - Directory path to search for `game_format` JSON card DBs.
+ *
+ * @param opts - CLI options.
  */
-export async function commandFindFormat(input: string, dirpath: string)
+export async function commandFindFormat(input: string, dirpath: string, opts: Record<string, any>)
 {
+   if (typeof input !== 'string') { throw new TypeError(`'input' option must be a string.`); }
    if(!isDirectory(dirpath)) { exit(`'directory' option path is an invalid directory.`); }
+
+   if (opts.b !== void 0 && typeof opts.b !== 'boolean') { throw new TypeError(`'b' option must be a boolean.`); }
+   if (opts.i !== void 0 && typeof opts.i !== 'boolean') { throw new TypeError(`'i' option must be a boolean.`); }
+   if (opts.exact !== void 0 && typeof opts.exact !== 'boolean') { throw new TypeError(`'exact' option must be a boolean.`); }
+
+   let searchText = input;
+
+   // Wrap w/ word boundaries.
+   if (opts.b) { searchText = `\\b${searchText}\\b`; }
+
+   // Wrap with exact pattern match.
+   if (opts.exact) { searchText = `^${searchText}$`; }
 
    let regex: RegExp | undefined = void 0;
 
    try
    {
-      regex = new RegExp(input);
+      regex = new RegExp(searchText, opts.i ? 'i' : void 0);
    }
    catch (err: unknown)
    {
