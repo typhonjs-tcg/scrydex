@@ -1,6 +1,8 @@
-import { CardFields }   from '#data';
+import {
+   CardFields,
+   PrintCardFields } from '#data';
 
-import { Card }         from '#types';
+import { Card }      from '#types';
 
 /**
  * Helper to create additional cell notes used in spreadsheet for note / comment on applicable cells.
@@ -118,41 +120,6 @@ export abstract class Notes
    }
 
    /**
-    * Generates a note for any oracle text provided with the card.
-    *
-    * @param card -
-    */
-   static oracleText(card: Card): string | undefined
-   {
-      let note = '';
-
-      if (card.card_faces)
-      {
-         const entries: string[] = [];
-
-         for (const face of card.card_faces)
-         {
-            if (face?.oracle_text?.length) { entries.push(face.oracle_text); }
-         }
-
-         if (entries.length)
-         {
-            note = entries.join('\n//\n');
-         }
-         else if (card.oracle_text?.length) // Fallback to any possible oracle text for at the card level.
-         {
-            note = card.oracle_text;
-         }
-      }
-      else if (card.oracle_text?.length)
-      {
-         note = card.oracle_text;
-      }
-
-      return note.length ? note.trim() : void 0;
-   }
-
-   /**
     * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
     *
     * @param manaCost - A card / card face mana cost to string note.
@@ -209,7 +176,7 @@ export abstract class Notes
 
       const name = card.lang !== lang ? '' : `${card.printed_name ?? card.name}\n`;
 
-      return `${name}Language: ${CardFields.langName(card)}`;
+      return `${name}Language: ${PrintCardFields.langName(card)}`;
    }
 
    // Internal Implementation (`manaCost`) ---------------------------------------------------------------------------

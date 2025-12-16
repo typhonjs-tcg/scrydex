@@ -1,53 +1,11 @@
-import { langCodeToName }  from '#data';
-
-import type { Card }       from '#types';
+import type {
+   Colors,
+   Card,
+   CardFace }              from '#types';
 
 export abstract class CardFields
 {
    /**
-    *
-    */
-   static colors(card: Card): string
-   {
-      if (card.card_faces)
-      {
-         const colors: string[] = [];
-         for (const face of card.card_faces)
-         {
-            if (Array.isArray(face.colors)) { colors.push(face.colors?.join(', ')); }
-         }
-
-         // Sometimes split cards that have `faces` have `colors` defined on the main card.
-         return colors.length ? colors.join(' // ') : card.colors?.join(', ') ?? '';
-      }
-      else
-      {
-         return card.colors?.join(', ') ?? '';
-      }
-   }
-
-   /**
-    * @param card -
-    *
-    * @returns The finish / foil icon embellishment for spreadsheet card name.
-    */
-   static finishIcon(card: Card): string
-   {
-      switch (card.foil)
-      {
-         case 'etched':
-            return ' ◈'
-
-         case 'foil':
-            return ' ◇'
-
-         default:
-         case 'normal':
-            return '';
-      }
-   }
-
-   /**
     * Defer to original CSV language code if available and differs from the Scryfall card `lang` field.
     *
     * Alas, currently most online MTG collection services do not associate cards w/ foreign language Scryfall IDs.
@@ -57,52 +15,11 @@ export abstract class CardFields
     *
     * @param card -
     *
-    * @param convert - When true, convert language code to full language name.
-    *
-    * @returns Normalized language code or full language name.
+    * @returns Normalized language code.
     */
-   static langCode(card: Card, convert = false): string
+   static langCode(card: Card): string
    {
-      const lang = typeof card.lang_csv === 'string' && card.lang !== card.lang_csv ? card.lang_csv : card.lang;
-
-      return convert ? langCodeToName.get(lang) ?? '<Unknown>' : lang;
-   }
-
-   /**
-    * Defer to original CSV language code if available and differs from the Scryfall card `lang` field.
-    *
-    * Alas, currently most online MTG collection services do not associate cards w/ foreign language Scryfall IDs.
-    * A temporary solution is to defer to any language set by the collection service exported CSV instead of the
-    * found Scryfall card data / language when these values differ. This requires the user to correctly set the language
-    * in the online MTG collection service.
-    *
-    * @param card -
-    *
-    * @returns Normalized language code or full language name.
-    */
-   static langName(card: Card): string
-   {
-      return langCodeToName.get(this.langCode(card)) ?? '<Unknown>';
-   }
-
-   /**
-    * Defer to Scryfall `name` field before falling back to possible `printed_name`.
-    *
-    * Append language code for non-English cards.
-    *
-    * @param card -
-    *
-    * @returns Normalized card name.
-    */
-   static name(card: Card): string
-   {
-      const name = card.name ?? card.printed_name ?? '<Unknown>';
-
-      const lang = this.langCode(card);
-
-      const finishIcon = this.finishIcon(card);
-
-      return `${name}${lang !== 'en' ? ` [${lang}]` : ''}${finishIcon}`;
+      return typeof card.lang_csv === 'string' && card.lang !== card.lang_csv ? card.lang_csv : card.lang;
    }
 
    /**
@@ -114,15 +31,128 @@ export abstract class CardFields
     */
    static manaCost(card: Card): string
    {
+      return card.card_faces ? this.partsManaCost(card).join(' // ') : card.mana_cost;
+   }
+
+   /**
+    * Return all `colors` parts for single or dual face cards.
+    *
+    * @param card -
+    *
+    * @returns The `colors` string array parts.
+    */
+   static partsColors(card: Card): Colors[]
+   {
+      return card.card_faces ? this.#partsPropArray(card, 'colors') : [card.colors];
+   }
+
+   /**
+    * Return all `name` parts for single or dual face cards.
+    *
+    * @param card -
+    *
+    * @returns `mana_cost` text parts.
+    */
+   static partsManaCost(card: Card): string[]
+   {
+      return this.#partsPropStr(card, 'mana_cost');
+   }
+
+   /**
+    * Return all `name` parts for single or dual face cards.
+    *
+    * @param card -
+    *
+    * @returns `name` text parts.
+    */
+   static partsName(card: Card): string[]
+   {
+      return this.#partsPropStr(card, 'name');
+   }
+
+   /**
+    * Return all `printed_name` parts for single or dual face cards.
+    *
+    * @param card -
+    *
+    * @returns `printed_name` text parts.
+    */
+   static partsPrintedName(card: Card): string[]
+   {
+      return this.#partsPropStr(card, 'printed_name');
+   }
+
+   /**
+    * Return all `oracle_text` parts for single or dual face cards.
+    *
+    * @param card -
+    *
+    * @returns `oracle_text` text parts.
+    */
+   static partsOracleText(card: Card): string[]
+   {
+      return this.#partsPropStr(card, 'oracle_text');
+   }
+
+   /**
+    * Return all `type_line` parts for single or dual face cards.
+    *
+    * @param card -
+    *
+    * @returns `type_line` text parts.
+    */
+   static partsTypeLine(card: Card): string[]
+   {
+      return this.#partsPropStr(card, 'type_line');
+   }
+
+   // Internal Implementation ----------------------------------------------------------------------------------------
+
+   static #partsPropArray(card: Card, prop: keyof Card | keyof CardFace): string[][]
+   {
+      const results: string[][] = [];
+
       if (card.card_faces)
       {
-         const manaCost: string[] = [];
-         for (const face of card.card_faces) { manaCost.push(face.mana_cost); }
-         return manaCost.join(' // ');
+         for (const face of card.card_faces)
+         {
+            if (Array.isArray(face[prop as keyof CardFace]))
+            {
+               results.push(face[prop as keyof CardFace] as string[]);
+            }
+         }
+
+         if (results.length === 0 && Array.isArray(card[prop])) { results.push(card[prop] as string[]); }
       }
       else
       {
-         return card.mana_cost;
+         if (Array.isArray(card[prop])) { results.push(card[prop] as string[]); }
       }
+
+      return results;
+   }
+
+   static #partsPropStr(card: Card, prop: keyof Card | keyof CardFace): string[]
+   {
+      const results: string[] = [];
+
+      if (card.card_faces)
+      {
+         for (const face of card.card_faces)
+         {
+            if (typeof face[prop as keyof CardFace] === 'string')
+            {
+               results.push(face[prop as keyof CardFace] as string);
+            }
+         }
+
+         if (results.length === 0 && typeof card[prop] === 'string') { results.push(card[prop]); }
+      }
+      else
+      {
+         if (typeof card[prop] === 'string') { results.push(card[prop]); }
+      }
+
+      return results;
    }
 }

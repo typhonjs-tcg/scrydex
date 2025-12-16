@@ -1,25 +1,26 @@
-import fs               from 'node:fs';
-import path             from 'node:path';
+import fs                  from 'node:fs';
+import path                from 'node:path';
 
-import { isDirectory }  from '@typhonjs-utils/file-util';
-import Excel            from 'exceljs';
+import { isDirectory }     from '@typhonjs-utils/file-util';
+import Excel               from 'exceljs';
 
-import { Notes }        from './Notes';
-import { Theme }        from './Theme';
+import { Notes }           from './Notes';
+import { Theme }           from './Theme';
 
 import {
    CardDB,
    CardFields,
-   SortedCollection }   from '#data';
+   PrintCardFields,
+   SortedCollection }      from '#data';
 
 import type {
-   Worksheet }          from 'exceljs';
+   Worksheet }             from 'exceljs';
 
 import type {
-   ConfigSort }         from '#types-command';
+   ConfigSort }            from '#types-command';
 
 import type {
-   SortedCategories }   from '#types-data';
+   SortedCategories }      from '#types-data';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
@@ -106,7 +107,7 @@ export abstract class ExportCollection
             const cardManaCost = CardFields.manaCost(card);
 
             const row = ws.addRow({
-               Name: CardFields.name(card),
+               Name: PrintCardFields.name(card),
                Quantity: Number(card.quantity),
                Filename: card.filename,
                Type: card.type,
@@ -116,7 +117,7 @@ export abstract class ExportCollection
                'Collector #': card.collector_number,
                'Mana Cost': cardManaCost,
                CMC: Number(card.cmc),
-               Colors: CardFields.colors(card),
+               Colors: PrintCardFields.colors(card),
                'Color Identity': card.color_identity?.join(', ') ?? '',
                'Price USD': card.price ?? '',
                'Scryfall Link': card.scryfall_uri
@@ -175,7 +176,7 @@ export abstract class ExportCollection
             const cardStats = Notes.cardStats(card);
             if (cardStats) { row.getCell('Type').note = cardStats; }
 
-            const oracleText = Notes.oracleText(card);
+            const oracleText = PrintCardFields.oracleText(card);
             if (oracleText) { row.getCell('Type Line').note = oracleText; }
 
             // Add natural language note for mana cost.
