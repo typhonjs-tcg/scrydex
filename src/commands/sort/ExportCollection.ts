@@ -116,7 +116,7 @@ export abstract class ExportCollection
                'Set Name': card.set_name,
                'Collector #': card.collector_number,
                'Mana Cost': cardManaCost,
-               CMC: Number(card.cmc),
+               CMC: card.cmc,
                Colors: PrintCardFields.colors(card),
                'Color Identity': card.color_identity?.join(', ') ?? '',
                'Price USD': card.price ?? '',

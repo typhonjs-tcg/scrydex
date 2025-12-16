@@ -57,6 +57,8 @@ interface ConfigFilter
 
 interface ConfigFind
 {
+   checks: ConfigFindChecks;
+
    /**
     * Directory to load.
     */
@@ -71,6 +73,17 @@ interface ConfigFind
     * The card fields to search.
     */
    regexFields: Set<string>;
+}
+
+/**
+ * Additional `find` command data for match checks.
+ */
+interface ConfigFindChecks
+{
+   /**
+    * Match card `CMC`.
+    */
+   cmc?: number;
 }
 
 /**

@@ -166,31 +166,23 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
  */
 export async function commandFindFormat(input: string, dirpath: string, opts: Record<string, any>)
 {
-   if (typeof input !== 'string') { throw new TypeError(`'input' option must be a string.`); }
+   if (typeof input !== 'string') { exit(`'input' option must be a string.`); }
    if(!isDirectory(dirpath)) { exit(`'directory' option path is an invalid directory.`); }
 
    // Verify pattern match fields.
-   if (opts.b !== void 0 && typeof opts.b !== 'boolean') { throw new TypeError(`'b' option must be a boolean.`); }
-   if (opts.i !== void 0 && typeof opts.i !== 'boolean') { throw new TypeError(`'i' option must be a boolean.`); }
-   if (opts.exact !== void 0 && typeof opts.exact !== 'boolean')
-   {
-      throw new TypeError(`'exact' option must be a boolean.`);
-   }
+   if (opts.b !== void 0 && typeof opts.b !== 'boolean') { exit(`'b' option must be a boolean.`); }
+   if (opts.i !== void 0 && typeof opts.i !== 'boolean') { exit(`'i' option must be a boolean.`); }
+   if (opts.exact !== void 0 && typeof opts.exact !== 'boolean') { exit(`'exact' option must be a boolean.`); }
 
    // Verify search surface fields.
-   if (opts.name !== void 0 && typeof opts.name !== 'boolean')
-   {
-      throw new TypeError(`'name' option must be a boolean.`);
-   }
+   if (opts.name !== void 0 && typeof opts.name !== 'boolean') { exit(`'name' option must be a boolean.`); }
+   if (opts.oracle !== void 0 && typeof opts.oracle !== 'boolean') { exit(`'oracle' option must be a boolean.`); }
+   if (opts.type !== void 0 && typeof opts.type !== 'boolean') { exit(`'type' option must be a boolean.`); }
 
-   if (opts.oracle !== void 0 && typeof opts.oracle !== 'boolean')
+   if (opts.cmc !== void 0)
    {
-      throw new TypeError(`'oracle' option must be a boolean.`);
-   }
-
-   if (opts.type !== void 0 && typeof opts.type !== 'boolean')
-   {
-      throw new TypeError(`'type' option must be a boolean.`);
+      const cmc = parseFloat(opts.cmc);
+      if (!Number.isFinite(cmc) || cmc < 0) { exit(`'cmc' option must be 0 to a positive number.`); }
    }
 
    const regexFields: string[] = [];
@@ -235,7 +227,12 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
 
    if (!regex) { return; }
 
+   const checks = {
+      cmc: opts.cmc ? parseFloat(opts.cmc) : void 0
+   }
+
    const config: ConfigFind = {
+      checks,
       dirpath,
       regex,
       // If there is no input string via `""` do not include regex fields.

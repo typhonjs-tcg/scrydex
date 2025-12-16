@@ -50,6 +50,7 @@ program
 .option('--oracle', 'Match against the card oracle text.')
 .option('--name', 'Match against the card name (default).')
 .option('--type', 'Match against the card type line.')
+.option('--cmc', 'Provide `0` to a positive finite number to match CMC / converted mana cost.')
 .example('find "Demonic Tutor" ./sorted-directory')
 .action(commandFindFormat);
 

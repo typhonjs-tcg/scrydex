@@ -43,7 +43,19 @@ export abstract class CardFields
     */
    static partsColors(card: Card): Colors[]
    {
-      return card.card_faces ? this.#partsPropArray(card, 'colors') : [card.colors];
+      return this.#partsPropArray(card, 'colors');
+   }
+
+   /**
+    * Return all `colors` parts for single or dual face cards.
+    *
+    * @param card -
+    *
+    * @returns The `colors` string array parts.
+    */
+   static partsCMC(card: Card): number[]
+   {
+      return this.#partsPropNumber(card, 'cmc');
    }
 
    /**
@@ -127,6 +139,33 @@ export abstract class CardFields
       else
       {
          if (Array.isArray(card[prop])) { results.push(card[prop] as string[]); }
+      }
+
+      return results;
+   }
+
+   static #partsPropNumber(card: Card, prop: keyof Card | keyof CardFace): number[]
+   {
+      const results: number[] = [];
+
+      if (card.card_faces)
+      {
+         for (const face of card.card_faces)
+         {
+            if (Number.isFinite(face[prop as keyof CardFace] as number))
+            {
+               results.push(face[prop as keyof CardFace] as number);
+            }
+         }
+
+         if (results.length === 0 && Number.isFinite(card[prop as keyof Card]))
+         {
+            results.push(card[prop as keyof Card] as number);
+         }
+      }
+      else
+      {
+         if (Number.isFinite(card[prop as keyof Card])) { results.push(card[prop as keyof Card] as number); }
       }
 
       return results;

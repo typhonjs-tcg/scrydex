@@ -11,16 +11,38 @@ export async function find(config: ConfigFind)
 
    console.log(`!!! find - collections.length: ${collections.length}`);
 
+   const checks = config.checks;
+   const hasChecks = Object.keys(checks).length > 0;
+
    for (const collection of collections)
    {
       console.log(`!!! find - searching collection.name: ${collection.name}`);
 
       for await (const card of collection.asStream())
       {
-         // Start with any regex tests otherwise set `found` to false.
-         let found = config.regexFields.size ? regexInputTests(card, config) : false;
+         // Start with any regex tests otherwise set `foundRegex` to true.
+         const foundRegex = config.regexFields.size ? regexInputTests(card, config) : true;
 
-         if (found)
+         // Additional custom checks.
+         let foundChecks = !hasChecks;
+
+         if (!foundChecks && checks.cmc !== void 0)
+         {
+            if (card.card_faces)
+            {
+               const cmcParts = CardFields.partsCMC(card);
+               for (const cmcPart of cmcParts)
+               {
+                  if (checks.cmc === cmcPart) { foundChecks = true; break;}
+               }
+            }
+            else if (checks.cmc === card.cmc)
+            {
+               foundChecks = true;
+            }
+         }
+
+         if (foundRegex && foundChecks)
          {
             console.log (`!!!! find - name: ${card.name}; quantity: ${card.quantity}; filename: ${card.filename}`);
          }

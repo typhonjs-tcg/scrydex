@@ -186,6 +186,11 @@ interface CardFace
    colors?: Colors | null;
 
    /**
+    * The card face mana value. Note that some funny cards have fractional mana costs.
+    */
+   cmc?: number | null;
+
+   /**
     * This face’s defense, if any. Battle cards.
     */
    defense?: string | null;

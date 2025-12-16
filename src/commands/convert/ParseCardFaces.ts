@@ -17,6 +17,7 @@ export abstract class ParseCardFaces
          result.push({
             object: 'card_face',
             colors: Array.isArray(face.colors) ? face.colors : void 0,
+            cmc: typeof face.cmc === 'number' ? face.cmc : void 0,
             defense: typeof face.defense === 'string' ? face.defense : void 0,
             loyalty: typeof face.loyalty === 'string' ? face.loyalty : void 0,
             mana_cost: typeof face.mana_cost === 'string' ? face.mana_cost : '',
