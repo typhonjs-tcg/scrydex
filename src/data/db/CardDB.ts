@@ -11,6 +11,8 @@ import { pick }         from 'stream-json/filters/Pick';
 import { streamArray }  from 'stream-json/streamers/StreamArray';
 import { streamObject } from 'stream-json/streamers/StreamObject';
 
+import { execTime }     from '#data';
+
 import { VERSION }      from '#version';
 
 import {
@@ -137,7 +139,7 @@ export class CardDB
          name,
          cliVersion: VERSION.package,
          schemaVersion: VERSION.schema,
-         generatedAt: new Date().toISOString(),
+         generatedAt: execTime.toISOString()
       }
 
       let output = `{\n  "meta": ${JSON.stringify(meta)},\n  "cards": [\n`;
