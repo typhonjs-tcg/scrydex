@@ -1,7 +1,3 @@
-import type { Borders, Fill, Font } from 'exceljs';
-
-import type { ExportCollection }   from './sort/ExportCollection';
-
 /**
  * Config object for the `convert` command.
  */
@@ -59,6 +55,19 @@ interface ConfigFilter
    output: string;
 }
 
+interface ConfigFind
+{
+   /**
+    * Directory to load.
+    */
+   dirpath: string;
+
+   /**
+    * Regular expression to evaluate on card names.
+    */
+   regex: RegExp;
+}
+
 /**
  * Config object for the `sort` command.
  */
@@ -101,5 +110,6 @@ interface ConfigSortFormat extends ConfigSort
 export {
    type ConfigConvert,
    type ConfigFilter,
+   type ConfigFind,
    type ConfigSort,
    type ConfigSortFormat };

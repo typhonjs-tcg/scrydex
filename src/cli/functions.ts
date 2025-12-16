@@ -7,6 +7,7 @@ import {
 import {
    convert,
    filter,
+   find,
    sortFormat }         from '#commands';
 
 import {
@@ -18,6 +19,7 @@ import { logger }       from '#util';
 import type {
    ConfigConvert,
    ConfigFilter,
+   ConfigFind,
    ConfigSortFormat }   from '#types-command';
 
 /**
@@ -153,10 +155,42 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
    }
 }
 
-export async function commandFindFormat(input: string, directory: string)
+/**
+ * Invokes `find` with the given config.
+ *
+ * @param input - Search text / regular expression.
+ *
+ * @param dirpath - Directory path to search for `game_format` JSON card DBs.
+ */
+export async function commandFindFormat(input: string, dirpath: string)
 {
-   console.log(`!!! commandFindFormat - input: `, input);
-   console.log(`!!! commandFindFormat - directory: `, directory);
+   if(!isDirectory(dirpath)) { exit(`'directory' option path is an invalid directory.`); }
+
+   let regex: RegExp | undefined = void 0;
+
+   try
+   {
+      regex = new RegExp(input);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+
+   if (!regex) { return; }
+
+   const config: ConfigFind = {
+      regex,
+      dirpath
+   }
+
+   await find(config);
 }
 
 /**

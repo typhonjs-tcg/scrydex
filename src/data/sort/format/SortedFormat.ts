@@ -52,7 +52,7 @@ export class SortedFormat extends SortedCollection
       presortFormat.set('basic-land', []);
       presortFormat.set('unsorted', []);
 
-      const db = await CardDB.loadStream({ filepath: config.input });
+      const db = await CardDB.load({ filepath: config.input });
 
       for await (const card of db.asStream())
       {

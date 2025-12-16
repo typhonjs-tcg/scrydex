@@ -26,7 +26,7 @@ export async function filter(config: ConfigFilter): Promise<void>
       logger.info(`Formats: ${config.formats.join(' and ')}`);
    }
 
-   const cards = await CardDB.loadStream({ filepath: config.input });
+   const cards = await CardDB.load({ filepath: config.input });
 
    const outputDB: Card[] = [];
 

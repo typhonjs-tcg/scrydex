@@ -42,24 +42,24 @@ program
 .action(commandFilter);
 
 program
-.command('find-format [input] [directory]', 'Find Card')
-.describe(`Finds a card by name from a sorted format directory / JSON DBs.`)
-.example('find-format "Demonic Tutor" ./sorted-directory')
+.command('find [input] [dirpath]', 'Find Card')
+.describe(`Finds a card by name or regular expression from a sorted format directory.`)
+.example('find "Demonic Tutor" ./sorted-directory')
 .action(commandFindFormat);
 
 program.command('formats', `List all supported Scryfall game 'formats'.`)
 .action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
 
 program
-.command('sort-format [input]', 'Sort')
+.command('sort [input]', 'Sort')
 .describe(`Sorts a converted Scryfall card DB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by type of card.')
 .option('--formats', 'Provide a colon separated list of game formats for sorting.')
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
 .option('--output', 'Provide a directory path for generated spreadsheets.')
 .option('--theme', 'Options are `light` or `dark`; light theme is default.')
-.example('sort-format ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
-.example('sort-format ./collection.json --formats predh:commander --output ./spreadsheets')
+.example('sort ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
+.example('sort ./collection.json --formats predh:commander --output ./spreadsheets')
 .action(commandSortFormat);
 
 program.parse(process.argv);
