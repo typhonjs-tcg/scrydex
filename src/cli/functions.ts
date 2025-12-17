@@ -258,7 +258,20 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       regexFields: regex && input.length ? new Set(regexFields) : null
    }
 
-   await find(config);
+   try
+   {
+      await find(config);
+   }
+   catch (err)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
 }
 
 /**
@@ -366,14 +379,6 @@ function validateBorder(borders: string): Set<string>
    }
 
    return seen;
-}
-
-/**
- * Validates all common config options.
- */
-function validateConfig(config: Record<string, any>)
-{
-
 }
 
 /**
