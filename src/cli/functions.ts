@@ -169,6 +169,8 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    if (typeof input !== 'string') { exit(`'input' option must be a string.`); }
    if(!isDirectory(dirpath)) { exit(`'directory' option path is an invalid directory.`); }
 
+   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
    // Verify pattern match fields.
    if (opts.b !== void 0 && typeof opts.b !== 'boolean') { exit(`'b' option must be a boolean.`); }
    if (opts.i !== void 0 && typeof opts.i !== 'boolean') { exit(`'i' option must be a boolean.`); }
@@ -245,6 +247,8 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       colorIdentity,
       cmc: opts.cmc ? parseFloat(opts.cmc) : void 0
    }
+
+   if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
    const config: ConfigFind = {
       checks,

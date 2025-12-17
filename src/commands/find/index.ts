@@ -1,23 +1,35 @@
 import {
    CardDB,
-   CardFields }         from '#data';
+   CardFields,
+   SortOrder }             from '#data';
 
-import { Card }         from '#types';
+import { logger }          from '#util';
 
-import { ConfigFind }   from '#types-command';
+import type { Card }       from '#types';
+import type { ConfigFind } from '#types-command';
 
 export async function find(config: ConfigFind)
 {
+   logger.info(`Attempting to find card(s) in directory: ${config.dirpath}`);
+
    const collections = await CardDB.loadAll({ dirpath: config.dirpath, type: 'game_format', walk: true });
 
-   console.log(`!!! find - collections.length: ${collections.length}`);
+   if (collections.length === 0)
+   {
+      logger.info(`No 'game_format' card collections found.`);
+      return;
+   }
+
+   logger.verbose(`Loading ${collections.length} 'game_format' card collections:`);
+   for (const collection of collections)
+   {
+      logger.verbose(`${collection.name} - ${collection.filepath}`);
+   }
 
    const hasChecks = Object.keys(config.checks).length > 0;
 
    for (const collection of collections)
    {
-      console.log(`!!! find - searching collection.name: ${collection.name}`);
-
       for await (const card of collection.asStream())
       {
          // Start with any regex tests otherwise set `foundRegex` to true.
@@ -30,7 +42,9 @@ export async function find(config: ConfigFind)
 
          if (foundRegex && foundChecks)
          {
-            console.log (`!!!! find - name: ${card.name}; quantity: ${card.quantity}; filename: ${card.filename}`);
+            logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Type: ${card.type}; Format: ${
+             collection.name}; Rarity: ${SortOrder.rarity(card, collection.name)}; Category: ${
+              SortOrder.categoryName(card)}${card.in_deck ? `; In Deck: ${card.filename}` : ''}`);
          }
       }
    }
