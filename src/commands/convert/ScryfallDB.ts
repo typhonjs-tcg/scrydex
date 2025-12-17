@@ -7,7 +7,7 @@ import { ParseCardFaces }           from './ParseCardFaces';
 import { ParseTypeLine }            from './ParseTypeLine';
 
 import {
-   CardDB,
+   CardDBStore,
    excludedSetsRecentRarity,
    excludedSetTypesRecentRarity }   from '#data';
 
@@ -239,7 +239,7 @@ export class ScryfallDB
 
       if (outputDB.length > 0)
       {
-         CardDB.save({
+         CardDBStore.save({
             filepath: config.output,
             cards: outputDB,
             type: 'collection'

@@ -8,7 +8,7 @@ import { Notes }           from './Notes';
 import { Theme }           from './Theme';
 
 import {
-   CardDB,
+   CardDBStore,
    CardFields,
    PrintCardFields,
    SortedCollection }      from '#data';
@@ -40,7 +40,7 @@ export abstract class ExportCollection
             if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath); }
 
             // Export collection cards to JSON DB.
-            CardDB.save({
+            CardDBStore.save({
                filepath: path.resolve(collectionDirPath, `${collection.name}-all.json`),
                type: collection.type,
                name: collection.name,

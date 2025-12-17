@@ -1,7 +1,7 @@
 import { SortedCollection }      from '../SortedCollection';
 
 import {
-   CardDB,
+   CardDBStore,
    SortedColor,
    SortOrder,
    validLegality }               from '#data';
@@ -51,7 +51,7 @@ export class SortedFormat extends SortedCollection
       presortFormat.set('basic-land', []);
       presortFormat.set('unsorted', []);
 
-      const db = await CardDB.load({ filepath: config.input });
+      const db = await CardDBStore.load({ filepath: config.input });
 
       for await (const card of db.asStream())
       {

@@ -40,6 +40,5 @@ interface SortedCategories
 }
 
 export {
-   CardSorted,
-   SortedCategories
-};
+   type CardSorted,
+   type SortedCategories };

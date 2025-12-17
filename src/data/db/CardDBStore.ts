@@ -15,11 +15,11 @@ import { execTime }     from '#data';
 
 import { VERSION }      from '#version';
 
-import {
+import type {
    Card,
    CollectionMetaData } from '#types';
 
-export class CardDB
+export class CardDBStore
 {
    /**
     * Load all JSON card DBs in the specified directory path. Additional options allow filtering by DB type and DB name.

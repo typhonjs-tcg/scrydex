@@ -1,5 +1,5 @@
 import {
-   CardDB,
+   CardDBStore,
    validLegality }            from '#data';
 
 import { logger }             from '#util';
@@ -26,7 +26,7 @@ export async function filter(config: ConfigFilter): Promise<void>
       logger.info(`Formats: ${config.formats.join(' and ')}`);
    }
 
-   const cards = await CardDB.load({ filepath: config.input });
+   const cards = await CardDBStore.load({ filepath: config.input });
 
    const outputDB: Card[] = [];
 
@@ -62,7 +62,7 @@ export async function filter(config: ConfigFilter): Promise<void>
 
    if (outputDB.length > 0)
    {
-      CardDB.save({
+      CardDBStore.save({
          filepath: config.output,
          type: cards.type,
          name: cards.name,

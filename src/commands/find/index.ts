@@ -1,5 +1,5 @@
 import {
-   CardDB,
+   CardDBStore,
    CardFields,
    SortOrder }             from '#data';
 
@@ -12,7 +12,7 @@ export async function find(config: ConfigFind)
 {
    logger.info(`Attempting to find card(s) in directory: ${config.dirpath}`);
 
-   const collections = await CardDB.loadAll({ dirpath: config.dirpath, type: 'game_format', walk: true });
+   const collections = await CardDBStore.loadAll({ dirpath: config.dirpath, type: 'game_format', walk: true });
 
    if (collections.length === 0)
    {
