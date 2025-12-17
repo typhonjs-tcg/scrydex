@@ -225,7 +225,7 @@ class CardStream
    }
 
    /**
-    * CLI version that generated DB.
+    * @returns CLI version that generated DB.
     */
    get cliVersion(): string
    {
@@ -233,7 +233,15 @@ class CardStream
    }
 
    /**
-    * The date when a DB was generated.
+    * @returns The associated filepath.
+    */
+   get filepath(): string
+   {
+      return this.#filepath;
+   }
+
+   /**
+    * @returns The date when a DB was generated.
     */
    get generatedAt(): Date
    {
@@ -241,7 +249,7 @@ class CardStream
    }
 
    /**
-    * Name of JSON card DB.
+    * @returns Name of JSON card DB.
     */
    get name(): string | undefined
    {

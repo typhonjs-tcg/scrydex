@@ -1,10 +1,63 @@
+import { parseManaCostColors }   from '#data';
+
 import type {
    Colors,
    Card,
-   CardFace }              from '#types';
+   CardFace }                    from '#types';
 
 export abstract class CardFields
 {
+   /**
+    * Calculate union for `colors` field taking into account card faces.
+    *
+    * @param card -
+    *
+    * @returns Read only union of all card colors.
+    */
+   static colorUnion(card: Card): Readonly<Colors>
+   {
+      if (card.card_faces)
+      {
+         let faceColors: Set<string> = new Set<string>();
+         for (const face of card.card_faces)
+         {
+            faceColors = faceColors.union(new Set(face.colors));
+         }
+
+         return faceColors.size ? [...faceColors] : card.colors ?? [];
+      }
+      else
+      {
+         return Array.isArray(card.colors) ? card.colors : [];
+      }
+   }
+
+   /**
+    * Parse card colors from mana cost. Some card categories like `Devoid` do not have an associated `colors` array, but
+    * do have a mana cost potentially with casting colors.
+    *
+    * @param card -
+    *
+    * @returns A set with mana cost colors.
+    */
+   static colorManaCost(card: Card): Set<string>
+   {
+      let colors: Set<string>;
+
+      if (card.card_faces)
+      {
+         colors = new Set();
+
+         for (const face of card.card_faces) { colors = colors.union(parseManaCostColors(face.mana_cost)); }
+      }
+      else
+      {
+         colors = parseManaCostColors(card.mana_cost);
+      }
+
+      return colors;
+   }
+
    /**
     * Defer to original CSV language code if available and differs from the Scryfall card `lang` field.
     *
