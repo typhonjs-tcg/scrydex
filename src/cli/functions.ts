@@ -208,7 +208,7 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    // Wrap with exact pattern match.
    if (opts.exact) { searchText = `^${searchText}$`; }
 
-   let regex: RegExp | undefined = void 0;
+   let regex: RegExp | null = null;
 
    try
    {
@@ -225,9 +225,24 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       exit(message);
    }
 
-   if (!regex) { return; }
+   if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
+   {
+      exit(`'color-identity' option must be a string.`);
+   }
+
+   let colorIdentity: Set<string> | undefined;
+
+   if (opts['color-identity'])
+   {
+      colorIdentity = parseManaCostColors(opts['color-identity']);
+      if (colorIdentity.size === 0)
+      {
+         exit(`'color-identity' option contains no valid WUBRG colors: ${opts['color-identity']}`);
+      }
+   }
 
    const checks = {
+      colorIdentity,
       cmc: opts.cmc ? parseFloat(opts.cmc) : void 0
    }
 
@@ -236,7 +251,7 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       dirpath,
       regex,
       // If there is no input string via `""` do not include regex fields.
-      regexFields: new Set(input.length ? regexFields : [])
+      regexFields: regex && input.length ? new Set(regexFields) : null
    }
 
    await find(config);

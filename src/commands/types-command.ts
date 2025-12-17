@@ -67,12 +67,12 @@ interface ConfigFind
    /**
     * Regular expression to evaluate on card names.
     */
-   regex: RegExp;
+   regex: RegExp | null;
 
    /**
     * The card fields to search.
     */
-   regexFields: Set<string>;
+   regexFields: Set<string> | null;
 }
 
 /**
@@ -80,6 +80,11 @@ interface ConfigFind
  */
 interface ConfigFindChecks
 {
+   /**
+    * WUBRG color identity set.
+    */
+   colorIdentity?: Set<string> | null;
+
    /**
     * Match card `CMC`.
     */

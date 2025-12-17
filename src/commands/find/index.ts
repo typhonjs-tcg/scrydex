@@ -3,6 +3,7 @@ import {
    CardFields }         from '#data';
 
 import { Card }         from '#types';
+
 import { ConfigFind }   from '#types-command';
 
 export async function find(config: ConfigFind)
@@ -11,8 +12,7 @@ export async function find(config: ConfigFind)
 
    console.log(`!!! find - collections.length: ${collections.length}`);
 
-   const checks = config.checks;
-   const hasChecks = Object.keys(checks).length > 0;
+   const hasChecks = Object.keys(config.checks).length > 0;
 
    for (const collection of collections)
    {
@@ -21,26 +21,12 @@ export async function find(config: ConfigFind)
       for await (const card of collection.asStream())
       {
          // Start with any regex tests otherwise set `foundRegex` to true.
-         const foundRegex = config.regexFields.size ? regexInputTests(card, config) : true;
+         const foundRegex = config.regex && config?.regexFields?.size ? regexInputTests(card, config) : true;
 
-         // Additional custom checks.
-         let foundChecks = !hasChecks;
+         if (!foundRegex) { continue; }
 
-         if (!foundChecks && checks.cmc !== void 0)
-         {
-            if (card.card_faces)
-            {
-               const cmcParts = CardFields.partsCMC(card);
-               for (const cmcPart of cmcParts)
-               {
-                  if (checks.cmc === cmcPart) { foundChecks = true; break;}
-               }
-            }
-            else if (checks.cmc === card.cmc)
-            {
-               foundChecks = true;
-            }
-         }
+         // Additional independent checks.
+         const foundChecks = hasChecks ? independentChecks(card, config) : true;
 
          if (foundRegex && foundChecks)
          {
@@ -48,6 +34,43 @@ export async function find(config: ConfigFind)
          }
       }
    }
+}
+
+/**
+ * Handles any independent property checks separate of regex testing.
+ *
+ * @param card -
+ *
+ * @param config -
+ */
+function independentChecks(card: Card, config: ConfigFind): boolean
+{
+   const checks = config.checks;
+
+   if (checks.colorIdentity && Array.isArray(card.color_identity))
+   {
+      if (!checks.colorIdentity.isSupersetOf(new Set(card.color_identity))) { return false; }
+   }
+
+   if (checks.cmc)
+   {
+      if (card.card_faces)
+      {
+         const cmcParts = CardFields.partsCMC(card);
+         let result = false;
+         for (const cmcPart of cmcParts)
+         {
+            if (checks.cmc === cmcPart) { result = true; break; }
+         }
+         if (!result) { return false; }
+      }
+      else if (checks.cmc !== card.cmc)
+      {
+         return false;
+      }
+   }
+
+   return true;
 }
 
 /**
@@ -61,6 +84,8 @@ export async function find(config: ConfigFind)
  */
 function regexInputTests(card: Card, config: ConfigFind): boolean
 {
+   if (!config.regex || !config.regexFields) { return false; }
+
    if (config.regexFields.has('name'))
    {
       if (card.card_faces)
