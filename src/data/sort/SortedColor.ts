@@ -1,8 +1,10 @@
-import { parseManaCostColors }   from '#data';
+import { SortOrder }    from '#data';
+
+import { logger }       from '#util';
 
 import type {
    CardSorted,
-   SortedCategories }            from '#types-data';
+   SortedCategories }   from '#types-data';
 
 export class SortedColor implements SortedCategories
 {
@@ -14,9 +16,6 @@ export class SortedColor implements SortedCategories
     * Name for this collection of cards.
     */
    readonly #name: string;
-
-   #regexArtifact = /\bartifact\b/i;
-   #regexLand = /\bland\b/i
 
    /**
     * @param name - Name for this collection of cards.
@@ -65,28 +64,16 @@ export class SortedColor implements SortedCategories
     */
    add(card: CardSorted)
    {
-      // Calculate union for colors with card faces.
-      if (card.card_faces)
+      const categoryName = SortOrder.categoryName(card);
+      const category = this.#categories.get(categoryName)
+
+      if (category)
       {
-         let faceColors: Set<string> = new Set<string>();
-         for (const face of card.card_faces)
-         {
-            faceColors = faceColors.union(new Set(face.colors));
-         }
-
-         const colors = faceColors.size ? [...faceColors] : card.colors ?? [];
-
-         this.#addImpl(card, colors);
+         category.push(card);
       }
       else
       {
-         if (!Array.isArray(card.colors))
-         {
-            this.#categories.get('Unsorted')?.push(card);
-            return;
-         }
-
-         this.#addImpl(card, card.colors);
+         logger.warn(`SortedColor.add warning: Unknown category name '${categoryName}'.`);
       }
    }
 
@@ -122,113 +109,5 @@ export class SortedColor implements SortedCategories
             cards.sort((a, b) => a.type.localeCompare(b.type));
          }
       }
-   }
-
-   // Internal Implementation ----------------------------------------------------------------------------------------
-
-   #addImpl(card: CardSorted, colors: string[])
-   {
-      switch(colors.length)
-      {
-         case 0:
-         {
-            // Devoid cards lack `colors` data, but have a mana cost, so sort by mana cost colors.
-            if (Array.isArray(card.keywords) && card.keywords.includes('Devoid'))
-            {
-               this.#sortManaCost(card);
-            }
-            else
-            {
-               this.#sortColorless(card);
-            }
-            break;
-         }
-
-         case 1:
-            this.#sortMono(card, colors);
-            break;
-
-         default:
-            this.#sortMulti(card);
-            break;
-      }
-   }
-
-   /**
-    * @param card -
-    */
-   #sortColorless(card: CardSorted)
-   {
-      if (this.#regexArtifact.test(card.type_line))
-      {
-         this.#categories.get('Artifact (Colorless)')?.push(card);
-      }
-      else if (card.type.startsWith('Land - Basic'))
-      {
-         this.#categories.get('Land (Basic)')?.push(card);
-      }
-      else if (this.#regexLand.test(card.type_line))
-      {
-         this.#categories.get('Land')?.push(card);
-      }
-      else
-      {
-         this.#categories.get('Non-artifact (Colorless)')?.push(card);
-      }
-   }
-
-   #sortManaCost(card: CardSorted)
-   {
-      let colors: Set<string>;
-
-      if (card.card_faces)
-      {
-         colors = new Set();
-
-         for (const face of card.card_faces) { colors = colors.union(parseManaCostColors(face.mana_cost)); }
-      }
-      else
-      {
-         colors = parseManaCostColors(card.mana_cost);
-      }
-
-      switch (colors.size)
-      {
-         case 0:
-            this.#sortColorless(card);
-            break;
-
-         case 1:
-            this.#sortMono(card, [...colors]);
-            break;
-
-         default:
-            this.#sortMulti(card);
-            break;
-      }
-   }
-
-   /**
-    * @param card -
-    *
-    * @param colorSource -
-    */
-   #sortMono(card: CardSorted, colorSource: string[])
-   {
-      const color = colorSource[0];
-
-      const category = this.#categories.get(color.toUpperCase());
-
-      category?.push(card);
-   }
-
-   /**
-    * @param card -
-    */
-   #sortMulti(card: CardSorted)
-   {
-      const category = this.#categories.get('Multicolor');
-
-      category?.push(card);
    }
 }

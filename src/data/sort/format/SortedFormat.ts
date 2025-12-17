@@ -1,10 +1,9 @@
-import fs                        from 'node:fs';
-
 import { SortedCollection }      from '../SortedCollection';
 
 import {
    CardDB,
    SortedColor,
+   SortOrder,
    validLegality }               from '#data';
 
 import { logger }                from '#util';
@@ -145,17 +144,16 @@ export class SortedFormat extends SortedCollection
       {
          // For just the `oldschool` & `premodern` formats use original rarity otherwise for all other formats use
          // recent rarity. Fallback if necessary to the actual card rarity.
-         const rarity = (format === 'oldschool' || format === 'premodern' ? card.rarity_orig : card.rarity_recent) ??
-          card.rarity;
+         const rarity = SortOrder.rarity(card, format);
 
-         let sortRarity = sortedCategories.has(rarity) ? sortedCategories.get(rarity) : void 0;
-         if (!sortRarity)
+         let categoryRarity = sortedCategories.has(rarity) ? sortedCategories.get(rarity) : void 0;
+         if (!categoryRarity)
          {
-            sortRarity = new SortedColor(rarity);
-            sortedCategories.set(rarity, sortRarity);
+            categoryRarity = new SortedColor(rarity);
+            sortedCategories.set(rarity, categoryRarity);
          }
 
-         sortRarity.add(card);
+         categoryRarity.add(card);
       }
 
       return sortedCategories;
