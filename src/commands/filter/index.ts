@@ -64,9 +64,8 @@ export async function filter(config: ConfigFilter): Promise<void>
    {
       CardDBStore.save({
          filepath: config.output,
-         type: cards.type,
-         name: cards.name,
-         cards: outputDB
+         cards: outputDB,
+         meta: cards.meta
       });
 
       logger.info(`Finished filtering Scryfall card collection: ${config.output}`);

@@ -176,6 +176,11 @@ interface Card extends CSVCard
    set_type: string;
 }
 
+/**
+ * Defines the enriched, but reduced set of card face data transferred from the Scryfall DB.
+ *
+ * @see https://scryfall.com/docs/api/cards
+ */
 interface CardFace
 {
    object: 'card_face';
@@ -244,7 +249,7 @@ interface CSVCard
    object: 'card';
 
    /**
-    * Associated CSV filename
+    * Associated CSV filename.
     */
    filename: string;
 
@@ -281,51 +286,84 @@ interface CSVCard
 }
 
 /**
- * Describes collection / JSON card DB metadata.
+ * Defines the card DB JSON file format.
  */
-interface CollectionMetaData
+interface CardDB
 {
    /**
-    * Type of card collection.
+    * Metadata about this card DB.
     */
-   type: 'collection' | 'game_format',
-
-   /**
-    * Name of game format
-    */
-   name?: string;
-
-   /**
-    * Generating CLI version.
-    */
-   cliVersion: string;
-
-   /**
-    * Generating schema version.
-    */
-   schemaVersion: string;
-
-   /**
-    * Date generated in UTC.
-    */
-   generatedAt: string;
-}
-
-/**
- * Defines the card collection JSON file format.
- */
-interface CardCollection
-{
-   /**
-    * Metadata about this collection.
-    */
-   meta: CollectionMetaData;
+   meta: CardDBMetadata;
 
    /**
     * List of associated cards.
     */
    cards: Card[];
 }
+
+/**
+ * CardDB metadata that is generated on creation.
+ */
+interface CardDBMetadataGenerated
+{
+   /** Generating CLI version. */
+   cliVersion: string;
+
+   /** UTC Date when generated. */
+   generatedAt: string;
+
+   /** CardDB schema version. */
+   schemaVersion: string;
+}
+
+/**
+ * CardDB metadata that is common across all DBs.
+ */
+interface CardDBMetadataCommon extends CardDBMetadataGenerated
+{
+   /** Name of CardDB */
+   name: string;
+}
+
+/**
+ * CardDB metadata for a sorted game format.
+ */
+interface CardDBMetadataSortedFormat extends CardDBMetadataCommon
+{
+   /** Type of CardDB. */
+   type: 'sorted_format';
+
+   /** Game format of CardDB. */
+   format: GameFormats;
+}
+
+/**
+ * CardDB metadata for a sorted collection of cards not associated with a game format.
+ */
+interface CardDBMetadataSorted extends CardDBMetadataCommon
+{
+   /** Type of CardDB. */
+   type: 'sorted';
+}
+
+/**
+ * CardDB metadata for an `inventory` of cards after initial conversion.
+ */
+interface CardDBMetadataInventory extends CardDBMetadataCommon
+{
+   /** Type of CardDB. */
+   type: 'inventory';
+}
+
+/**
+ * The different types / categories of Card DBs.
+ */
+type CardDBType = 'inventory' | 'sorted' | 'sorted_format';
+
+/**
+ * Combined CardDB metadata definition.
+ */
+type CardDBMetadata = CardDBMetadataInventory | CardDBMetadataSorted | CardDBMetadataSortedFormat;
 
 /**
  * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase, single-character
@@ -336,11 +374,20 @@ interface CardCollection
  */
 type Colors = string[];
 
+/**
+ * Valid Scryfall game formats.
+ */
+type GameFormats = 'standard' | 'future' | 'historic' | 'timeless' | 'gladiator' | 'pioneer' | 'modern' | 'legacy' |
+ 'pauper' | 'vintage' | 'penny' | 'commander' | 'oathbreaker' | 'standardbrawl' | 'brawl' | 'alchemy' |
+  'paupercommander' | 'duel' | 'oldschool' | 'premodern' | 'predh';
+
 export {
    type Card,
-   type CardCollection,
+   type CardDB,
+   type CardDBMetadata,
+   type CardDBMetadataGenerated,
+   type CardDBType,
    type CardFace,
-   type CollectionMetaData,
    type Colors,
    type CSVCard,
-}
+   type GameFormats };

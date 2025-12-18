@@ -241,8 +241,8 @@ export class ScryfallDB
       {
          CardDBStore.save({
             filepath: config.output,
-            cards: outputDB,
-            type: 'collection'
+            cards: outputDB.sort((a, b) => a.name.localeCompare(b.name)),
+            meta: { type: 'inventory' }
          });
       }
       else

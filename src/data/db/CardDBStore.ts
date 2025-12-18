@@ -1,9 +1,12 @@
 import fs               from 'node:fs';
+import path             from 'node:path';
 
 import {
    getFileList,
    isDirectory,
    isFile }             from '@typhonjs-utils/file-util';
+
+import { isObject }     from '@typhonjs-utils/object';
 
 import { chain }        from 'stream-chain';
 import { parser }       from 'stream-json';
@@ -11,13 +14,20 @@ import { pick }         from 'stream-json/filters/Pick';
 import { streamArray }  from 'stream-json/streamers/StreamArray';
 import { streamObject } from 'stream-json/streamers/StreamObject';
 
-import { execTime }     from '#data';
+import {
+   execTime,
+   supportedFormats }   from '#data';
 
 import { VERSION }      from '#version';
 
 import type {
    Card,
-   CollectionMetaData } from '#types';
+   CardDB,
+   CardDBMetadata,
+   CardDBType }         from '#types';
+
+import type {
+   CardDBMetaSave }     from '#types-data';
 
 export class CardDBStore
 {
@@ -28,28 +38,28 @@ export class CardDBStore
     *
     * @param options.dirpath - Directory path to load.
     *
-    * @param [options.name] - Match exact name of DB.
+    * @param [options.format] - Match exact game format of a `sorted_format` CardDB.
     *
-    * @param [options.type] - Match type of JSON card DB.
+    * @param [options.type] - Match type of CardDB.
     *
-    * @param [options.walk] - Walk all subdirectories for JSON card DBs to load; default: `false`
+    * @param [options.walk] - Walk all subdirectories for CardDB files to load; default: `false`
     *
     * @returns Configured CardStream instances for the found JSON card DB collections.
     */
-   static async loadAll({ dirpath, name, type, walk = false }:
-    { dirpath: string, name?: string, type?: 'game_format' | 'collection', walk?: boolean }): Promise<CardStream[]>
+   static async loadAll({ dirpath, format, type, walk = false }:
+    { dirpath: string, format?: string, type?: CardDBType, walk?: boolean }): Promise<CardStream[]>
    {
       if (!isDirectory(dirpath)) { throw new Error(`CardDB.loadAll error: 'dirpath' is not a directory.`); }
       if (typeof walk !== 'boolean') { throw new TypeError(`CardDB.loadAll error: 'walk' is not a boolean.`); }
 
-      if (name !== void 0 && typeof name !== 'string')
+      if (format !== void 0 && typeof format !== 'string')
       {
-         throw new TypeError(`CardDB.loadAll error: 'name' is not a string.`);
+         throw new TypeError(`CardDB.loadAll error: 'format' is not a string.`);
       }
 
-      if (type !== void 0 && type !== 'collection' && type !== 'game_format')
+      if (type !== void 0 && type !== 'inventory' && type !== 'sorted' && type !== 'sorted_format')
       {
-         throw new Error(`CardDB.loadAll error: 'type' is not a 'collection' or 'game_format'.`);
+         throw new Error(`CardDB.loadAll error: 'type' is not a 'inventory', 'sorted', or 'sorted_format'.`);
       }
 
       const results: CardStream[] = [];
@@ -67,8 +77,14 @@ export class CardDBStore
          {
             const cardStream = await this.load({ filepath });
 
-            if (name !== void 0 && cardStream.name !== type) { continue; }
-            if (type !== void 0 && cardStream.type !== type) { continue; }
+            if (type !== void 0 && cardStream.meta.type !== type) { continue; }
+
+            // If format requested reject any CardDB that isn't a `sorted_format` type of the format mismatches.
+            if (format !== void 0 && (cardStream.meta.type !== 'sorted_format' ||
+             (cardStream.meta.type === 'sorted_format' && cardStream.meta.format !== format)))
+            {
+               continue;
+            }
 
             results.push(cardStream);
          }
@@ -109,40 +125,38 @@ export class CardDBStore
     * Save a Card array as a JSON card DB collection.
     *
     * @param options - Options
-    *
-    * @param options.filepath - File path to save to.
-    *
-    * @param options.cards - Cards to serialize / save.
-    *
-    * @param options.type - Type of Card DB collection.
-    *
-    * @param options.name - Name of the collection; often the game format.
     */
-   static save({ filepath, cards, type, name }: { filepath: string; cards: Card[], type: string, name?: string })
+   static save({ filepath, cards, meta }: SaveOptions)
    {
+      if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a string.`); }
+      if (!filepath.endsWith('.json')) { throw new TypeError(`'filepath' does not have the '.json' file extension.`); }
       if (isDirectory(filepath)) { throw new Error(`'filepath' is a directory.`); }
+
       if (!Array.isArray(cards)) { throw new TypeError(`'cards' is not an array.`); }
-      if (typeof type !== 'string') { throw new TypeError(`'type' is not a string.`); }
+      if (!isObject(meta)) { throw new TypeError(`'meta' is not an object.`); }
 
-      if (type !== 'collection' && type !== 'game_format')
+      if (meta.type !== 'inventory' && meta.type !== 'sorted' && meta.type !== 'sorted_format')
       {
-         throw new Error(`CardDB.save error: 'type' must be 'collection' or 'game_format'.`);
+         throw new Error(`CardDB.save error: 'type' must be 'inventory', 'sorted', or 'sorted_format'.`);
       }
 
-      if (type === 'game_format' && typeof name !== 'string')
+      if (meta.type === 'sorted_format' && !supportedFormats.has(meta.format))
       {
-         throw new TypeError(`CardDB.save error: Game formats must include 'name' as a string.`);
+         throw new TypeError(
+          `CardDB.save error: A sorted format must include a supported game format in 'meta.format'.`);
       }
 
-      const meta = {
-         type,
+      const name = meta.name === void 0 && typeof meta.name !== 'string' ? path.basename(filepath, '.json') : meta.name;
+
+      const metadata: CardDBMetadata = {
+         ...meta,
          name,
          cliVersion: VERSION.package,
          schemaVersion: VERSION.schema,
          generatedAt: execTime.toISOString()
       }
 
-      let output = `{\n  "meta": ${JSON.stringify(meta)},\n  "cards": [\n`;
+      let output = `{\n  "meta": ${JSON.stringify(metadata)},\n  "cards": [\n`;
 
       for (let i = 0; i < cards.length; i++)
       {
@@ -190,12 +204,33 @@ export class CardDBStore
     *
     * @param meta - Potential Meta object / unknown
     */
-   static #validateMeta(filepath: string, meta: unknown): CollectionMetaData | string
+   static #validateMeta(filepath: string, meta: unknown): CardDBMetadata | string
    {
       if (!meta) { throw new Error(`CardDB.load error: Could not load meta data for ${filepath}`); }
 
-      return meta as CollectionMetaData;
+      return meta as CardDBMetadata;
    }
+}
+
+/**
+ * Options for {@link CardDBStore.save}. If you do not include an explicit `meta.name` field the filename will be used.
+ */
+interface SaveOptions
+{
+   /**
+    * A valid file path ending with the `.json` file extension.
+    */
+   filepath: string;
+
+   /**
+    * Cards to serialize.
+    */
+   cards: Card[];
+
+   /**
+    * Partial CardDB metadata.
+    */
+   meta: CardDBMetaSave;
 }
 
 /**
@@ -211,25 +246,17 @@ class CardStream
    /**
     * Metadata object in DB.
     */
-   readonly #meta: CollectionMetaData;
+   readonly #meta: CardDBMetadata;
 
    /**
     * @param filepath - File path of DB.
     *
     * @param meta - Metadata object of DB.
     */
-   constructor(filepath: string, meta: CollectionMetaData)
+   constructor(filepath: string, meta: CardDBMetadata)
    {
       this.#filepath = filepath;
       this.#meta = Object.freeze(meta);
-   }
-
-   /**
-    * @returns CLI version that generated DB.
-    */
-   get cliVersion(): string
-   {
-      return this.#meta.cliVersion;
    }
 
    /**
@@ -240,36 +267,9 @@ class CardStream
       return this.#filepath;
    }
 
-   /**
-    * @returns The date when a DB was generated.
-    */
-   get generatedAt(): Date
+   get meta(): Readonly<CardDBMetadata>
    {
-      return new Date(this.#meta.generatedAt);
-   }
-
-   /**
-    * @returns Name of JSON card DB.
-    */
-   get name(): string | undefined
-   {
-      return this.#meta.name;
-   }
-
-   /**
-    * Schema version of the DB.
-    */
-   get schemaVersion(): string
-   {
-      return this.#meta.schemaVersion;
-   }
-
-   /**
-    * Type of JSON card DB.
-    */
-   get type(): 'collection' | 'game_format'
-   {
-      return this.#meta.type;
+      return this.#meta;
    }
 
    /**
@@ -292,7 +292,7 @@ class CardStream
     */
    getAll(): Card[]
    {
-      const db = JSON.parse(fs.readFileSync(this.#filepath, 'utf-8')) as { cards: Card[] };
+      const db = JSON.parse(fs.readFileSync(this.#filepath, 'utf-8')) as CardDB;
 
       return Array.isArray(db.cards) ? db.cards : [];
    }

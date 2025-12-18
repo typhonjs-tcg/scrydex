@@ -1,12 +1,14 @@
 import type { ConfigSort } from '#types-command';
+
 import type {
+   CardDBMetaSave,
    CardSorted,
    SortedCategories }      from '#types-data';
 
 /**
  * Base class for a sorted collection of cards by categories.
  */
-export abstract class SortedCollection
+export abstract class AbstractCollection
 {
    readonly #cards: CardSorted[];
 
@@ -30,6 +32,14 @@ export abstract class SortedCollection
    }
 
    /**
+    * Returns the CardDB metadata required for saving this collection.
+    *
+    * @privateRemarks
+    * Override in child class.
+    */
+   abstract get meta(): CardDBMetaSave;
+
+   /**
     * @returns Format name / ID.
     */
    get name(): string
@@ -44,11 +54,6 @@ export abstract class SortedCollection
    {
       return this.#cards.length;
    }
-
-   /**
-    * Implement in child class.
-    */
-   abstract get type(): string;
 
    /**
     * Calculate any `mark` merging.

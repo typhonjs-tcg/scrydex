@@ -11,7 +11,7 @@ import {
    CardDBStore,
    CardFields,
    PrintCardFields,
-   SortedCollection }      from '#data';
+   AbstractCollection }      from '#data';
 
 import type {
    Worksheet }             from 'exceljs';
@@ -27,7 +27,7 @@ import type {
  */
 export abstract class ExportCollection
 {
-   static async generate(config: ConfigSort, collections: Iterable<SortedCollection>): Promise<void>
+   static async generate(config: ConfigSort, collections: Iterable<AbstractCollection>): Promise<void>
    {
       for (const collection of collections)
       {
@@ -42,9 +42,8 @@ export abstract class ExportCollection
             // Export collection cards to JSON DB.
             CardDBStore.save({
                filepath: path.resolve(collectionDirPath, `${collection.name}-all.json`),
-               type: collection.type,
-               name: collection.name,
-               cards: collection.cards
+               cards: collection.cards,
+               meta: collection.meta
             });
 
             for (const categories of collection.values())
@@ -67,8 +66,8 @@ export abstract class ExportCollection
     *
     * @param collectionDirPath -
     */
-   static async #exportSpreadsheet(config: ConfigSort, collection: SortedCollection, categories: SortedCategories,
-    collectionDirPath: string): Promise<void>
+   static async #exportSpreadsheet(config: ConfigSort, collection: AbstractCollection, categories: SortedCategories,
+                                   collectionDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
 

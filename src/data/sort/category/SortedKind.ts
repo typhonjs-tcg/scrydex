@@ -6,7 +6,7 @@ import type {
    CardSorted,
    SortedCategories }   from '#types-data';
 
-export class SortedColor implements SortedCategories
+export class SortedKind implements SortedCategories
 {
    /**
     */

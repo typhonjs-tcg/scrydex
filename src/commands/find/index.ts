@@ -12,7 +12,7 @@ export async function find(config: ConfigFind)
 {
    logger.info(`Attempting to find card(s) in directory: ${config.dirpath}`);
 
-   const collections = await CardDBStore.loadAll({ dirpath: config.dirpath, type: 'game_format', walk: true });
+   const collections = await CardDBStore.loadAll({ dirpath: config.dirpath, type: 'sorted_format', walk: true });
 
    if (collections.length === 0)
    {
@@ -23,7 +23,7 @@ export async function find(config: ConfigFind)
    logger.verbose(`Loading ${collections.length} 'game_format' card collections:`);
    for (const collection of collections)
    {
-      logger.verbose(`${collection.name} - ${collection.filepath}`);
+      logger.verbose(`${collection.meta.name} - ${collection.filepath}`);
    }
 
    const hasChecks = Object.keys(config.checks).length > 0;
@@ -42,9 +42,12 @@ export async function find(config: ConfigFind)
 
          if (foundRegex && foundChecks)
          {
-            logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Type: ${card.type}; Format: ${
-             collection.name}; Rarity: ${SortOrder.rarity(card, collection.name)}; Category: ${
-              SortOrder.categoryName(card)}${card.in_deck ? `; In Deck: ${card.filename}` : ''}`);
+            const gameFormat = collection.meta.type === 'sorted_format' ? collection.meta.format : void 0;
+            const gameFormatStr = gameFormat ? `; Format: ${gameFormat}` : '';
+
+            logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Type: ${card.type}${gameFormatStr}; Rarity: ${
+             SortOrder.rarity(card, gameFormat)}; Category: ${SortOrder.categoryName(card)}${
+              card.in_deck ? `; In Deck: ${card.filename}` : ''}`);
          }
       }
    }

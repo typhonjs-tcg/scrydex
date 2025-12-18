@@ -1,118 +1,41 @@
-import { SortedCollection }      from '../SortedCollection';
+import { AbstractCollection }      from '../AbstractCollection';
 
 import {
-   CardDBStore,
-   SortedColor,
-   SortOrder,
-   validLegality }               from '#data';
-
-import { logger }                from '#util';
+   isSupportedFormat,
+   SortedKind,
+   SortOrder
+} from '#data';
 
 import type {
+   CardDBMetaSave,
    CardSorted,
    SortedCategories }            from '#types-data';
 
-import type { Card }             from '#types';
-import type { ConfigSortFormat } from '#types-command';
+import type {
+   GameFormats }                 from '#types';
 
-export class SortedFormat extends SortedCollection
+export class SortedFormat extends AbstractCollection
 {
+   readonly #meta: CardDBMetaSave;
+
    /**
+    * @param name -
+    *
     * @param format -
     *
     * @param cards -
     */
-   constructor(format: string, cards: CardSorted[])
+   constructor({ cards, name, format }: { cards: CardSorted[], name: string, format?: GameFormats })
    {
-      super(format, cards, SortedFormat.#sortRarity(format, cards));
+      super(name, cards, SortedFormat.#sortRarity(cards, format));
+
+      this.#meta = isSupportedFormat(format) ? Object.freeze({ name, type: 'sorted_format', format }) :
+       { name, type: 'sorted' };
    }
 
-   /**
-    * Returns the card collection type.
-    */
-   get type(): string
+   get meta(): Readonly<CardDBMetaSave>
    {
-      return 'game_format';
-   }
-
-   /**
-    * Generates all game format sorted collections.
-    *
-    * @param config -
-    *
-    * @returns All game format sorted collections.
-    */
-   static async generate(config: ConfigSortFormat): Promise<SortedFormat[]>
-   {
-      /**
-       */
-      const presortFormat: Map<string, Card[]> = new Map(config.formats.map((entry) => [entry, []]));
-
-      presortFormat.set('basic-land', []);
-      presortFormat.set('unsorted', []);
-
-      const db = await CardDBStore.load({ filepath: config.input });
-
-      for await (const card of db.asStream())
-      {
-         // Separate all basic land.
-         if (card.type.startsWith('Land - Basic'))
-         {
-            presortFormat.get('basic-land')?.push(card);
-            continue;
-         }
-
-         let sorted = false;
-
-         for (const format of config.formats)
-         {
-            if (validLegality.has(card.legalities?.[format]))
-            {
-               presortFormat.get(format)?.push(card);
-               sorted = true;
-               break;
-            }
-         }
-
-         if (!sorted) { presortFormat.get('unsorted')?.push(card); }
-      }
-
-      for (const format of presortFormat.keys())
-      {
-         const formatSort = presortFormat.get(format);
-         if (!formatSort) { continue; }
-
-         presortFormat.set(format, formatSort.sort((a, b) => a.name.localeCompare(b.name)));
-      }
-
-      const sortedFormats: SortedFormat[] = [];
-
-      for (const [format, cards] of presortFormat)
-      {
-         const sortedFormat = new SortedFormat(format, cards);
-
-         sortedFormat.sort({ alpha: true, type: config.sortByType });
-
-         logger.verbose(`Sorting format '${format}' - unique card entry count: ${cards.length}`);
-
-         // if (format !== 'basic-land' && format !== 'unsorted')
-         // {
-         //    sortedFormat.extractBinder();
-         // }
-
-         if (config.mark.size)
-         {
-            const hasMarked = sortedFormat.calculateMarked(config);
-            if (hasMarked)
-            {
-               logger.verbose(`  - Some cards marked for merging.`);
-            }
-         }
-
-         sortedFormats.push(sortedFormat);
-      }
-
-      return sortedFormats;
+      return this.#meta;
    }
 
    /**
@@ -130,11 +53,11 @@ export class SortedFormat extends SortedCollection
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
-    * @param format -
-    *
     * @param cards -
+    *
+    * @param [format] -
     */
-   static #sortRarity(format: string, cards: CardSorted[]): Map<string, SortedCategories>
+   static #sortRarity(cards: CardSorted[], format?: GameFormats): Map<string, SortedCategories>
    {
       if (cards.length === 0) { return new Map<string, SortedCategories>(); }
 
@@ -149,7 +72,7 @@ export class SortedFormat extends SortedCollection
          let categoryRarity = sortedCategories.has(rarity) ? sortedCategories.get(rarity) : void 0;
          if (!categoryRarity)
          {
-            categoryRarity = new SortedColor(rarity);
+            categoryRarity = new SortedKind(rarity);
             sortedCategories.set(rarity, categoryRarity);
          }
 
