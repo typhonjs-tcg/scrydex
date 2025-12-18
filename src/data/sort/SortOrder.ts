@@ -4,7 +4,7 @@ import type {
    Card,
    GameFormat }            from '#types';
 
-import type { CardSorted } from "#types-data";
+import type { CardSorted } from '#types-data';
 
 /**
  * Provides card data related to sort order for rarity and card category.

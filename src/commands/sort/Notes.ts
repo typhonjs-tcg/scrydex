@@ -96,7 +96,7 @@ export abstract class Notes
    }
 
    /**
-    * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
+    * Translates a mana cost string (IE `{1}{W}{W}`) into readable English.
     *
     * @param card - Card to convert mana cost to string note.
     *
@@ -120,7 +120,7 @@ export abstract class Notes
    }
 
    /**
-    * Translates a mana cost string (e.g. "{1}{W}{W}") into readable English.
+    * Translates a mana cost string (IE `{1}{W}{W}`) into readable English.
     *
     * @param manaCost - A card / card face mana cost to string note.
     *
@@ -145,7 +145,7 @@ export abstract class Notes
       {
          const desc = this.#describeUnit(symbol);
 
-         // If desc already encodes quantity; IE "2 generic or 1 white".
+         // If desc already encodes quantity; IE `2 generic or 1 white`.
          if (desc.includes(' or '))
          {
             fragments.push(`${count}× ${desc}`);

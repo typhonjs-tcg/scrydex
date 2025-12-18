@@ -31,7 +31,7 @@ export function parseManaCostColors(manaCost: string): Set<string>
 
       for (const p of parts)
       {
-         // p will be -> "W", "U", "G", "P", "C", "X", "". Only include actual color letters.
+         // p will be -> `W`, `U`, `G`, `P`, `C`, `X`. Only include actual color letters.
          if (p === 'W' || p === 'U' || p === 'B' || p === 'R' || p === 'G') { colorSet.add(p); }
       }
    }

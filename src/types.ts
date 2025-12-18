@@ -367,7 +367,7 @@ type CardDBMetadata = CardDBMetadataInventory | CardDBMetadataSorted | CardDBMet
 
 /**
  * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase, single-character
- * abbreviations for those colors. For example, `["W","U"]` represents something that is both white and blue. Colorless
+ * abbreviations for those colors. For example, `['W','U']` represents something that is both white and blue. Colorless
  * sources are denoted with an empty array `[]`.
  *
  * @see https://scryfall.com/docs/api/colors

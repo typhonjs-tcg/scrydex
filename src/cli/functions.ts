@@ -160,7 +160,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
  *
  * @param input - Search text / regular expression.
  *
- * @param dirpath - Directory path to search for `game_format` JSON card DBs.
+ * @param dirpath - Directory path to search for _sorted_ JSON CardDBs.
  *
  * @param opts - CLI options.
  */

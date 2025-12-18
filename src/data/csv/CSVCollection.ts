@@ -1,11 +1,11 @@
 import {
    getFileList,
-   isDirectory, isFile
-} from '@typhonjs-utils/file-util';
+   isDirectory,
+   isFile }                   from '@typhonjs-utils/file-util';
 
 import { CSVCardIndex }       from './CSVCardIndex';
 
-import { logger }             from "#util";
+import { logger }             from '#util';
 
 import type { CSVCard }       from '#types';
 

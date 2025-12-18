@@ -38,7 +38,7 @@ import type { Card } from '#types';
  *      Battle - Legendary
  *
  * Special rules applied:
- *   - "Interrupt" and "Mana Source" printings normalize to Instant.
+ *   - `Interrupt` and `Mana Source` printings normalize to Instant.
  *   - Enchantment Creature resolves as Creature (not Artifact- or Enchantment-based).
  *   - Artifact subtype resolution precedes generic Creature detection.
  *   - Legendary status is applied after subtype determination.
