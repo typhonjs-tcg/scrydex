@@ -24,13 +24,24 @@ import type {
    Card,
    CardDB,
    CardDBMetadata,
-   CardDBType }         from '#types';
+   CardDBType,
+   GameFormats }        from '#types';
 
 import type {
    CardDBMetaSave }     from '#types-data';
 
 export class CardDBStore
 {
+   /**
+    * Type guard for {@link CardDBType}.
+    *
+    * @param type -
+    */
+   static isValidType(type: unknown): type is CardDBType
+   {
+      return type === 'inventory' || type === 'sorted' || type === 'sorted_format';
+   }
+
    /**
     * Load all JSON card DBs in the specified directory path. Additional options allow filtering by DB type and DB name.
     *
@@ -47,19 +58,20 @@ export class CardDBStore
     * @returns Configured CardStream instances for the found JSON card DB collections.
     */
    static async loadAll({ dirpath, format, type, walk = false }:
-    { dirpath: string, format?: string, type?: CardDBType, walk?: boolean }): Promise<CardStream[]>
+    { dirpath: string, format?: GameFormats | Set<GameFormats>, type?: CardDBType | Set<CardDBType>, walk?: boolean }):
+     Promise<CardStream[]>
    {
       if (!isDirectory(dirpath)) { throw new Error(`CardDB.loadAll error: 'dirpath' is not a directory.`); }
       if (typeof walk !== 'boolean') { throw new TypeError(`CardDB.loadAll error: 'walk' is not a boolean.`); }
 
-      if (format !== void 0 && typeof format !== 'string')
+      if (format !== void 0 && typeof format !== 'string' && !(format instanceof Set))
       {
-         throw new TypeError(`CardDB.loadAll error: 'format' is not a string.`);
+         throw new TypeError(`CardDB.loadAll error: 'format' is not a string or set of strings.`);
       }
 
-      if (type !== void 0 && type !== 'inventory' && type !== 'sorted' && type !== 'sorted_format')
+      if (type !== void 0 && !this.isValidType(type) && !(type instanceof Set))
       {
-         throw new Error(`CardDB.loadAll error: 'type' is not a 'inventory', 'sorted', or 'sorted_format'.`);
+         throw new Error(`CardDB.loadAll error: 'type' is not a valid CardDBType or set of CardDBTypes.`);
       }
 
       const results: CardStream[] = [];
@@ -77,13 +89,23 @@ export class CardDBStore
          {
             const cardStream = await this.load({ filepath });
 
-            if (type !== void 0 && cardStream.meta.type !== type) { continue; }
-
-            // If format requested reject any CardDB that isn't a `sorted_format` type of the format mismatches.
-            if (format !== void 0 && (cardStream.meta.type !== 'sorted_format' ||
-             (cardStream.meta.type === 'sorted_format' && cardStream.meta.format !== format)))
+            // Reject any CardDB that doesn't match the requested `CardDBType`.
+            if (type !== void 0 && ((typeof type === 'string' && cardStream.meta.type !== type) ||
+             ((type instanceof Set) && !type.has(cardStream.meta.type))))
             {
                continue;
+            }
+
+            // If format requested reject any CardDB that isn't a `sorted_format` type or the format mismatches.
+            if (format !== void 0)
+            {
+               if (cardStream.meta.type !== 'sorted_format') { continue; }
+
+               if ((typeof format === 'string' && cardStream.meta.format !== format) ||
+                ((format instanceof Set) && !format.has(cardStream.meta.format)))
+               {
+                  continue;
+               }
             }
 
             results.push(cardStream);

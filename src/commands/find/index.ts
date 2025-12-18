@@ -12,15 +12,19 @@ export async function find(config: ConfigFind)
 {
    logger.info(`Attempting to find card(s) in directory: ${config.dirpath}`);
 
-   const collections = await CardDBStore.loadAll({ dirpath: config.dirpath, type: 'sorted_format', walk: true });
+   const collections = await CardDBStore.loadAll({
+      dirpath: config.dirpath,
+      type: new Set(['sorted', 'sorted_format']),
+      walk: true
+   });
 
    if (collections.length === 0)
    {
-      logger.info(`No 'game_format' card collections found.`);
+      logger.info(`No 'sorted' or 'sorted_format' card collections found.`);
       return;
    }
 
-   logger.verbose(`Loading ${collections.length} 'game_format' card collections:`);
+   logger.verbose(`Loading ${collections.length} card collections:`);
    for (const collection of collections)
    {
       logger.verbose(`${collection.meta.name} - ${collection.filepath}`);
