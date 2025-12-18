@@ -334,7 +334,7 @@ interface CardDBMetadataSortedFormat extends CardDBMetadataCommon
    type: 'sorted_format';
 
    /** Game format of CardDB. */
-   format: GameFormats;
+   format: GameFormat;
 }
 
 /**
@@ -377,7 +377,7 @@ type Colors = string[];
 /**
  * Valid Scryfall game formats.
  */
-type GameFormats = 'standard' | 'future' | 'historic' | 'timeless' | 'gladiator' | 'pioneer' | 'modern' | 'legacy' |
+type GameFormat = 'standard' | 'future' | 'historic' | 'timeless' | 'gladiator' | 'pioneer' | 'modern' | 'legacy' |
  'pauper' | 'vintage' | 'penny' | 'commander' | 'oathbreaker' | 'standardbrawl' | 'brawl' | 'alchemy' |
   'paupercommander' | 'duel' | 'oldschool' | 'premodern' | 'predh';
 
@@ -390,4 +390,4 @@ export {
    type CardFace,
    type Colors,
    type CSVCard,
-   type GameFormats };
+   type GameFormat };

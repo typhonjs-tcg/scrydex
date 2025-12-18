@@ -1,11 +1,11 @@
-import { GameFormats } from '#types';
+import { GameFormat } from '#types';
 
 /**
  * Provides a type guard for testing game format support.
  *
  * @param format - Game format to test.
  */
-function isSupportedFormat(format: string | undefined): format is GameFormats
+function isSupportedFormat(format: string | undefined): format is GameFormat
 {
    return typeof format === 'string' && supportedFormats.has(format);
 }

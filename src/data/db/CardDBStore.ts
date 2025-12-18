@@ -25,7 +25,7 @@ import type {
    CardDB,
    CardDBMetadata,
    CardDBType,
-   GameFormats }        from '#types';
+   GameFormat }         from '#types';
 
 import type {
    CardDBMetaSave }     from '#types-data';
@@ -58,7 +58,7 @@ export class CardDBStore
     * @returns Configured CardStream instances for the found JSON card DB collections.
     */
    static async loadAll({ dirpath, format, type, walk = false }:
-    { dirpath: string, format?: GameFormats | Set<GameFormats>, type?: CardDBType | Set<CardDBType>, walk?: boolean }):
+    { dirpath: string, format?: GameFormat | Set<GameFormat>, type?: CardDBType | Set<CardDBType>, walk?: boolean }):
      Promise<CardStream[]>
    {
       if (!isDirectory(dirpath)) { throw new Error(`CardDB.loadAll error: 'dirpath' is not a directory.`); }

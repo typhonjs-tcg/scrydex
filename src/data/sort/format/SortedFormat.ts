@@ -1,18 +1,16 @@
-import { AbstractCollection }      from '../AbstractCollection';
+import { AbstractCollection } from '../AbstractCollection';
 
 import {
    isSupportedFormat,
    SortedKind,
-   SortOrder
-} from '#data';
+   SortOrder }                from '#data';
 
 import type {
    CardDBMetaSave,
    CardSorted,
-   SortedCategories }            from '#types-data';
+   SortedCategories }         from '#types-data';
 
-import type {
-   GameFormats }                 from '#types';
+import type { GameFormat }    from '#types';
 
 export class SortedFormat extends AbstractCollection
 {
@@ -25,7 +23,7 @@ export class SortedFormat extends AbstractCollection
     *
     * @param cards -
     */
-   constructor({ cards, name, format }: { cards: CardSorted[], name: string, format?: GameFormats })
+   constructor({ cards, name, format }: { cards: CardSorted[], name: string, format?: GameFormat })
    {
       super(name, cards, SortedFormat.#sortRarity(cards, format));
 
@@ -57,7 +55,7 @@ export class SortedFormat extends AbstractCollection
     *
     * @param [format] -
     */
-   static #sortRarity(cards: CardSorted[], format?: GameFormats): Map<string, SortedCategories>
+   static #sortRarity(cards: CardSorted[], format?: GameFormat): Map<string, SortedCategories>
    {
       if (cards.length === 0) { return new Map<string, SortedCategories>(); }
 

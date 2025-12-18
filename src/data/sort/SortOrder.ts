@@ -2,7 +2,7 @@ import { CardFields }      from '#data';
 
 import type {
    Card,
-   GameFormats }           from '#types';
+   GameFormat }            from '#types';
 
 import type { CardSorted } from "#types-data";
 
@@ -74,7 +74,7 @@ export abstract class SortOrder
     *
     * @param [format] - Specific game format.
     */
-   static rarity(card: Card, format?: GameFormats)
+   static rarity(card: Card, format?: GameFormat)
    {
       return (format === 'oldschool' || format === 'premodern' ? card.rarity_orig : card.rarity_recent) ?? card.rarity;
    }
