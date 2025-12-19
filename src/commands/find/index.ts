@@ -91,6 +91,24 @@ function independentChecks(card: Card, config: ConfigFind): boolean
       }
    }
 
+   if (checks.manaCost)
+   {
+      if (card.card_faces)
+      {
+         const manaCostParts = CardFields.partsManaCost(card);
+         let result = false;
+         for (const manaCost of manaCostParts)
+         {
+            if (checks.manaCost === manaCost) { result = true; break; }
+         }
+         if (!result) { return false; }
+      }
+      else if (checks.manaCost !== card.mana_cost)
+      {
+         return false;
+      }
+   }
+
    return true;
 }
 

@@ -52,6 +52,7 @@ program
 .option('--type', 'Match against the card type line.')
 .option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to match by color identity.')
 .option('--cmc', 'Provide `0` to a positive finite number to match CMC / converted mana cost.')
+.option('--mana-cost', 'Provide the exact encoded symbol match such as `{1}{G}` to match mana cost.')
 .example('find "Demonic Tutor" ./sorted-directory')
 .action(commandFindFormat);
 

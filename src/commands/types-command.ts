@@ -89,6 +89,11 @@ interface ConfigFindChecks
     * Match card `CMC`.
     */
    cmc?: number;
+
+   /**
+    * Match exact mana cost.
+    */
+   manaCost?: string;
 }
 
 /**

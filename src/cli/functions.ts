@@ -243,9 +243,15 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       }
    }
 
+   if (opts['mana-cost'] !== void 0 && typeof opts['mana-cost'] !== 'string')
+   {
+      exit(`'mana-cost' option must be a string.`);
+   }
+
    const checks = {
       colorIdentity,
-      cmc: opts.cmc ? parseFloat(opts.cmc) : void 0
+      cmc: opts.cmc ? parseFloat(opts.cmc) : void 0,
+      manaCost: opts['mana-cost'] ? opts['mana-cost'] : void 0
    }
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
