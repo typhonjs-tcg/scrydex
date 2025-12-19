@@ -33,34 +33,65 @@ type CardDBMetaSave =
 interface ConfigCardFilter
 {
    /**
-    * Card border colors to filter.
+    * Independent card properties to filter.
     */
-   border?: Set<string>;
+   properties: {
+      /**
+       * Card border colors to filter.
+       */
+      border?: Set<string>;
+
+      /**
+       * WUBRG color identity set.
+       */
+      colorIdentity?: Set<string>;
+
+      /**
+       * Match card `CMC`.
+       */
+      cmc?: number;
+
+      /**
+       * Game format legality.
+       */
+      formats?: string[];
+
+      /**
+       * An array of RegExp instances for keywords that a card uses such as 'Flying' and 'Cumulative upkeep'.
+       */
+      keywords?: RegExp[];
+
+      /**
+       * Match exact mana cost.
+       */
+      manaCost?: string;
+   };
 
    /**
-    * WUBRG color identity set.
+    * Defines a possible regex test that occurs before independent property tests.
     */
-   colorIdentity?: Set<string>;
+   regex?: {
+      /**
+       * Regex operation.
+       */
+      op: RegExp;
 
-   /**
-    * Match card `CMC`.
-    */
-   cmc?: number;
+      /**
+       * The card fields to search.
+       */
+      fields: Set<string>,
 
-   /**
-    * Game format legality.
-    */
-   formats?: string[];
+      /**
+       * Info for logging config.
+       */
+      log: {
+         input: string,
 
-   /**
-    * An array of RegExp instances for keywords that a card uses such as 'Flying' and 'Cumulative upkeep'.
-    */
-   keywords?: RegExp[];
-
-   /**
-    * Match exact mana cost.
-    */
-   manaCost?: string;
+         caseInsensitive: boolean,
+         exact: boolean,
+         wordBoundary: boolean;
+      }
+   }
 }
 
 export {

@@ -1,7 +1,6 @@
 import {
-   CardDBStore, CardFilter,
-   validLegality
-} from '#data';
+   CardDBStore,
+   CardFilter }               from '#data';
 
 import { logger }             from '#util';
 

@@ -58,16 +58,6 @@ interface ConfigFind
     * Config for {@link CardFilter}.
     */
    filter: ConfigCardFilter;
-
-   /**
-    * Regular expression to evaluate on card names.
-    */
-   regex: RegExp | null;
-
-   /**
-    * The card fields to search.
-    */
-   regexFields: Set<string> | null;
 }
 
 /**
