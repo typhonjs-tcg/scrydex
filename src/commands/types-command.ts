@@ -91,6 +91,11 @@ interface ConfigFindChecks
    cmc?: number;
 
    /**
+    * Game format legality.
+    */
+   formats?: string[] | null;
+
+   /**
     * Match exact mana cost.
     */
    manaCost?: string;

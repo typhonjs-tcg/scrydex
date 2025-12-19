@@ -171,6 +171,8 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
+   // Verify main search criteria ------------------------------------------------------------------------------------
+
    // Verify pattern match fields.
    if (opts.b !== void 0 && typeof opts.b !== 'boolean') { exit(`'b' option must be a boolean.`); }
    if (opts.i !== void 0 && typeof opts.i !== 'boolean') { exit(`'i' option must be a boolean.`); }
@@ -180,12 +182,6 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    if (opts.name !== void 0 && typeof opts.name !== 'boolean') { exit(`'name' option must be a boolean.`); }
    if (opts.oracle !== void 0 && typeof opts.oracle !== 'boolean') { exit(`'oracle' option must be a boolean.`); }
    if (opts.type !== void 0 && typeof opts.type !== 'boolean') { exit(`'type' option must be a boolean.`); }
-
-   if (opts.cmc !== void 0)
-   {
-      const cmc = parseFloat(opts.cmc);
-      if (!Number.isFinite(cmc) || cmc < 0) { exit(`'cmc' option must be 0 to a positive number.`); }
-   }
 
    const regexFields: string[] = [];
 
@@ -227,6 +223,8 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       exit(message);
    }
 
+   // Additional independent search criteria -------------------------------------------------------------------------
+
    if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
    {
       exit(`'color-identity' option must be a string.`);
@@ -243,6 +241,16 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       }
    }
 
+   if (opts.cmc !== void 0)
+   {
+      const cmc = parseFloat(opts.cmc);
+      if (!Number.isFinite(cmc) || cmc < 0) { exit(`'cmc' option must be 0 to a positive number.`); }
+   }
+
+   if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
+
+   const formats = opts.formats ? validateFormats(opts.formats) : null;
+
    if (opts['mana-cost'] !== void 0 && typeof opts['mana-cost'] !== 'string')
    {
       exit(`'mana-cost' option must be a string.`);
@@ -251,6 +259,7 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    const checks = {
       colorIdentity,
       cmc: opts.cmc ? parseFloat(opts.cmc) : void 0,
+      formats,
       manaCost: opts['mana-cost'] ? opts['mana-cost'] : void 0
    }
 

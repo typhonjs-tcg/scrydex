@@ -1,7 +1,8 @@
 import {
    CardDBStore,
    CardFields,
-   SortOrder }             from '#data';
+   SortOrder,
+   validLegality }         from '#data';
 
 import { logger }          from '#util';
 
@@ -88,6 +89,14 @@ function independentChecks(card: Card, config: ConfigFind): boolean
       else if (checks.cmc !== card.cmc)
       {
          return false;
+      }
+   }
+
+   if (checks.formats?.length)
+   {
+      for (const format of checks.formats)
+      {
+         if (!validLegality.has(card.legalities?.[format])) { return false; }
       }
    }
 
