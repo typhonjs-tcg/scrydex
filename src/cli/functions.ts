@@ -10,9 +10,7 @@ import {
    find,
    sortFormat }         from '#commands';
 
-import {
-   parseManaCostColors,
-   supportedFormats }   from '#data';
+import { CardFilter }   from '#data';
 
 import { logger }       from '#util';
 
@@ -92,36 +90,18 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
-   if (opts.border !== void 0 && typeof opts.border !== 'string') { exit(`'border' option is not defined.`); }
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
-   const border = opts.border ? validateBorder(opts.border) : null;
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
-   if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
+   const filterOptions = CardFilter.validateCLIOptions(opts);
 
-   const formats = opts.formats ? validateFormats(opts.formats) : null;
-
-   if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
-   {
-      exit(`'color-identity' option must be a string.`);
-   }
-
-   let colorIdentity: Set<string> | null;
-
-   if (opts['color-identity'])
-   {
-      colorIdentity = parseManaCostColors(opts['color-identity']);
-      if (colorIdentity.size === 0)
-      {
-         exit(`'color-identity' option contains no valid WUBRG colors: ${opts['color-identity']}`);
-      }
-   }
-   else
-   {
-      colorIdentity = null;
-   }
+   // A string indicates validation error is detected.
+   if (typeof filterOptions === 'string') { exit(filterOptions); }
 
    // Abort as no filtering options are provided.
-   if (!border && !colorIdentity && !formats)
+   if (Object.keys(filterOptions).length === 0)
    {
       exit(`Aborting as no filtering options provided.`);
    }
@@ -129,15 +109,8 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
    const config: ConfigFilter = {
       input,
       output: opts.output,
-      border,
-      colorIdentity,
-      formats
+      filter: filterOptions
    };
-
-   // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    try
    {
@@ -170,6 +143,8 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    if(!isDirectory(dirpath)) { exit(`'directory' option path is an invalid directory.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
    // Verify main search criteria ------------------------------------------------------------------------------------
 
@@ -225,55 +200,10 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
 
    // Additional independent search criteria -------------------------------------------------------------------------
 
-   if (opts.border !== void 0 && typeof opts.border !== 'string') { exit(`'border' option is not defined.`); }
+   const filter = CardFilter.validateCLIOptions(opts);
 
-   const border = opts.border ? validateBorder(opts.border) : null;
-
-   if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
-   {
-      exit(`'color-identity' option must be a string.`);
-   }
-
-   let colorIdentity: Set<string> | undefined;
-
-   if (opts['color-identity'])
-   {
-      colorIdentity = parseManaCostColors(opts['color-identity']);
-      if (colorIdentity.size === 0)
-      {
-         exit(`'color-identity' option contains no valid WUBRG colors: ${opts['color-identity']}`);
-      }
-   }
-
-   if (opts.cmc !== void 0)
-   {
-      const cmc = parseFloat(opts.cmc);
-      if (!Number.isFinite(cmc) || cmc < 0) { exit(`'cmc' option must be 0 to a positive number.`); }
-   }
-
-   if (opts.formats !== void 0 && typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
-
-   const formats = opts.formats ? validateFormats(opts.formats) : null;
-
-   if (opts.keywords !== void 0 && typeof opts.keywords !== 'string') { exit(`'keywords' option is not defined.`); }
-
-   const keywords = opts.keywords ? validateKeywords(opts.keywords) : null;
-
-   if (opts['mana-cost'] !== void 0 && typeof opts['mana-cost'] !== 'string')
-   {
-      exit(`'mana-cost' option must be a string.`);
-   }
-
-   const filter = {
-      border,
-      colorIdentity,
-      cmc: opts.cmc ? parseFloat(opts.cmc) : void 0,
-      formats,
-      keywords,
-      manaCost: opts['mana-cost'] ? opts['mana-cost'] : void 0
-   }
-
-   if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
+   // A string indicates validation error is detected.
+   if (typeof filter === 'string') { exit(filter); }
 
    const config: ConfigFind = {
       dirpath,
@@ -323,9 +253,9 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
 
    if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined`); }
 
-   const formats = validateFormats(opts.formats);
+   const formats = CardFilter.validateCLIFormats(opts.formats);
 
-   if (formats.length === 0) { exit(`'formats' option is empty.`); }
+   if (typeof formats === 'string') { exit(formats); }
 
    if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined.`); }
 
@@ -371,83 +301,12 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
 }
 
 /**
- * @param message - A message.
+ * Exit process with error message.
  *
- * @param [exit=true] - Invoke `process.exit`.
+ * @param message - A message.
  */
-function exit(message: string, exit: boolean = true)
+function exit(message: string): never
 {
    console.error(`[31m[scrydex] ${message}[0m`);
-   if (exit) { process.exit(1); }
-}
-
-/**
- * Parse and validate border colors.
- *
- * @param borders -
- */
-function validateBorder(borders: string): Set<string>
-{
-   const entries = borders.split(':');
-
-   const supportedBorder = new Set(['black', 'borderless', 'gold', 'silver', 'white', 'yellow']);
-
-   const seen: Set<string> = new Set();
-
-   for (const border of entries)
-   {
-      if (seen.has(border)) { exit(`'border' option contains duplicate border: ${border}`); }
-
-      if (!supportedBorder.has(border)) { exit(`'border' option contains an invalid format: ${border}`); }
-
-      seen.add(border);
-   }
-
-   return seen;
-}
-
-/**
- * Parse and validate game formats.
- *
- * @param formats -
- */
-function validateFormats(formats: string): string[]
-{
-   const result = formats.split(':');
-
-   const seen: Set<string> = new Set();
-
-   for (const format of result)
-   {
-      if (seen.has(format)) { exit(`'formats' option contains duplicate format: ${format}`); }
-
-      if (!supportedFormats.has(format)) { exit(`'formats' option contains an invalid format: ${format}`); }
-
-      seen.add(format);
-   }
-
-   return result;
-}
-
-/**
- * Parse and validate `keywords` into separate RegExp instances.
- *
- * @param keywords -
- */
-function validateKeywords(keywords: string): RegExp[] | null
-{
-   const result = keywords.split(':');
-
-   const seen: Map<string, RegExp> = new Map();
-
-   for (const keyword of result)
-   {
-      if (keyword.length === 0) { exit(`'keywords' option contains empty / zero length entry.`); }
-
-      if (seen.has(keyword)) { exit(`'keywords' option contains duplicate keyword: ${keyword}`); }
-
-      seen.set(keyword, new RegExp(`\\b${keyword}\\b`, 'i'));
-   }
-
-   return seen.size ? [...seen.values()] : null;
+   process.exit(1);
 }

@@ -35,12 +35,12 @@ interface ConfigCardFilter
    /**
     * Card border colors to filter.
     */
-   border?: Set<string> | null;
+   border?: Set<string>;
 
    /**
     * WUBRG color identity set.
     */
-   colorIdentity?: Set<string> | null;
+   colorIdentity?: Set<string>;
 
    /**
     * Match card `CMC`.
@@ -50,12 +50,12 @@ interface ConfigCardFilter
    /**
     * Game format legality.
     */
-   formats?: string[] | null;
+   formats?: string[];
 
    /**
     * An array of RegExp instances for keywords that a card uses such as 'Flying' and 'Cumulative upkeep'.
     */
-   keywords?: RegExp[] | null;
+   keywords?: RegExp[];
 
    /**
     * Match exact mana cost.

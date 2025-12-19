@@ -11,7 +11,7 @@ import type { ConfigFind } from '#types-command';
 
 export async function find(config: ConfigFind)
 {
-   logger.info(`Attempting to find card(s) in directory: ${config.dirpath}`);
+   logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.dirpath}`);
 
    const collections = await CardDBStore.loadAll({
       dirpath: config.dirpath,
@@ -25,13 +25,28 @@ export async function find(config: ConfigFind)
       return;
    }
 
-   logger.verbose(`Loading ${collections.length} card collections:`);
+   logger.info(`Loading ${collections.length} card collections: ${
+    collections.map((entry) => entry.meta.name).join(', ')}`);
+
+   logger.verbose(``);
+
    for (const collection of collections)
    {
       logger.verbose(`${collection.meta.name} - ${collection.filepath}`);
    }
 
-   const hasChecks = Object.keys(config.filter).length > 0;
+   const hasFilters = Object.keys(config.filter).length > 0;
+
+   if (hasFilters)
+   {
+      logger.verbose(``);
+      logger.verbose(`[Filter Options]`);
+      logger.verbose(`----------------------`);
+
+      CardFilter.logConfig(config.filter, 'verbose');
+
+      logger.verbose(`----------------------`);
+   }
 
    for (const collection of collections)
    {
@@ -42,15 +57,14 @@ export async function find(config: ConfigFind)
 
          if (!foundRegex) { continue; }
 
-         // Additional independent checks.
-         const foundChecks = hasChecks ? CardFilter.test(card, config.filter) : true;
+         // Additional independent filter checks.
+         const foundFilters = hasFilters ? CardFilter.test(card, config.filter) : true;
 
-         if (foundRegex && foundChecks)
+         if (foundRegex && foundFilters)
          {
             const gameFormat = collection.meta.type === 'sorted_format' ? collection.meta.format : void 0;
-            const gameFormatStr = gameFormat ? `; Format: ${gameFormat}` : '';
 
-            logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Type: ${card.type}${gameFormatStr}; Rarity: ${
+            logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
              SortOrder.rarity(card, gameFormat)}; Category: ${SortOrder.categoryName(card)}${
               card.in_deck ? `; In Deck: ${card.filename}` : ''}`);
          }

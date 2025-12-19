@@ -1,6 +1,7 @@
 import {
-   CardDBStore,
-   validLegality }            from '#data';
+   CardDBStore, CardFilter,
+   validLegality
+} from '#data';
 
 import { logger }             from '#util';
 
@@ -9,22 +10,14 @@ import type { ConfigFilter }  from '#types-command';
 
 export async function filter(config: ConfigFilter): Promise<void>
 {
-   logger.info(`Filtering Scryfall card collection: ${config.input}`);
+   logger.info(`Filtering Scrydex CardDB: ${config.input}`);
 
-   if (config.border)
-   {
-      logger.info(`Card borders: ${[...config.border].join(' or ')}`);
-   }
+   logger.verbose(`[Filter Options]`);
+   logger.verbose(`----------------------`);
 
-   if (config.colorIdentity)
-   {
-      logger.info(`Color Identity: ${[...config.colorIdentity].join(', ')}`);
-   }
+   CardFilter.logConfig(config.filter, 'verbose');
 
-   if (config.formats?.length)
-   {
-      logger.info(`Formats: ${config.formats.join(' and ')}`);
-   }
+   logger.verbose(`----------------------`);
 
    const cards = await CardDBStore.load({ filepath: config.input });
 
@@ -34,28 +27,10 @@ export async function filter(config: ConfigFilter): Promise<void>
 
    for await (const card of cards.asStream())
    {
-      if (card.object !== 'card') { continue; }
-
       totalUnique++;
 
-      if (config.border && !config.border.has(card.border_color)) { continue; }
-
-      if (config.colorIdentity && Array.isArray(card.color_identity))
-      {
-         if (!config.colorIdentity.isSupersetOf(new Set(card.color_identity))) { continue; }
-      }
-
-      if (config.formats?.length)
-      {
-         let valid = true;
-
-         for (const format of config.formats)
-         {
-            if (!validLegality.has(card.legalities?.[format])) { valid = false; }
-         }
-
-         if (!valid) { continue; }
-      }
+      // Independent filter checks.
+      if (!CardFilter.test(card, config.filter)) { continue; }
 
       outputDB.push(card);
    }
@@ -68,8 +43,8 @@ export async function filter(config: ConfigFilter): Promise<void>
          meta: cards.meta
       });
 
-      logger.info(`Finished filtering Scryfall card collection: ${config.output}`);
-      logger.info(`Filtered ${outputDB.length} / ${totalUnique} unique cards.`);
+      logger.info(`Finished filtering Scrydex CardDB: ${config.output}`);
+      logger.info(`Filtered ${outputDB.length} / ${totalUnique} unique card entries.`);
    }
    else
    {

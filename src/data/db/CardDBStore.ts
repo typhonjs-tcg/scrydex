@@ -289,6 +289,9 @@ class CardStream
       return this.#filepath;
    }
 
+   /**
+    * @returns CardDB metadata.
+    */
    get meta(): Readonly<CardDBMetadata>
    {
       return this.#meta;
@@ -296,6 +299,8 @@ class CardStream
 
    /**
     * Stream the card data in the DB asynchronously.
+    *
+    * @returns Asynchronous iterator over validated card entries.
     */
    async *asStream(): AsyncIterable<Card>
    {
@@ -306,11 +311,20 @@ class CardStream
          streamArray()
       ]);
 
-      for await (const { value } of pipeline) { yield value; }
+      for await (const { value } of pipeline)
+      {
+         if (typeof value !== 'object' || value === null || value.object !== 'card') { continue; }
+
+         yield value;
+      }
    }
 
    /**
     * Return synchronously all card data in the DB.
+    *
+    * Note: Individual entries are not validated for typeof `object` or the Scryfall `object: 'card'` association.
+    *
+    * @returns All cards in the collection.
     */
    getAll(): Card[]
    {

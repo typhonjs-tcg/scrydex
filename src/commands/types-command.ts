@@ -32,19 +32,9 @@ interface ConfigConvert
 interface ConfigFilter
 {
    /**
-    * Card border colors to filter.
+    * Config for {@link CardFilter}.
     */
-   border: Set<string> | null;
-
-   /**
-    * WUBRG color identity set.
-    */
-   colorIdentity: Set<string> | null;
-
-   /**
-    * Scryfall game formats.
-    */
-   formats: string[] | null;
+   filter: ConfigCardFilter;
 
    /**
     * Input card JSON DB file.
