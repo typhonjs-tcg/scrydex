@@ -50,6 +50,7 @@ program
 .option('--oracle', 'Match against the card oracle text.')
 .option('--name', 'Match against the card name (default).')
 .option('--type', 'Match against the card type line.')
+.option('--border', 'Provide a colon separated list of border colors including: black, white, borderless, yellow, silver, or gold.')
 .option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to match by color identity.')
 .option('--cmc', 'Provide `0` to a positive finite number to match CMC / converted mana cost.')
 .option('--formats', 'Provide a colon separated list of legal game formats.')

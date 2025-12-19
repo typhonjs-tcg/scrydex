@@ -69,6 +69,8 @@ function independentChecks(card: Card, config: ConfigFind): boolean
 {
    const checks = config.checks;
 
+   if (checks.border && !checks.border.has(card.border_color)) { return false; }
+
    if (checks.colorIdentity && Array.isArray(card.color_identity))
    {
       if (!checks.colorIdentity.isSupersetOf(new Set(card.color_identity))) { return false; }

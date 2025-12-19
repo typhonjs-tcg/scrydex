@@ -81,6 +81,11 @@ interface ConfigFind
 interface ConfigFindChecks
 {
    /**
+    * Card border colors to filter.
+    */
+   border?: Set<string> | null;
+
+   /**
     * WUBRG color identity set.
     */
    colorIdentity?: Set<string> | null;

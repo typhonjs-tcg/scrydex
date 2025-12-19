@@ -225,6 +225,10 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
 
    // Additional independent search criteria -------------------------------------------------------------------------
 
+   if (opts.border !== void 0 && typeof opts.border !== 'string') { exit(`'border' option is not defined.`); }
+
+   const border = opts.border ? validateBorder(opts.border) : null;
+
    if (opts['color-identity'] !== void 0 && typeof opts['color-identity'] !== 'string')
    {
       exit(`'color-identity' option must be a string.`);
@@ -261,6 +265,7 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    }
 
    const checks = {
+      border,
       colorIdentity,
       cmc: opts.cmc ? parseFloat(opts.cmc) : void 0,
       formats,
