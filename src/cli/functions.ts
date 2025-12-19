@@ -251,6 +251,10 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
 
    const formats = opts.formats ? validateFormats(opts.formats) : null;
 
+   if (opts.keywords !== void 0 && typeof opts.keywords !== 'string') { exit(`'keywords' option is not defined.`); }
+
+   const keywords = opts.keywords ? validateKeywords(opts.keywords) : null;
+
    if (opts['mana-cost'] !== void 0 && typeof opts['mana-cost'] !== 'string')
    {
       exit(`'mana-cost' option must be a string.`);
@@ -260,6 +264,7 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       colorIdentity,
       cmc: opts.cmc ? parseFloat(opts.cmc) : void 0,
       formats,
+      keywords,
       manaCost: opts['mana-cost'] ? opts['mana-cost'] : void 0
    }
 
@@ -417,4 +422,27 @@ function validateFormats(formats: string): string[]
    }
 
    return result;
+}
+
+/**
+ * Parse and validate `keywords` into separate RegExp instances.
+ *
+ * @param keywords -
+ */
+function validateKeywords(keywords: string): RegExp[] | null
+{
+   const result = keywords.split(':');
+
+   const seen: Map<string, RegExp> = new Map();
+
+   for (const keyword of result)
+   {
+      if (keyword.length === 0) { exit(`'keywords' option contains empty / zero length entry.`); }
+
+      if (seen.has(keyword)) { exit(`'keywords' option contains duplicate keyword: ${keyword}`); }
+
+      seen.set(keyword, new RegExp(`\\b${keyword}\\b`, 'i'));
+   }
+
+   return seen.size ? [...seen.values()] : null;
 }

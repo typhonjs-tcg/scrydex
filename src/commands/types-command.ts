@@ -96,6 +96,11 @@ interface ConfigFindChecks
    formats?: string[] | null;
 
    /**
+    * An array of RegExp instances for keywords that a card uses such as 'Flying' and 'Cumulative upkeep'.
+    */
+   keywords?: RegExp[] | null;
+
+   /**
     * Match exact mana cost.
     */
    manaCost?: string;

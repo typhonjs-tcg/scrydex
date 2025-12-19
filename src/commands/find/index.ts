@@ -100,6 +100,19 @@ function independentChecks(card: Card, config: ConfigFind): boolean
       }
    }
 
+   if (checks.keywords?.length)
+   {
+      if (!Array.isArray(card.keywords) || card.keywords.length === 0) { return false; }
+
+      for (const keywordRegex of checks.keywords)
+      {
+         for (const keyword of card.keywords)
+         {
+            if (!keywordRegex.test(keyword)) { return false; }
+         }
+      }
+   }
+
    if (checks.manaCost)
    {
       if (card.card_faces)
