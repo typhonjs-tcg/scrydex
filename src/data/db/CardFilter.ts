@@ -25,11 +25,11 @@ export abstract class CardFilter
    /**
     * Checks if there are filter checks to execute in the given config object.
     *
-    * @param config -
+    * @param [config] -
     *
     * @return Filter check status.
     */
-   static hasFilterChecks(config: ConfigCardFilter): boolean
+   static hasFilterChecks(config?: ConfigCardFilter): config is ConfigCardFilter
    {
       if (!isObject(config)) { return false; }
       if (!isObject(config.properties)) { return false; }

@@ -15,6 +15,7 @@ import { streamArray }  from 'stream-json/streamers/StreamArray';
 import { streamObject } from 'stream-json/streamers/StreamObject';
 
 import {
+   CardFilter,
    execTime,
    supportedFormats }   from '#data';
 
@@ -28,7 +29,8 @@ import type {
    GameFormat }         from '#types';
 
 import type {
-   CardDBMetaSave }     from '#types-data';
+   CardDBMetaSave,
+   ConfigCardFilter }   from '#types-data';
 
 export class CardDBStore
 {
@@ -300,9 +302,13 @@ class CardStream
    /**
     * Stream the card data in the DB asynchronously.
     *
+    * @param [options] - Optional options.
+    *
+    * @param [options.filter] - Optional {@link ConfigCardFilter} configuration object to filter card stream.
+    *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream(): AsyncIterable<Card>
+   async *asStream({ filter }: { filter?: ConfigCardFilter} = {}): AsyncIterable<Card>
    {
       const pipeline = chain([
          fs.createReadStream(this.#filepath),
@@ -311,11 +317,28 @@ class CardStream
          streamArray()
       ]);
 
-      for await (const { value } of pipeline)
+      if (CardFilter.hasFilterChecks(filter))
       {
-         if (typeof value !== 'object' || value === null || value.object !== 'card') { continue; }
+         for await (const { value } of pipeline)
+         {
+            // Add additional card filter test.
+            if (typeof value !== 'object' || value === null || value.object !== 'card' ||
+             !CardFilter.test(value, filter))
+            {
+               continue;
+            }
 
-         yield value;
+            yield value;
+         }
+      }
+      else
+      {
+         for await (const { value } of pipeline)
+         {
+            if (typeof value !== 'object' || value === null || value.object !== 'card') { continue; }
+
+            yield value;
+         }
       }
    }
 

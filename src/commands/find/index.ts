@@ -48,16 +48,13 @@ export async function find(config: ConfigFind)
 
    for (const collection of collections)
    {
-      for await (const card of collection.asStream())
+      for await (const card of collection.asStream({ filter: config.filter }))
       {
-         if (CardFilter.test(card, config.filter))
-         {
-            const gameFormat = collection.meta.type === 'sorted_format' ? collection.meta.format : void 0;
+         const gameFormat = collection.meta.type === 'sorted_format' ? collection.meta.format : void 0;
 
-            logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
-             SortOrder.rarity(card, gameFormat)}; Category: ${SortOrder.categoryName(card)}${
-              card.in_deck ? `; In Deck: ${card.filename}` : ''}`);
-         }
+         logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
+          SortOrder.rarity(card, gameFormat)}; Category: ${SortOrder.categoryName(card)}${
+           card.in_deck ? `; In Deck: ${card.filename}` : ''}`);
       }
    }
 }
