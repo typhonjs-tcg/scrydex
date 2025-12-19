@@ -27,4 +27,42 @@ type CardDBMetaSave =
          : never
       : never;
 
-export { CardDBMetaSave };
+/**
+ * Provides the configuration object for {@link CardFilter.filter}.
+ */
+interface ConfigCardFilter
+{
+   /**
+    * Card border colors to filter.
+    */
+   border?: Set<string> | null;
+
+   /**
+    * WUBRG color identity set.
+    */
+   colorIdentity?: Set<string> | null;
+
+   /**
+    * Match card `CMC`.
+    */
+   cmc?: number;
+
+   /**
+    * Game format legality.
+    */
+   formats?: string[] | null;
+
+   /**
+    * An array of RegExp instances for keywords that a card uses such as 'Flying' and 'Cumulative upkeep'.
+    */
+   keywords?: RegExp[] | null;
+
+   /**
+    * Match exact mana cost.
+    */
+   manaCost?: string;
+}
+
+export {
+   CardDBMetaSave,
+   ConfigCardFilter };

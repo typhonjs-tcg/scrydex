@@ -1,8 +1,8 @@
 import {
    CardDBStore,
    CardFields,
-   SortOrder,
-   validLegality }         from '#data';
+   CardFilter,
+   SortOrder }             from '#data';
 
 import { logger }          from '#util';
 
@@ -31,7 +31,7 @@ export async function find(config: ConfigFind)
       logger.verbose(`${collection.meta.name} - ${collection.filepath}`);
    }
 
-   const hasChecks = Object.keys(config.checks).length > 0;
+   const hasChecks = Object.keys(config.filter).length > 0;
 
    for (const collection of collections)
    {
@@ -43,7 +43,7 @@ export async function find(config: ConfigFind)
          if (!foundRegex) { continue; }
 
          // Additional independent checks.
-         const foundChecks = hasChecks ? independentChecks(card, config) : true;
+         const foundChecks = hasChecks ? CardFilter.test(card, config.filter) : true;
 
          if (foundRegex && foundChecks)
          {
@@ -56,84 +56,6 @@ export async function find(config: ConfigFind)
          }
       }
    }
-}
-
-/**
- * Handles any independent property checks separate of regex testing.
- *
- * @param card -
- *
- * @param config -
- */
-function independentChecks(card: Card, config: ConfigFind): boolean
-{
-   const checks = config.checks;
-
-   if (checks.border && !checks.border.has(card.border_color)) { return false; }
-
-   if (checks.colorIdentity && Array.isArray(card.color_identity))
-   {
-      if (!checks.colorIdentity.isSupersetOf(new Set(card.color_identity))) { return false; }
-   }
-
-   if (checks.cmc)
-   {
-      if (card.card_faces)
-      {
-         const cmcParts = CardFields.partsCMC(card);
-         let result = false;
-         for (const cmcPart of cmcParts)
-         {
-            if (checks.cmc === cmcPart) { result = true; break; }
-         }
-         if (!result) { return false; }
-      }
-      else if (checks.cmc !== card.cmc)
-      {
-         return false;
-      }
-   }
-
-   if (checks.formats?.length)
-   {
-      for (const format of checks.formats)
-      {
-         if (!validLegality.has(card.legalities?.[format])) { return false; }
-      }
-   }
-
-   if (checks.keywords?.length)
-   {
-      if (!Array.isArray(card.keywords) || card.keywords.length === 0) { return false; }
-
-      for (const keywordRegex of checks.keywords)
-      {
-         for (const keyword of card.keywords)
-         {
-            if (!keywordRegex.test(keyword)) { return false; }
-         }
-      }
-   }
-
-   if (checks.manaCost)
-   {
-      if (card.card_faces)
-      {
-         const manaCostParts = CardFields.partsManaCost(card);
-         let result = false;
-         for (const manaCost of manaCostParts)
-         {
-            if (checks.manaCost === manaCost) { result = true; break; }
-         }
-         if (!result) { return false; }
-      }
-      else if (checks.manaCost !== card.mana_cost)
-      {
-         return false;
-      }
-   }
-
-   return true;
 }
 
 /**

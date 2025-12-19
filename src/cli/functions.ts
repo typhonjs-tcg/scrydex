@@ -264,7 +264,7 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
       exit(`'mana-cost' option must be a string.`);
    }
 
-   const checks = {
+   const filter = {
       border,
       colorIdentity,
       cmc: opts.cmc ? parseFloat(opts.cmc) : void 0,
@@ -276,8 +276,8 @@ export async function commandFindFormat(input: string, dirpath: string, opts: Re
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
    const config: ConfigFind = {
-      checks,
       dirpath,
+      filter,
       regex,
       // If there is no input string via `""` do not include regex fields.
       regexFields: regex && input.length ? new Set(regexFields) : null

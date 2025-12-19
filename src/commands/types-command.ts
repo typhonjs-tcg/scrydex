@@ -1,3 +1,5 @@
+import { ConfigCardFilter } from '#types-data';
+
 /**
  * Config object for the `convert` command.
  */
@@ -57,12 +59,15 @@ interface ConfigFilter
 
 interface ConfigFind
 {
-   checks: ConfigFindChecks;
-
    /**
     * Directory to load.
     */
    dirpath: string;
+
+   /**
+    * Config for {@link CardFilter}.
+    */
+   filter: ConfigCardFilter;
 
    /**
     * Regular expression to evaluate on card names.
@@ -73,42 +78,6 @@ interface ConfigFind
     * The card fields to search.
     */
    regexFields: Set<string> | null;
-}
-
-/**
- * Additional `find` command data for match checks.
- */
-interface ConfigFindChecks
-{
-   /**
-    * Card border colors to filter.
-    */
-   border?: Set<string> | null;
-
-   /**
-    * WUBRG color identity set.
-    */
-   colorIdentity?: Set<string> | null;
-
-   /**
-    * Match card `CMC`.
-    */
-   cmc?: number;
-
-   /**
-    * Game format legality.
-    */
-   formats?: string[] | null;
-
-   /**
-    * An array of RegExp instances for keywords that a card uses such as 'Flying' and 'Cumulative upkeep'.
-    */
-   keywords?: RegExp[] | null;
-
-   /**
-    * Match exact mana cost.
-    */
-   manaCost?: string;
 }
 
 /**
