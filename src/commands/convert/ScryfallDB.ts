@@ -1,22 +1,24 @@
-import fs                           from 'node:fs';
-import chain                        from 'stream-chain';
-import parser                       from 'stream-json';
-import { streamArray }              from 'stream-json/streamers/StreamArray';
+import fs                        from 'node:fs';
+import chain                     from 'stream-chain';
+import parser                    from 'stream-json';
+import { streamArray }           from 'stream-json/streamers/StreamArray';
 
-import { ParseCardFaces }           from './ParseCardFaces';
-import { ParseTypeLine }            from './ParseTypeLine';
+import { RarityNormalization }   from './RarityNormalization';
+import { ParseCardFaces }        from './ParseCardFaces';
+import { ParseTypeLine }         from './ParseTypeLine';
 
-import {
-   CardDBStore,
-   excludedSetsRecentRarity,
-   excludedSetTypesRecentRarity }   from '#data';
+import { CardDBStore }           from '#data';
 
-import { logger }                   from '#util';
+import { logger }                from '#util';
 
-import type { CSVCollection }       from '#data';
-import type { Card, CSVCard }       from '#types';
-import type { ConfigConvert }       from '#types-command';
+import type { CSVCollection }    from '#data';
+import type { Card, CSVCard }    from '#types';
+import type { ConfigConvert }    from '#types-command';
 
+/**
+ * Provides thorough resolution and normalization of CSV collection cards with multiple streaming passes over the
+ * Scryfall DB.
+ */
 export class ScryfallDB
 {
    /**
@@ -28,16 +30,12 @@ export class ScryfallDB
    {
       const outputDB: Card[] = [];
 
-      /**
-       * Tracks original / earliest rarity for same printings. This may be used when sorting older formats like
-       * `premodern`.
-       */
-      const originalRarityMap: Map<string, { rarity: string, released_at: number, set_name: string }> = new Map();
+      const rarityNormalization = new RarityNormalization();
 
-      /**
-       * Tracks recent / latest rarity for same printings. This may be used when sorting cards by more modern formats.
-       */
-      const recentRarityMap: Map<string, { rarity: string, released_at: number, set_name: string }> = new Map();
+      // This is a first streaming pass across the Scryfall DB collecting the `oracle_id` for cards in the collection.
+      await rarityNormalization.scanForOracleID(config, collection);
+
+      logger.info(`Building Scrydex card database - this may take a moment...`);
 
       const pipeline = chain([
          fs.createReadStream(config.db),
@@ -49,42 +47,9 @@ export class ScryfallDB
 
       for await (const { value: scryCard } of pipeline)
       {
-         if (scryCard.object !== 'card') { continue; }
+         if (scryCard?.object !== 'card') { continue; }
 
-         // Save original rarity for earliest oracle ID.
-         const oracle_id = scryCard.oracle_id;
-
-         if (typeof oracle_id === 'string')
-         {
-            const existingOriginalRarity = originalRarityMap.get(oracle_id);
-
-            // Track lowest / original rarity for unique card printing.
-            if (!excludedSetTypesRecentRarity.has(scryCard.set_type) && !excludedSetsRecentRarity.has(scryCard.set) &&
-             scryCard.rarity !== 'special' && (!existingOriginalRarity || (Date.parse(scryCard.released_at) <
-              existingOriginalRarity.released_at)))
-            {
-               originalRarityMap.set(oracle_id, {
-                  rarity: scryCard.rarity,
-                  released_at: Date.parse(scryCard.released_at),
-                  set_name: scryCard.set_name
-               });
-            }
-
-            const existingRecentRarity = recentRarityMap.get(oracle_id);
-
-            // Track most recent rarity for unique card printing that isn't in a special set, Summer Magic, rarity of
-            // `special` and is more recent printing.
-            if (!excludedSetTypesRecentRarity.has(scryCard.set_type) && !excludedSetsRecentRarity.has(scryCard.set) &&
-             scryCard.rarity !== 'special' && (!existingRecentRarity || (Date.parse(scryCard.released_at) >
-              existingRecentRarity.released_at)))
-            {
-               recentRarityMap.set(oracle_id, {
-                  rarity: scryCard.rarity,
-                  released_at: Date.parse(scryCard.released_at),
-                  set_name: scryCard.set_name
-               });
-            }
-         }
+         rarityNormalization.trackRarity(scryCard);
 
          const csvCards = collection.get(scryCard.id);
 
@@ -147,85 +112,12 @@ export class ScryfallDB
          if (collection.size === 0) { break; }
       }
 
-      /**
-       * Old school rarity change cut-off.
-       *
-       * @type {number}
-       */
-      const oldschoolCutoff = Date.parse('2003-06-01');
-
-      /**
-       * Card name map that changed rarity before Mirrodin block.
-       *
-       * @type {Map<string, ({
-       *    orig_rarity: string,
-       *    orig_set_name: string,
-       *    recent_rarity: string,
-       *    recent_set_name: string
-       * })>}
-       */
-      const rarityChangeMap = new Map();
-
       // Second pass to set original / first print rarity.
-      for (const card of outputDB)
-      {
-         const oracleId = card.oracle_id;
+      for (const card of outputDB) { rarityNormalization.updateRarity(card); }
 
-         const existingOriginalRarity = originalRarityMap.get(oracleId);
+      rarityNormalization.logChangesAndCleanup();
 
-         card.rarity_orig = existingOriginalRarity ? existingOriginalRarity.rarity : card.rarity;
-
-         const existingRecentRarity = recentRarityMap.get(oracleId);
-
-         if (existingRecentRarity)
-         {
-            card.rarity_recent = existingRecentRarity.rarity;
-
-            if (existingRecentRarity.released_at < oldschoolCutoff && card.rarity_recent !== card.rarity_orig)
-            {
-               if (!rarityChangeMap.has(card.name))
-               {
-                  rarityChangeMap.set(card.name, {
-                     orig_rarity: card.rarity_orig,
-                     orig_set_name: originalRarityMap.get(oracleId)?.set_name ?? '<Unknown>',
-                     recent_rarity: card.rarity_recent,
-                     recent_set_name: recentRarityMap.get(oracleId)?.set_name ?? '<Unknown>'
-                  });
-               }
-
-               card.rarity_orig = card.rarity_recent;
-            }
-         }
-         else
-         {
-            card.rarity_recent = card.rarity;
-         }
-      }
-
-      if (rarityChangeMap.size > 0)
-      {
-         logger.verbose(`--------------------`);
-
-         logger.verbose(`Various cards printed before June 2003 changed rarity between editions without further ` +
-         `movement in future years.`);
-
-         logger.verbose(`To preserve historical identity the most recent rarity among pre-Mirrodin block ` +
-          `printings are utilized as the original rarity.`);
-
-         logger.verbose(`--------------------`);
-
-         const keys = [...rarityChangeMap.keys()].sort((a, b) => a.localeCompare(b));
-
-         for (const key of keys)
-         {
-            const changeData = rarityChangeMap.get(key);
-
-            logger.verbose(`[Rarity Change]: ${key} - earlier print (${changeData.orig_set_name}) was '${
-             changeData.orig_rarity}'; later print (${changeData.recent_set_name}) is '${changeData.recent_rarity}'.`);
-         }
-      }
-
-      logger.info(`Finished processing ${outputDB.length} unique cards / total quantity: ${totalQuantity}`);
+      logger.info(`Finished processing ${outputDB.length} unique card entries / total quantity: ${totalQuantity}`);
 
       if (collection.size !== 0)
       {
