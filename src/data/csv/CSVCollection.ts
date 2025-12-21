@@ -13,11 +13,18 @@ import type { ConfigConvert } from '#types-command';
 
 export class CSVCollection
 {
+   #external: Set<string>;
+
+   #decks: Set<string>;
+
    #index: CSVCardIndex[];
 
    constructor()
    {
       this.#index = [];
+
+      this.#external = new Set();
+      this.#decks = new Set();
    }
 
    /**
@@ -31,11 +38,27 @@ export class CSVCollection
    {
       const collection = new CSVCollection();
 
-      await this.#loadPath({ path: config.input, collection });
+      await this.#loadPath({ sourcePath: config.input, collection });
 
-      if (config.decks) { await this.#loadPath({ path: config.decks, collection, isDeck: true }); }
+      if (config.decks) { await this.#loadPath({ sourcePath: config.decks, collection, isDeck: true }); }
 
       return collection;
+   }
+
+   /**
+    * @returns The `decks` CSV file name set.
+    */
+   get decks(): Set<string>
+   {
+      return this.#decks;
+   }
+
+   /**
+    * @returns The `external` CSV file name set.
+    */
+   get external(): Set<string>
+   {
+      return this.#external;
    }
 
    /**
@@ -163,35 +186,43 @@ export class CSVCollection
     *
     * @returns A new collection of all CSV card data.
     */
-   static async #loadPath({ path, collection = new CSVCollection(), isDeck = false }: { path: string, collection?:
-    CSVCollection, isDeck?: boolean }): Promise<CSVCollection>
+   static async #loadPath({ sourcePath, collection = new CSVCollection(), isBinder = false, isDeck = false }:
+    { sourcePath: string, collection?: CSVCollection, isBinder?: boolean, isDeck?: boolean }): Promise<CSVCollection>
    {
-      if (isDirectory(path))
+      if (isDirectory(sourcePath))
       {
-         logger.verbose(`Loading directory path: ${path}`);
+         logger.verbose(`Loading directory path: ${sourcePath}`);
 
-         const files = await getFileList({ dir: path, includeFile: /\.csv$/, sort: true, resolve: true });
+         const files = await getFileList({ dir: sourcePath, includeFile: /\.csv$/, sort: true, resolve: true });
 
          for (const file of files)
          {
             logger.verbose(`Loading file path: ${file}`);
 
-            collection.#index.push(await CSVCardIndex.fromCSV(file, isDeck));
+            const cardIndex = await CSVCardIndex.fromCSV(file);
+
+            if (isDeck) { collection.#decks.add(cardIndex.filename); }
+
+            collection.#index.push(cardIndex);
          }
 
          logger.info('Done extracting CSV collection files.');
       }
-      else if (isFile(path))
+      else if (isFile(sourcePath))
       {
-         logger.verbose(`Loading file path: ${path}`);
+         logger.verbose(`Loading file path: ${sourcePath}`);
 
-         collection.#index.push(await CSVCardIndex.fromCSV(path));
+         const cardIndex = await CSVCardIndex.fromCSV(sourcePath);
+
+         if (isDeck) { collection.#decks.add(cardIndex.filename); }
+
+         collection.#index.push(cardIndex);
 
          logger.info('Done extracting CSV collection file.');
       }
       else
       {
-         throw new TypeError(`Invalid path: ${path}`);
+         throw new TypeError(`Invalid path: ${sourcePath}`);
       }
 
       return collection;

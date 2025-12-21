@@ -67,7 +67,7 @@ export abstract class ExportCollection
     * @param collectionDirPath -
     */
    static async #exportSpreadsheet(config: ConfigSort, collection: AbstractCollection, categories: SortedCategories,
-                                   collectionDirPath: string): Promise<void>
+    collectionDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
 
@@ -125,7 +125,7 @@ export abstract class ExportCollection
             row.fill = theme.row.fill.default;
 
             // Potentially color / mark that the card is in a deck / outside main collection.
-            if (card.in_deck)
+            if (collection.isCardGroup(card, 'deck'))
             {
                // Indicate that this row has been colored.
                (row as any)._marked = true;

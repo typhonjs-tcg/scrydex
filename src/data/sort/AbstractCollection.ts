@@ -4,6 +4,7 @@ import type {
    CardDBMetaSave,
    CardSorted,
    SortedCategories }      from '#types-data';
+import type {Card} from "#types";
 
 /**
  * Base class for a sorted collection of cards by categories.
@@ -72,6 +73,15 @@ export abstract class AbstractCollection
    {
       return this.#categories.entries();
    }
+
+   /**
+    * Checks the meta _external_ file names for a card file name match.
+    *
+    * @param card -
+    *
+    * @param group - External card group to test for inclusion.
+    */
+   abstract isCardGroup(card: Card, group: 'deck' | 'external'): boolean;
 
    /**
     * Implement this method to forward on the sort options to the collection categories.

@@ -273,6 +273,16 @@ class CardStream
    readonly #meta: CardDBMetadata;
 
    /**
+    * Set instance of meta `decks` tracking.
+    */
+   readonly #decks: Set<string>;
+
+   /**
+    * Set instance of meta `external` tracking.
+    */
+   readonly #external: Set<string>;
+
+   /**
     * @param filepath - File path of DB.
     *
     * @param meta - Metadata object of DB.
@@ -281,6 +291,9 @@ class CardStream
    {
       this.#filepath = filepath;
       this.#meta = Object.freeze(meta);
+
+      this.#decks = new Set(Array.isArray(meta.decks) ? meta.decks : []);
+      this.#external = new Set(Array.isArray(meta.external) ? meta.external : []);
    }
 
    /**
@@ -354,5 +367,23 @@ class CardStream
       const db = JSON.parse(fs.readFileSync(this.#filepath, 'utf-8')) as CardDB;
 
       return Array.isArray(db.cards) ? db.cards : [];
+   }
+
+   /**
+    * Checks the meta _external_ file names for a card file name match.
+    *
+    * @param card -
+    *
+    * @param group - External card group to test for inclusion.
+    */
+   isCardGroup(card: Card, group: 'deck' | 'external'): boolean
+   {
+      switch (group)
+      {
+         case 'deck': return this.#decks.has(card.filename);
+         case 'external': return this.#external.has(card.filename);
+
+         default: return false;
+      }
    }
 }

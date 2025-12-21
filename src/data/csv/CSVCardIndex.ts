@@ -25,19 +25,24 @@ export class CSVCardIndex
    #data: Map<string, CSVCard> = new Map();
 
    /**
+    * Stores the CSV file name.
+    */
+   #filename: string = '';
+
+   /**
     * @param filepath - CSV filepath to load.
-    *
-    * @param [isDeck] - When true, this card index is marked as being in a `deck` / check out.
     *
     * @returns Import index of CSV card data.
     */
-   static async fromCSV(filepath: string, isDeck = false): Promise<CSVCardIndex>
+   static async fromCSV(filepath: string): Promise<CSVCardIndex>
    {
       return new Promise((resolve, reject) =>
       {
+         const cardIndex = new CSVCardIndex();
+
          const filename = path.basename(filepath, '.csv');
 
-         const collection = new CSVCardIndex();
+         cardIndex.#filename = filename;
 
          // Read and extract Scryfall IDs.
          const stream = fs.createReadStream(filepath).pipe(csv());
@@ -72,7 +77,7 @@ export class CSVCardIndex
                 new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
             }
 
-            const existingCard = collection.get(scryfall_id);
+            const existingCard = cardIndex.get(scryfall_id);
 
             // TODO: Must consider foil state.
             if (existingCard)
@@ -81,11 +86,10 @@ export class CSVCardIndex
             }
             else
             {
-               collection.set(scryfall_id, {
+               cardIndex.set(scryfall_id, {
                   object: 'card',
                   name,
                   foil,
-                  in_deck: isDeck,
                   lang_csv,
                   quantity,
                   scryfall_id,
@@ -95,8 +99,16 @@ export class CSVCardIndex
          });
 
          stream.on('error', reject);
-         stream.on('end', () => resolve(collection))
+         stream.on('end', () => resolve(cardIndex))
       });
+   }
+
+   /**
+    * @returns File name associated with this index.
+    */
+   get filename(): string
+   {
+      return this.#filename;
    }
 
    /**

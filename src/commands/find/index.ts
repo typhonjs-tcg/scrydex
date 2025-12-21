@@ -54,7 +54,7 @@ export async function find(config: ConfigFind)
 
          logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
           SortOrder.rarity(card, gameFormat)}; Category: ${SortOrder.categoryName(card)}${
-           card.in_deck ? `; In Deck: ${card.filename}` : ''}`);
+           collection.isCardGroup(card, 'deck') ? `; In Deck: ${card.filename}` : ''}`);
       }
    }
 }

@@ -79,7 +79,6 @@ export class ScryfallDB
                defense: scryCard.defense,
                foil: csvCard.foil,
                game_changer: scryCard.game_changer,
-               in_deck: csvCard.in_deck,
                keywords: scryCard.keywords,
                loyalty: scryCard.loyalty,
                reserved: scryCard.reserved,
@@ -134,7 +133,7 @@ export class ScryfallDB
          CardDBStore.save({
             filepath: config.output,
             cards: outputDB.sort((a, b) => a.name.localeCompare(b.name)),
-            meta: { type: 'inventory' }
+            meta: { type: 'inventory', decks: [...collection.decks], external: [...collection.external] }
          });
       }
       else

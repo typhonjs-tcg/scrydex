@@ -265,11 +265,6 @@ interface CSVCard
    lang_csv?: string;
 
    /**
-    * Marks this card as being in `deck` / check out from the collection.
-    */
-   in_deck: boolean;
-
-   /**
     * Card name when defined in CSV file.
     */
    name?: string;
@@ -323,6 +318,12 @@ interface CardDBMetadataCommon extends CardDBMetadataGenerated
 {
    /** Name of CardDB */
    name: string;
+
+   /** Card file name association w/ decks. */
+   decks: string[];
+
+   /** Card file name association w/ external card groups. */
+   external: string[];
 }
 
 /**
