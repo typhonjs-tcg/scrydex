@@ -36,6 +36,7 @@ class ThemeDark implements ThemeData
       ok: { fill: Fill, border: Partial<Borders> };
       warning: { fill: Fill, border: Partial<Borders> };
       in_deck: { fill: Fill, border: Partial<Borders> };
+      in_external: { fill: Fill, border: Partial<Borders> };
    };
 
    readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
@@ -90,6 +91,16 @@ class ThemeDark implements ThemeData
             },
 
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF163C42' } }
+         },
+
+         // Purple - Card is in external group.
+         in_external: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF9A6BBD' }},
+               bottom: { style: 'thin', color: { argb: 'FF9A6BBD' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2A1F36' } }
          }
       };
 
@@ -158,6 +169,7 @@ class ThemeLight implements ThemeData
       ok: { fill: Fill, border: Partial<Borders> };
       warning: { fill: Fill, border: Partial<Borders> };
       in_deck: { fill: Fill, border: Partial<Borders> };
+      in_external: { fill: Fill, border: Partial<Borders> };
    };
 
    readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
@@ -218,6 +230,16 @@ class ThemeLight implements ThemeData
             },
 
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD6F1F6' } }
+         },
+
+         // Purple - Card is in external group.
+         in_external: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF8A6BB8' }},
+               bottom: { style: 'thin', color: { argb: 'FF8A6BB8' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3D8F2' } }
          }
       }
 
@@ -294,6 +316,7 @@ interface ThemeData
       ok: { fill: Fill, border: Partial<Borders> }
       warning: { fill: Fill, border: Partial<Borders> }
       in_deck: { fill: Fill, border: Partial<Borders> }
+      in_external: { fill: Fill, border: Partial<Borders> }
    }
 
    get row(): {

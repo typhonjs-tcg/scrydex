@@ -137,6 +137,19 @@ export abstract class ExportCollection
                });
             }
 
+            // Potentially color / mark that the card is in an external group / outside main collection.
+            if (collection.isCardGroup(card, 'external'))
+            {
+               // Indicate that this row has been colored.
+               (row as any)._marked = true;
+
+               row.eachCell({ includeEmpty: true }, (cell) =>
+               {
+                  cell.fill = theme.mark.in_external.fill;
+                  cell.border = theme.mark.in_external.border;
+               });
+            }
+
             // Potentially mark merge status for marked filenames / cards.
             if (config.mark.has(card.filename) && typeof card.mark === 'string')
             {
