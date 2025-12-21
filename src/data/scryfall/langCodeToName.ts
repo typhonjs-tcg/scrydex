@@ -9,11 +9,21 @@ const langCodeToName: ReadonlyMap<string, string> = Object.freeze(new Map<string
    ['it', 'Italian'],
    ['ja', 'Japanese'],
    ['ko', 'Korean'],
-   ['ph', 'Phyrexian'],
    ['pt', 'Portuguese'],
    ['ru', 'Russian'],
-   ['zhs', 'Chinese'],
-   ['zht', 'Traditional Chinese']
+   ['zhs', 'Simplified Chinese'],
+   ['zht', 'Traditional Chinese'],
+
+   // ~50 cards
+   ['ph', 'Phyrexian'],
+
+   // Very few cards each.
+   ['ar', 'Arabic'],
+   ['grc', 'Ancient Greek'],
+   ['he', 'Hebrew'],
+   ['la', 'Latin'],
+   ['qya', 'Quenya'],
+   ['sa', 'Sanskrit']
 ]));
 
 export { langCodeToName };

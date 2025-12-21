@@ -9,7 +9,6 @@ const supportedLang: ReadonlyMap<string, string> = Object.freeze(new Map<string,
    ['it', 'it'],
    ['ja', 'ja'],
    ['ko', 'ko'],
-   ['ph', 'ph'],  // Phyrexian
    ['pt', 'pt'],
    ['ru', 'ru'],
    ['zhs', 'zhs'],
@@ -22,7 +21,6 @@ const supportedLang: ReadonlyMap<string, string> = Object.freeze(new Map<string,
    ['IT', 'it'],
    ['JA', 'ja'],
    ['KO', 'ko'],
-   ['PH', 'ph'],  // Phyrexian
    ['PT', 'pt'],
    ['RU', 'ru'],
    ['ZHS', 'zhs'],
@@ -36,10 +34,39 @@ const supportedLang: ReadonlyMap<string, string> = Object.freeze(new Map<string,
    ['Japanese', 'ja'],
    ['Korean', 'ko'],
    ['Portuguese', 'pt'],
-   ['Phyrexian', 'ph'],
    ['Russian', 'ru'],
    ['Chinese', 'zhs'],
-   ['Traditional Chinese', 'zht']
+   ['Simplified Chinese', 'zhs'],
+   ['Traditional Chinese', 'zht'],
+
+   // The following have few cards each...
+
+   ['ph', 'ph'],  // Phyrexian - ~50 cards
+
+   ['ar', 'ar'],
+   ['grc', 'grc'],
+   ['he', 'he'],
+   ['la', 'la'],
+   ['qya', 'qya'],
+   ['sa', 'sa'],
+
+   ['PH', 'ph'],  // Phyrexian
+
+   ['AR', 'ar'],
+   ['GRC', 'grc'],
+   ['HE', 'he'],
+   ['LA', 'la'],
+   ['QYA', 'qya'],
+   ['SA', 'sa'],
+
+   ['Phyrexian', 'ph'],
+
+   ['Arabic', 'ar'],
+   ['Ancient Greek', 'grc'],
+   ['Hebrew', 'he'],
+   ['Latin', 'la'],
+   ['Quenya', 'qya'],
+   ['Sanskrit', 'sa']
 ]));
 
 export { supportedLang };
