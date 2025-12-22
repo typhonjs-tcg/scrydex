@@ -32,7 +32,7 @@ import type {
    CardDBMetaSave,
    ConfigCardFilter }   from '#types-data';
 
-export class CardDBStore
+class CardDBStore
 {
    /**
     * Type guard for {@link CardDBType}.
@@ -335,28 +335,18 @@ class CardStream
          streamArray()
       ]);
 
-      if (CardFilter.hasFilterChecks(filter))
-      {
-         for await (const { value } of pipeline)
-         {
-            // Add additional card filter test.
-            if (typeof value !== 'object' || value === null || value.object !== 'card' ||
-             !CardFilter.test(value, filter))
-            {
-               continue;
-            }
+      const hasFilterChecks = CardFilter.hasFilterChecks(filter);
 
-            yield value;
-         }
-      }
-      else
+      for await (const { value } of pipeline)
       {
-         for await (const { value } of pipeline)
-         {
-            if (typeof value !== 'object' || value === null || value.object !== 'card') { continue; }
+         if (typeof value !== 'object' || value === null || value.object !== 'card') { continue; }
 
-            yield value;
-         }
+         if (hasFilterChecks && !CardFilter.test(value, filter)) { continue; }
+
+         if (!isDeck && this.isCardGroup(value, 'deck')) { continue; }
+         if (!isExternal && this.isCardGroup(value, 'external')) { continue; }
+
+         yield value;
       }
    }
 
@@ -392,3 +382,7 @@ class CardStream
       }
    }
 }
+
+export {
+   CardDBStore,
+   CardStream };
