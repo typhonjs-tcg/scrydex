@@ -63,17 +63,17 @@ class CardDBStore
     { dirpath: string, format?: GameFormat | Set<GameFormat>, type?: CardDBType | Set<CardDBType>, walk?: boolean }):
      Promise<CardStream[]>
    {
-      if (!isDirectory(dirpath)) { throw new Error(`CardDB.loadAll error: 'dirpath' is not a directory.`); }
-      if (typeof walk !== 'boolean') { throw new TypeError(`CardDB.loadAll error: 'walk' is not a boolean.`); }
+      if (!isDirectory(dirpath)) { throw new Error(`CardDBStore.loadAll error: 'dirpath' is not a directory.`); }
+      if (typeof walk !== 'boolean') { throw new TypeError(`CardDBStore.loadAll error: 'walk' is not a boolean.`); }
 
       if (format !== void 0 && typeof format !== 'string' && !(format instanceof Set))
       {
-         throw new TypeError(`CardDB.loadAll error: 'format' is not a string or set of strings.`);
+         throw new TypeError(`CardDBStore.loadAll error: 'format' is not a string or set of strings.`);
       }
 
       if (type !== void 0 && !this.isValidType(type) && !(type instanceof Set))
       {
-         throw new Error(`CardDB.loadAll error: 'type' is not a valid CardDBType or set of CardDBTypes.`);
+         throw new Error(`CardDBStore.loadAll error: 'type' is not a valid CardDBType or set of CardDBTypes.`);
       }
 
       const results: CardStream[] = [];
@@ -130,14 +130,14 @@ class CardDBStore
     */
    static async load({ filepath }: { filepath: string }): Promise<CardStream>
    {
-      if (isDirectory(filepath)) { throw new Error(`CardDB.load error: 'filepath' is a directory.`); }
-      if (!isFile(filepath)) { throw new Error(`CardDB.load error: 'filepath' is not a valid file.`); }
+      if (isDirectory(filepath)) { throw new Error(`CardDBStore.load error: 'filepath' is a directory.`); }
+      if (!isFile(filepath)) { throw new Error(`CardDBStore.load error: 'filepath' is not a valid file.`); }
 
       const result = this.#validateMeta(filepath, await this.#loadMeta(filepath));
 
       if (typeof result === 'string')
       {
-         throw new Error(`CardDB.load error: Meta data failed validation.\n${result}`);
+         throw new Error(`CardDBStore.load error: Meta data failed validation.\n${result}`);
       }
       else
       {
@@ -161,13 +161,13 @@ class CardDBStore
 
       if (meta.type !== 'inventory' && meta.type !== 'sorted' && meta.type !== 'sorted_format')
       {
-         throw new Error(`CardDB.save error: 'type' must be 'inventory', 'sorted', or 'sorted_format'.`);
+         throw new Error(`CardDBStore.save error: 'type' must be 'inventory', 'sorted', or 'sorted_format'.`);
       }
 
       if (meta.type === 'sorted_format' && !supportedFormats.has(meta.format))
       {
          throw new TypeError(
-          `CardDB.save error: A sorted format must include a supported game format in 'meta.format'.`);
+          `CardDBStore.save error: A sorted format must include a supported game format in 'meta.format'.`);
       }
 
       const name = meta.name === void 0 && typeof meta.name !== 'string' ? path.basename(filepath, '.json') : meta.name;
@@ -230,7 +230,7 @@ class CardDBStore
     */
    static #validateMeta(filepath: string, meta: unknown): CardDBMetadata | string
    {
-      if (!meta) { throw new Error(`CardDB.load error: Could not load meta data for ${filepath}`); }
+      if (!meta) { throw new Error(`CardDBStore.load error: Could not load meta data for ${filepath}`); }
 
       return meta as CardDBMetadata;
    }
