@@ -319,9 +319,14 @@ class CardStream
     *
     * @param [options.filter] - Optional {@link ConfigCardFilter} configuration object to filter card stream.
     *
+    * @param [options.isDeck] - When true, cards that are part of the external deck group are returned; default: true.
+    *
+    * @param [options.isExternal] - When true, cards that are part of the external group are returned; default: true.
+    *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream({ filter }: { filter?: ConfigCardFilter} = {}): AsyncIterable<Card>
+   async *asStream({ filter, isDeck = true, isExternal = true }:
+    { filter?: ConfigCardFilter, isDeck?: boolean, isExternal?: boolean } = {}): AsyncIterable<Card>
    {
       const pipeline = chain([
          fs.createReadStream(this.#filepath),

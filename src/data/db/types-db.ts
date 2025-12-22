@@ -1,6 +1,9 @@
 import type {
    CardDBMetadata,
-   CardDBMetadataGenerated } from '#types';
+   CardDBMetadataGenerated }  from '#types';
+
+import type {
+   PriceFilter }              from '#types-data';
 
 /**
  * Make `name` optional in metadata.
@@ -65,6 +68,11 @@ interface ConfigCardFilter
        * Match exact mana cost.
        */
       manaCost?: string;
+
+      /**
+       * Price filter to match.
+       */
+      price?: PriceFilter;
    };
 
    /**

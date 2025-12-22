@@ -40,6 +40,7 @@ program
 .option('--keywords', 'Provide a colon separated list of keywords such as `Flying` or `Cumulative upkeep`.')
 .option('--mana-cost', 'Provide the exact encoded symbol match such as `{1}{G}` to match mana cost.')
 .option('--output', 'Provide a file path for filtered JSON card DB output.')
+.option('--price', 'Provide a price comparison expression (IE ">=10", "<2.50") or "null" for unpriced cards.')
 .example('filter ./collection.json --formats premodern --output ./just-premodern.json')
 .example('filter ./collection.json --formats commander --color-identity {W}{U}{G} --output ./commander-wug.json')
 .example('filter ./collection.json --border black:borderless --output ./black-borderless.json')
@@ -61,6 +62,7 @@ program
 .option('--formats', 'Provide a colon separated list of legal game formats.')
 .option('--keywords', 'Provide a colon separated list of keywords such as `Flying` or `Cumulative upkeep`.')
 .option('--mana-cost', 'Provide the exact encoded symbol match such as `{1}{G}` to match mana cost.')
+.option('--price', 'Provide a price comparison expression (IE ">=10", "<2.50") or "null" for unpriced cards..')
 .example('find "Demonic Tutor" ./sorted-directory')
 .action(commandFindFormat);
 

@@ -3,6 +3,8 @@ import { isObject }              from '@typhonjs-utils/object';
 import {
    CardFields,
    parseManaCostColors,
+   parsePriceFilter,
+   matchesPriceFilter,
    supportedFormats,
    validLegality }               from '#data';
 
@@ -113,6 +115,18 @@ export abstract class CardFilter
       if (config.properties.manaCost)
       {
          logger[logLevel](`Mana Cost: ${config.properties.manaCost}`);
+      }
+
+      if (config.properties.price)
+      {
+         if (config.properties.price.kind === 'null')
+         {
+            logger[logLevel](`Price: null (card entries without a price)`);
+         }
+         else
+         {
+            logger[logLevel](`Price: ${config.properties.price.expr.operator}${config.properties.price.expr.rawValue}`);
+         }
       }
    }
 
@@ -272,6 +286,20 @@ export abstract class CardFilter
          result.properties.manaCost = opts['mana-cost'];
       }
 
+      if (opts.price !== void 0)
+      {
+         if (typeof opts.price !== 'string')
+         {
+            return `'price' option must be a string. Ensure quotes are used IE ">10"`;
+         }
+
+         const priceFilter = parsePriceFilter(opts.price);
+
+         if (!priceFilter) { return `'price' option is an invalid price filter.` }
+
+         result.properties.price = priceFilter;
+      }
+
       return result;
    }
 
@@ -379,6 +407,13 @@ export abstract class CardFilter
          {
             return false;
          }
+      }
+
+      if (config.properties.price)
+      {
+         const price = typeof card.price === 'string' ? parseFloat(card.price) : card.price;
+
+         return matchesPriceFilter(price, config.properties.price);
       }
 
       return true;
