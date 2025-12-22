@@ -55,9 +55,9 @@ interface ConfigFilter
 interface ConfigFind
 {
    /**
-    * Directory to load.
+    * File or directory path to load.
     */
-   dirpath: string;
+   input: string;
 
    /**
     * Config for {@link CardFilter}.

@@ -1,3 +1,5 @@
+import { isFile }          from '@typhonjs-utils/file-util';
+
 import {
    CardDBStore,
    CardFilter,
@@ -5,22 +7,42 @@ import {
 
 import { logger }          from '#util';
 
+import type { CardStream } from '#data';
 import type { ConfigFind } from '#types-command';
 
 export async function find(config: ConfigFind)
 {
-   logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.dirpath}`);
+   let collections: CardStream[];
 
-   const collections = await CardDBStore.loadAll({
-      dirpath: config.dirpath,
-      type: new Set(['sorted', 'sorted_format']),
-      walk: true
-   });
-
-   if (collections.length === 0)
+   if (isFile(config.input))
    {
-      logger.info(`No 'sorted' or 'sorted_format' card collections found.`);
-      return;
+      logger.info(`Attempting to load Scrydex CardDB: ${config.input}`);
+
+      const singleCollection = await CardDBStore.load({ filepath: config.input });
+
+      if (!singleCollection)
+      {
+         logger.error(`No card collection found.`);
+         return;
+      }
+
+      collections = [singleCollection];
+   }
+   else
+   {
+      logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.input}`);
+
+      collections = await CardDBStore.loadAll({
+         dirpath: config.input,
+         type: new Set(['sorted', 'sorted_format']),
+         walk: true
+      });
+
+      if (collections.length === 0)
+      {
+         logger.info(`No 'sorted' or 'sorted_format' card collections found.`);
+         return;
+      }
    }
 
    logger.info(`Searching ${collections.length} card collections: ${

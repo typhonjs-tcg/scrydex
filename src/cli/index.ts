@@ -47,15 +47,15 @@ program
 .action(commandFilter);
 
 program
-.command('find [input] [dirpath]', 'Find Card')
+.command('find [input] [query]', 'Find Card')
 .describe('Finds a card by text / regular expression from a sorted format directory or file path to a single CardDB.')
-.describe('You may omit `[input]` and provide just `[dirpath]` when only using independent filter options.')
+.describe('You may omit `[query]` and provide just `[input]` when only using independent filter options.')
 .option('-i', 'Case insensitive search.')
 .option('-b', 'Enforce word boundaries on search.')
-.option('--exact', 'Match the search text exactly.')
-.option('--oracle', 'Match the search text against the card oracle text.')
-.option('--name', 'Match the search text against the card name (default).')
-.option('--type', 'Match the search text against the card type line.')
+.option('--exact', 'Match the search query exactly.')
+.option('--oracle', 'Match the search query against the card oracle text.')
+.option('--name', 'Match the search query against the card name (default).')
+.option('--type', 'Match the search query against the card type line.')
 .option('--border', 'Provide a colon separated list of border colors including: black, white, borderless, yellow, silver, or gold.')
 .option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to match by color identity.')
 .option('--cmc', 'Provide `0` to a positive finite number to match CMC / converted mana cost.')

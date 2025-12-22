@@ -139,26 +139,27 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
  *
  * @param input - Search text / regular expression.
  *
- * @param dirpath - Directory path to search for _sorted_ JSON CardDBs.
+ * @param query - File or directory path to search for _sorted_ JSON CardDBs.
  *
  * @param opts - CLI options.
  */
-export async function commandFindFormat(input: string, dirpath: string, opts: Record<string, any>)
+export async function commandFindFormat(input: string, query: string, opts: Record<string, any>)
 {
-   if (typeof input !== 'string') { exit(`'input' option must be a string.`); }
-   if(!isDirectory(dirpath)) { exit(`'directory' option path is an invalid directory.`); }
+   if(!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
+
+   if (query !== void 0 && typeof query !== 'string') { exit(`'query' option must be a string.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
-   const filter = CardFilter.validateCLIOptions(opts, input);
+   const filter = CardFilter.validateCLIOptions(opts, query);
 
    // A string indicates validation error is detected.
    if (typeof filter === 'string') { exit(filter); }
 
    const config: ConfigFind = {
-      dirpath,
+      input,
       filter
    };
 
