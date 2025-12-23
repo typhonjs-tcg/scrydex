@@ -1,24 +1,28 @@
-import path             from 'node:path';
+import path                from 'node:path';
 
 import {
    isDirectory,
-   isFile }             from '@typhonjs-utils/file-util';
+   isFile }                from '@typhonjs-utils/file-util';
 
 import {
    convert,
    filter,
    find,
-   sortFormat }         from '#commands';
+   sortFormat }            from '#commands';
 
-import { CardFilter }   from '#data';
+import {
+   CardFilter,
+   parsePriceExpression }  from '#data';
 
-import { logger }       from '#util';
+import { logger }          from '#util';
 
 import type {
    ConfigConvert,
    ConfigFilter,
    ConfigFind,
-   ConfigSortFormat }   from '#types-command';
+   ConfigSortFormat }      from '#types-command';
+
+import { PriceExpression } from '#types-data';
 
 /**
  * Invokes `convert` with the given config.
@@ -207,6 +211,23 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
 
    if (typeof formats === 'string') { exit(formats); }
 
+   if (opts['high-value'] !== void 0 && typeof opts['high-value'] !== 'string')
+   {
+      exit(`'high-value' option is not defined.`);
+   }
+
+   let highValue: PriceExpression | null = null;
+
+   if (opts['high-value'])
+   {
+      highValue = parsePriceExpression(opts['high-value']);
+
+      if (highValue && (highValue.operator === '<' || highValue.operator === '<='))
+      {
+         exit(`'high-value' option is not a positive price comparison.`);
+      }
+   }
+
    if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined.`); }
 
    const mark: Set<string> = typeof opts.mark === 'string' ? new Set(opts.mark.split(':')) : new Set();
@@ -224,6 +245,7 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
       input,
       output: opts.output,
       formats,
+      highValue,
       mark,
       sortByType: opts['by-type'] ?? false,
       theme

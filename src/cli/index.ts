@@ -71,9 +71,10 @@ program.command('formats', `List all supported Scryfall game 'formats'.`)
 
 program
 .command('sort [input]', 'Sort')
-.describe(`Sorts a converted Scryfall card DB by game format legalities outputting spreadsheets.`)
+.describe(`Sorts a converted Scrydex CardDB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by normalized type of card.')
 .option('--formats', 'Provide a colon separated list of game formats for sorting.')
+.option('--high-value', 'Separate high-value cards into a derived binder; requires a positive price comparison (IE ">=10").')
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
 .option('--output', 'Provide a directory path for generated spreadsheets and sorted card DBs.')
 .option('--theme', 'Options are `light` or `dark`; light theme is default.')

@@ -1,4 +1,6 @@
-import { ConfigCardFilter } from '#types-data';
+import {
+   ConfigCardFilter,
+   PriceExpression } from '#types-data';
 
 /**
  * Config object for the `convert` command.
@@ -102,6 +104,11 @@ interface ConfigSortFormat extends ConfigSort
     * Scryfall game formats and sort order.
     */
    formats: string[];
+
+   /**
+    * When defined
+    */
+   highValue: PriceExpression | null;
 }
 
 export {
