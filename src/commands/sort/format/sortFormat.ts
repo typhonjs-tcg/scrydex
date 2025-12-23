@@ -4,6 +4,7 @@ import {
    CardDBStore,
    isSupportedFormat,
    SortedFormat,
+   SortOrder,
    validLegality }            from '#data';
 
 import { logger }             from '#util';
@@ -82,10 +83,12 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
 
    for (const [name, cards] of presortFormat)
    {
+      const format = isSupportedFormat(name) ? name : void 0;
+
       const sortedFormat = new SortedFormat({
          cards,
          name,
-         format: isSupportedFormat(name) ? name : void 0,
+         format,
          sourceMeta: db.meta
       });
 
@@ -100,10 +103,14 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
 
       if (config.mark.size)
       {
-         const hasMarked = sortedFormat.calculateMarked(config);
-         if (hasMarked)
+         const cardsMarked = sortedFormat.calculateMarked(config);
+         if (cardsMarked.length)
          {
-            logger.verbose(`  - Some cards marked for merging.`);
+            const markedRarity: Set<string> = new Set<string>();
+            for (const card of cardsMarked) { markedRarity.add(SortOrder.rarity(card, format)); }
+
+            logger.verbose(`  - ${cardsMarked.length} card entries marked for merging in: ${
+             [...markedRarity].sort((a, b) => a.localeCompare(b)).join(', ')}`);
          }
       }
 

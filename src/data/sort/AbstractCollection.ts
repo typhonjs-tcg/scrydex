@@ -80,9 +80,9 @@ export abstract class AbstractCollection
     *
     * @param config -
     */
-   calculateMarked(config: ConfigSort): boolean
+   calculateMarked(config: ConfigSort): CardSorted[]
    {
-      return this.#cards.length ? this.#calculateMarked(config) : false;
+      return this.#cards.length ? this.#calculateMarked(config) : [];
    }
 
    /**
@@ -131,14 +131,14 @@ export abstract class AbstractCollection
    /**
     * @param config -
     *
-    * @returns Whether any cards were marked for this format.
+    * @returns Any cards that were marked for merging.
     */
-   #calculateMarked(config: ConfigSort): boolean
+   #calculateMarked(config: ConfigSort): CardSorted[]
    {
       /**
-       * Tracks if any cards were marked in this format.
+       * Collects any cards were marked.
        */
-      let result = false;
+      const result = [];
 
       /**
        * Scryfall oracle ID map.
@@ -186,8 +186,8 @@ export abstract class AbstractCollection
 
          if (!oracleMap.has(card.oracle_id))
          {
-            result = true;
             card.mark = 'ok';
+            result.push(card);
             continue;
          }
 
@@ -195,15 +195,15 @@ export abstract class AbstractCollection
 
          if (existingIDCard && existingIDCard.count >= 4)
          {
-            result = true;
             card.mark = 'error';
+            result.push(card);
             continue;
          }
 
          if (oracleMap.has(card.oracle_id))
          {
-            result = true;
             card.mark = 'warning';
+            result.push(card);
          }
       }
 
