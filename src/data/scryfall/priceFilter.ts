@@ -29,6 +29,8 @@ const priceRegex = /^(?<operator><=|>=|<|>)\s*(?<value>\d+(?:\.\d+)?)$/;
  */
 function parsePriceExpression(input: string): PriceExpression | null
 {
+   if (typeof input !== 'string') { return null; }
+
    const match = priceRegex.exec(input);
    if (!match?.groups) { return null; }
 
@@ -71,7 +73,7 @@ function matchesPriceExpression(price: number | string | null | undefined, expr:
 {
    const priceNum = typeof price === 'string' ? parseFloat(price) : price;
 
-   if (!priceNum || !Number.isFinite(price)) { return false; }
+   if (!priceNum || !Number.isFinite(priceNum)) { return false; }
 
    switch (expr.operator)
    {
