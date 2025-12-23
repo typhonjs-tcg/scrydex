@@ -11,7 +11,7 @@ import {
    CardDBStore,
    CardFields,
    PrintCardFields,
-   AbstractCollection }      from '#data';
+   AbstractCollection }    from '#data';
 
 import type {
    Worksheet }             from 'exceljs';
