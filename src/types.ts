@@ -367,6 +367,20 @@ type CardDBType = 'inventory' | 'sorted' | 'sorted_format';
 type CardDBMetadata = CardDBMetadataInventory | CardDBMetadataSorted | CardDBMetadataSortedFormat;
 
 /**
+ * CardDB metadata base shape required during runtime without DB generated keys.
+ *
+ * @privateRemarks
+ * This type is derived from the persisted CardDB metadata definition with generated fields
+ * (CLI version, schema version, timestamp) removed.
+ */
+type CardDBMetadataBase =
+   CardDBMetadata extends infer T
+      ? T extends any
+         ? Omit<T, keyof CardDBMetadataGenerated>
+         : never
+      : never;
+
+/**
  * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase, single-character
  * abbreviations for those colors. For example, `['W','U']` represents something that is both white and blue. Colorless
  * sources are denoted with an empty array `[]`.
@@ -386,6 +400,7 @@ export {
    type Card,
    type CardDB,
    type CardDBMetadata,
+   type CardDBMetadataBase,
    type CardDBMetadataGenerated,
    type CardDBType,
    type CardFace,

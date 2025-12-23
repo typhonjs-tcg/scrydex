@@ -86,8 +86,7 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
          cards,
          name,
          format: isSupportedFormat(name) ? name : void 0,
-         decks: db.meta.decks,
-         external: db.meta.external
+         sourceMeta: db.meta
       });
 
       sortedFormat.sort({ alpha: true, type: config.sortByType });

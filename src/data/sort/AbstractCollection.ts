@@ -1,10 +1,12 @@
 import type { ConfigSort } from '#types-command';
 
 import type {
-   CardDBMetaSave,
+   Card,
+   CardDBMetadataBase }    from '#types';
+
+import type {
    CardSorted,
    SortedCategories }      from '#types-data';
-import type {Card} from "#types";
 
 /**
  * Base class for a sorted collection of cards by categories.
@@ -15,13 +17,30 @@ export abstract class AbstractCollection
 
    #categories: Map<string, SortedCategories>;
 
-   readonly #name: string;
+   /**
+    * Set instance of meta `decks` tracking.
+    */
+   readonly #decks: Set<string>;
 
-   constructor(name: string, cards: CardSorted[], categories: Map<string, SortedCategories>)
+   /**
+    * Set instance of meta `external` tracking.
+    */
+   readonly #external: Set<string>;
+
+   /**
+    * CardDB metadata.
+    */
+   readonly #meta: CardDBMetadataBase;
+
+   constructor({ cards, categories, meta }:
+    { cards: CardSorted[], categories: Map<string, SortedCategories>, meta: CardDBMetadataBase })
    {
-      this.#name = name;
       this.#cards = cards;
       this.#categories = categories;
+      this.#meta = meta;
+
+      this.#decks = new Set(Array.isArray(meta.decks) ? meta.decks : []);
+      this.#external = new Set(Array.isArray(meta.external) ? meta.external : []);
    }
 
    /**
@@ -33,19 +52,19 @@ export abstract class AbstractCollection
    }
 
    /**
-    * Returns the CardDB metadata required for saving this collection.
-    *
-    * @privateRemarks
-    * Override in child class.
+    * @returns Collection metadata.
     */
-   abstract get meta(): CardDBMetaSave;
+   get meta(): Readonly<CardDBMetadataBase>
+   {
+      return this.#meta;
+   }
 
    /**
     * @returns Format name / ID.
     */
    get name(): string
    {
-      return this.#name;
+      return this.#meta.name;
    }
 
    /**
@@ -81,7 +100,16 @@ export abstract class AbstractCollection
     *
     * @param group - External card group to test for inclusion.
     */
-   abstract isCardGroup(card: Card, group: 'deck' | 'external'): boolean;
+   isCardGroup(card: Card, group: 'deck' | 'external'): boolean
+   {
+      switch (group)
+      {
+         case 'deck': return this.#decks.has(card.filename);
+         case 'external': return this.#external.has(card.filename);
+
+         default: return false;
+      }
+   }
 
    /**
     * Implement this method to forward on the sort options to the collection categories.

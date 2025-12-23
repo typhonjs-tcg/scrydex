@@ -6,75 +6,35 @@ import {
    SortOrder }                from '#data';
 
 import type {
-   Card,
+   CardDBMetadataBase,
    GameFormat }               from '#types';
 
 import type {
-   CardDBMetaSave,
    CardSorted,
    SortedCategories }         from '#types-data';
 
 export class SortedFormat extends AbstractCollection
 {
    /**
-    * Set instance of meta `decks` tracking.
-    */
-   readonly #decks: Set<string>;
-
-   /**
-    * Set instance of meta `external` tracking.
-    */
-   readonly #external: Set<string>;
-
-   /**
-    * CardDB metadata.
-    */
-   readonly #meta: CardDBMetaSave;
-
-   /**
-    * @param cards -
+    * @param options - Required options.
     *
-    * @param decks -
+    * @param options.cards - Cards associated with this collection.
     *
-    * @param external -
+    * @param options.name - Name of this collection.
     *
-    * @param name -
+    * @param options.sourceMeta - CardDB metadata from source of cards.
     *
-    * @param format -
+    * @param [options.format] - Associated game format. When provided this makes this collection type `sorted_format`
+    *        otherwise the type is `sorted`.
     */
-   constructor({ cards, decks, external, name, format }:
-    { cards: CardSorted[], decks: string[], external: string[], name: string, format?: GameFormat })
+   constructor({ cards, name, sourceMeta, format }:
+    { cards: CardSorted[], name: string, sourceMeta: CardDBMetadataBase, format?: GameFormat })
    {
-      super(name, cards, SortedFormat.#sortRarity(cards, format));
-
-      this.#meta = isSupportedFormat(format) ? Object.freeze({ name, type: 'sorted_format', format, decks, external }) :
-       { name, type: 'sorted', decks, external };
-
-      this.#decks = new Set(Array.isArray(decks) ? decks : []);
-      this.#external = new Set(Array.isArray(external) ? external : []);
-   }
-
-   get meta(): Readonly<CardDBMetaSave>
-   {
-      return this.#meta;
-   }
-
-   /**
-    * Checks the meta _external_ file names for a card file name match.
-    *
-    * @param card -
-    *
-    * @param group - External card group to test for inclusion.
-    */
-   isCardGroup(card: Card, group: 'deck' | 'external'): boolean
-   {
-      switch (group)
-      {
-         case 'deck': return this.#decks.has(card.filename);
-         case 'external': return this.#external.has(card.filename);
-
-         default: return false;
-      }
+      super({
+         cards,
+         categories: SortedFormat.#sortRarity(cards, format),
+         meta: SortedFormat.#createMeta(name, sourceMeta, format),
+      });
    }
 
    /**
@@ -90,6 +50,23 @@ export class SortedFormat extends AbstractCollection
    }
 
    // Internal Implementation ----------------------------------------------------------------------------------------
+
+   /**
+    * Creates the CardDBMetadataBase object for this collection. Copies `decks` / `external` properties from
+    * `sourceMeta`.
+    *
+    * @param name - Name of collection.
+    *
+    * @param sourceMeta - CardDB metadata for source of cards in this collection.
+    *
+    * @param [format] - Optional game format to make this a `sorted_format` collection.
+    */
+   static #createMeta(name: string, sourceMeta: CardDBMetadataBase, format?: string): CardDBMetadataBase
+   {
+      return isSupportedFormat(format) ?
+       Object.freeze({ name, type: 'sorted_format', format, decks: sourceMeta.decks, external: sourceMeta.external }) :
+        { name, type: 'sorted', decks: sourceMeta.decks, external: sourceMeta.external };
+   }
 
    /**
     * @param cards -
