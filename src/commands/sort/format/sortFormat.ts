@@ -63,7 +63,13 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
 
          if (cardsLow.length)
          {
-            sortedFormats.push(createSortedFormat(config, { cards: cardsLow, name, format, sourceMeta: db.meta }));
+            sortedFormats.push(createSortedFormat(config, {
+               cards: cardsLow,
+               name,
+               format,
+               dirpath: format,
+               sourceMeta: db.meta
+            }));
          }
 
          if (cardsHigh.length)
@@ -72,13 +78,20 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
                cards: cardsHigh,
                name: `${name}-high-value`,
                format,
+               dirpath: `${format}/high-value`,
                sourceMeta: db.meta
             }));
          }
       }
       else
       {
-         sortedFormats.push(createSortedFormat(config, { cards, name, format, sourceMeta: db.meta }));
+         sortedFormats.push(createSortedFormat(config, {
+            cards,
+            name,
+            format,
+            dirpath: format ?? name,
+            sourceMeta: db.meta
+         }));
       }
    }
 
@@ -90,33 +103,20 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
  *
  * @param config -
  *
- * @param opts -
- *
- * @param opts.cards -
- *
- * @param opts.name -
- *
- * @param opts.sourceMeta -
- *
- * @param [opts.format] -
+ * @param options -
  *
  * @returns The SortedFormat instance.
  */
-function createSortedFormat(config: ConfigSortFormat, { cards, name, sourceMeta, format }:
- { cards: Card[]; name: string; sourceMeta: CardDBMetadataBase, format?: GameFormat }): SortedFormat
+function createSortedFormat(config: ConfigSortFormat, options:
+ { cards: Card[]; name: string; sourceMeta: CardDBMetadataBase, dirpath: string, format?: GameFormat }): SortedFormat
 {
-   sortByNameThenPrice(cards, 'desc');
+   sortByNameThenPrice(options.cards, 'desc');
 
-   const sortedFormat = new SortedFormat({
-      cards,
-      name,
-      format,
-      sourceMeta
-   });
+   const sortedFormat = new SortedFormat(options);
 
    sortedFormat.sort({ alpha: true, type: config.sortByType });
 
-   logger.verbose(`Sorting '${name}' - unique card entry count: ${cards.length}`);
+   logger.verbose(`Sorting '${options.name}' - unique card entry count: ${options.cards.length}`);
 
    if (config.mark.size)
    {
@@ -124,10 +124,10 @@ function createSortedFormat(config: ConfigSortFormat, { cards, name, sourceMeta,
       if (cardsMarked.length)
       {
          const markedRarity: Set<string> = new Set<string>();
-         for (const card of cardsMarked) { markedRarity.add(SortOrder.rarity(card, format)); }
+         for (const card of cardsMarked) { markedRarity.add(SortOrder.rarity(card, options.format)); }
 
          logger.verbose(`  - ${cardsMarked.length} card entries marked for merging in: ${
-            [...markedRarity].sort((a, b) => a.localeCompare(b)).join(', ')}`);
+          [...markedRarity].sort((a, b) => a.localeCompare(b)).join(', ')}`);
       }
    }
 

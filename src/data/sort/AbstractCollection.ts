@@ -23,6 +23,11 @@ export abstract class AbstractCollection
    readonly #decks: Set<string>;
 
    /**
+    * The subdirectory for this collection.
+    */
+   readonly #dirpath: string;
+
+   /**
     * Set instance of meta `external` tracking.
     */
    readonly #external: Set<string>;
@@ -32,11 +37,12 @@ export abstract class AbstractCollection
     */
    readonly #meta: CardDBMetadataBase;
 
-   constructor({ cards, categories, meta }:
-    { cards: CardSorted[], categories: Map<string, SortedCategories>, meta: CardDBMetadataBase })
+   constructor({ cards, categories, dirpath, meta }:
+    { cards: CardSorted[], categories: Map<string, SortedCategories>, dirpath: string, meta: CardDBMetadataBase })
    {
       this.#cards = cards;
       this.#categories = categories;
+      this.#dirpath = dirpath;
       this.#meta = meta;
 
       this.#decks = new Set(Array.isArray(meta.decks) ? meta.decks : []);
@@ -49,6 +55,14 @@ export abstract class AbstractCollection
    get cards(): CardSorted[]
    {
       return this.#cards;
+   }
+
+   /**
+    * Returns the subdirectory for this collection.
+    */
+   get dirpath(): string
+   {
+      return this.#dirpath;
    }
 
    /**

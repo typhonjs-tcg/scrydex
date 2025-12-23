@@ -34,14 +34,14 @@ export abstract class ExportCollection
          if (collection.size > 0)
          {
             // Store spreadsheets in format subdirectories.
-            const collectionDirPath = path.resolve(config.output, collection.name);
+            const collectionDirPath = path.resolve(config.output, collection.dirpath);
 
             // Create collection subdirectory if it doesn't exist already.
-            if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath); }
+            if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath, { recursive: true }); }
 
             // Export collection cards to JSON DB.
             CardDBStore.save({
-               filepath: path.resolve(collectionDirPath, `${collection.name}-all.json`),
+               filepath: path.resolve(collectionDirPath, `${collection.name}.json`),
                cards: collection.cards,
                meta: collection.meta
             });
@@ -227,7 +227,8 @@ export abstract class ExportCollection
          // Shade rows 2..N.
          ws.eachRow({ includeEmpty: false }, (row, rowNum) =>
          {
-            if (typeof (row as any)._marked === 'boolean' && (row as any)._marked) { return; }   // Skip `marked` overrides.
+            // Skip `marked` overrides.
+            if (typeof (row as any)._marked === 'boolean' && (row as any)._marked) { return; }
 
             if (rowNum === 1) { return; } // Skip header row.
 

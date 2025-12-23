@@ -20,6 +20,8 @@ export class SortedFormat extends AbstractCollection
     *
     * @param options.cards - Cards associated with this collection.
     *
+    * @param options.dirpath - The subdirectory for this collection.
+    *
     * @param options.name - Name of this collection.
     *
     * @param options.sourceMeta - CardDB metadata from source of cards.
@@ -27,12 +29,13 @@ export class SortedFormat extends AbstractCollection
     * @param [options.format] - Associated game format. When provided this makes this collection type `sorted_format`
     *        otherwise the type is `sorted`.
     */
-   constructor({ cards, name, sourceMeta, format }:
-    { cards: CardSorted[], name: string, sourceMeta: CardDBMetadataBase, format?: GameFormat })
+   constructor({ cards, dirpath, name, sourceMeta, format }:
+    { cards: CardSorted[], dirpath: string, name: string, sourceMeta: CardDBMetadataBase, format?: GameFormat })
    {
       super({
          cards,
          categories: SortedFormat.#sortRarity(cards, format),
+         dirpath,
          meta: SortedFormat.#createMeta(name, sourceMeta, format),
       });
    }
