@@ -3,13 +3,20 @@ import { ExportCollection }   from '../ExportCollection';
 import {
    CardDBStore,
    isSupportedFormat,
+   matchesPriceExpression,
+   sortByNameThenPrice,
    SortedFormat,
    SortOrder,
    validLegality }            from '#data';
 
 import { logger }             from '#util';
 
-import type { Card }          from '#types';
+import type { CardStream }    from '#data';
+
+import type {
+   Card,
+   CardDBMetadataBase,
+   GameFormat}                from '#types';
 
 import type {
    ConfigSortFormat }         from '#types-command';
@@ -38,14 +45,108 @@ export async function sortFormat(config: ConfigSortFormat): Promise<void>
  */
 async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
 {
-   /**
-    */
+   const db = await CardDBStore.load({ filepath: config.input });
+
+   const presortFormat = await presortCards(config, db);
+
+   const sortedFormats: SortedFormat[] = [];
+
+   for (const [name, cards] of presortFormat)
+   {
+      if (cards.length === 0) { continue; }
+
+      const format = isSupportedFormat(name) ? name : void 0;
+
+      if (format && config.highValue)
+      {
+         const { cardsLow, cardsHigh } = splitHighValue(config, cards);
+
+         if (cardsLow.length)
+         {
+            sortedFormats.push(createSortedFormat(config, { cards: cardsLow, name, format, sourceMeta: db.meta }));
+         }
+
+         if (cardsHigh.length)
+         {
+            sortedFormats.push(createSortedFormat(config, {
+               cards: cardsHigh,
+               name: `${name}-high-value`,
+               format,
+               sourceMeta: db.meta
+            }));
+         }
+      }
+      else
+      {
+         sortedFormats.push(createSortedFormat(config, { cards, name, format, sourceMeta: db.meta }));
+      }
+   }
+
+   return sortedFormats;
+}
+
+/**
+ * Creates the final SortedFormat instance plus logging.
+ *
+ * @param config -
+ *
+ * @param opts -
+ *
+ * @param opts.cards -
+ *
+ * @param opts.name -
+ *
+ * @param opts.sourceMeta -
+ *
+ * @param [opts.format] -
+ *
+ * @returns The SortedFormat instance.
+ */
+function createSortedFormat(config: ConfigSortFormat, { cards, name, sourceMeta, format }:
+ { cards: Card[]; name: string; sourceMeta: CardDBMetadataBase, format?: GameFormat }): SortedFormat
+{
+   sortByNameThenPrice(cards, 'desc');
+
+   const sortedFormat = new SortedFormat({
+      cards,
+      name,
+      format,
+      sourceMeta
+   });
+
+   sortedFormat.sort({ alpha: true, type: config.sortByType });
+
+   logger.verbose(`Sorting '${name}' - unique card entry count: ${cards.length}`);
+
+   if (config.mark.size)
+   {
+      const cardsMarked = sortedFormat.calculateMarked(config);
+      if (cardsMarked.length)
+      {
+         const markedRarity: Set<string> = new Set<string>();
+         for (const card of cardsMarked) { markedRarity.add(SortOrder.rarity(card, format)); }
+
+         logger.verbose(`  - ${cardsMarked.length} card entries marked for merging in: ${
+            [...markedRarity].sort((a, b) => a.localeCompare(b)).join(', ')}`);
+      }
+   }
+
+   return sortedFormat;
+}
+
+/**
+ * Presorts the cards by format legalities. Basic land and any remaining non-legal cards are separated.
+ *
+ * @param config -
+ *
+ * @param db -
+ */
+async function presortCards(config: ConfigSortFormat, db: CardStream): Promise<Map<string, Card[]>>
+{
    const presortFormat: Map<string, Card[]> = new Map(config.formats.map((entry) => [entry, []]));
 
    presortFormat.set('basic-land', []);
    presortFormat.set('unsorted', []);
-
-   const db = await CardDBStore.load({ filepath: config.input });
 
    for await (const card of db.asStream())
    {
@@ -71,51 +172,45 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
       if (!sorted) { presortFormat.get('unsorted')?.push(card); }
    }
 
-   for (const format of presortFormat.keys())
-   {
-      const formatSort = presortFormat.get(format);
-      if (!formatSort) { continue; }
+   return presortFormat;
+}
 
-      presortFormat.set(format, formatSort.sort((a, b) => a.name.localeCompare(b.name)));
+/**
+ * Splits cards by matching the price expression in the given config.
+ *
+ * @param config -
+ *
+ * @param cards -
+ *
+ * @returns Cards split by low and high value.
+ */
+function splitHighValue(config: ConfigSortFormat, cards: Card[]): { cardsLow: Card[], cardsHigh: Card[] }
+{
+   if (!config.highValue) { return { cardsLow: cards, cardsHigh: [] }; }
+
+   const cardsLow: Card[] = [];
+   const cardsHigh: Card[] = [];
+
+   const oracleHigh: Set<string> = new Set();
+
+   // Collect all high value oracle IDs.
+   for (const card of cards)
+   {
+      if (matchesPriceExpression(card.price, config.highValue)) { oracleHigh.add(card.oracle_id); }
    }
 
-   const sortedFormats: SortedFormat[] = [];
-
-   for (const [name, cards] of presortFormat)
+   // Separate all cards matching a high value oracle ID.
+   for (const card of cards)
    {
-      const format = isSupportedFormat(name) ? name : void 0;
-
-      const sortedFormat = new SortedFormat({
-         cards,
-         name,
-         format,
-         sourceMeta: db.meta
-      });
-
-      sortedFormat.sort({ alpha: true, type: config.sortByType });
-
-      logger.verbose(`Sorting '${name}' - unique card entry count: ${cards.length}`);
-
-      // if (format !== 'basic-land' && format !== 'unsorted')
-      // {
-      //    sortedFormat.extractBinder();
-      // }
-
-      if (config.mark.size)
+      if (oracleHigh.has(card.oracle_id))
       {
-         const cardsMarked = sortedFormat.calculateMarked(config);
-         if (cardsMarked.length)
-         {
-            const markedRarity: Set<string> = new Set<string>();
-            for (const card of cardsMarked) { markedRarity.add(SortOrder.rarity(card, format)); }
-
-            logger.verbose(`  - ${cardsMarked.length} card entries marked for merging in: ${
-             [...markedRarity].sort((a, b) => a.localeCompare(b)).join(', ')}`);
-         }
+         cardsHigh.push(card);
       }
-
-      sortedFormats.push(sortedFormat);
+      else
+      {
+         cardsLow.push(card);
+      }
    }
 
-   return sortedFormats;
+   return { cardsLow, cardsHigh };
 }

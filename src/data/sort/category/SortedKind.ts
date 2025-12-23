@@ -1,4 +1,6 @@
-import { SortOrder }    from '#data';
+import {
+   sortByNameThenPrice,
+   SortOrder }          from '#data';
 
 import { logger }       from '#util';
 
@@ -96,18 +98,12 @@ export class SortedKind implements SortedCategories
    {
       if (options.alpha)
       {
-         for (const cards of this.#categories.values())
-         {
-            cards.sort((a, b) => a.name.localeCompare(b.name));
-         }
+         for (const cards of this.#categories.values()) { sortByNameThenPrice(cards, 'desc'); }
       }
 
       if (options.type)
       {
-         for (const cards of this.#categories.values())
-         {
-            cards.sort((a, b) => a.type.localeCompare(b.type));
-         }
+         for (const cards of this.#categories.values()) { cards.sort((a, b) => a.type.localeCompare(b.type)); }
       }
    }
 }
