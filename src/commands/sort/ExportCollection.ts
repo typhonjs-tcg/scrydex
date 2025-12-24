@@ -13,6 +13,8 @@ import {
    PrintCardFields,
    AbstractCollection }    from '#data';
 
+import { capitalizeStr }   from '#util';
+
 import type {
    Worksheet }             from 'exceljs';
 
@@ -27,6 +29,19 @@ import type {
  */
 export abstract class ExportCollection
 {
+   /**
+    * Category kind to full name.
+    */
+   static #categoryNameFull = new Map([
+      ['W', 'White'],
+      ['U', 'Blue'],
+      ['B', 'Black'],
+      ['R', 'Red'],
+      ['G', 'Green']
+   ]);
+
+   private constructor() {}
+
    static async generate(config: ConfigSort, collections: Iterable<AbstractCollection>): Promise<void>
    {
       for (const collection of collections)
@@ -46,11 +61,12 @@ export abstract class ExportCollection
                meta: collection.meta
             });
 
-            for (const categories of collection.values())
+            for (const [categoriesName, categories] of collection.entries())
             {
                if (categories.size > 0)
                {
-                  await ExportCollection.#exportSpreadsheet(config, collection, categories, collectionDirPath);
+                  await ExportCollection.#exportSpreadsheet(config, collection, categoriesName, categories,
+                   collectionDirPath);
                }
             }
          }
@@ -62,12 +78,14 @@ export abstract class ExportCollection
     *
     * @param collection -
     *
+    * @param categoriesName -
+    *
     * @param categories -
     *
     * @param collectionDirPath -
     */
-   static async #exportSpreadsheet(config: ConfigSort, collection: AbstractCollection, categories: SortedCategories,
-    collectionDirPath: string): Promise<void>
+   static async #exportSpreadsheet(config: ConfigSort, collection: AbstractCollection, categoriesName: string,
+    categories: SortedCategories, collectionDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
 
@@ -75,11 +93,11 @@ export abstract class ExportCollection
 
       const theme = Theme.get(config);
 
-      for (const [category, cards] of categories.entries())
+      for (const [categoryName, cards] of categories.entries())
       {
          if (cards.length <= 0) { continue; }
 
-         const ws = wb.addWorksheet(category);
+         const ws = wb.addWorksheet(categoryName);
 
          // Column definitions + alignment rules.
          ws.columns = [
@@ -98,6 +116,26 @@ export abstract class ExportCollection
             { header: 'Price USD', key: 'Price USD', width: 12, alignment: { horizontal: 'center' } },
             { header: 'Scryfall Link', key: 'Scryfall Link', width: 20, alignment: { horizontal: 'center' } }
          ];
+
+         // Splice top row / sheet title -----------------------------------------------------------------------------
+
+         ws.spliceRows(1, 0, []);
+
+         const titleRow = ws.getRow(1);
+         titleRow.fill = theme.row.fill.default;
+
+         // Merge across all columns.
+         ws.mergeCells(1, 1, 1, ws.columnCount);
+
+         const titleCell = titleRow.getCell(1);
+
+         titleRow.height = 22;
+         titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+         titleCell.value = `${collection.printName} (${capitalizeStr(categoriesName)}) - ${
+          this.#categoryNameFull.get(categoryName) ?? categoryName}`;
+
+         // Card rows ------------------------------------------------------------------------------------------------
 
          let prevType: string | undefined = void 0;
 
@@ -217,12 +255,15 @@ export abstract class ExportCollection
          });
 
          // Bold headers.
-         const headerRow = ws.getRow(1);
+         titleCell.font = theme.fonts.title;
+         titleCell.border = { ...theme.cell.border, ...theme.row.lastRow.border };
+
+         const headerRow = ws.getRow(2);
          headerRow.fill = theme.row.fill.default;
          headerRow.font = theme.fonts.header;
 
-         // Freeze first row.
-         ws.views = [{ state: 'frozen', ySplit: 1 }];
+         // Freeze header rows.
+         ws.views = [{ state: 'frozen', ySplit: 2 }];
 
          // Shade rows 2..N.
          ws.eachRow({ includeEmpty: false }, (row, rowNum) =>
@@ -230,9 +271,9 @@ export abstract class ExportCollection
             // Skip `marked` overrides.
             if (typeof (row as any)._marked === 'boolean' && (row as any)._marked) { return; }
 
-            if (rowNum === 1) { return; } // Skip header row.
+            if (rowNum === 1 || rowNum === 2) { return; } // Skip header row.
 
-            if (rowNum % 2 === 0)
+            if (rowNum % 2 === 1)
             {
                row.eachCell({ includeEmpty: true }, (cell) => cell.fill = theme.row.fill.alternate);
             }
@@ -281,8 +322,11 @@ export abstract class ExportCollection
 
          let max = col?.header?.length ?? 0;
 
-         col.eachCell({ includeEmpty: true }, (cell) =>
+         col.eachCell({ includeEmpty: true }, (cell, rowNumber) =>
          {
+            // Skip title row.
+            if (rowNumber === 1) { return; }
+
             if (!cell.value) { return; }
 
             let text;

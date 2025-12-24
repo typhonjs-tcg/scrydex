@@ -29,7 +29,7 @@ class ThemeDark implements ThemeData
 {
    readonly #cell: { border: Partial<Borders> };
 
-   readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font> };
+   readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font>, title: Partial<Font> };
 
    readonly #mark: {
       error: { fill: Fill, border: Partial<Borders> };
@@ -55,7 +55,8 @@ class ThemeDark implements ThemeData
       this.#fonts = {
          header: { color: { argb: 'FFF5F5F5' }, name: 'Arial', size: 13, bold: true },
          link:   { color: { argb: 'FFCCE0FF' }, name: 'Arial', size: 12, underline: true },
-         main:   { color: { argb: 'FFE8E2C2' }, name: 'Arial', size: 12 }
+         main:   { color: { argb: 'FFE8E2C2' }, name: 'Arial', size: 12 },
+         title: { color: { argb: 'FFC0C0C0' }, name: 'Arial', size: 14, bold: true, italic: true }
       };
 
       this.#mark = {
@@ -162,7 +163,7 @@ class ThemeLight implements ThemeData
 {
    readonly #cell: { border: Partial<Borders> };
 
-   readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font> };
+   readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font>, title: Partial<Font> };
 
    readonly #mark: {
       error: { fill: Fill, border: Partial<Borders> };
@@ -188,7 +189,8 @@ class ThemeLight implements ThemeData
       this.#fonts = {
          header: { color: { argb: 'FF000000' }, name: 'Arial', size: 13, bold: true },
          link: { color: { argb: 'FF0000FF' }, name: 'Arial', size: 12, underline: true },
-         main: { color: { argb: 'FF000000' }, name: 'Arial', size: 12 }
+         main: { color: { argb: 'FF000000' }, name: 'Arial', size: 12 },
+         title: { color: { argb: 'FF444444' }, name: 'Arial', size: 14, bold: true, italic: true }
       };
 
       this.#mark = {
@@ -308,7 +310,8 @@ interface ThemeData
    get fonts(): {
       header: Partial<Font>,
       link: Partial<Font>,
-      main: Partial<Font>
+      main: Partial<Font>,
+      title: Partial<Font>
    }
 
    get mark(): {
