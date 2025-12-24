@@ -17,6 +17,7 @@ import { streamObject } from 'stream-json/streamers/StreamObject';
 import {
    CardFilter,
    execTime,
+   isGroupKind,
    supportedFormats }   from '#data';
 
 import { VERSION }      from '#version';
@@ -26,6 +27,7 @@ import type {
    CardDB,
    CardDBMetadata,
    CardDBMetadataGenerated,
+   CardDBMetadataGroups,
    CardDBType,
    GameFormat }         from '#types';
 
@@ -268,19 +270,14 @@ class CardStream
    readonly #filepath: string;
 
    /**
+    * Card / filename group associations.
+    */
+   readonly #groups: CardDBMetadataGroups<Set<string>> = {};
+
+   /**
     * Metadata object in DB.
     */
    readonly #meta: CardDBMetadata;
-
-   /**
-    * Set instance of meta `decks` tracking.
-    */
-   readonly #decks: Set<string>;
-
-   /**
-    * Set instance of meta `external` tracking.
-    */
-   readonly #external: Set<string>;
 
    /**
     * @param filepath - File path of DB.
@@ -292,8 +289,12 @@ class CardStream
       this.#filepath = filepath;
       this.#meta = Object.freeze(meta);
 
-      this.#decks = new Set(Array.isArray(meta.decks) ? meta.decks : []);
-      this.#external = new Set(Array.isArray(meta.external) ? meta.external : []);
+      for (const group in meta.groups)
+      {
+         if (!isGroupKind(group)) { continue; }
+
+         if (Array.isArray(meta.groups[group])) { this.#groups[group] = new Set(meta.groups[group]); }
+      }
    }
 
    /**
@@ -343,7 +344,7 @@ class CardStream
 
          if (hasFilterChecks && !CardFilter.test(value, filter)) { continue; }
 
-         if (!isDeck && this.isCardGroup(value, 'deck')) { continue; }
+         if (!isDeck && this.isCardGroup(value, 'decks')) { continue; }
          if (!isExternal && this.isCardGroup(value, 'external')) { continue; }
 
          yield value;
@@ -371,15 +372,9 @@ class CardStream
     *
     * @param group - External card group to test for inclusion.
     */
-   isCardGroup(card: Card, group: 'deck' | 'external'): boolean
+   isCardGroup(card: Card, group: keyof CardDBMetadataGroups): boolean
    {
-      switch (group)
-      {
-         case 'deck': return this.#decks.has(card.filename);
-         case 'external': return this.#external.has(card.filename);
-
-         default: return false;
-      }
+      return this.#groups?.[group]?.has(card.filename) ?? false;
    }
 }
 

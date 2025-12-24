@@ -319,11 +319,33 @@ interface CardDBMetadataCommon extends CardDBMetadataGenerated
    /** Name of CardDB */
    name: string;
 
-   /** Card file name association w/ decks. */
-   decks: string[];
+   /** Card / filename group associations. */
+   groups: CardDBMetadataGroups;
+}
 
-   /** Card file name association w/ external card groups. */
-   external: string[];
+/**
+ * Defines groups of cards that are not considered part of the main collection and may not be exported.
+ *
+ * Each array stores a list of CSV file names associated with that group.
+ *
+ * @typeParam T - data type; default metadata is `string[]`.
+ */
+interface CardDBMetadataGroups<T = string[]>
+{
+   /**
+    * Active decks.
+    */
+   decks?: T;
+
+   /**
+    * Manual / human organized collections.
+    */
+   external?: T;
+
+   /**
+    * Self-printed proxies (price = 0, no value logic)
+    */
+   proxy?: T;
 }
 
 /**
@@ -402,6 +424,7 @@ export {
    type CardDBMetadata,
    type CardDBMetadataBase,
    type CardDBMetadataGenerated,
+   type CardDBMetadataGroups,
    type CardDBType,
    type CardFace,
    type Colors,

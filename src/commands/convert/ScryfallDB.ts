@@ -133,7 +133,7 @@ export class ScryfallDB
          CardDBStore.save({
             filepath: config.output,
             cards: outputDB.sort((a, b) => a.name.localeCompare(b.name)),
-            meta: { type: 'inventory', decks: [...collection.decks], external: [...collection.external] }
+            meta: { type: 'inventory', groups: { decks: [...collection.decks], external: [...collection.external] }}
          });
       }
       else

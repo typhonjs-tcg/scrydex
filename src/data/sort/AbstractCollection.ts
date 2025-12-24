@@ -1,10 +1,13 @@
+import { isGroupKind }     from '#data';
+
 import { capitalizeStr }   from '#util';
 
 import type { ConfigSort } from '#types-command';
 
 import type {
    Card,
-   CardDBMetadataBase }    from '#types';
+   CardDBMetadataBase,
+   CardDBMetadataGroups }  from '#types';
 
 import type {
    CardSorted,
@@ -20,19 +23,14 @@ export abstract class AbstractCollection
    #categories: Map<string, SortedCategories>;
 
    /**
-    * Set instance of meta `decks` tracking.
+    * Card / filename group associations.
     */
-   readonly #decks: Set<string>;
+   readonly #groups: CardDBMetadataGroups<Set<string>> = {};
 
    /**
     * The subdirectory for this collection.
     */
    readonly #dirpath: string;
-
-   /**
-    * Set instance of meta `external` tracking.
-    */
-   readonly #external: Set<string>;
 
    /**
     * CardDB metadata.
@@ -47,8 +45,12 @@ export abstract class AbstractCollection
       this.#dirpath = dirpath;
       this.#meta = meta;
 
-      this.#decks = new Set(Array.isArray(meta.decks) ? meta.decks : []);
-      this.#external = new Set(Array.isArray(meta.external) ? meta.external : []);
+      for (const group in meta.groups)
+      {
+         if (!isGroupKind(group)) { continue; }
+
+         if (Array.isArray(meta.groups[group])) { this.#groups[group] = new Set(meta.groups[group]); }
+      }
    }
 
    /**
@@ -129,15 +131,9 @@ export abstract class AbstractCollection
     *
     * @param group - External card group to test for inclusion.
     */
-   isCardGroup(card: Card, group: 'deck' | 'external'): boolean
+   isCardGroup(card: Card, group: keyof CardDBMetadataGroups): boolean
    {
-      switch (group)
-      {
-         case 'deck': return this.#decks.has(card.filename);
-         case 'external': return this.#external.has(card.filename);
-
-         default: return false;
-      }
+      return this.#groups?.[group]?.has(card.filename) ?? false;
    }
 
    /**

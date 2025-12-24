@@ -6,8 +6,9 @@ import {
    SortOrder }                from '#data';
 
 import type {
-   CardDBMetadataBase,
-   GameFormat }               from '#types';
+   CardDBMetadataBase, CardDBMetadataGroups,
+   GameFormat
+} from '#types';
 
 import type {
    CardSorted,
@@ -67,8 +68,8 @@ export class SortedFormat extends AbstractCollection
    static #createMeta(name: string, sourceMeta: CardDBMetadataBase, format?: string): CardDBMetadataBase
    {
       return isSupportedFormat(format) ?
-       Object.freeze({ name, type: 'sorted_format', format, decks: sourceMeta.decks, external: sourceMeta.external }) :
-        { name, type: 'sorted', decks: sourceMeta.decks, external: sourceMeta.external };
+       Object.freeze({ name, type: 'sorted_format', format, groups: sourceMeta.groups }) :
+        { name, type: 'sorted', groups: sourceMeta.groups };
    }
 
    /**
