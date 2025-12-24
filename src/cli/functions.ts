@@ -46,6 +46,11 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
       exit(`'group-external' option is not a file or directory path.`);
    }
 
+   if (opts['group-proxy'] !== void 0 && !isFile(opts['group-proxy']) && !isDirectory(opts['group-proxy']))
+   {
+      exit(`'group-proxy' option is not a file or directory path.`);
+   }
+
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
@@ -58,7 +63,8 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
       db: opts.db,
       groups: {
          decks: opts['group-decks'],
-         external: opts['group-external']
+         external: opts['group-external'],
+         proxy: opts['group-proxy']
       }
    };
 
