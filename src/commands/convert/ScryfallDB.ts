@@ -12,7 +12,7 @@ import { CardDBStore }           from '#data';
 import { logger }                from '#util';
 
 import type { CSVCollection }    from '#data';
-import type { Card, CSVCard }    from '#types';
+import type {Card, CardDBMetadataGroups, CSVCard} from '#types';
 import type { ConfigConvert }    from '#types-command';
 
 /**
@@ -133,7 +133,7 @@ export class ScryfallDB
          CardDBStore.save({
             filepath: config.output,
             cards: outputDB.sort((a, b) => a.name.localeCompare(b.name)),
-            meta: { type: 'inventory', groups: { decks: [...collection.decks], external: [...collection.external] }}
+            meta: { type: 'inventory', groups: collection.groups }
          });
       }
       else

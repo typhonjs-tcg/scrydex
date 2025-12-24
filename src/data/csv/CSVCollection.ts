@@ -3,28 +3,27 @@ import {
    isDirectory,
    isFile }                   from '@typhonjs-utils/file-util';
 
-import { CSVCardIndex }       from './CSVCardIndex';
+import {
+   CSVCardIndex,
+   isGroupKind }              from '#data';
 
 import { logger }             from '#util';
 
-import type { CSVCard }       from '#types';
+import type {
+   CardDBMetadataGroups,
+   CSVCard}                   from '#types';
 
 import type { ConfigConvert } from '#types-command';
 
 export class CSVCollection
 {
-   #external: Set<string>;
-
-   #decks: Set<string>;
+   #groups: CardDBMetadataGroups<Set<string>> = {};
 
    #index: CSVCardIndex[];
 
    constructor()
    {
       this.#index = [];
-
-      this.#external = new Set();
-      this.#decks = new Set();
    }
 
    /**
@@ -40,26 +39,37 @@ export class CSVCollection
 
       await this.#loadPath({ path: config.input, collection });
 
-      if (config.decks) { await this.#loadPath({ path: config.decks, collection, isDeck: true }); }
-      if (config.external) { await this.#loadPath({ path: config.external, collection, isExternal: true }); }
+      for (const group in config.groups)
+      {
+         if (isGroupKind(group) && typeof config.groups[group] === 'string')
+         {
+            await this.#loadPath({ path: config.groups[group], collection, group });
+         }
+      }
 
       return collection;
    }
 
    /**
-    * @returns The `decks` CSV file name set.
+    * @returns The `groups` CSV file name metadata.
     */
-   get decks(): Set<string>
+   get groups(): CardDBMetadataGroups
    {
-      return this.#decks;
+      const groups: CardDBMetadataGroups = {};
+      for (const group in this.#groups)
+      {
+         if (isGroupKind(group)) { groups[group] = [...this.#groups[group] ?? []]; }
+      }
+
+      return groups;
    }
 
    /**
-    * @returns The `external` CSV file name set.
+    * @returns The `groups` CSV file name sets.
     */
-   get external(): Set<string>
+   get groupsSet(): CardDBMetadataGroups<Set<string>>
    {
-      return this.#external;
+      return this.#groups;
    }
 
    /**
@@ -183,14 +193,12 @@ export class CSVCollection
     *
     * @param [options.collection] - Existing collection to load CSV card data into.
     *
-    * @param [options.isDeck] - Mark loaded CSV card data as in a `deck`.
-    *
-    * @param [options.isExternal] - Mark loaded CSV card data as in a `external` organized collection.
+    * @param [options.group] - Mark loaded CSV card data as in the given group.
     *
     * @returns A new collection of all CSV card data.
     */
-   static async #loadPath({ path, collection = new CSVCollection(), isDeck = false, isExternal = false }:
-    { path: string, collection?: CSVCollection, isBinder?: boolean, isDeck?: boolean, isExternal?: boolean }):
+   static async #loadPath({ path, collection = new CSVCollection(), group }:
+    { path: string, collection?: CSVCollection, group?: keyof CardDBMetadataGroups }):
      Promise<CSVCollection>
    {
       if (isDirectory(path))
@@ -205,8 +213,12 @@ export class CSVCollection
 
             const cardIndex = await CSVCardIndex.fromCSV(file);
 
-            if (isDeck) { collection.#decks.add(cardIndex.filename); }
-            if (isExternal) { collection.#external.add(cardIndex.filename); }
+            if (group)
+            {
+               if (!collection.#groups[group]) { collection.#groups[group] = new Set<string>(); }
+
+               collection.#groups[group].add(cardIndex.filename);
+            }
 
             collection.#index.push(cardIndex);
          }
@@ -219,8 +231,12 @@ export class CSVCollection
 
          const cardIndex = await CSVCardIndex.fromCSV(path);
 
-         if (isDeck) { collection.#decks.add(cardIndex.filename); }
-         if (isExternal) { collection.#external.add(cardIndex.filename); }
+         if (group)
+         {
+            if (!collection.#groups[group]) { collection.#groups[group] = new Set<string>(); }
+
+            collection.#groups[group].add(cardIndex.filename);
+         }
 
          collection.#index.push(cardIndex);
 

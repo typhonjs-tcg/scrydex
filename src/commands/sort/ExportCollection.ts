@@ -163,7 +163,7 @@ export abstract class ExportCollection
             row.fill = theme.row.fill.default;
 
             // Potentially color / mark that the card is in a deck / outside main collection.
-            if (collection.isCardGroup(card, 'deck'))
+            if (collection.isCardGroup(card, 'decks'))
             {
                // Indicate that this row has been colored.
                (row as any)._marked = true;

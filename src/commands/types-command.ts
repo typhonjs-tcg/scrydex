@@ -1,6 +1,9 @@
-import {
+import type {
+   CardDBMetadataGroups }  from '#types';
+
+import type {
    ConfigCardFilter,
-   PriceExpression } from '#types-data';
+   PriceExpression }       from '#types-data';
 
 /**
  * Config object for the `convert` command.
@@ -13,14 +16,9 @@ interface ConfigConvert
    db: string;
 
    /**
-    * Input CSV file or directory path to CSV files for card collections representing active decks.
+    * Input CSV file or directory path to CSV files for card collections representing various groups.
     */
-   decks: string;
-
-   /**
-    * Input CSV file or directory path to CSV files for card collections representing externally organized collections.
-    */
-   external: string;
+   groups: CardDBMetadataGroups<string>;
 
    /**
     * Input CSV file or directory path to CSV files.

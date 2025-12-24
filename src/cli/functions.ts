@@ -36,14 +36,14 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
    if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
 
-   if (opts.decks !== void 0 && !isFile(opts.decks) && !isDirectory(opts.decks))
+   if (opts['group-decks'] !== void 0 && !isFile(opts['group-decks']) && !isDirectory(opts['group-decks']))
    {
-      exit(`'decks' option is not a file or directory path.`);
+      exit(`'group-decks' option is not a file or directory path.`);
    }
 
-   if (opts.external !== void 0 && !isFile(opts.external) && !isDirectory(opts.external))
+   if (opts['group-external'] !== void 0 && !isFile(opts['group-external']) && !isDirectory(opts['group-external']))
    {
-      exit(`'external' option is not a file or directory path.`);
+      exit(`'group-external' option is not a file or directory path.`);
    }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
@@ -56,8 +56,10 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
       input,
       output: opts.output,
       db: opts.db,
-      decks: opts.decks,
-      external: opts.external
+      groups: {
+         decks: opts['group-decks'],
+         external: opts['group-external']
+      }
    };
 
    // Set default log level to verbose.

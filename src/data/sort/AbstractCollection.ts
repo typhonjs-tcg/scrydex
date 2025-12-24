@@ -47,9 +47,10 @@ export abstract class AbstractCollection
 
       for (const group in meta.groups)
       {
-         if (!isGroupKind(group)) { continue; }
-
-         if (Array.isArray(meta.groups[group])) { this.#groups[group] = new Set(meta.groups[group]); }
+         if (isGroupKind(group) && Array.isArray(meta.groups[group]))
+         {
+            this.#groups[group] = new Set(meta.groups[group]);
+         }
       }
    }
 
