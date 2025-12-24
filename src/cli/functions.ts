@@ -230,9 +230,16 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
    {
       highValue = parsePriceExpression(opts['high-value']);
 
-      if (highValue && (highValue.operator === '<' || highValue.operator === '<='))
+      if (!highValue) { exit(`'high-value' option is invalid: ${opts['high-value']}`); }
+
+      if (highValue.operator === '<' || highValue.operator === '<=')
       {
-         exit(`'high-value' option is not a positive price comparison.`);
+         exit(`'high-value' option must be '>' or '>=' price comparison.`);
+      }
+
+      if (highValue.value < 1)
+      {
+         exit(`'high-value' option must be a positive threshold strictly greater than 1.`);
       }
    }
 

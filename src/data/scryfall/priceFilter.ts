@@ -20,7 +20,7 @@ import type {
  * - `>=2.50`
  * - `<= 0.99`
  */
-const priceRegex = /^(?<operator><=|>=|<|>)\s*(?<value>\d+(?:\.\d+)?)$/;
+const priceRegex = /^(?<operator><=|>=|<|>)\s*(?<value>-?\d+(?:\.\d+)?)$/;
 
 /**
  * @param input - Price expression to parse.
