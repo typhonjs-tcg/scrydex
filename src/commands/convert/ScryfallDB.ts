@@ -59,6 +59,8 @@ export class ScryfallDB
 
          for (const csvCard of csvCards)
          {
+            const isGroupProxy = collection.isCardGroup(csvCard, 'proxy');
+
             const card: Card = {
                object: 'card',
                name: scryCard.name,
@@ -85,7 +87,7 @@ export class ScryfallDB
                mana_cost: scryCard.mana_cost,
                oracle_text: scryCard.oracle_text,
                power: scryCard.power,
-               price: this.#priceLookup(scryCard, csvCard),
+               price: isGroupProxy ? '0.00' : this.#priceLookup(scryCard, csvCard),
                produced_mana: scryCard.produced_mana,
                released_at: scryCard.released_at,
                toughness: scryCard.toughness,

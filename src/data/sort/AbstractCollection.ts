@@ -198,6 +198,9 @@ export abstract class AbstractCollection
 
       for (const card of this.#cards)
       {
+         // Skip proxy cards.
+         if (this.isCardGroup(card, 'proxy')) { continue; }
+
          // Skip if is part of `marked` filenames.
          if (mark.has(card.filename)) { continue; }
 
@@ -226,6 +229,10 @@ export abstract class AbstractCollection
 
       for (const card of this.#cards)
       {
+         // Skip proxy cards.
+         if (this.isCardGroup(card, 'proxy')) { continue; }
+
+         // Skip non-marked cards.
          if (!mark.has(card.filename)) { continue; }
 
          if (!oracleMap.has(card.oracle_id))

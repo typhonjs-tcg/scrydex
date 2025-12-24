@@ -11,7 +11,7 @@ import { logger }             from '#util';
 
 import type {
    CardDBMetadataGroups,
-   CSVCard}                   from '#types';
+   CSVCard }                  from '#types';
 
 import type { ConfigConvert } from '#types-command';
 
@@ -112,6 +112,45 @@ export class CSVCollection
    }
 
    /**
+    * Get all CSV card entries across all CSV indexed files for the given Scryfall ID.
+    *
+    * @param key - Scryfall ID.
+    *
+    * @returns An array of all CSV card entries matching the given key.
+    */
+   get(key: string): CSVCard[] | undefined
+   {
+      let result = [];
+
+      for (let i = 0; i < this.#index.length; i++)
+      {
+         const card = this.#index[i].get(key);
+
+         if (card) { result.push(card);}
+      }
+
+      return result.length ? result : void 0;
+   }
+
+   /**
+    * Returns the group name this card belongs to if any..
+    *
+    * @param card -
+    */
+   getCardGroup(card: CSVCard): keyof CardDBMetadataGroups | undefined
+   {
+      for (const group in this.#groups)
+      {
+         if (this.#groups?.[group as keyof CardDBMetadataGroups]?.has(card.filename))
+         {
+            return group as keyof CardDBMetadataGroups;
+         }
+      }
+
+      return void 0;
+   }
+
+   /**
     * @param key - Scryfall ID.
     *
     * @returns Does any collection index have the given card.
@@ -124,6 +163,18 @@ export class CSVCollection
       }
 
       return false;
+   }
+
+   /**
+    * Checks the meta _external_ file names for a card file name match.
+    *
+    * @param card -
+    *
+    * @param group - External card group to test for inclusion.
+    */
+   isCardGroup(card: CSVCard, group: keyof CardDBMetadataGroups): boolean
+   {
+      return this.#groups?.[group]?.has(card.filename) ?? false;
    }
 
    /**
@@ -144,27 +195,6 @@ export class CSVCollection
             }
          }
       }
-   }
-
-   /**
-    * Get all CSV card entries across all CSV indexed files for the given Scryfall ID.
-    *
-    * @param key - Scryfall ID.
-    *
-    * @returns An array of all CSV card entries matching the given key.
-    */
-   get(key: string): CSVCard[] | undefined
-   {
-      let result = [];
-
-      for (let i = 0; i < this.#index.length; i++)
-      {
-         const card = this.#index[i].get(key);
-
-         if (card) { result.push(card);}
-      }
-
-      return result.length ? result : void 0;
    }
 
    /**
