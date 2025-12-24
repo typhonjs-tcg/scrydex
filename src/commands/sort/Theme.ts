@@ -1,10 +1,13 @@
 import type {
    Borders,
    Fill,
-   Font }         from 'exceljs';
+   Font }                  from 'exceljs';
+
+import {
+   CardDBMetadataGroups }  from "#types";
 
 import type {
-   ConfigSort }   from '#types-command';
+   ConfigSort }            from '#types-command';
 
 export class Theme
 {
@@ -31,12 +34,12 @@ class ThemeDark implements ThemeData
 
    readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font>, title: Partial<Font> };
 
+   readonly #groups: Required<CardDBMetadataGroups<{ fill: Fill, border: Partial<Borders> }>>;
+
    readonly #mark: {
       error: { fill: Fill, border: Partial<Borders> };
       ok: { fill: Fill, border: Partial<Borders> };
       warning: { fill: Fill, border: Partial<Borders> };
-      in_deck: { fill: Fill, border: Partial<Borders> };
-      in_external: { fill: Fill, border: Partial<Borders> };
    };
 
    readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
@@ -58,6 +61,38 @@ class ThemeDark implements ThemeData
          main:   { color: { argb: 'FFE8E2C2' }, name: 'Arial', size: 12 },
          title: { color: { argb: 'FFC0C0C0' }, name: 'Arial', size: 14, bold: true, italic: true }
       };
+
+      this.#groups = {
+         // Cyan - Card is in deck.
+         decks: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF5FB7C6' }},
+               bottom: { style: 'thin', color: { argb: 'FF5FB7C6' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF163C42' } }
+         },
+
+         // Purple - Card is in external group.
+         external: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF9A6BBD' }},
+               bottom: { style: 'thin', color: { argb: 'FF9A6BBD' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF3A2B4A' } }
+         },
+
+         // Muted Slate Blue - Card is in proxy group.
+         proxy: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF6B748A' }},
+               bottom: { style: 'thin', color: { argb: 'FF6B748A' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2E3442' } }
+         }
+      }
 
       this.#mark = {
          error: {
@@ -82,26 +117,6 @@ class ThemeDark implements ThemeData
                bottom: { style: 'thin', color: { argb: 'FFCCAA66' }}
             },
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF3F2B00' }}
-         },
-
-         // Cyan - Card is in deck.
-         in_deck: {
-            border: {
-               top: { style: 'thin', color: { argb: 'FF5FB7C6' }},
-               bottom: { style: 'thin', color: { argb: 'FF5FB7C6' }},
-            },
-
-            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF163C42' } }
-         },
-
-         // Purple - Card is in external group.
-         in_external: {
-            border: {
-               top: { style: 'thin', color: { argb: 'FF9A6BBD' }},
-               bottom: { style: 'thin', color: { argb: 'FF9A6BBD' }},
-            },
-
-            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF3A2B4A' } }
          }
       };
 
@@ -143,6 +158,11 @@ class ThemeDark implements ThemeData
       return this.#fonts;
    }
 
+   get groups()
+   {
+      return this.#groups;
+   }
+
    get mark()
    {
       return this.#mark;
@@ -165,12 +185,12 @@ class ThemeLight implements ThemeData
 
    readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font>, title: Partial<Font> };
 
+   readonly #groups: Required<CardDBMetadataGroups<{ fill: Fill, border: Partial<Borders> }>>;
+
    readonly #mark: {
       error: { fill: Fill, border: Partial<Borders> };
       ok: { fill: Fill, border: Partial<Borders> };
       warning: { fill: Fill, border: Partial<Borders> };
-      in_deck: { fill: Fill, border: Partial<Borders> };
-      in_external: { fill: Fill, border: Partial<Borders> };
    };
 
    readonly #row: { fill: { alternate: Fill, default: Fill }, lastRow: { border: Partial<Borders> } };
@@ -192,6 +212,38 @@ class ThemeLight implements ThemeData
          main: { color: { argb: 'FF000000' }, name: 'Arial', size: 12 },
          title: { color: { argb: 'FF444444' }, name: 'Arial', size: 14, bold: true, italic: true }
       };
+
+      this.#groups = {
+         // Cyan - Card is in deck.
+         decks: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF4FA3B8' }},
+               bottom: { style: 'thin', color: { argb: 'FF4FA3B8' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD6F1F6' } }
+         },
+
+         // Purple - Card is in external group.
+         external: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF8A6BB8' }},
+               bottom: { style: 'thin', color: { argb: 'FF8A6BB8' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3D8F2' } }
+         },
+
+         // Muted Slate Blue - Card is in proxy group.
+         proxy: {
+            border: {
+               top: { style: 'thin', color: { argb: 'FF8F9BB3' }},
+               bottom: { style: 'thin', color: { argb: 'FF8F9BB3' }},
+            },
+
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD7DDEA' } }
+         }
+      }
 
       this.#mark = {
          // Red - Needs attention.
@@ -222,26 +274,6 @@ class ThemeLight implements ThemeData
             },
 
             fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF4CC' } }
-         },
-
-         // Cyan - Card is in deck.
-         in_deck: {
-            border: {
-               top: { style: 'thin', color: { argb: 'FF4FA3B8' }},
-               bottom: { style: 'thin', color: { argb: 'FF4FA3B8' }},
-            },
-
-            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD6F1F6' } }
-         },
-
-         // Purple - Card is in external group.
-         in_external: {
-            border: {
-               top: { style: 'thin', color: { argb: 'FF8A6BB8' }},
-               bottom: { style: 'thin', color: { argb: 'FF8A6BB8' }},
-            },
-
-            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3D8F2' } }
          }
       }
 
@@ -282,6 +314,11 @@ class ThemeLight implements ThemeData
       return this.#fonts;
    }
 
+   get groups()
+   {
+      return this.#groups;
+   }
+
    get mark()
    {
       return this.#mark;
@@ -314,12 +351,12 @@ interface ThemeData
       title: Partial<Font>
    }
 
+   get groups(): Required<CardDBMetadataGroups<{ fill: Fill, border: Partial<Borders> }>>
+
    get mark(): {
       error: { fill: Fill, border: Partial<Borders> }
       ok: { fill: Fill, border: Partial<Borders> }
       warning: { fill: Fill, border: Partial<Borders> }
-      in_deck: { fill: Fill, border: Partial<Borders> }
-      in_external: { fill: Fill, border: Partial<Borders> }
    }
 
    get row(): {

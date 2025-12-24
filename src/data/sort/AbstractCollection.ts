@@ -126,6 +126,24 @@ export abstract class AbstractCollection
    }
 
    /**
+    * Returns the group name this card belongs to if any..
+    *
+    * @param card -
+    */
+   getCardGroup(card: Card): keyof CardDBMetadataGroups | undefined
+   {
+      for (const group in this.#groups)
+      {
+         if (this.#groups?.[group as keyof CardDBMetadataGroups]?.has(card.filename))
+         {
+            return group as keyof CardDBMetadataGroups;
+         }
+      }
+
+      return void 0;
+   }
+
+   /**
     * Checks the meta _external_ file names for a card file name match.
     *
     * @param card -

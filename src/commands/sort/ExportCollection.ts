@@ -162,29 +162,17 @@ export abstract class ExportCollection
 
             row.fill = theme.row.fill.default;
 
-            // Potentially color / mark that the card is in a deck / outside main collection.
-            if (collection.isCardGroup(card, 'decks'))
+            // Potentially color / fill if that the card is an external group.
+            const groupName = collection.getCardGroup(card);
+            if (groupName)
             {
                // Indicate that this row has been colored.
                (row as any)._marked = true;
 
                row.eachCell({ includeEmpty: true }, (cell) =>
                {
-                  cell.fill = theme.mark.in_deck.fill;
-                  cell.border = theme.mark.in_deck.border;
-               });
-            }
-
-            // Potentially color / mark that the card is in an external group / outside main collection.
-            if (collection.isCardGroup(card, 'external'))
-            {
-               // Indicate that this row has been colored.
-               (row as any)._marked = true;
-
-               row.eachCell({ includeEmpty: true }, (cell) =>
-               {
-                  cell.fill = theme.mark.in_external.fill;
-                  cell.border = theme.mark.in_external.border;
+                  cell.fill = theme.groups[groupName].fill;
+                  cell.border = theme.groups[groupName].border;
                });
             }
 
