@@ -174,6 +174,8 @@ export abstract class ExportCollection
                   cell.fill = theme.groups[groupName].fill;
                   cell.border = theme.groups[groupName].border;
                });
+
+               row.getCell('Filename').note = `Group: ${groupName}`;
             }
 
             // Potentially mark merge status for marked filenames / cards.
