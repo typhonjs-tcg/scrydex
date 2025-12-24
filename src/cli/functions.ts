@@ -213,11 +213,13 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
 
    if (!isDirectory(opts.output)) { exit(`'output' option is not a directory: ${opts.output}`); }
 
-   if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined`); }
+   if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 
    const formats = CardFilter.validateCLIFormats(opts.formats);
 
    if (typeof formats === 'string') { exit(formats); }
+
+   if (opts.clean !== void 0 && typeof opts.clean !== 'boolean') { exit(`'clean' option is not a boolean.`); }
 
    if (opts['high-value'] !== void 0 && typeof opts['high-value'] !== 'string')
    {
@@ -259,6 +261,7 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
    const config: ConfigSortFormat = {
       input,
       output: opts.output,
+      clean: opts.clean ?? false,
       formats,
       highValue,
       mark,

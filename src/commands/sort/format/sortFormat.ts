@@ -1,3 +1,6 @@
+import fs                     from 'node:fs';
+import path                   from 'node:path';
+
 import { ExportCollection }   from '../ExportCollection';
 
 import {
@@ -28,12 +31,39 @@ import type {
  */
 export async function sortFormat(config: ConfigSortFormat): Promise<void>
 {
-   logger.info(`Sorting Scryfall card collection: ${config.input}`);
+   logger.info(`Sorting Scrydex CardDB: ${config.input}`);
    logger.info(`Formats: ${config.formats.join(', ')}`);
+   logger.info(`Sorted output target directory: ${config.output}`);
+
+   if (config.clean) { await cleanOutputDir(config); }
 
    await ExportCollection.generate(config, await generate(config));
 
-   logger.info(`Finished sorting Scryfall card collection: ${config.output}`);
+   logger.info(`Finished sorting Scrydex card collection: ${config.output}`);
+}
+
+// Internal Implementation -------------------------------------------------------------------------------------------
+
+/**
+ * Clean the output directory of any subdirectories containing previously sorted collection data.
+ *
+ * @param config -
+ */
+async function cleanOutputDir(config: ConfigSortFormat): Promise<void>
+{
+   logger.verbose('Removing existing sorted output before regenerating.')
+
+   const dbFiles = await CardDBStore.loadAll({ dirpath: config.output, type: ['sorted', 'sorted_format'], walk: true });
+
+   for (const dbFile of dbFiles)
+   {
+      const dirpath = path.dirname(dbFile.filepath);
+
+      // Ignore deeper directories.
+      if (path.relative(config.output, dirpath).includes(path.sep)) { continue; }
+
+      fs.rmSync(dirpath, { recursive: true, force: true });
+   }
 }
 
 /**

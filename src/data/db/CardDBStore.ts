@@ -6,7 +6,9 @@ import {
    isDirectory,
    isFile }             from '@typhonjs-utils/file-util';
 
-import { isObject }     from '@typhonjs-utils/object';
+import {
+   isIterable,
+   isObject }           from '@typhonjs-utils/object';
 
 import { chain }        from 'stream-chain';
 import { parser }       from 'stream-json';
@@ -47,7 +49,8 @@ class CardDBStore
    }
 
    /**
-    * Load all JSON card DBs in the specified directory path. Additional options allow filtering by DB type and DB name.
+    * Load all JSON card DBs in the specified directory path. Additional options allow filtering by DB type and game
+    * format.
     *
     * @param options - Options.
     *
@@ -62,20 +65,20 @@ class CardDBStore
     * @returns Configured CardStream instances for the found JSON card DB collections.
     */
    static async loadAll({ dirpath, format, type, walk = false }:
-    { dirpath: string, format?: GameFormat | Set<GameFormat>, type?: CardDBType | Set<CardDBType>, walk?: boolean }):
-     Promise<CardStream[]>
+    { dirpath: string, format?: GameFormat | Iterable<GameFormat>, type?: CardDBType | Iterable<CardDBType>,
+     walk?: boolean }): Promise<CardStream[]>
    {
       if (!isDirectory(dirpath)) { throw new Error(`CardDBStore.loadAll error: 'dirpath' is not a directory.`); }
       if (typeof walk !== 'boolean') { throw new TypeError(`CardDBStore.loadAll error: 'walk' is not a boolean.`); }
 
-      if (format !== void 0 && typeof format !== 'string' && !(format instanceof Set))
+      if (format !== void 0 && typeof format !== 'string' && !isIterable(format))
       {
-         throw new TypeError(`CardDBStore.loadAll error: 'format' is not a string or set of strings.`);
+         throw new TypeError(`CardDBStore.loadAll error: 'format' is not a string or list of strings.`);
       }
 
-      if (type !== void 0 && !this.isValidType(type) && !(type instanceof Set))
+      if (type !== void 0 && !this.isValidType(type) && !isIterable(type))
       {
-         throw new Error(`CardDBStore.loadAll error: 'type' is not a valid CardDBType or set of CardDBTypes.`);
+         throw new Error(`CardDBStore.loadAll error: 'type' is not a valid CardDBType or list of CardDBTypes.`);
       }
 
       const results: CardStream[] = [];
@@ -87,6 +90,9 @@ class CardDBStore
          walk
       });
 
+      const formatSet: Set<GameFormat> | undefined = format && typeof format !== 'string' ? new Set(format) : void 0;
+      const typeSet: Set<CardDBType> | undefined = type && typeof type !== 'string' ? new Set(type) : void 0;
+
       for (const filepath of dbFiles)
       {
          try
@@ -95,7 +101,7 @@ class CardDBStore
 
             // Reject any CardDB that doesn't match the requested `CardDBType`.
             if (type !== void 0 && ((typeof type === 'string' && cardStream.meta.type !== type) ||
-             ((type instanceof Set) && !type.has(cardStream.meta.type))))
+             ((typeSet instanceof Set) && !typeSet.has(cardStream.meta.type))))
             {
                continue;
             }
@@ -106,7 +112,7 @@ class CardDBStore
                if (cardStream.meta.type !== 'sorted_format') { continue; }
 
                if ((typeof format === 'string' && cardStream.meta.format !== format) ||
-                ((format instanceof Set) && !format.has(cardStream.meta.format)))
+                ((formatSet instanceof Set) && !formatSet.has(cardStream.meta.format)))
                {
                   continue;
                }

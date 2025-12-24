@@ -74,6 +74,7 @@ program
 .command('sort [input]', 'Sort')
 .describe(`Sorts a converted Scrydex CardDB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by normalized type of card.')
+.option('--clean', 'Remove existing sorted output before regenerating.')
 .option('--formats', 'Provide a colon separated list of game formats for sorting.')
 .option('--high-value', 'Separate high-value cards into a derived binder; requires a positive price comparison (IE ">=10").')
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')

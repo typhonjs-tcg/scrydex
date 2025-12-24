@@ -71,6 +71,11 @@ interface ConfigFind
 interface ConfigSort
 {
    /**
+    * When true, remove existing sorted output before regenerating.
+    */
+   clean: boolean;
+
+   /**
     * Input JSON file post conversion.
     */
    input: string;
@@ -104,7 +109,7 @@ interface ConfigSortFormat extends ConfigSort
    formats: string[];
 
    /**
-    * When defined
+    * When defined sorted collections are separated into high value binders.
     */
    highValue: PriceExpression | null;
 }
