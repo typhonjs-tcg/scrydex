@@ -223,7 +223,7 @@ export class CSVCollection
             collection.#index.push(cardIndex);
          }
 
-         logger.info('Done extracting CSV collection files.');
+         logger.info(`Done extracting CSV collection files.${group ? ` (Group: ${group})` : ''}`);
       }
       else if (isFile(path))
       {
@@ -240,7 +240,7 @@ export class CSVCollection
 
          collection.#index.push(cardIndex);
 
-         logger.info('Done extracting CSV collection file.');
+         logger.info(`Done extracting CSV collection file.${group ? ` (Group: ${group})` : ''}`);
       }
       else
       {
