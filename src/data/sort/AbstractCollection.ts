@@ -1,3 +1,5 @@
+import { capitalizeStr }   from '#util';
+
 import type { ConfigSort } from '#types-command';
 
 import type {
@@ -74,11 +76,24 @@ export abstract class AbstractCollection
    }
 
    /**
-    * @returns Format name / ID.
+    * @returns Collection name / ID.
     */
    get name(): string
    {
       return this.#meta.name;
+   }
+
+   /**
+    * @returns A printable / punctuated version of the collection name.
+    */
+   get printName(): string
+   {
+      const name = this.#meta.name;
+
+      const parts = name.split(/[-_\s]+/);
+
+      return parts.length === 1 ? `${capitalizeStr(parts[0])}` :
+       `${capitalizeStr(parts[0])} - ${parts.slice(1).map((part) => capitalizeStr(part)).join(' ')}`;
    }
 
    /**
