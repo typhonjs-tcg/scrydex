@@ -101,7 +101,7 @@ class ThemeDark implements ThemeData
                bottom: { style: 'thin', color: { argb: 'FF9A6BBD' }},
             },
 
-            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2A1F36' } }
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF3A2B4A' } }
          }
       };
 

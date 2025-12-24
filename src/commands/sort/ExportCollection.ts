@@ -209,7 +209,10 @@ export abstract class ExportCollection
                // Potentially, skip top border for first category.
                if (prevType !== void 0)
                {
-                  row.eachCell({ includeEmpty: true }, (cell) => cell.border = theme.sortByType.border);
+                  row.eachCell({ includeEmpty: true }, (cell) =>
+                  {
+                     cell.border = { ...(cell.border ?? {}), ...theme.sortByType.border }
+                  });
                }
 
                prevType = card.type;
