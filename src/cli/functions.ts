@@ -5,7 +5,7 @@ import {
    isFile }                from '@typhonjs-utils/file-util';
 
 import {
-   convert,
+   convertCsv,
    filter,
    find,
    sortFormat }            from '#commands';
@@ -27,46 +27,13 @@ import { PriceExpression } from '#types-data';
 /**
  * Invokes `convert` with the given config.
  *
- * @param input - Manabox collection CSV input file path or directory path.
+ * @param input - CSV input file path or directory path.
  *
  * @param opts - CLI options.
  */
-export async function commandConvert(input: string, opts: Record<string, any>): Promise<void>
+export async function commandConvertCsv(input: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
-   if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
-
-   if (opts['group-decks'] !== void 0 && !isFile(opts['group-decks']) && !isDirectory(opts['group-decks']))
-   {
-      exit(`'group-decks' option is not a file or directory path.`);
-   }
-
-   if (opts['group-external'] !== void 0 && !isFile(opts['group-external']) && !isDirectory(opts['group-external']))
-   {
-      exit(`'group-external' option is not a file or directory path.`);
-   }
-
-   if (opts['group-proxy'] !== void 0 && !isFile(opts['group-proxy']) && !isDirectory(opts['group-proxy']))
-   {
-      exit(`'group-proxy' option is not a file or directory path.`);
-   }
-
-   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
-
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
-
-   if(!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
-
-   const config: ConfigConvert = {
-      input,
-      output: opts.output,
-      db: opts.db,
-      groups: {
-         decks: opts['group-decks'],
-         external: opts['group-external'],
-         proxy: opts['group-proxy']
-      }
-   };
+   const config = validateConvert(input, opts);
 
    // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
@@ -75,7 +42,7 @@ export async function commandConvert(input: string, opts: Record<string, any>): 
 
    try
    {
-      await convert(config);
+      await convertCsv(config);
    }
    catch (err: unknown)
    {
@@ -155,7 +122,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
  *
  * @param opts - CLI options.
  */
-export async function commandFindFormat(input: string, query: string, opts: Record<string, any>)
+export async function commandFind(input: string, query: string, opts: Record<string, any>)
 {
    if(!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
 
@@ -290,6 +257,8 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
    }
 }
 
+// Internal Implementation -------------------------------------------------------------------------------------------
+
 /**
  * Exit process with error message.
  *
@@ -299,4 +268,51 @@ function exit(message: string): never
 {
    console.error(`[31m[scrydex] ${message}[0m`);
    process.exit(1);
+}
+
+/**
+ * Validate the CLI options for `covert` commands.
+ *
+ * @param input - CSV input file path or directory path.
+ *
+ * @param opts - CLI options.
+ *
+ * @return ConfigConvert object.
+ */
+export function validateConvert(input: string, opts: Record<string, any>): ConfigConvert
+{
+   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
+   if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
+
+   if (opts['group-decks'] !== void 0 && !isFile(opts['group-decks']) && !isDirectory(opts['group-decks']))
+   {
+      exit(`'group-decks' option is not a file or directory path.`);
+   }
+
+   if (opts['group-external'] !== void 0 && !isFile(opts['group-external']) && !isDirectory(opts['group-external']))
+   {
+      exit(`'group-external' option is not a file or directory path.`);
+   }
+
+   if (opts['group-proxy'] !== void 0 && !isFile(opts['group-proxy']) && !isDirectory(opts['group-proxy']))
+   {
+      exit(`'group-proxy' option is not a file or directory path.`);
+   }
+
+   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
+
+   return {
+      input,
+      output: opts.output,
+      db: opts.db,
+      groups: {
+         decks: opts['group-decks'],
+         external: opts['group-external'],
+         proxy: opts['group-proxy']
+      }
+   };
 }

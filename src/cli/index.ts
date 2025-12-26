@@ -2,9 +2,9 @@
 import sade                   from 'sade';
 
 import {
-   commandConvert,
+   commandConvertCsv,
    commandFilter,
-   commandFindFormat,
+   commandFind,
    commandSortFormat }        from './functions';
 
 import { wrap }               from './wrap';
@@ -20,8 +20,8 @@ const program = sade('scrydex')
  `'trace', or 'all'.`);
 
 program
-.command('convert [input]', 'Convert')
-.describe(`Converts CSV card collection files to a compact Scryfall card DB.`)
+.command('convert-csv [input]', 'Convert')
+.describe(`Converts CSV card collection files to a compact Scrydex CardDB.`)
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
 .option('--group-decks', 'Provide a file or directory path of CSV card collections representing active decks.')
 .option('--group-external', 'Provide a file or directory path of CSV card collections representing externally organized collections.')
@@ -29,7 +29,7 @@ program
 .option('--output', 'Provide a file path for generated JSON card DB output.')
 .example('convert ./collection.csv --output ./collection.json -db ./scryfall.json')
 .example('convert ./collection-dir --output ./collection-all.json -db ./scryfall.json')
-.action(commandConvert);
+.action(commandConvertCsv);
 
 program
 .command('filter [input]', 'Filter')
@@ -65,13 +65,13 @@ program
 .option('--mana-cost', 'Provide the exact encoded symbol match such as `{1}{G}` to match mana cost.')
 .option('--price', 'Provide a price comparison expression (IE ">=10", "<2.50") or "null" for unpriced cards..')
 .example('find "Demonic Tutor" ./sorted-directory')
-.action(commandFindFormat);
+.action(commandFind);
 
 program.command('formats', `List all supported Scryfall game 'formats'.`)
 .action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
 
 program
-.command('sort [input]', 'Sort')
+.command('sort-format [input]', 'Sort')
 .describe(`Sorts a converted Scrydex CardDB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by normalized type of card.')
 .option('--clean', 'Remove existing sorted output before regenerating.')

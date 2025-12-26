@@ -9,9 +9,9 @@ import {
 
 import { logger }                   from '#util';
 
-import type { CSVCollection }       from '#data';
 import type { Card }                from '#types';
 import type { ConfigConvert }       from '#types-command';
+import type { ImportCollection }    from '#types-data';
 
 /**
  * Computes normalized card rarity keyed by `oracle_id`.
@@ -102,7 +102,7 @@ export class RarityNormalization
     *
     * @param collection -
     */
-   async scanForOracleID(config: ConfigConvert, collection: CSVCollection)
+   async scanForOracleID(config: ConfigConvert, collection: ImportCollection)
    {
       logger.info(
        `Scanning Scryfall database to identify oracle IDs used by cards in the collection - this may take a moment...`);

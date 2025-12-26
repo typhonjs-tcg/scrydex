@@ -1,21 +1,23 @@
 import {
    getFileList,
    isDirectory,
-   isFile }                   from '@typhonjs-utils/file-util';
+   isFile }                      from '@typhonjs-utils/file-util';
 
 import {
    CSVCardIndex,
-   isGroupKind }              from '#data';
+   isGroupKind }                 from '#data';
 
-import { logger }             from '#util';
+import { logger }                from '#util';
 
 import type {
    CardDBMetadataGroups,
-   CSVCard }                  from '#types';
+   CSVCard }                     from '#types';
 
-import type { ConfigConvert } from '#types-command';
+import type { ConfigConvert }    from '#types-command';
 
-export class CSVCollection
+import type { ImportCollection } from '#types-data';
+
+export class CSVCollection implements ImportCollection
 {
    #groups: CardDBMetadataGroups<Set<string>> = {};
 

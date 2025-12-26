@@ -3,16 +3,20 @@ import chain                     from 'stream-chain';
 import parser                    from 'stream-json';
 import { streamArray }           from 'stream-json/streamers/StreamArray';
 
-import { RarityNormalization }   from './RarityNormalization';
-import { ParseCardFaces }        from './ParseCardFaces';
-import { ParseTypeLine }         from './ParseTypeLine';
+import { RarityNormalization }   from '../RarityNormalization';
+import { ParseCardFaces }        from '../ParseCardFaces';
+import { ParseTypeLine }         from '../ParseTypeLine';
 
 import { CardDBStore }           from '#data';
 
 import { logger }                from '#util';
 
 import type { CSVCollection }    from '#data';
-import type {Card, CardDBMetadataGroups, CSVCard} from '#types';
+
+import type {
+   Card,
+   CSVCard }                     from '#types';
+
 import type { ConfigConvert }    from '#types-command';
 
 /**
