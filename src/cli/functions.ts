@@ -1,3 +1,4 @@
+import fs                  from 'node:fs';
 import path                from 'node:path';
 
 import {
@@ -6,6 +7,7 @@ import {
 
 import {
    convertCsv,
+   exportCsv,
    filter,
    find,
    sortFormat }            from '#commands';
@@ -18,6 +20,7 @@ import { logger }          from '#util';
 
 import type {
    ConfigConvert,
+   ConfigExport,
    ConfigFilter,
    ConfigFind,
    ConfigSortFormat }      from '#types-command';
@@ -57,6 +60,50 @@ export async function commandConvertCsv(input: string, opts: Record<string, any>
 }
 
 /**
+ * Invokes `exportCsv` with the given config.
+ *
+ * @param input - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandExportCsv(input: string, opts: Record<string, any>): Promise<void>
+{
+   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (isFile(input) && fs.existsSync(opts.output) && isDirectory(opts.output))
+   {
+      exit(`'input' options is a file; 'output' option must also be a file.`);
+   }
+
+   if (isDirectory(input) && fs.existsSync(opts.output) && isFile(opts.output))
+   {
+      exit(`'input' options is a directory; 'output' option must also be a directory.`);
+   }
+
+   const config: ConfigExport = {
+      input,
+      output: opts.output
+   };
+
+   try
+   {
+      await exportCsv(config);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
  * Invokes `filter` with the given config.
  *
  * @param input - Existing JSON card DB.
@@ -71,7 +118,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    if (isDirectory(opts.output)) { exit(`'output' option is an already existing directory.`); }
 
-   if(!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
+   if (!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
@@ -116,15 +163,15 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 /**
  * Invokes `find` with the given config.
  *
- * @param input - Search text / regular expression.
+ * @param input - File or directory path to search for _sorted_ JSON CardDBs.
  *
- * @param query - File or directory path to search for _sorted_ JSON CardDBs.
+ * @param query - Search text / regular expression.
  *
  * @param opts - CLI options.
  */
 export async function commandFind(input: string, query: string, opts: Record<string, any>)
 {
-   if(!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
 
    if (query !== void 0 && typeof query !== 'string') { exit(`'query' option must be a string.`); }
 
@@ -169,16 +216,18 @@ export async function commandFind(input: string, query: string, opts: Record<str
  */
 export async function commandSortFormat(input: string, opts: Record<string, any>): Promise<void>
 {
+   if (!isFile(input)) { exit(`'input' option path is not a file.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (!isDirectory(opts.output)) { exit(`'output' option is not a directory: ${opts.output}`); }
+
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts['by-type'] !== void 0 && typeof opts['by-type'] !== 'boolean')
    {
       exit(`'by-type' option is not a boolean.`);
    }
-
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
-
-   if (!isDirectory(opts.output)) { exit(`'output' option is not a directory: ${opts.output}`); }
 
    if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 

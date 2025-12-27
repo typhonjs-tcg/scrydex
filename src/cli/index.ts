@@ -3,6 +3,7 @@ import sade                   from 'sade';
 
 import {
    commandConvertCsv,
+   commandExportCsv,
    commandFilter,
    commandFind,
    commandSortFormat }        from './functions';
@@ -30,6 +31,14 @@ program
 .example('convert ./collection.csv --output ./collection.json -db ./scryfall.json')
 .example('convert ./collection-dir --output ./collection-all.json -db ./scryfall.json')
 .action(commandConvertCsv);
+
+program
+.command('export-csv [input]', 'Export CSV')
+.describe('Exports all sorted Scrydex CardDB files from a directory or file path to one or more CSV files.')
+.option('--output', 'Provide an output file path or directory path for generated CSV card collection file(s).')
+.example('export-csv ./collection.json --output ./collection.csv')
+.example('export-csv ./sorted-directory --output ./csv-sorted')
+.action(commandExportCsv);
 
 program
 .command('filter [input]', 'Filter')
@@ -71,7 +80,7 @@ program.command('formats', `List all supported Scryfall game 'formats'.`)
 .action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
 
 program
-.command('sort-format [input]', 'Sort')
+.command('sort-format [input]', 'Sort Format')
 .describe(`Sorts a converted Scrydex CardDB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by normalized type of card.')
 .option('--clean', 'Remove existing sorted output before regenerating.')
@@ -80,8 +89,8 @@ program
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
 .option('--output', 'Provide a directory path for generated spreadsheets and sorted card DBs.')
 .option('--theme', 'Options are `light` or `dark`; light theme is default.')
-.example('sort ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
-.example('sort ./collection.json --formats predh:commander --output ./spreadsheets')
+.example('sort-format ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')
+.example('sort-format ./collection.json --formats predh:commander --output ./spreadsheets')
 .action(commandSortFormat);
 
 program.parse(process.argv);

@@ -32,6 +32,22 @@ interface ConfigConvert
 }
 
 /**
+ * Config object for all `export` commands.
+ */
+interface ConfigExport
+{
+   /**
+    * Input card JSON DB file or directory.
+    */
+   input: string;
+
+   /**
+    * Output directory path for exported data.
+    */
+   output: string;
+}
+
+/**
  * Config object for the `filter` command.
  */
 interface ConfigFilter
@@ -52,6 +68,9 @@ interface ConfigFilter
    output: string;
 }
 
+/**
+ * Config object for the `find` command.
+ */
 interface ConfigFind
 {
    /**
@@ -66,7 +85,7 @@ interface ConfigFind
 }
 
 /**
- * Config object for the `sort` command.
+ * Base config object for all `sort` commands.
  */
 interface ConfigSort
 {
@@ -101,6 +120,9 @@ interface ConfigSort
    theme: 'light' | 'dark';
 }
 
+/**
+ * Config object for the `sortFormat` command.
+ */
 interface ConfigSortFormat extends ConfigSort
 {
    /**
@@ -116,6 +138,7 @@ interface ConfigSortFormat extends ConfigSort
 
 export {
    type ConfigConvert,
+   type ConfigExport,
    type ConfigFilter,
    type ConfigFind,
    type ConfigSort,
