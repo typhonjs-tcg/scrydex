@@ -1,7 +1,7 @@
 import fs                  from 'node:fs';
 import path                from 'node:path';
 
-import csv                 from 'csv-parser';
+import { parse }           from 'csv-parse';
 
 import { supportedLang }   from '#data';
 
@@ -36,71 +36,71 @@ export class CSVCardIndex
     */
    static async fromCSV(filepath: string): Promise<CSVCardIndex>
    {
-      return new Promise((resolve, reject) =>
+      const cardIndex = new CSVCardIndex();
+
+      const filename = path.basename(filepath, '.csv');
+
+      cardIndex.#filename = filename;
+
+      // Read and extract Scryfall IDs.
+      const parser = fs.createReadStream(filepath).pipe(parse({
+         columns: true,
+         skip_empty_lines: true,
+         trim: true
+      }));
+
+      let rowCntr = 1;
+
+      for await (const row of parser)
       {
-         const cardIndex = new CSVCardIndex();
+         rowCntr++;
 
-         const filename = path.basename(filepath, '.csv');
-
-         cardIndex.#filename = filename;
-
-         // Read and extract Scryfall IDs.
-         const stream = fs.createReadStream(filepath).pipe(csv());
-
-         let rowCntr = 1;
-
-         stream.on('data', (row) =>
+         if (row['Quantity'] === void 0 || row['Scryfall ID'] === void 0)
          {
-            rowCntr++;
+            parser.destroy(
+             new Error(`CSV file does not have required 'Quantity' or 'Scryfall ID' fields:\n${filepath}`));
+         }
 
-            if (row['Quantity'] === void 0 || row['Scryfall ID'] === void 0)
-            {
-               stream.destroy(
-                new Error(`CSV file does not have required 'Quantity' or 'Scryfall ID' fields:\n${filepath}`));
-            }
+         const name = row['Name'];
+         const quantity = Number(row['Quantity']);
+         const scryfall_id = row['Scryfall ID'];
+         const foil = row['Foil'] ?? 'normal';
+         const lang_csv = supportedLang.get(row['Language']);
 
-            const name = row['Name'];
-            const quantity = Number(row['Quantity']);
-            const scryfall_id = row['Scryfall ID'];
-            const foil = row['Foil'] ?? 'normal';
-            const lang_csv = supportedLang.get(row['Language']);
+         if (!Number.isInteger(quantity) || quantity < 1)
+         {
+            parser.destroy(
+             new Error(`CSV file on row '${rowCntr}' has invalid quantity '${row['Quantity']}':\n${filepath}`));
+         }
 
-            if (!Number.isInteger(quantity) || quantity < 1)
-            {
-               stream.destroy(
-                new Error(`CSV file on row '${rowCntr}' has invalid quantity '${row['Quantity']}':\n${filepath}`));
-            }
+         if (!this.#regexUUID.test(scryfall_id))
+         {
+            parser.destroy(
+             new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
+         }
 
-            if (!this.#regexUUID.test(scryfall_id))
-            {
-               stream.destroy(
-                new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
-            }
+         const existingCard = cardIndex.get(scryfall_id);
 
-            const existingCard = cardIndex.get(scryfall_id);
+         // TODO: Must consider foil state.
+         if (existingCard)
+         {
+            existingCard.quantity += quantity;
+         }
+         else
+         {
+            cardIndex.set(scryfall_id, {
+               object: 'card',
+               name,
+               foil,
+               lang_csv,
+               quantity,
+               scryfall_id,
+               filename
+            });
+         }
+      }
 
-            // TODO: Must consider foil state.
-            if (existingCard)
-            {
-               existingCard.quantity += quantity;
-            }
-            else
-            {
-               cardIndex.set(scryfall_id, {
-                  object: 'card',
-                  name,
-                  foil,
-                  lang_csv,
-                  quantity,
-                  scryfall_id,
-                  filename
-               });
-            }
-         });
-
-         stream.on('error', reject);
-         stream.on('end', () => resolve(cardIndex))
-      });
+      return cardIndex;
    }
 
    /**
