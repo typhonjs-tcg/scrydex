@@ -330,10 +330,15 @@ class CardStream
     *
     * @param [options.isExternal] - When true, cards that are part of the external group are returned; default: true.
     *
+    * @param [options.isProxy] - When true, cards that are part of the external proxy group are returned; default: true.
+    *
+    * @param [options.isExportable] - When true, all non-exportable card group tests are enabled.
+    *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream({ filter, isDeck = true, isExternal = true }:
-    { filter?: ConfigCardFilter, isDeck?: boolean, isExternal?: boolean } = {}): AsyncIterable<Card>
+   async *asStream({ filter, isDeck = true, isExternal = true, isProxy = true, isExportable }:
+    { filter?: ConfigCardFilter, isDeck?: boolean, isExternal?: boolean, isProxy?: boolean, isExportable?: true }
+     = {}): AsyncIterable<Card>
    {
       const pipeline = chain([
          fs.createReadStream(this.#filepath),
@@ -344,6 +349,14 @@ class CardStream
 
       const hasFilterChecks = CardFilter.hasFilterChecks(filter);
 
+      // Automatically set all non-exportable groups to be tested.
+      if (isExportable)
+      {
+         isDeck = false;
+         isExternal = false;
+         isProxy = false;
+      }
+
       for await (const { value } of pipeline)
       {
          if (typeof value !== 'object' || value === null || value.object !== 'card') { continue; }
@@ -352,6 +365,7 @@ class CardStream
 
          if (!isDeck && this.isCardGroup(value, 'decks')) { continue; }
          if (!isExternal && this.isCardGroup(value, 'external')) { continue; }
+         if (!isProxy && this.isCardGroup(value, 'proxy')) { continue; }
 
          yield value;
       }
@@ -372,11 +386,31 @@ class CardStream
    }
 
    /**
+    * Verifies that the card is not part of a non-exportable group. Presently all groups are non-exportable.
+    * IE `decks`, `external` or `proxy`.
+    *
+    * @param card -
+    *
+    * @returns Whether card can be exported.
+    */
+   isCardExportable(card: Card): boolean
+   {
+      for (const group in this.#groups)
+      {
+         if (this.#groups?.[group as keyof CardDBMetadataGroups]?.has(card.filename)) { return false; }
+      }
+
+      return true;
+   }
+
+   /**
     * Checks the meta _external_ file names for a card file name match.
     *
     * @param card -
     *
     * @param group - External card group to test for inclusion.
+    *
+    * @returns Whether card is part of given group.
     */
    isCardGroup(card: Card, group: keyof CardDBMetadataGroups): boolean
    {
