@@ -82,6 +82,11 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
       exit(`'input' options is a directory; 'output' option must also be a directory.`);
    }
 
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
    const config: ConfigExport = {
       input,
       output: opts.output
