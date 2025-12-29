@@ -5,46 +5,51 @@ import { logger }             from '#util';
 
 import type { CardStream }    from '#data';
 
+import type { ConfigExport }  from '#types-command';
+
+/**
+ * Defines the DB export implementation.
+ */
+export type ExportFn = ({ coalesce, db, output }: { coalesce: boolean, db: CardStream, output: string }) =>
+ Promise<void>
+
 /**
  * Finds all sorted CardDBs in a given input directory and exports each to the given output directory.
  *
  * @param options - Options.
  *
- * @param options.dirpath - Input directory path to find sorted CardDBs.
+ * @param options.config - The export config.
  *
  * @param options.exportFn - DB export implementation.
  *
  * @param options.extension - Export file extension.
- *
- * @param options.output - Output directory.
  */
-export async function exportDir({ dirpath, exportFn, extension, output }:
- { dirpath: string, exportFn: (db: CardStream, filepath: string) => Promise<void>, extension: string, output: string }):
-  Promise<void>
+export async function exportDir({ config, exportFn, extension }:
+ { config: ConfigExport, exportFn: ExportFn, extension: string }): Promise<void>
 {
    const cards = await CardDBStore.loadAll({
-      dirpath,
+      dirpath: config.input,
       type: ['sorted', 'sorted_format'],
       walk: true
    });
 
    if (cards.length === 0)
    {
-      logger.warn(`No sorted CardDB collections found in:\n${dirpath}`);
+      logger.warn(`No sorted CardDB collections found in:\n${config.input}`);
       return;
    }
    else
    {
       logger.info(`Exporting ${cards.length} sorted CardDB collections.`);
-      logger.info(`Export output target directory: ${output}`);
+      logger.info(`Export output target directory: ${config.output}`);
 
       for (const db of cards)
       {
-         const dbPath = path.resolve(output, `./${db.meta.name}.${extension}`);
+         const dbPath = path.resolve(config.output, `./${db.meta.name}.${extension}`);
 
          logger.verbose(`${db.meta.name} - ${dbPath}`);
 
-         await exportFn(db, dbPath)
+         await exportFn({ coalesce: config.coalesce, db, output: dbPath });
       }
 
       logger.info(`Finished exporting sorted CardDB collections.`);

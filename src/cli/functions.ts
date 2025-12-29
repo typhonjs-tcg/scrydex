@@ -75,12 +75,17 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
 
    if (isFile(input) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
-      exit(`'input' options is a file; 'output' option must also be a file.`);
+      exit(`'input' option is a file; 'output' option must also be a file.`);
    }
 
    if (isDirectory(input) && fs.existsSync(opts.output) && isFile(opts.output))
    {
-      exit(`'input' options is a directory; 'output' option must also be a directory.`);
+      exit(`'input' option is a directory; 'output' option must also be a directory.`);
+   }
+
+   if (opts['no-coalesce'] !== void 0 && typeof opts['no-coalesce'] !== 'boolean')
+   {
+      exit(`'no-coalesce' option is not a boolean.`);
    }
 
    // Set default log level to verbose.
@@ -89,6 +94,7 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigExport = {
+      coalesce: typeof opts['no-coalesce'] !== 'boolean',
       input,
       output: opts.output
    };
@@ -124,12 +130,17 @@ export async function commandExportTxt(input: string, opts: Record<string, any>)
 
    if (isFile(input) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
-      exit(`'input' options is a file; 'output' option must also be a file.`);
+      exit(`'input' option is a file; 'output' option must also be a file.`);
    }
 
    if (isDirectory(input) && fs.existsSync(opts.output) && isFile(opts.output))
    {
-      exit(`'input' options is a directory; 'output' option must also be a directory.`);
+      exit(`'input' option is a directory; 'output' option must also be a directory.`);
+   }
+
+   if (opts['no-coalesce'] !== void 0 && typeof opts['no-coalesce'] !== 'boolean')
+   {
+      exit(`'no-coalesce' option is not a boolean.`);
    }
 
    // Set default log level to verbose.
@@ -138,6 +149,7 @@ export async function commandExportTxt(input: string, opts: Record<string, any>)
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigExport = {
+      coalesce: typeof opts['no-coalesce'] !== 'boolean',
       input,
       output: opts.output
    };

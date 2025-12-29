@@ -28,22 +28,21 @@ export async function exportCsv(config: ConfigExport): Promise<void>
    {
       logger.verbose(`Loading file path: ${config.input}`);
 
-      const inputDB = await CardDBStore.load({ filepath: config.input });
+      if (config.coalesce) { logger.verbose(`Coalescing unique card printings.`); }
+
+      const db = await CardDBStore.load({ filepath: config.input });
 
       logger.info(`Export output target file: ${config.output}`);
 
-      return exportDB(inputDB, config.output);
+      return exportDB({ coalesce: config.coalesce, db, output: config.output });
    }
    else if (isDirectory(config.input))
    {
       logger.verbose(`Loading directory path: ${config.input}`);
 
-      return exportDir({
-         dirpath: config.input,
-         exportFn: exportDB,
-         extension: 'csv',
-         output: config.output,
-      });
+      if (config.coalesce) { logger.verbose(`Coalescing unique card printings.`); }
+
+      return exportDir({ config, exportFn: exportDB, extension: 'csv' });
    }
 }
 
@@ -52,11 +51,15 @@ export async function exportCsv(config: ConfigExport): Promise<void>
 /**
  * Coalesces unique card entries and exports to a CSV file.
  *
- * @param db - CardDB to serialize.
+ * @param options - Options.
  *
- * @param output - Output file path.
+ * @param options.coalesce - Combine unique card printings.
+ *
+ * @param options.db - CardDB to serialize.
+ *
+ * @param options.output - Output file path.
  */
-async function exportDB(db: CardStream, output: string): Promise<void>
+async function exportDB({ coalesce, db, output }: { coalesce: boolean, db: CardStream, output: string }): Promise<void>
 {
    const stringifier = stringify({
       header: true,
@@ -77,7 +80,7 @@ async function exportDB(db: CardStream, output: string): Promise<void>
 
    stringifier.pipe(fs.createWriteStream(output));
 
-   for await (const card of exportCards({ db }))
+   for await (const card of exportCards({ coalesce, db }))
    {
       stringifier.write({
          Name: card.name,

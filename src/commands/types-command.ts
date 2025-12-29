@@ -37,12 +37,17 @@ interface ConfigConvert
 interface ConfigExport
 {
    /**
+    * When true, combine identical card printings.
+    */
+   coalesce: boolean;
+
+   /**
     * Input card JSON DB file or directory.
     */
    input: string;
 
    /**
-    * Output directory path for exported data.
+    * Output file or directory path for exported data.
     */
    output: string;
 }
