@@ -4,6 +4,7 @@ import sade                   from 'sade';
 import {
    commandConvertCsv,
    commandExportCsv,
+   commandExportTxt,
    commandFilter,
    commandFind,
    commandSortFormat }        from './functions';
@@ -41,8 +42,16 @@ program
 .action(commandExportCsv);
 
 program
+.command('export-txt [input]', 'Export Text')
+.describe('Exports all sorted Scrydex CardDB files from a directory or file path to one or more text files.')
+.option('--output', 'Provide an output file path or directory path for generated text card collection file(s).')
+.example('export-txt ./collection.json --output ./collection.txt')
+.example('export-txt ./sorted-directory --output ./txt-sorted')
+.action(commandExportTxt);
+
+program
 .command('filter [input]', 'Filter')
-.describe(`Filters an existing JSON card DB by game formats and other card attributes.`)
+.describe(`Filters an existing Scrydex CardDB by game formats and other card attributes.`)
 .option('--border', 'Provide a colon separated list of border colors including: black, white, borderless, yellow, silver, or gold.')
 .option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to match by color identity.')
 .option('--cmc', 'Provide `0` to a positive finite number to match CMC / converted mana cost.')

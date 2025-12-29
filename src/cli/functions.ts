@@ -8,6 +8,7 @@ import {
 import {
    convertCsv,
    exportCsv,
+   exportTxt,
    filter,
    find,
    sortFormat }            from '#commands';
@@ -95,6 +96,55 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
    try
    {
       await exportCsv(config);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
+ * Invokes `exportTxt` with the given config.
+ *
+ * @param input - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandExportTxt(input: string, opts: Record<string, any>): Promise<void>
+{
+   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (isFile(input) && fs.existsSync(opts.output) && isDirectory(opts.output))
+   {
+      exit(`'input' options is a file; 'output' option must also be a file.`);
+   }
+
+   if (isDirectory(input) && fs.existsSync(opts.output) && isFile(opts.output))
+   {
+      exit(`'input' options is a directory; 'output' option must also be a directory.`);
+   }
+
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   const config: ConfigExport = {
+      input,
+      output: opts.output
+   };
+
+   try
+   {
+      await exportTxt(config);
    }
    catch (err: unknown)
    {
