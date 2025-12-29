@@ -9,6 +9,8 @@ import { stringify }          from 'csv-stringify';
 
 import { CardDBStore }        from '#data';
 
+import { logger }             from '#util';
+
 import type { CardStream }    from '#data';
 
 import type { ConfigExport }  from '#types-command';
@@ -22,18 +24,48 @@ export async function exportCsv(config: ConfigExport): Promise<void>
 {
    if (isFile(config.input))
    {
+      logger.verbose(`Loading file path: ${config.input}`);
+
       const inputDB = await CardDBStore.load({ filepath: config.input });
+
+      logger.info(`Export output target file: ${config.output}`);
+
       return exportDB(inputDB, config.output);
    }
    else if (isDirectory(config.input))
    {
+      logger.verbose(`Loading directory path: ${config.input}`);
+
       return exportDir(config);
    }
 }
 
 async function exportDir(config: ConfigExport): Promise<void>
 {
+   const cards = await CardDBStore.loadAll({
+      dirpath: config.input,
+      type: ['sorted', 'sorted_format'],
+      walk: true
+   });
 
+   if (cards.length === 0)
+   {
+      logger.warn(`No sorted CardDB collections found in:\n${config.input}`);
+      return;
+   }
+   else
+   {
+      logger.info(`Exporting ${cards.length} sorted CardDB collections.`);
+
+      for (const db of cards)
+      {
+         const dbPath = path.resolve(config.output, `./${db.meta.name}.csv`);
+
+         logger.verbose(`${db.meta.name} - ${dbPath}`);
+
+         await exportDB(db, dbPath)
+      }
+   }
 }
 
 async function exportDB(inputDB: CardStream, output: string): Promise<void>
