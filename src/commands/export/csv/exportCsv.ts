@@ -103,7 +103,7 @@ async function exportDB(inputDB: CardStream, output: string): Promise<void>
    });
 
    // Ensure `output` directory exists.
-   if (!fs.existsSync(output)) { fs.mkdirSync(path.dirname(output), { recursive: true }); }
+   fs.mkdirSync(path.dirname(output), { recursive: true });
 
    stringifier.pipe(fs.createWriteStream(output));
 
@@ -113,10 +113,10 @@ async function exportDB(inputDB: CardStream, output: string): Promise<void>
 
    for await (const card of inputDB.asStream({ isExportable: true }))
    {
-      if (typeof card.quantity !== 'number' || !Number.isInteger(card.quantity) || card.quantity < 0)
+      if (typeof card.quantity !== 'number' || !Number.isInteger(card.quantity) || card.quantity <= 0)
       {
          logger.warn(`Skipping card (${card.name}) from '${inputDB.meta.name}' due to invalid quantity: ${
-            card.quantity}`);
+          card.quantity}`);
 
          continue;
       }
