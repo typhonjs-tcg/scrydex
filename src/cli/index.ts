@@ -3,6 +3,7 @@ import sade                   from 'sade';
 
 import {
    commandConvertCsv,
+   commandDiff,
    commandExportCsv,
    commandExportTxt,
    commandFilter,
@@ -34,8 +35,16 @@ program
 .action(commandConvertCsv);
 
 program
+.command('diff [inputA] [inputB]', 'Compare CardDBs')
+.describe('Compares two CardDBs or two directories of sorted CardDBs and generates a spreadsheet report of added, removed, and changed cards.')
+.option('--output', 'Provide an output directory for generated diff report spreadsheets.')
+.example('diff ./carddb-a.json ./carddb-b.json --output ./diff-report')
+.example('diff ./sorted-a ./sorted-b --output ./diff-report-sorted')
+.action(commandDiff);
+
+program
 .command('export-csv [input]', 'Export CSV')
-.describe('Exports all sorted Scrydex CardDB files from a directory or file path to one or more CSV files.')
+.describe('Exports all sorted Scrydex CardDB files from a directory or file path to a single CardDB outputting collection CSV files.')
 .option('--no-coalesce', 'Export cards without combining identical printings.')
 .option('--output', 'Provide an output file path or directory path for generated CSV card collection file(s).')
 .example('export-csv ./collection.json --output ./collection.csv')
@@ -44,7 +53,7 @@ program
 
 program
 .command('export-txt [input]', 'Export Text')
-.describe('Exports all sorted Scrydex CardDB files from a directory or file path to one or more text files.')
+.describe('Exports all sorted Scrydex CardDB files from a directory or file path to a single CardDB outputting collection text files.')
 .option('--no-coalesce', 'Export cards without combining identical printings.')
 .option('--output', 'Provide an output file path or directory path for generated text card collection file(s).')
 .example('export-txt ./collection.json --output ./collection.txt')

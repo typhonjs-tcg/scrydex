@@ -7,6 +7,7 @@ import {
 
 import {
    convertCsv,
+   diff,
    exportCsv,
    exportTxt,
    filter,
@@ -21,6 +22,7 @@ import { logger }          from '#util';
 
 import type {
    ConfigConvert,
+   ConfigDiff,
    ConfigExport,
    ConfigFilter,
    ConfigFind,
@@ -47,6 +49,60 @@ export async function commandConvertCsv(input: string, opts: Record<string, any>
    try
    {
       await convertCsv(config);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
+ * Invokes `diff` with the given config.
+ *
+ * @param inputA - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ *
+ * @param inputB - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandDiff(inputA: string, inputB: string, opts: Record<string, any>): Promise<void>
+{
+   if (!isFile(inputA) && !isDirectory(inputA)) { exit(`'inputA' option path is not a file or directory.`); }
+
+   if (!isFile(inputB) && !isDirectory(inputB)) { exit(`'inputB' option path is not a file or directory.`); }
+
+   if (isFile(inputA) && !isFile(inputB))
+   {
+      exit(`'inputA' option is a file path, but 'inputB' is not a file path.`);
+   }
+
+   if (isDirectory(inputA) && !isDirectory(inputB))
+   {
+      exit(`'inputA' option is a directory path, but 'inputB' is not a directory path.`);
+   }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   const config: ConfigDiff = {
+      inputA,
+      inputB,
+      output: opts.output
+   };
+
+   try
+   {
+      await diff(config);
    }
    catch (err: unknown)
    {

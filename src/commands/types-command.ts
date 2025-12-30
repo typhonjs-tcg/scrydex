@@ -32,6 +32,27 @@ interface ConfigConvert
 }
 
 /**
+ * Config object for the `diff` command.
+ */
+interface ConfigDiff
+{
+   /**
+    * Input card JSON DB file or directory.
+    */
+   inputA: string;
+
+   /**
+    * Input card JSON DB file or directory.
+    */
+   inputB: string;
+
+   /**
+    * Output file or directory path for diff report.
+    */
+   output: string;
+}
+
+/**
  * Config object for all `export` commands.
  */
 interface ConfigExport
@@ -143,6 +164,7 @@ interface ConfigSortFormat extends ConfigSort
 
 export {
    type ConfigConvert,
+   type ConfigDiff,
    type ConfigExport,
    type ConfigFilter,
    type ConfigFind,
