@@ -156,7 +156,7 @@ class CardDBStore
    /**
     * Save a Card array as a JSON card DB collection.
     *
-    * @param options - Options
+    * @param options - Options.
     */
    static save({ filepath, cards, meta }: SaveOptions)
    {
@@ -245,27 +245,6 @@ class CardDBStore
 }
 
 /**
- * Options for {@link CardDBStore.save}. If you do not include an explicit `meta.name` field the filename will be used.
- */
-interface SaveOptions
-{
-   /**
-    * A valid file path ending with the `.json` file extension.
-    */
-   filepath: string;
-
-   /**
-    * Cards to serialize.
-    */
-   cards: Card[];
-
-   /**
-    * Partial CardDB metadata.
-    */
-   meta: CardDBMetaSave;
-}
-
-/**
  * Provide a wrapper around a JSON Card DB with streaming access to cards.
  */
 class CardStream
@@ -324,21 +303,9 @@ class CardStream
     *
     * @param [options] - Optional options.
     *
-    * @param [options.filter] - Optional {@link ConfigCardFilter} configuration object to filter card stream.
-    *
-    * @param [options.isDeck] - When true, cards that are part of the external deck group are returned; default: true.
-    *
-    * @param [options.isExternal] - When true, cards that are part of the external group are returned; default: true.
-    *
-    * @param [options.isProxy] - When true, cards that are part of the external proxy group are returned; default: true.
-    *
-    * @param [options.isExportable] - When true, all non-exportable card group tests are enabled.
-    *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream({ filter, isDeck = true, isExternal = true, isProxy = true, isExportable }:
-    { filter?: ConfigCardFilter, isDeck?: boolean, isExternal?: boolean, isProxy?: boolean, isExportable?: true }
-     = {}): AsyncIterable<Card>
+   async *asStream({ filter, groups, isExportable }: CardStreamOptions = {}): AsyncIterable<Card>
    {
       const pipeline = chain([
          fs.createReadStream(this.#filepath),
@@ -349,12 +316,16 @@ class CardStream
 
       const hasFilterChecks = CardFilter.hasFilterChecks(filter);
 
+      let excludeDecks = typeof groups?.decks === 'boolean' && !groups.decks;
+      let excludeExternal = typeof groups?.external === 'boolean' && !groups.external;
+      let excludeProxy = typeof groups?.proxy === 'boolean' && !groups.proxy;
+
       // Automatically set all non-exportable groups to be tested.
       if (isExportable)
       {
-         isDeck = false;
-         isExternal = false;
-         isProxy = false;
+         excludeDecks = false;
+         excludeExternal = false;
+         excludeProxy = false;
       }
 
       for await (const { value } of pipeline)
@@ -363,9 +334,9 @@ class CardStream
 
          if (hasFilterChecks && !CardFilter.test(value, filter)) { continue; }
 
-         if (!isDeck && this.isCardGroup(value, 'decks')) { continue; }
-         if (!isExternal && this.isCardGroup(value, 'external')) { continue; }
-         if (!isProxy && this.isCardGroup(value, 'proxy')) { continue; }
+         if (excludeDecks && this.isCardGroup(value, 'decks')) { continue; }
+         if (excludeExternal && this.isCardGroup(value, 'external')) { continue; }
+         if (excludeProxy && this.isCardGroup(value, 'proxy')) { continue; }
 
          yield value;
       }
@@ -420,7 +391,34 @@ class CardStream
 
 export {
    CardDBStore,
-   CardStream };
+   CardStream,
+   type CardStreamOptions };
+
+/**
+ * Options for {@link CardStream.asStream}.
+ */
+interface CardStreamOptions
+{
+   /**
+    * Optional card-level filtering configuration.
+    */
+   filter?: ConfigCardFilter;
+
+   /**
+    * Exclude cards belonging to specific metadata groups.
+    *
+    * A group is excluded by specifying `false`.
+    */
+   groups?: Partial<Record<keyof CardDBMetadataGroups, false>>;
+
+   /**
+    * When true, skip all non-exportable card entries; IE all decks, externals, proxy groups.
+    */
+   isExportable?: true;
+}
+
+// Internal Types ----------------------------------------------------------------------------------------------------
+
 
 /**
  * Make `name` optional in metadata.
@@ -446,3 +444,24 @@ type CardDBMetaSave =
          ? OptionalName<Omit<T, keyof CardDBMetadataGenerated>>
          : never
       : never;
+
+/**
+ * Options for {@link CardDBStore.save}. If you do not include an explicit `meta.name` field the filename will be used.
+ */
+interface SaveOptions
+{
+   /**
+    * A valid file path ending with the `.json` file extension.
+    */
+   filepath: string;
+
+   /**
+    * Cards to serialize.
+    */
+   cards: Card[];
+
+   /**
+    * Partial CardDB metadata.
+    */
+   meta: CardDBMetaSave;
+}
