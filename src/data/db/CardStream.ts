@@ -10,6 +10,8 @@ import {
    isGroupKind,
    uniqueCardKey }      from '#data';
 
+import type { BasicLogger }   from '@typhonjs-utils/logger-color';
+
 import type {
    Card,
    CardDB,
@@ -79,7 +81,8 @@ class CardStream
     *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream({ filter, groups, isExportable }: CardStreamOptions = {}): AsyncIterable<Card>
+   async *asStream({ filter, groups, isExportable, uniqueKeys, uniqueOnce }: CardStreamOptions = {}):
+    AsyncIterable<Card>
    {
       const pipeline = chain([
          fs.createReadStream(this.#filepath),
@@ -90,6 +93,7 @@ class CardStream
 
       const hasFilterChecks = CardFilter.hasFilterChecks(filter);
 
+      // Group checks to enable.
       let excludeDecks = typeof groups?.decks === 'boolean' && !groups.decks;
       let excludeExternal = typeof groups?.external === 'boolean' && !groups.external;
       let excludeProxy = typeof groups?.proxy === 'boolean' && !groups.proxy;
@@ -97,22 +101,34 @@ class CardStream
       // Automatically set all non-exportable groups to be tested.
       if (isExportable)
       {
-         excludeDecks = false;
-         excludeExternal = false;
-         excludeProxy = false;
+         excludeDecks = true;
+         excludeExternal = true;
+         excludeProxy = true;
       }
 
-      for await (const { value } of pipeline)
+      // When `uniqueOnce` is true track seen unique keys; rejecting duplicate like cards.
+      const uniqueKeysSeen = typeof uniqueOnce === 'boolean' && uniqueOnce ? new Set<string>() : null;
+
+      for await (const { value: card } of pipeline)
       {
-         if (typeof value !== 'object' || value === null || value.object !== 'card') { continue; }
+         if (typeof card !== 'object' || card === null || card.object !== 'card') { continue; }
 
-         if (hasFilterChecks && !CardFilter.test(value, filter)) { continue; }
+         if (excludeDecks && this.isCardGroup(card, 'decks')) { continue; }
+         if (excludeExternal && this.isCardGroup(card, 'external')) { continue; }
+         if (excludeProxy && this.isCardGroup(card, 'proxy')) { continue; }
 
-         if (excludeDecks && this.isCardGroup(value, 'decks')) { continue; }
-         if (excludeExternal && this.isCardGroup(value, 'external')) { continue; }
-         if (excludeProxy && this.isCardGroup(value, 'proxy')) { continue; }
+         if (hasFilterChecks && !CardFilter.test(card, filter)) { continue; }
 
-         yield value;
+         if (uniqueKeys)
+         {
+            const uniqueKey = uniqueCardKey(card);
+
+            if (!uniqueKeys.has(uniqueKey) || uniqueKeysSeen?.has(uniqueKey)) { continue; }
+
+            if (uniqueKeysSeen) { uniqueKeysSeen.add(uniqueKey); }
+         }
+
+         yield card;
       }
    }
 
@@ -202,11 +218,11 @@ class CardStream
     * - export coalescing
     * - analytics and reporting
     *
-    * @param options - Optional stream selection options; default: exportable cards only.
+    * @param [options] - Optional stream selection options.
     *
     * @returns A map of unique card identity keys to total quantities.
     */
-   async getQuantityMap(options: CardStreamOptions = { isExportable: true }): Promise<Map<string, number>>
+   async getQuantityMap(options?: CardStreamOptions): Promise<Map<string, number>>
    {
       const map: Map<string, number> = new Map();
 
@@ -302,6 +318,21 @@ interface CardStreamOptions
     * When true, skip all non-exportable card entries; IE all decks, externals, proxy groups.
     */
    isExportable?: true;
+
+   /**
+    * When provided, only cards whose composite identity matches one of these keys are yielded.
+    */
+   uniqueKeys?: Set<string>;
+
+   /**
+    * When true, only the first card encountered for each unique key is yielded.
+    */
+   uniqueOnce?: true;
+
+   /**
+    * Optional logger for diagnostics. If omitted, no logging is performed.
+    */
+   logger?: BasicLogger;
 }
 
 export {
