@@ -5,7 +5,6 @@ import {
 import { CardDBStore }        from '#data';
 import { logger }             from '#util';
 
-import type { CardStream }    from '#data';
 import type { ConfigDiff }    from '#types-command';
 
 /**
@@ -15,16 +14,39 @@ import type { ConfigDiff }    from '#types-command';
  */
 export async function diff(config: ConfigDiff): Promise<void>
 {
-   if (isDirectory(config.inputA) && isDirectory(config.inputB))
+   if (isDirectory(config.baseline) && isDirectory(config.comparison))
    {
       logger.verbose(`Comparing the following directory paths:`);
-      logger.verbose(`A) ${config.inputA}`);
-      logger.verbose(`B) ${config.inputB}`);
+      logger.verbose(`A) ${config.baseline}`);
+      logger.verbose(`B) ${config.comparison}`);
    }
-   else if (isFile(config.inputA) && isFile(config.inputB))
+   else if (isFile(config.baseline) && isFile(config.comparison))
    {
       logger.verbose(`Comparing the following file paths:`);
-      logger.verbose(`A) ${config.inputA}`);
-      logger.verbose(`B) ${config.inputB}`);
+      logger.verbose(`Baseline - ${config.baseline}`);
+      logger.verbose(`Comparison - ${config.comparison}`);
+
+      const baseline = await CardDBStore.load({ filepath: config.baseline });
+      const comparison = await CardDBStore.load({ filepath: config.comparison });
+
+      const result = await baseline.diff(comparison, { isExportable: true });
+
+      logger.verbose(`!!! result.added: ${JSON.stringify([...result.added], null, 2)}`);
+      logger.verbose(`!!! result.removed: ${JSON.stringify([...result.removed], null, 2)}`);
+      logger.verbose(`!!! result.changed: ${JSON.stringify(Object.fromEntries(result.changed), null, 2)}`);
+
+      logger.verbose(`!!! Removed cards:`);
+
+      for await (const card of baseline.asStream({ uniqueKeys: result.removed }))
+      {
+         logger.verbose(`!!! name: ${card.name}`);
+      }
+
+      logger.verbose(`!!! Changed cards:`);
+
+      for await (const card of baseline.asStream({ uniqueKeys: result.changed, uniqueOnce: true }))
+      {
+         logger.verbose(`!!! name: ${card.name}`);
+      }
    }
 }
