@@ -7,7 +7,8 @@ import { streamArray }  from 'stream-json/streamers/StreamArray';
 
 import {
    CardFilter,
-   isGroupKind }        from '#data';
+   isGroupKind,
+   uniqueCardKey }      from '#data';
 
 import type {
    Card,
@@ -116,6 +117,64 @@ class CardStream
    }
 
    /**
+    * Computes a quantity-based diff between this CardStream and a comparison CardStream instance.
+    *
+    * Cards are compared using a composite identity key (`scryfall_id + foil + lang`) via {@link uniqueCardKey} so that
+    * physically distinct printings are treated independently.
+    *
+    * The diff is asymmetric:
+    * - `this` CardStream instance is treated as the baseline card pool.
+    * - `comparison` is treated as the comparison target.
+    *
+    * The result captures:
+    * - cards newly **added** in `comparison`.
+    * - cards **removed** since `baseline`.
+    * - cards whose quantities **changed** between the two CardStreams.
+    *
+    * This function is intentionally card-data–light. It operates only on identity keys and quantities. Any card
+    * metadata required for reporting should be collected in a subsequent streaming pass.
+    *
+    * @param comparison - Comparison CardStream.
+    *
+    * @param [streamOptions] - Optional CardStream options. By default, only `exportable` cards are compared.
+    *
+    * @returns CardStreamDiff object.
+    */
+   async diff(comparison: CardStream, streamOptions?: CardStreamOptions): Promise<CardStreamDiff>
+   {
+      // Build identity → quantity maps for both streams.
+      const mapB = await this.getQuantityMap(streamOptions);
+      const mapC = await comparison.getQuantityMap(streamOptions);
+
+      // Extract identity key sets for structural comparison.
+      const keysB = new Set(mapB.keys());
+      const keysC = new Set(mapC.keys());
+
+      // Cards present only in the comparison stream.
+      const added = keysC.difference(keysB);
+
+      // Cards no longer present in the comparison stream.
+      const removed = keysB.difference(keysC);
+
+      // Cards present in both streams (potential quantity changes).
+      const shared = keysB.intersection(keysC);
+
+      // Quantity changes for shared keys.
+      const changed = new Map<string, number>();
+
+      for (const key of shared)
+      {
+         const qtyA = mapB.get(key)!;
+         const qtyB = mapC.get(key)!;
+
+         const delta = qtyB - qtyA;
+         if (delta !== 0) { changed.set(key, delta); }
+      }
+
+      return { added, removed, changed };
+   }
+
+   /**
     * Return synchronously all card data in the DB.
     *
     * Note: Individual entries are not validated for typeof `object` or the Scryfall `object: 'card'` association.
@@ -127,6 +186,40 @@ class CardStream
       const db = JSON.parse(fs.readFileSync(this.#filepath, 'utf-8')) as CardDB;
 
       return Array.isArray(db.cards) ? db.cards : [];
+   }
+
+   /**
+    * Builds a quantity map for cards in this CardStream.
+    *
+    * Cards are grouped by their composite identity key (`scryfall_id + foil + lang`), and the quantities of
+    * matching entries are summed.
+    *
+    * This method is streaming and memory-efficient: it does not retain card objects, only identity keys and
+    * aggregated quantities.
+    *
+    * The returned map is suitable for:
+    * - diff operations
+    * - export coalescing
+    * - analytics and reporting
+    *
+    * @param options - Optional stream selection options; default: exportable cards only.
+    *
+    * @returns A map of unique card identity keys to total quantities.
+    */
+   async getQuantityMap(options: CardStreamOptions = { isExportable: true }): Promise<Map<string, number>>
+   {
+      const map: Map<string, number> = new Map();
+
+      for await (const card of this.asStream(options))
+      {
+         if (Number.isInteger(card.quantity) && card.quantity > 0)
+         {
+            const key = uniqueCardKey(card);
+            map.set(key, (map.get(key) ?? 0) + card.quantity);
+         }
+      }
+
+      return map;
    }
 
    /**
@@ -163,6 +256,32 @@ class CardStream
 }
 
 /**
+ * Result of diffing two CardStream instances.
+ *
+ * All keys are composite card identities (`scryfall_id + foil + lang`) via {@link uniqueCardKey}.
+ */
+interface CardStreamDiff
+{
+   /**
+    * Card identities present only in the comparison stream.
+    */
+   added: Set<string>;
+
+   /**
+    * Card identities present only in the baseline stream.
+    */
+   removed: Set<string>;
+
+   /**
+    * Quantity deltas for card identities present in both streams.
+    *
+    * Positive values indicate an increase.
+    * Negative values indicate a decrease.
+    */
+   changed: Map<string, number>;
+}
+
+/**
  * Options for {@link CardStream.asStream}.
  */
 interface CardStreamOptions
@@ -187,4 +306,5 @@ interface CardStreamOptions
 
 export {
    CardStream,
+   type CardStreamDiff,
    type CardStreamOptions };
