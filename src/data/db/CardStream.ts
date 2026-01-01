@@ -19,6 +19,7 @@ import type {
    CardDBMetadataGroups }     from '#types';
 
 import { ConfigCardFilter }   from "#types-data";
+import {logger} from "#util";
 
 /**
  * Provide a wrapper around a JSON Card DB with streaming access to cards.
@@ -81,7 +82,7 @@ class CardStream
     *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream({ filter, groups, isExportable, uniqueKeys, uniqueOnce }: CardStreamOptions = {}):
+   async *asStream({ filter, filterFn, groups, isExportable, uniqueKeys, uniqueOnce }: CardStreamOptions = {}):
     AsyncIterable<Card>
    {
       const pipeline = chain([
@@ -127,6 +128,8 @@ class CardStream
 
             if (uniqueKeysSeen) { uniqueKeysSeen.add(uniqueKey); }
          }
+
+         if (filterFn && !filterFn(card)) { continue; }
 
          yield card;
       }
@@ -233,6 +236,11 @@ class CardStream
             const key = uniqueCardKey(card);
             map.set(key, (map.get(key) ?? 0) + card.quantity);
          }
+         else if (options?.logger)
+         {
+            logger.warn(`Skipping card (${card.name}) from '${this.meta.name}' due to invalid quantity: ${
+             card.quantity}`);
+         }
       }
 
       return map;
@@ -308,6 +316,16 @@ interface CardStreamOptions
    filter?: ConfigCardFilter;
 
    /**
+    * Optional predicate applied to each card in the stream.
+    *
+    * When provided, the card is yielded only if this function returns `true`. This predicate is applied after all
+    * structured stream options (filters, group exclusions, identity selection) have been evaluated.
+    *
+    * Intended for advanced or ad-hoc use cases. Structured filters should be preferred where possible.
+    */
+   filterFn?: (card: Card) => boolean;
+
+   /**
     * Exclude cards belonging to specific metadata groups.
     *
     * A group is excluded by specifying `false`.
@@ -321,8 +339,13 @@ interface CardStreamOptions
 
    /**
     * When provided, only cards whose composite identity matches one of these keys are yielded.
+    *
+    * Any object implementing a `has(key: string): boolean` method may be used; IE `Set`, `Map`, or a custom lookup
+    * structure.
+    *
+    * Composite identity keys are created using {@link uniqueCardKey}.
     */
-   uniqueKeys?: Set<string>;
+   uniqueKeys?: { has(key: string): boolean };
 
    /**
     * When true, only the first card encountered for each unique key is yielded.
