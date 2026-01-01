@@ -35,7 +35,7 @@ program
 .action(commandConvertCsv);
 
 program
-.command('diff [inputA] [inputB]', 'Compare CardDBs')
+.command('diff [baseline] [comparison]', 'Compare CardDBs')
 .describe('Compares two CardDBs or two directories of sorted CardDBs and generates a spreadsheet report of added, removed, and changed cards.')
 .option('--output', 'Provide an output directory for generated diff report spreadsheets.')
 .example('diff ./carddb-a.json ./carddb-b.json --output ./diff-report')

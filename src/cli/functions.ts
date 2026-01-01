@@ -65,24 +65,24 @@ export async function commandConvertCsv(input: string, opts: Record<string, any>
 /**
  * Invokes `diff` with the given config.
  *
- * @param inputA - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ * @param baseline - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
  *
- * @param inputB - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ * @param comparison - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
  *
  * @param opts - CLI options.
  */
-export async function commandDiff(inputA: string, inputB: string, opts: Record<string, any>): Promise<void>
+export async function commandDiff(baseline: string, comparison: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(inputA) && !isDirectory(inputA)) { exit(`'inputA' option path is not a file or directory.`); }
+   if (!isFile(baseline) && !isDirectory(baseline)) { exit(`'inputA' option path is not a file or directory.`); }
 
-   if (!isFile(inputB) && !isDirectory(inputB)) { exit(`'inputB' option path is not a file or directory.`); }
+   if (!isFile(comparison) && !isDirectory(comparison)) { exit(`'inputB' option path is not a file or directory.`); }
 
-   if (isFile(inputA) && !isFile(inputB))
+   if (isFile(baseline) && !isFile(comparison))
    {
       exit(`'inputA' option is a file path, but 'inputB' is not a file path.`);
    }
 
-   if (isDirectory(inputA) && !isDirectory(inputB))
+   if (isDirectory(baseline) && !isDirectory(comparison))
    {
       exit(`'inputA' option is a directory path, but 'inputB' is not a directory path.`);
    }
@@ -95,8 +95,8 @@ export async function commandDiff(inputA: string, inputB: string, opts: Record<s
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigDiff = {
-      inputA,
-      inputB,
+      baseline,
+      comparison,
       output: opts.output
    };
 

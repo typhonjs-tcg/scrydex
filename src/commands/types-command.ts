@@ -39,12 +39,12 @@ interface ConfigDiff
    /**
     * Input card JSON DB file or directory.
     */
-   inputA: string;
+   baseline: string;
 
    /**
     * Input card JSON DB file or directory.
     */
-   inputB: string;
+   comparison: string;
 
    /**
     * Output file or directory path for diff report.
