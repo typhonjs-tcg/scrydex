@@ -4,20 +4,20 @@ import path                from 'node:path';
 import { isDirectory }     from '@typhonjs-utils/file-util';
 import Excel               from 'exceljs';
 
-import { Notes }           from './Notes';
-import { Theme }           from './Theme';
-
 import {
    CardFields,
-   PrintCardFields }       from '#data';
+   PrintCardFields }       from '#scrydex/data';
 
-import { capitalizeStr }   from '#util';
+import { capitalizeStr }   from '#scrydex/util';
+
+import { Notes }           from './Notes';
+import { Theme }           from './Theme';
 
 import type {
    Worksheet }             from 'exceljs';
 
 import type {
-   AbstractCollection }    from '#data';
+   AbstractCollection }    from '#scrydex/data';
 
 import type {
    ConfigSort }            from '#types-command';

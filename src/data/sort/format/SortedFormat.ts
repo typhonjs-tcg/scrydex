@@ -1,14 +1,14 @@
 import { AbstractCollection } from '../AbstractCollection';
 
-import {
-   isSupportedFormat,
-   SortedKind,
-   SortOrder }                from '#data';
+import { isSupportedFormat }  from '../../scryfall';
+
+import { SortedKind }         from '../category/SortedKind';
+
+import { SortOrder }          from '../SortOrder';
 
 import type {
-   CardDBMetadataBase, CardDBMetadataGroups,
-   GameFormat
-} from '#types';
+   CardDBMetadataBase,
+   GameFormat }               from '#types';
 
 import type {
    CardSorted,

@@ -2,8 +2,8 @@ import {
    isDirectory,
    isFile }                   from '@typhonjs-utils/file-util';
 
-import { CardDBStore }        from '#data';
-import { logger }             from '#util';
+import { CardDBStore }        from '#scrydex/data';
+import { logger }             from '#scrydex/util';
 
 import type { ConfigDiff }    from '#types-command';
 

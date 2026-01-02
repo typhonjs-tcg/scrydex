@@ -1,8 +1,7 @@
-import {
-   CardFields,
-   langCodeToName }  from '#data';
+import { CardFields }      from './CardFields';
+import { langCodeToName }  from '../../scryfall';
 
-import type { Card } from '#types';
+import type { Card }       from '#types';
 
 /**
  * Provides card fields as a unified string regardless of single / dual facedl.

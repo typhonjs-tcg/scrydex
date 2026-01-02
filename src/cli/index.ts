@@ -12,7 +12,7 @@ import {
 
 import { wrap }               from './wrap';
 
-import { supportedFormats }   from '#data';
+import { supportedFormats }   from '#scrydex/data';
 import { VERSION }            from '#version';
 
 const program = sade('scrydex')

@@ -5,9 +5,9 @@ import { streamArray }              from 'stream-json/streamers/StreamArray';
 
 import {
    excludedSetsRecentRarity,
-   excludedSetTypesRecentRarity }   from '#data';
+   excludedSetTypesRecentRarity }   from '#scrydex/data';
 
-import { logger }                   from '#util';
+import { logger }                   from '#scrydex/util';
 
 import type { Card }                from '#types';
 import type { ConfigConvert }       from '#types-command';

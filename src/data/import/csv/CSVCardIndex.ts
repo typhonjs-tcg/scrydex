@@ -3,7 +3,7 @@ import path                from 'node:path';
 
 import { parse }           from 'csv-parse';
 
-import { supportedLang }   from '#data';
+import { supportedLang }   from '../../scryfall';
 
 import type { CSVCard }    from '#types';
 

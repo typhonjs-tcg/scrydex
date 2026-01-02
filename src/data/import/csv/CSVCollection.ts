@@ -3,11 +3,10 @@ import {
    isDirectory,
    isFile }                      from '@typhonjs-utils/file-util';
 
-import {
-   CSVCardIndex,
-   isGroupKind }                 from '#data';
+import { CSVCardIndex }          from './CSVCardIndex';
+import { isGroupKind }           from '../../db';
 
-import { logger }                from '#util';
+import { logger }                from '#scrydex/util';
 
 import type {
    CardDBMetadataGroups,

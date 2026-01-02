@@ -7,14 +7,14 @@ import {
 
 import { stringify }          from 'csv-stringify';
 
-import { CardDBStore }        from '#data';
-import { logger }             from '#util';
+import { CardDBStore }        from '#scrydex/data';
+import { logger }             from '#scrydex/util';
 
 import {
    exportCards,
    exportDir }                from '../common';
 
-import type { CardStream }    from '#data';
+import type { CardStream }    from '#scrydex/data';
 import type { ConfigExport }  from '#types-command';
 
 /**

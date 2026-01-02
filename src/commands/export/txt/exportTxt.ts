@@ -6,15 +6,15 @@ import {
    isDirectory,
    isFile }                   from '@typhonjs-utils/file-util';
 
-import { CardDBStore }        from '#data';
+import { CardDBStore }        from '#scrydex/data';
 
-import { logger }             from '#util';
+import { logger }             from '#scrydex/util';
 
 import {
    exportCards,
    exportDir }                from '../common';
 
-import type { CardStream }    from '#data';
+import type { CardStream }    from '#scrydex/data';
 import type { ConfigExport }  from '#types-command';
 
 /**

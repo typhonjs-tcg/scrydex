@@ -1,14 +1,15 @@
 import { isObject }              from '@typhonjs-utils/object';
 
+import { CardFields }            from './CardFields';
+
 import {
-   CardFields,
    parseManaCostColors,
    parsePriceFilter,
    matchesPriceFilter,
    supportedFormats,
-   validLegality }               from '#data';
+   validLegality }               from '../../scryfall';
 
-import { logger }                from '#util';
+import { logger }                from '#scrydex/util';
 
 import type { LogLevel }         from '@typhonjs-utils/logger-color';
 

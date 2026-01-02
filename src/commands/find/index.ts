@@ -3,11 +3,11 @@ import { isFile }          from '@typhonjs-utils/file-util';
 import {
    CardDBStore,
    CardFilter,
-   SortOrder }             from '#data';
+   SortOrder }             from '#scrydex/data';
 
-import { logger }          from '#util';
+import { logger }          from '#scrydex/util';
 
-import type { CardStream } from '#data';
+import type { CardStream } from '#scrydex/data';
 import type { ConfigFind } from '#types-command';
 
 export async function find(config: ConfigFind)

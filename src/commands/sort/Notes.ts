@@ -1,6 +1,6 @@
 import {
    CardFields,
-   PrintCardFields } from '#data';
+   PrintCardFields } from '#scrydex/data';
 
 import { Card }      from '#types';
 

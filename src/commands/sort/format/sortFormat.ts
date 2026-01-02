@@ -10,11 +10,11 @@ import {
    sortByNameThenPrice,
    SortedFormat,
    SortOrder,
-   validLegality }            from '#data';
+   validLegality }            from '#scrydex/data';
 
-import { logger }             from '#util';
+import { logger }             from '#scrydex/util';
 
-import type { CardStream }    from '#data';
+import type { CardStream }    from '#scrydex/data';
 
 import type {
    Card,

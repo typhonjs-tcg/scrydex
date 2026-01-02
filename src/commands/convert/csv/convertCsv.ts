@@ -1,9 +1,9 @@
-import { CSVCollection }   from '#data';
+import { CSVCollection }   from '#scrydex/data';
 
-import { ScryfallDB }   from './ScryfallDB';
+import { ScryfallDB }      from './ScryfallDB';
 
 import type {
-   ConfigConvert }      from '#types-command';
+   ConfigConvert }         from '#types-command';
 
 /**
  * Converts the CSV collection output to compact Scryfall card data.

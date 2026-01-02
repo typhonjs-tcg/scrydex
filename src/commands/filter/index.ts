@@ -1,8 +1,8 @@
 import {
    CardDBStore,
-   CardFilter }               from '#data';
+   CardFilter }               from '#scrydex/data';
 
-import { logger }             from '#util';
+import { logger }             from '#scrydex/util';
 
 import type { Card }          from '#types';
 import type { ConfigFilter }  from '#types-command';

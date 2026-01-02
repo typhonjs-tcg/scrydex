@@ -1,5 +1,6 @@
-import { parsePrice }      from '#data';
-import { isFiniteNumber }  from '#util';
+import { parsePrice }      from '../scryfall';
+
+import { isFiniteNumber }  from '#scrydex/util';
 
 import type { Card }       from '#types';
 

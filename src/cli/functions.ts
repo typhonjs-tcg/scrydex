@@ -12,13 +12,13 @@ import {
    exportTxt,
    filter,
    find,
-   sortFormat }            from '#commands';
+   sortFormat }            from '#scrydex/commands';
 
 import {
    CardFilter,
-   parsePriceExpression }  from '#data';
+   parsePriceExpression }  from '#scrydex/data';
 
-import { logger }          from '#util';
+import { logger }          from '#scrydex/util';
 
 import type {
    ConfigConvert,

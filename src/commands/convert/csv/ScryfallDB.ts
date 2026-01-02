@@ -3,15 +3,14 @@ import chain                     from 'stream-chain';
 import parser                    from 'stream-json';
 import { streamArray }           from 'stream-json/streamers/StreamArray';
 
+import { CardDBStore }           from '#scrydex/data';
+import { logger }                from '#scrydex/util';
+
 import { RarityNormalization }   from '../RarityNormalization';
 import { ParseCardFaces }        from '../ParseCardFaces';
 import { ParseTypeLine }         from '../ParseTypeLine';
 
-import { CardDBStore }           from '#data';
-
-import { logger }                from '#util';
-
-import type { CSVCollection }    from '#data';
+import type { CSVCollection }    from '#scrydex/data';
 
 import type {
    Card,

@@ -1,4 +1,4 @@
-import { parseManaCostColors }   from '#data';
+import { parseManaCostColors }   from '../../scryfall';
 
 import type {
    Colors,

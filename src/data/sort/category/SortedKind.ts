@@ -1,12 +1,11 @@
-import {
-   sortByNameThenPrice,
-   SortOrder }          from '#data';
+import { sortByNameThenPrice }   from '../sortByNameThenPrice';
+import { SortOrder }             from '../SortOrder';
 
-import { logger }       from '#util';
+import { logger }                from '#scrydex/util';
 
 import type {
    CardSorted,
-   SortedCategories }   from '#types-data';
+   SortedCategories }            from '#types-data';
 
 export class SortedKind implements SortedCategories
 {

@@ -1,6 +1,6 @@
-import { isGroupKind }     from '#data';
+import { isGroupKind }     from '../db';
 
-import { capitalizeStr }   from '#util';
+import { capitalizeStr }   from '#scrydex/util';
 
 import type { ConfigSort } from '#types-command';
 

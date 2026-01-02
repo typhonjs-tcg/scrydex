@@ -3,12 +3,12 @@ import path                   from 'node:path';
 
 import { isDirectory }        from '@typhonjs-utils/file-util';
 
-import { CardDBStore }        from '#data';
+import { CardDBStore }        from '#scrydex/data';
 
 import { ExportSpreadsheet }  from './ExportSpreadsheet';
 
 import type {
-   AbstractCollection }       from '#data';
+   AbstractCollection }       from '#scrydex/data';
 
 import type {
    ConfigSort }               from '#types-command';
