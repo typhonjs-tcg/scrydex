@@ -74,7 +74,7 @@ export async function find(config: ConfigFind)
       {
          const gameFormat = collection.meta.type === 'sorted_format' ? collection.meta.format : void 0;
 
-         const isInDeck = collection.isCardGroup(card, 'deck') ? `; In Deck: ${card.filename}` : '';
+         const isInDeck = collection.isCardGroup(card, 'decks') ? `; In Deck: ${card.filename}` : '';
          const isInExternal = collection.isCardGroup(card, 'external') ? `; In External: ${card.filename}` : ''
 
          logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
