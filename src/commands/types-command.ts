@@ -1,5 +1,7 @@
-import type { ConfigCardFilter }       from '#scrydex/data/db/util';
-import type { PriceExpression }        from '#scrydex/data/scryfall';
+import type {
+   ConfigCardFilter,
+   PriceExpression }                   from '#scrydex/data/db/util';
+
 import type { CardDBMetadataGroups }   from '#types';
 
 /**

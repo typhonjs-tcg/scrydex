@@ -1,29 +1,29 @@
-import fs                     from 'node:fs';
-import path                   from 'node:path';
+import fs                           from 'node:fs';
+import path                         from 'node:path';
 
-import { ExportCollection }   from '../ExportCollection';
+import { ExportCollection }         from '../ExportCollection';
 
-import { CardDBStore }        from '#scrydex/data/db';
+import { CardDBStore }              from '#scrydex/data/db';
+import { matchesPriceExpression }   from '#scrydex/data/db/util';
 
 import {
    isSupportedFormat,
-   matchesPriceExpression,
-   validLegality }            from '#scrydex/data/scryfall';
+   validLegality }                  from '#scrydex/data/scryfall';
 
 import {
    sortByNameThenPrice,
    SortedFormat,
-   SortOrder }                from '#scrydex/data/sort';
+   SortOrder }                      from '#scrydex/data/sort';
 
-import { logger }             from '#scrydex/util';
+import { logger }                   from '#scrydex/util';
 
-import type { ConfigCmd }     from '#scrydex/commands';
-import type { CardStream }    from '#scrydex/data/db';
+import type { ConfigCmd }           from '#scrydex/commands';
+import type { CardStream }          from '#scrydex/data/db';
 
 import type {
    Card,
    CardDBMetadataBase,
-   GameFormat}                from '#types';
+   GameFormat }                     from '#types';
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.

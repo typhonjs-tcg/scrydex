@@ -14,12 +14,14 @@ import {
    find,
    sortFormat }                  from '#scrydex/commands';
 
-import { CardFilter }            from '#scrydex/data/db/util';
-import { parsePriceExpression }  from '#scrydex/data/scryfall';
+import {
+   CardFilter,
+   parsePriceExpression }        from '#scrydex/data/db/util';
+
 import { logger }                from '#scrydex/util';
 
 import type { ConfigCmd }        from '#scrydex/commands';
-import type { PriceExpression }  from '#scrydex/data/scryfall';
+import type { PriceExpression }  from '#scrydex/data/db/util';
 
 /**
  * Invokes `convert` with the given config.

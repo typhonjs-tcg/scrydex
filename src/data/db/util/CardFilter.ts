@@ -1,9 +1,11 @@
 import { isObject }              from '@typhonjs-utils/object';
 
 import {
-   parseManaCostColors,
    parsePriceFilter,
-   matchesPriceFilter,
+   matchesPriceFilter }          from '#scrydex/data/db/util';
+
+import {
+   parseManaCostColors,
    supportedFormats,
    validLegality }               from '#scrydex/data/scryfall';
 
