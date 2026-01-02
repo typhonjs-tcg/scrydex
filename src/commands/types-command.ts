@@ -1,9 +1,6 @@
-import type {
-   CardDBMetadataGroups }  from '#types';
-
-import type {
-   ConfigCardFilter,
-   PriceExpression }       from '#types-data';
+import type { PriceExpression }        from '#scrydex/data/scryfall';
+import type { CardDBMetadataGroups }   from '#types';
+import type { ConfigCardFilter }       from '#types-data';
 
 /**
  * Config object for the `convert` command.

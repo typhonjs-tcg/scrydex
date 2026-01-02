@@ -1,9 +1,9 @@
-import fs                  from 'node:fs';
-import path                from 'node:path';
+import fs                        from 'node:fs';
+import path                      from 'node:path';
 
 import {
    isDirectory,
-   isFile }                from '@typhonjs-utils/file-util';
+   isFile }                      from '@typhonjs-utils/file-util';
 
 import {
    convertCsv,
@@ -12,17 +12,16 @@ import {
    exportTxt,
    filter,
    find,
-   sortFormat }            from '#scrydex/commands';
+   sortFormat }                  from '#scrydex/commands';
 
-import {
-   CardFilter,
-   parsePriceExpression }  from '#scrydex/data';
+import { CardFilter }            from '#scrydex/data';
 
-import { logger }          from '#scrydex/util';
+import { parsePriceExpression }  from '#scrydex/data/scryfall';
 
-import type { ConfigCmd }  from '#scrydex/commands';
+import { logger }                from '#scrydex/util';
 
-import { PriceExpression } from '#types-data';
+import type { ConfigCmd }        from '#scrydex/commands';
+import type { PriceExpression }  from '#scrydex/data/scryfall';
 
 /**
  * Invokes `convert` with the given config.

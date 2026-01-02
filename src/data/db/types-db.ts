@@ -1,5 +1,4 @@
-import type {
-   PriceFilter }              from '#types-data';
+import type { PriceFilter }   from '#scrydex/data/scryfall';
 
 /**
  * Provides the configuration object for {@link CardFilter.filter}.

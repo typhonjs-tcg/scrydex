@@ -5,7 +5,7 @@ import { streamArray }              from 'stream-json/streamers/StreamArray';
 
 import {
    excludedSetsRecentRarity,
-   excludedSetTypesRecentRarity }   from '#scrydex/data';
+   excludedSetTypesRecentRarity }   from '#scrydex/data/scryfall';
 
 import { logger }                   from '#scrydex/util';
 

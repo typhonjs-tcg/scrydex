@@ -3,11 +3,12 @@ import path                   from 'node:path';
 
 import { ExportCollection }   from '../ExportCollection';
 
+import { CardDBStore }        from '#scrydex/data';
+
 import {
-   CardDBStore,
    isSupportedFormat,
    matchesPriceExpression,
-   validLegality }            from '#scrydex/data';
+   validLegality }            from '#scrydex/data/scryfall';
 
 import {
    sortByNameThenPrice,

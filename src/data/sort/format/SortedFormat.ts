@@ -1,4 +1,4 @@
-import { isSupportedFormat }  from '#scrydex/data';
+import { isSupportedFormat }  from '#scrydex/data/scryfall';
 
 import { AbstractCollection } from '../AbstractCollection';
 import { SortedKind }         from '../category/SortedKind';
