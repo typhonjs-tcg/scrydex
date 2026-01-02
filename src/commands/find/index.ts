@@ -7,10 +7,10 @@ import {
 
 import { logger }          from '#scrydex/util';
 
+import type { ConfigCmd }  from '#scrydex/commands';
 import type { CardStream } from '#scrydex/data';
-import type { ConfigFind } from '#types-command';
 
-export async function find(config: ConfigFind)
+export async function find(config: ConfigCmd.Find)
 {
    let collections: CardStream[];
 

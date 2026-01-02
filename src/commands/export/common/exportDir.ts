@@ -1,11 +1,10 @@
-import path                   from 'node:path';
+import path                from 'node:path';
 
-import { CardDBStore }        from '#scrydex/data';
-import { logger }             from '#scrydex/util';
+import { CardDBStore }     from '#scrydex/data';
+import { logger }          from '#scrydex/util';
 
-import type { CardStream }    from '#scrydex/data';
-
-import type { ConfigExport }  from '#types-command';
+import type { ConfigCmd }  from '#scrydex/commands';
+import type { CardStream } from '#scrydex/data';
 
 /**
  * Defines the DB export implementation.
@@ -25,7 +24,7 @@ export type ExportFn = ({ coalesce, db, output }: { coalesce: boolean, db: CardS
  * @param options.extension - Export file extension.
  */
 export async function exportDir({ config, exportFn, extension }:
- { config: ConfigExport, exportFn: ExportFn, extension: string }): Promise<void>
+ { config: ConfigCmd.Export, exportFn: ExportFn, extension: string }): Promise<void>
 {
    const cards = await CardDBStore.loadAll({
       dirpath: config.input,

@@ -2,7 +2,7 @@ import { isGroupKind }     from '../db';
 
 import { capitalizeStr }   from '#scrydex/util';
 
-import type { ConfigSort } from '#types-command';
+import type { ConfigCmd }  from '#scrydex/commands';
 
 import type {
    Card,
@@ -112,7 +112,7 @@ export abstract class AbstractCollection
     *
     * @param config -
     */
-   calculateMarked(config: ConfigSort): CardSorted[]
+   calculateMarked(config: ConfigCmd.Sort): CardSorted[]
    {
       return this.#cards.length ? this.#calculateMarked(config) : [];
    }
@@ -177,7 +177,7 @@ export abstract class AbstractCollection
     *
     * @returns Any cards that were marked for merging.
     */
-   #calculateMarked(config: ConfigSort): CardSorted[]
+   #calculateMarked(config: ConfigCmd.Sort): CardSorted[]
    {
       /**
        * Collects any cards were marked.

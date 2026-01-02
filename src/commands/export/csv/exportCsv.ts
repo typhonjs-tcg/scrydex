@@ -1,28 +1,28 @@
-import fs                     from 'node:fs';
-import path                   from 'node:path';
+import fs                  from 'node:fs';
+import path                from 'node:path';
 
 import {
    isDirectory,
-   isFile }                   from '@typhonjs-utils/file-util';
+   isFile }                from '@typhonjs-utils/file-util';
 
-import { stringify }          from 'csv-stringify';
+import { stringify }       from 'csv-stringify';
 
-import { CardDBStore }        from '#scrydex/data';
-import { logger }             from '#scrydex/util';
+import { CardDBStore }     from '#scrydex/data';
+import { logger }          from '#scrydex/util';
 
 import {
    exportCards,
-   exportDir }                from '../common';
+   exportDir }             from '../common';
 
-import type { CardStream }    from '#scrydex/data';
-import type { ConfigExport }  from '#types-command';
+import type { ConfigCmd }  from '#scrydex/commands';
+import type { CardStream } from '#scrydex/data';
 
 /**
  * Exports a single Scrydex CardDB to CSV or all sorted CardDBs found in a directory.
  *
  * @param config - Config options.
  */
-export async function exportCsv(config: ConfigExport): Promise<void>
+export async function exportCsv(config: ConfigCmd.Export): Promise<void>
 {
    if (isFile(config.input))
    {

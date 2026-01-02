@@ -1,18 +1,18 @@
 import {
    isDirectory,
-   isFile }                   from '@typhonjs-utils/file-util';
+   isFile }                from '@typhonjs-utils/file-util';
 
-import { CardDBStore }        from '#scrydex/data';
-import { logger }             from '#scrydex/util';
+import { CardDBStore }     from '#scrydex/data';
+import { logger }          from '#scrydex/util';
 
-import type { ConfigDiff }    from '#types-command';
+import type { ConfigCmd }  from '#scrydex/commands';
 
 /**
  * Exports a single Scrydex CardDB to CSV or all sorted CardDBs found in a directory.
  *
  * @param config - Config options.
  */
-export async function diff(config: ConfigDiff): Promise<void>
+export async function diff(config: ConfigCmd.Diff): Promise<void>
 {
    if (isDirectory(config.baseline) && isDirectory(config.comparison))
    {

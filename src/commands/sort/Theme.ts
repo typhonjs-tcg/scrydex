@@ -3,11 +3,10 @@ import type {
    Fill,
    Font }                  from 'exceljs';
 
+import type { ConfigCmd }  from '#scrydex/commands';
+
 import {
    CardDBMetadataGroups }  from "#types";
-
-import type {
-   ConfigSort }            from '#types-command';
 
 export class Theme
 {
@@ -16,7 +15,7 @@ export class Theme
     *
     * @returns Theme data.
     */
-   static get(config: ConfigSort): ThemeData
+   static get(config: ConfigCmd.Sort): ThemeData
    {
       switch (config.theme)
       {

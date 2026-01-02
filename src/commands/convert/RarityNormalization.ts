@@ -9,8 +9,8 @@ import {
 
 import { logger }                   from '#scrydex/util';
 
+import type { ConfigCmd }           from '#scrydex/commands';
 import type { Card }                from '#types';
-import type { ConfigConvert }       from '#types-command';
 import type { ImportCollection }    from '#types-data';
 
 /**
@@ -102,7 +102,7 @@ export class RarityNormalization
     *
     * @param collection -
     */
-   async scanForOracleID(config: ConfigConvert, collection: ImportCollection)
+   async scanForOracleID(config: ConfigCmd.Convert, collection: ImportCollection)
    {
       logger.info(
        `Scanning Scryfall database to identify oracle IDs used by cards in the collection - this may take a moment...`);

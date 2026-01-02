@@ -8,11 +8,11 @@ import { isGroupKind }           from '../../db';
 
 import { logger }                from '#scrydex/util';
 
+import type { ConfigCmd }        from '#scrydex/commands';
+
 import type {
    CardDBMetadataGroups,
    CSVCard }                     from '#types';
-
-import type { ConfigConvert }    from '#types-command';
 
 import type { ImportCollection } from '#types-data';
 
@@ -34,7 +34,7 @@ export class CSVCollection implements ImportCollection
     *
     * @returns A new collection of all CSV card data.
     */
-   static async load(config: ConfigConvert): Promise<CSVCollection>
+   static async load(config: ConfigCmd.Convert): Promise<CSVCollection>
    {
       const collection = new CSVCollection();
 

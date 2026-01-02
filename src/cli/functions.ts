@@ -20,13 +20,7 @@ import {
 
 import { logger }          from '#scrydex/util';
 
-import type {
-   ConfigConvert,
-   ConfigDiff,
-   ConfigExport,
-   ConfigFilter,
-   ConfigFind,
-   ConfigSortFormat }      from '#types-command';
+import type { ConfigCmd }  from '#scrydex/commands';
 
 import { PriceExpression } from '#types-data';
 
@@ -94,7 +88,7 @@ export async function commandDiff(baseline: string, comparison: string, opts: Re
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
-   const config: ConfigDiff = {
+   const config: ConfigCmd.Diff = {
       baseline,
       comparison,
       output: opts.output
@@ -149,7 +143,7 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
-   const config: ConfigExport = {
+   const config: ConfigCmd.Export = {
       coalesce: typeof opts['no-coalesce'] !== 'boolean',
       input,
       output: opts.output
@@ -204,7 +198,7 @@ export async function commandExportTxt(input: string, opts: Record<string, any>)
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
-   const config: ConfigExport = {
+   const config: ConfigCmd.Export = {
       coalesce: typeof opts['no-coalesce'] !== 'boolean',
       input,
       output: opts.output
@@ -261,7 +255,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
       exit(`Aborting as no filtering options provided.`);
    }
 
-   const config: ConfigFilter = {
+   const config: ConfigCmd.Filter = {
       input,
       output: opts.output,
       filter: filterOptions
@@ -307,7 +301,7 @@ export async function commandFind(input: string, query: string, opts: Record<str
    // A string indicates validation error is detected.
    if (typeof filter === 'string') { exit(filter); }
 
-   const config: ConfigFind = {
+   const config: ConfigCmd.Find = {
       input,
       filter
    };
@@ -397,7 +391,7 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
 
    const theme = opts.theme === 'dark' ? 'dark' : 'light';
 
-   const config: ConfigSortFormat = {
+   const config: ConfigCmd.SortFormat = {
       input,
       output: opts.output,
       clean: opts.clean ?? false,
@@ -451,7 +445,7 @@ function exit(message: string): never
  *
  * @return ConfigConvert object.
  */
-export function validateConvert(input: string, opts: Record<string, any>): ConfigConvert
+export function validateConvert(input: string, opts: Record<string, any>): ConfigCmd.Convert
 {
    if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }

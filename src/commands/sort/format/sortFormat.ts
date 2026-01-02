@@ -14,6 +14,7 @@ import {
 
 import { logger }             from '#scrydex/util';
 
+import type { ConfigCmd }     from '#scrydex/commands';
 import type { CardStream }    from '#scrydex/data';
 
 import type {
@@ -21,15 +22,12 @@ import type {
    CardDBMetadataBase,
    GameFormat}                from '#types';
 
-import type {
-   ConfigSortFormat }         from '#types-command';
-
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
  *
  * @param config - Config options.
  */
-export async function sortFormat(config: ConfigSortFormat): Promise<void>
+export async function sortFormat(config: ConfigCmd.SortFormat): Promise<void>
 {
    logger.info(`Sorting Scrydex CardDB: ${config.input}`);
    logger.info(`Formats: ${config.formats.join(', ')}`);
@@ -49,7 +47,7 @@ export async function sortFormat(config: ConfigSortFormat): Promise<void>
  *
  * @param config -
  */
-async function cleanOutputDir(config: ConfigSortFormat): Promise<void>
+async function cleanOutputDir(config: ConfigCmd.SortFormat): Promise<void>
 {
    logger.verbose('Removing existing sorted output before regenerating.')
 
@@ -73,7 +71,7 @@ async function cleanOutputDir(config: ConfigSortFormat): Promise<void>
  *
  * @returns All game format sorted collections.
  */
-async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
+async function generate(config: ConfigCmd.SortFormat): Promise<SortedFormat[]>
 {
    const db = await CardDBStore.load({ filepath: config.input });
 
@@ -137,7 +135,7 @@ async function generate(config: ConfigSortFormat): Promise<SortedFormat[]>
  *
  * @returns The SortedFormat instance.
  */
-function createSortedFormat(config: ConfigSortFormat, options:
+function createSortedFormat(config: ConfigCmd.SortFormat, options:
  { cards: Card[]; name: string; sourceMeta: CardDBMetadataBase, dirpath: string, format?: GameFormat }): SortedFormat
 {
    sortByNameThenPrice(options.cards, 'desc');
@@ -171,7 +169,7 @@ function createSortedFormat(config: ConfigSortFormat, options:
  *
  * @param db -
  */
-async function presortCards(config: ConfigSortFormat, db: CardStream): Promise<Map<string, Card[]>>
+async function presortCards(config: ConfigCmd.SortFormat, db: CardStream): Promise<Map<string, Card[]>>
 {
    const presortFormat: Map<string, Card[]> = new Map(config.formats.map((entry) => [entry, []]));
 
@@ -214,7 +212,7 @@ async function presortCards(config: ConfigSortFormat, db: CardStream): Promise<M
  *
  * @returns Cards split by low and high value.
  */
-function splitHighValue(config: ConfigSortFormat, cards: Card[]): { cardsLow: Card[], cardsHigh: Card[] }
+function splitHighValue(config: ConfigCmd.SortFormat, cards: Card[]): { cardsLow: Card[], cardsHigh: Card[] }
 {
    if (!config.highValue) { return { cardsLow: cards, cardsHigh: [] }; }
 

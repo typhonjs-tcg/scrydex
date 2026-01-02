@@ -1,13 +1,13 @@
 import {
    CardDBStore,
-   CardFilter }               from '#scrydex/data';
+   CardFilter }            from '#scrydex/data';
 
-import { logger }             from '#scrydex/util';
+import { logger }          from '#scrydex/util';
 
-import type { Card }          from '#types';
-import type { ConfigFilter }  from '#types-command';
+import type { ConfigCmd }  from '#scrydex/commands';
+import type { Card }       from '#types';
 
-export async function filter(config: ConfigFilter): Promise<void>
+export async function filter(config: ConfigCmd.Filter): Promise<void>
 {
    logger.info(`Filtering Scrydex CardDB: ${config.input}`);
 

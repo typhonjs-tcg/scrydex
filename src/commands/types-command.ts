@@ -8,7 +8,7 @@ import type {
 /**
  * Config object for the `convert` command.
  */
-interface ConfigConvert
+interface Convert
 {
    /**
     * File path to Scryfall JSON DB.
@@ -34,7 +34,7 @@ interface ConfigConvert
 /**
  * Config object for the `diff` command.
  */
-interface ConfigDiff
+interface Diff
 {
    /**
     * Input card JSON DB file or directory.
@@ -55,7 +55,7 @@ interface ConfigDiff
 /**
  * Config object for all `export` commands.
  */
-interface ConfigExport
+interface Export
 {
    /**
     * When true, combine identical card printings.
@@ -76,7 +76,7 @@ interface ConfigExport
 /**
  * Config object for the `filter` command.
  */
-interface ConfigFilter
+interface Filter
 {
    /**
     * Config for {@link CardFilter}.
@@ -97,7 +97,7 @@ interface ConfigFilter
 /**
  * Config object for the `find` command.
  */
-interface ConfigFind
+interface Find
 {
    /**
     * File or directory path to load.
@@ -113,7 +113,7 @@ interface ConfigFind
 /**
  * Base config object for all `sort` commands.
  */
-interface ConfigSort
+interface Sort
 {
    /**
     * When true, remove existing sorted output before regenerating.
@@ -149,7 +149,7 @@ interface ConfigSort
 /**
  * Config object for the `sortFormat` command.
  */
-interface ConfigSortFormat extends ConfigSort
+interface SortFormat extends Sort
 {
    /**
     * Scryfall game formats and sort order.
@@ -162,11 +162,18 @@ interface ConfigSortFormat extends ConfigSort
    highValue: PriceExpression | null;
 }
 
-export {
-   type ConfigConvert,
-   type ConfigDiff,
-   type ConfigExport,
-   type ConfigFilter,
-   type ConfigFind,
-   type ConfigSort,
-   type ConfigSortFormat };
+/**
+ * Provides all the configuration objects for all commands from `@typhonjs-tcg/scrydex/commands`.
+ */
+declare namespace ConfigCmd
+{
+   export { Convert };
+   export { Diff };
+   export { Export };
+   export { Filter };
+   export { Find };
+   export { Sort };
+   export { SortFormat };
+}
+
+export { type ConfigCmd };

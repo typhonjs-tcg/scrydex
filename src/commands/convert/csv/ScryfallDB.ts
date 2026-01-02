@@ -16,7 +16,7 @@ import type {
    Card,
    CSVCard }                     from '#types';
 
-import type { ConfigConvert }    from '#types-command';
+import type { ConfigCmd }        from '#scrydex/commands';
 
 /**
  * Provides thorough resolution and normalization of CSV collection cards with multiple streaming passes over the
@@ -29,7 +29,7 @@ export class ScryfallDB
     *
     * @param collection -
     */
-   static async exportCollection(config: ConfigConvert, collection: CSVCollection): Promise<void>
+   static async exportCollection(config: ConfigCmd.Convert, collection: CSVCollection): Promise<void>
    {
       const outputDB: Card[] = [];
 

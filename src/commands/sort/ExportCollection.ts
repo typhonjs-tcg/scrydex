@@ -7,11 +7,10 @@ import { CardDBStore }        from '#scrydex/data';
 
 import { ExportSpreadsheet }  from './ExportSpreadsheet';
 
-import type {
-   AbstractCollection }       from '#scrydex/data';
+import type { ConfigCmd }     from '#scrydex/commands';
 
 import type {
-   ConfigSort }               from '#types-command';
+   AbstractCollection }       from '#scrydex/data';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.
@@ -20,7 +19,7 @@ export abstract class ExportCollection
 {
    private constructor() {}
 
-   static async generate(config: ConfigSort, collections: Iterable<AbstractCollection>): Promise<void>
+   static async generate(config: ConfigCmd.Sort, collections: Iterable<AbstractCollection>): Promise<void>
    {
       for (const collection of collections)
       {

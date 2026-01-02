@@ -16,11 +16,10 @@ import { Theme }           from './Theme';
 import type {
    Worksheet }             from 'exceljs';
 
-import type {
-   AbstractCollection }    from '#scrydex/data';
+import type { ConfigCmd }  from '#scrydex/commands';
 
 import type {
-   ConfigSort }            from '#types-command';
+   AbstractCollection }    from '#scrydex/data';
 
 import type {
    SortedCategories }      from '#types-data';
@@ -50,7 +49,7 @@ export abstract class ExportSpreadsheet
     *
     * @param options.collection -
     */
-   static async writeCollection({ config, collection }: { config: ConfigSort, collection: AbstractCollection }):
+   static async writeCollection({ config, collection }: { config: ConfigCmd.Sort, collection: AbstractCollection }):
       Promise<void>
    {
       // Store spreadsheets in format subdirectories.
@@ -79,7 +78,7 @@ export abstract class ExportSpreadsheet
     *
     * @param collectionDirPath -
     */
-   static async #exportSpreadsheet(config: ConfigSort, collection: AbstractCollection, categoriesName: string,
+   static async #exportSpreadsheet(config: ConfigCmd.Sort, collection: AbstractCollection, categoriesName: string,
     categories: SortedCategories, collectionDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
