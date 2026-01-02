@@ -10,8 +10,8 @@ import {
 import { logger }                   from '#scrydex/util';
 
 import type { ConfigCmd }           from '#scrydex/commands';
+import type { ImportCollection }    from '#scrydex/data/import';
 import type { Card }                from '#types';
-import type { ImportCollection }    from '#types-data';
 
 /**
  * Computes normalized card rarity keyed by `oracle_id`.

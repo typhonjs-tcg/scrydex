@@ -1,9 +1,8 @@
 import fs                  from 'node:fs';
 import path                from 'node:path';
-
 import { parse }           from 'csv-parse';
 
-import { supportedLang }   from '../../scryfall';
+import { supportedLang }   from '#scrydex/data/scryfall';
 
 import type { CSVCard }    from '#types';
 

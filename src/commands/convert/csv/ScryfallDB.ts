@@ -10,7 +10,7 @@ import { RarityNormalization }   from '../RarityNormalization';
 import { ParseCardFaces }        from '../ParseCardFaces';
 import { ParseTypeLine }         from '../ParseTypeLine';
 
-import type { CSVCollection }    from '#scrydex/data';
+import type { CSVCollection }    from '#scrydex/data/import';
 
 import type {
    Card,

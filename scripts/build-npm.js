@@ -65,6 +65,22 @@ export default () =>
          ]
       },
       {
+         input: 'src/data/import/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/data/import/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(s_IMPORTS_OPTIONS),
+            resolve(),
+            typescript({ include: ['src/data/import/**/*'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
          input: 'src/data/scryfall/index.ts',
          external: s_EXTERNAL,
          output: [{

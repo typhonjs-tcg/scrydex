@@ -3,10 +3,10 @@ import {
    isDirectory,
    isFile }                      from '@typhonjs-utils/file-util';
 
-import { CSVCardIndex }          from './CSVCardIndex';
-import { isGroupKind }           from '../../db';
-
+import { isGroupKind }           from '#scrydex/data';
 import { logger }                from '#scrydex/util';
+
+import { CSVCardIndex }          from './CSVCardIndex';
 
 import type { ConfigCmd }        from '#scrydex/commands';
 
@@ -14,7 +14,7 @@ import type {
    CardDBMetadataGroups,
    CSVCard }                     from '#types';
 
-import type { ImportCollection } from '#types-data';
+import type { ImportCollection } from '#scrydex/data/import';
 
 export class CSVCollection implements ImportCollection
 {
