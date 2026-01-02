@@ -5,7 +5,7 @@ import { logger }                from '#scrydex/util';
 
 import type {
    CardSorted,
-   SortedCategories }            from '#types-data';
+   SortedCategories }            from '#scrydex/data/sort';
 
 export class SortedKind implements SortedCategories
 {

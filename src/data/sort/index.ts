@@ -3,3 +3,5 @@ export * from './format/SortedFormat';
 export * from './AbstractCollection';
 export * from './sortByNameThenPrice';
 export * from './SortOrder';
+
+export * from './types-sort';

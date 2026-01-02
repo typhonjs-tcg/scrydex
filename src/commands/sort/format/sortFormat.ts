@@ -7,10 +7,12 @@ import {
    CardDBStore,
    isSupportedFormat,
    matchesPriceExpression,
+   validLegality }            from '#scrydex/data';
+
+import {
    sortByNameThenPrice,
    SortedFormat,
-   SortOrder,
-   validLegality }            from '#scrydex/data';
+   SortOrder }                from '#scrydex/data/sort';
 
 import { logger }             from '#scrydex/util';
 

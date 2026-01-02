@@ -1,10 +1,10 @@
-import { CardFields }      from '../db';
+import { CardFields }      from '#scrydex/data';
 
 import type {
    Card,
    GameFormat }            from '#types';
 
-import type { CardSorted } from '#types-data';
+import type { CardSorted } from '#scrydex/data/sort';
 
 /**
  * Provides card data related to sort order for rarity and card category.

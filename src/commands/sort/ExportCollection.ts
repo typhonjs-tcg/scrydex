@@ -10,7 +10,7 @@ import { ExportSpreadsheet }  from './ExportSpreadsheet';
 import type { ConfigCmd }     from '#scrydex/commands';
 
 import type {
-   AbstractCollection }       from '#scrydex/data';
+   AbstractCollection }       from '#scrydex/data/sort';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.

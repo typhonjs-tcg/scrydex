@@ -1,5 +1,4 @@
-import { isGroupKind }     from '../db';
-
+import { isGroupKind }     from '#scrydex/data';
 import { capitalizeStr }   from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';
@@ -11,7 +10,7 @@ import type {
 
 import type {
    CardSorted,
-   SortedCategories }      from '#types-data';
+   SortedCategories }      from '#scrydex/data/sort';
 
 /**
  * Base class for a sorted collection of cards by categories.

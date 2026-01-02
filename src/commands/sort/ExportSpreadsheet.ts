@@ -19,10 +19,8 @@ import type {
 import type { ConfigCmd }  from '#scrydex/commands';
 
 import type {
-   AbstractCollection }    from '#scrydex/data';
-
-import type {
-   SortedCategories }      from '#types-data';
+   AbstractCollection,
+   SortedCategories }      from '#scrydex/data/sort';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.

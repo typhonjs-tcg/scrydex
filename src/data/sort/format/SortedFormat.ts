@@ -1,9 +1,7 @@
+import { isSupportedFormat }  from '#scrydex/data';
+
 import { AbstractCollection } from '../AbstractCollection';
-
-import { isSupportedFormat }  from '../../scryfall';
-
 import { SortedKind }         from '../category/SortedKind';
-
 import { SortOrder }          from '../SortOrder';
 
 import type {
@@ -12,7 +10,7 @@ import type {
 
 import type {
    CardSorted,
-   SortedCategories }         from '#types-data';
+   SortedCategories }         from '#scrydex/data/sort';
 
 export class SortedFormat extends AbstractCollection
 {
