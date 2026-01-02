@@ -1,6 +1,6 @@
 import fs                        from 'node:fs';
-import chain                     from 'stream-chain';
-import parser                    from 'stream-json';
+import { chain }                 from 'stream-chain';
+import { parser }                from 'stream-json';
 import { streamArray }           from 'stream-json/streamers/StreamArray';
 
 import { CardDBStore }           from '#scrydex/data';
