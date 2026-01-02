@@ -14,10 +14,8 @@ import {
    find,
    sortFormat }                  from '#scrydex/commands';
 
-import { CardFilter }            from '#scrydex/data';
-
+import { CardFilter }            from '#scrydex/data/db/util';
 import { parsePriceExpression }  from '#scrydex/data/scryfall';
-
 import { logger }                from '#scrydex/util';
 
 import type { ConfigCmd }        from '#scrydex/commands';

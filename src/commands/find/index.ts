@@ -1,9 +1,7 @@
 import { isFile }          from '@typhonjs-utils/file-util';
 
-import {
-   CardDBStore,
-   CardFilter }            from '#scrydex/data';
-
+import { CardDBStore }     from '#scrydex/data';
+import { CardFilter }      from '#scrydex/data/db/util';
 import { SortOrder }       from '#scrydex/data/sort';
 import { logger }          from '#scrydex/util';
 

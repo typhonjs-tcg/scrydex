@@ -1,4 +1,4 @@
-import { CardFields }      from '#scrydex/data';
+import { CardFields }      from '#scrydex/data/db/util';
 
 import type {
    Card,

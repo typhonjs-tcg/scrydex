@@ -1,5 +1,6 @@
+import { langCodeToName }  from '#scrydex/data/scryfall';
+
 import { CardFields }      from './CardFields';
-import { langCodeToName }  from '../../scryfall';
 
 import type { Card }       from '#types';
 

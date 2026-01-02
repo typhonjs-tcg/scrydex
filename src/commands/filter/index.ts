@@ -1,7 +1,5 @@
-import {
-   CardDBStore,
-   CardFilter }            from '#scrydex/data';
-
+import { CardDBStore }     from '#scrydex/data';
+import { CardFilter }      from '#scrydex/data/db/util';
 import { logger }          from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';

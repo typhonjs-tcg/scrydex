@@ -6,7 +6,7 @@ import Excel               from 'exceljs';
 
 import {
    CardFields,
-   PrintCardFields }       from '#scrydex/data';
+   PrintCardFields }       from '#scrydex/data/db/util';
 
 import { capitalizeStr }   from '#scrydex/util';
 

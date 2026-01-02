@@ -1,4 +1,4 @@
-import { uniqueCardKey }   from '#scrydex/data';
+import { uniqueCardKey }   from '#scrydex/data/db/util';
 import { logger }          from '#scrydex/util';
 
 import type { CardStream } from '#scrydex/data';

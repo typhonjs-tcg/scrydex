@@ -1,4 +1,4 @@
-import { isGroupKind }     from '#scrydex/data';
+import { isGroupKind }     from '#scrydex/data/db/util';
 import { capitalizeStr }   from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';

@@ -3,7 +3,7 @@ import {
    isDirectory,
    isFile }                      from '@typhonjs-utils/file-util';
 
-import { isGroupKind }           from '#scrydex/data';
+import { isGroupKind }           from '#scrydex/data/db/util';
 import { logger }                from '#scrydex/util';
 
 import { CSVCardIndex }          from './CSVCardIndex';
