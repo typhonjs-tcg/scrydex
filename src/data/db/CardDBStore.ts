@@ -15,10 +15,10 @@ import { parser }             from 'stream-json';
 import { pick }               from 'stream-json/filters/Pick';
 import { streamObject }       from 'stream-json/streamers/StreamObject';
 
-import { CardStream }         from '../db/CardStream';
-import { execTime }           from '../db/util/execTime';
+import { execTime }           from '#scrydex/data/db/util';
+import { supportedFormats }   from '#scrydex/data/scryfall';
 
-import { supportedFormats }   from '../scryfall';
+import { CardStream }         from './CardStream';
 
 import { VERSION }            from '#version';
 

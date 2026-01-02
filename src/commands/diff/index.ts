@@ -2,7 +2,7 @@ import {
    isDirectory,
    isFile }                from '@typhonjs-utils/file-util';
 
-import { CardDBStore }     from '#scrydex/data';
+import { CardDBStore }     from '#scrydex/data/db';
 import { logger }          from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';

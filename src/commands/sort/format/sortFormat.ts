@@ -3,7 +3,7 @@ import path                   from 'node:path';
 
 import { ExportCollection }   from '../ExportCollection';
 
-import { CardDBStore }        from '#scrydex/data';
+import { CardDBStore }        from '#scrydex/data/db';
 
 import {
    isSupportedFormat,
@@ -18,7 +18,7 @@ import {
 import { logger }             from '#scrydex/util';
 
 import type { ConfigCmd }     from '#scrydex/commands';
-import type { CardStream }    from '#scrydex/data';
+import type { CardStream }    from '#scrydex/data/db';
 
 import type {
    Card,

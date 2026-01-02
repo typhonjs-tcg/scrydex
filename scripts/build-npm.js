@@ -49,10 +49,10 @@ export default () =>
          ]
       },
       {
-         input: 'src/data/index.ts',
+         input: 'src/data/db/index.ts',
          external: s_EXTERNAL,
          output: [{
-            file: `./dist-npm/data/index.js`,
+            file: `./dist-npm/data/db/index.js`,
             format: 'es',
             generatedCode: { constBindings: true },
             sourcemap: s_SOURCEMAP,
@@ -60,7 +60,7 @@ export default () =>
          plugins: [
             importsLocal(s_IMPORTS_OPTIONS),
             resolve(),
-            typescript({ include: ['src/data/**/*'] }),
+            typescript({ include: ['src/data/db/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
          ]
       },

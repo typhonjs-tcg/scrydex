@@ -3,7 +3,7 @@ import path                   from 'node:path';
 
 import { isDirectory }        from '@typhonjs-utils/file-util';
 
-import { CardDBStore }        from '#scrydex/data';
+import { CardDBStore }        from '#scrydex/data/db';
 
 import { ExportSpreadsheet }  from './ExportSpreadsheet';
 

@@ -6,7 +6,7 @@ import {
    isDirectory,
    isFile }                from '@typhonjs-utils/file-util';
 
-import { CardDBStore }     from '#scrydex/data';
+import { CardDBStore }     from '#scrydex/data/db';
 
 import { logger }          from '#scrydex/util';
 
@@ -15,7 +15,7 @@ import {
    exportDir }             from '../common';
 
 import type { ConfigCmd }  from '#scrydex/commands';
-import type { CardStream } from '#scrydex/data';
+import type { CardStream } from '#scrydex/data/db';
 
 /**
  * Exports a single Scrydex CardDB to a text file or all sorted CardDBs found in a directory.

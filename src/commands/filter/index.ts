@@ -1,4 +1,4 @@
-import { CardDBStore }     from '#scrydex/data';
+import { CardDBStore }     from '#scrydex/data/db';
 import { CardFilter }      from '#scrydex/data/db/util';
 import { logger }          from '#scrydex/util';
 

@@ -3,7 +3,7 @@ import { chain }                 from 'stream-chain';
 import { parser }                from 'stream-json';
 import { streamArray }           from 'stream-json/streamers/StreamArray';
 
-import { CardDBStore }           from '#scrydex/data';
+import { CardDBStore }           from '#scrydex/data/db';
 import { logger }                from '#scrydex/util';
 
 import { RarityNormalization }   from '../RarityNormalization';

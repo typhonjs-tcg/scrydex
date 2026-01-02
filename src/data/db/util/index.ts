@@ -4,3 +4,5 @@ export * from './execTime';
 export * from './isGroupKind';
 export * from './PrintCardFields';
 export * from './uniqueCardKey';
+
+export * from './types-db-util';

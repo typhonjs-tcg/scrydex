@@ -7,7 +7,7 @@ import {
 
 import { stringify }       from 'csv-stringify';
 
-import { CardDBStore }     from '#scrydex/data';
+import { CardDBStore }     from '#scrydex/data/db';
 import { logger }          from '#scrydex/util';
 
 import {
@@ -15,7 +15,7 @@ import {
    exportDir }             from '../common';
 
 import type { ConfigCmd }  from '#scrydex/commands';
-import type { CardStream } from '#scrydex/data';
+import type { CardStream } from '#scrydex/data/db';
 
 /**
  * Exports a single Scrydex CardDB to CSV or all sorted CardDBs found in a directory.

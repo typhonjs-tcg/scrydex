@@ -1,12 +1,12 @@
 import { isFile }          from '@typhonjs-utils/file-util';
 
-import { CardDBStore }     from '#scrydex/data';
+import { CardDBStore }     from '#scrydex/data/db';
 import { CardFilter }      from '#scrydex/data/db/util';
 import { SortOrder }       from '#scrydex/data/sort';
 import { logger }          from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';
-import type { CardStream } from '#scrydex/data';
+import type { CardStream } from '#scrydex/data/db';
 
 export async function find(config: ConfigCmd.Find)
 {
