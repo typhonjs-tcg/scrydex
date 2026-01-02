@@ -7,8 +7,10 @@ npm-debug.log
 /coverage
 /html
 /db
-/dist
+/dist-exec
+/dist-npm
 /manabox-csv
+/manabox-export
 /manabox-sort
 /node_modules
 /test/fixture/output

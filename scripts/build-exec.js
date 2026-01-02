@@ -7,7 +7,7 @@ import { $ }   from 'bun';
 
 const APP_NAME = 'scrydex';
 const ENTRY = 'src/cli/index.ts';
-const OUT_DIR = 'dist';
+const OUT_DIR = 'dist-exec';
 
 // Resolve paths.
 const distDir = path.resolve(OUT_DIR);
@@ -41,7 +41,7 @@ switch (arch)
 const tempOut = path.resolve(distDir, `${APP_NAME}${os === 'windows' ? '.exe' : ''}`);
 
 // Final output name.
-const outFile = path.resolve(distDir,`${APP_NAME}-${os}-${arch}${os === 'windows' ? '.exe' : ''}`);
+const outFile = path.resolve(distDir, `${APP_NAME}-${os}-${arch}${os === 'windows' ? '.exe' : ''}`);
 
 console.log(`🔨 Building ${outFile} ...`);
 
