@@ -8,14 +8,28 @@ const s_SOURCEMAP = true;
 
 const s_DTS_OPTIONS = { tsconfig: './tsconfig.json' };
 
-const s_IMPORTS_OPTIONS = { importKeys: ['#scrydex/*'] };
-
 const s_EXTERNAL = [/csv-/g, 'exceljs', 'sade', /stream-/g, /@typhonjs*/g];
 
 // These bundles are for the Node distribution.
 export default () =>
 {
    return [
+      {
+         input: 'src/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/*.ts'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
       {
          input: 'src/cli/index.ts',
          external: s_EXTERNAL,
@@ -26,7 +40,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/cli/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
@@ -42,7 +56,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/commands/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
@@ -58,7 +72,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/data/db/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
@@ -74,7 +88,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/data/db/util/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
@@ -90,7 +104,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/data/import/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
@@ -106,7 +120,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/data/scryfall/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
@@ -122,7 +136,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/data/sort/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
@@ -138,7 +152,7 @@ export default () =>
             sourcemap: s_SOURCEMAP,
          }],
          plugins: [
-            importsLocal(s_IMPORTS_OPTIONS),
+            importsLocal(),
             resolve(),
             typescript({ include: ['src/util/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)

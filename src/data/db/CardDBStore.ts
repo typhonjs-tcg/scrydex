@@ -15,12 +15,11 @@ import { parser }             from 'stream-json';
 import { pick }               from 'stream-json/filters/Pick';
 import { streamObject }       from 'stream-json/streamers/StreamObject';
 
+import { VERSION }            from '#scrydex';
 import { execTime }           from '#scrydex/data/db/util';
 import { supportedFormats }   from '#scrydex/data/scryfall';
 
 import { CardStream }         from './CardStream';
-
-import { VERSION }            from '#version';
 
 import type {
    Card,

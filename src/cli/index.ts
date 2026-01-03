@@ -12,8 +12,8 @@ import {
 
 import { wrap }               from './wrap';
 
+import { VERSION }            from '#scrydex';
 import { supportedFormats }   from '#scrydex/data/scryfall';
-import { VERSION }            from '#version';
 
 const program = sade('scrydex')
 .version(VERSION.package)
