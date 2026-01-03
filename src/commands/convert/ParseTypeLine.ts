@@ -1,4 +1,4 @@
-import type { Card } from '#types';
+import type { Card } from '#scrydex/data/db';
 
 /**
  * Resolves a Scryfall type_line into a normalized card category.

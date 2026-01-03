@@ -15,8 +15,8 @@ import { CardFields }            from './CardFields';
 
 import type { LogLevel }         from '@typhonjs-utils/logger-color';
 
+import type { Card }             from '#scrydex/data/db';
 import type { ConfigCardFilter } from '#scrydex/data/db/util';
-import type { Card }             from '#types';
 
 /**
  * Provides a reusable card filter based on optional independent card attributes and regex search string.

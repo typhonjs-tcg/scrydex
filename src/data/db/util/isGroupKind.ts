@@ -1,4 +1,4 @@
-import type { CardDBMetadataGroups }   from '#types';
+import type { CardDBMetadataGroups }   from '#scrydex/data/db';
 
 /**
  * Provides a type guard for {@link CardDBMetadataGroups} keys.

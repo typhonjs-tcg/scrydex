@@ -3,7 +3,7 @@ import { parseManaCostColors }   from '#scrydex/data/scryfall';
 import type {
    Colors,
    Card,
-   CardFace }                    from '#types';
+   CardFace }                    from '#scrydex/data/db';
 
 export abstract class CardFields
 {

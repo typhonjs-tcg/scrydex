@@ -1,3 +1,5 @@
+import type { GameFormat } from '#scrydex/data/scryfall';
+
 /**
  * Defines the enriched, but reduced set of card data transferred from the Scryfall DB.
  *
@@ -411,13 +413,6 @@ type CardDBMetadataBase =
  */
 type Colors = string[];
 
-/**
- * Valid Scryfall game formats.
- */
-type GameFormat = 'standard' | 'future' | 'historic' | 'timeless' | 'gladiator' | 'pioneer' | 'modern' | 'legacy' |
- 'pauper' | 'vintage' | 'penny' | 'commander' | 'oathbreaker' | 'standardbrawl' | 'brawl' | 'alchemy' |
-  'paupercommander' | 'duel' | 'oldschool' | 'premodern' | 'predh';
-
 export {
    type Card,
    type CardDB,
@@ -428,5 +423,4 @@ export {
    type CardDBType,
    type CardFace,
    type Colors,
-   type CSVCard,
-   type GameFormat };
+   type CSVCard };

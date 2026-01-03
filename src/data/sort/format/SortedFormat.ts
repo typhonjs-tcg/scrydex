@@ -5,8 +5,9 @@ import { SortedKind }         from '../category/SortedKind';
 import { SortOrder }          from '../SortOrder';
 
 import type {
-   CardDBMetadataBase,
-   GameFormat }               from '#types';
+   CardDBMetadataBase }       from '#scrydex/data/db';
+
+import type { GameFormat }    from '#scrydex/data/scryfall';
 
 import type {
    CardSorted,

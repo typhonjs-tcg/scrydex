@@ -18,7 +18,7 @@ import type {
    Card,
    CardDB,
    CardDBMetadata,
-   CardDBMetadataGroups }     from '#types';
+   CardDBMetadataGroups }     from '#scrydex/data/db';
 
 import { ConfigCardFilter }   from "#scrydex/data/db/util";
 

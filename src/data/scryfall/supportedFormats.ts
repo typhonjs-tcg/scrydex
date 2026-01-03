@@ -1,4 +1,9 @@
-import { GameFormat } from '#types';
+/**
+ * Valid Scryfall game formats.
+ */
+type GameFormat = 'standard' | 'future' | 'historic' | 'timeless' | 'gladiator' | 'pioneer' | 'modern' | 'legacy' |
+ 'pauper' | 'vintage' | 'penny' | 'commander' | 'oathbreaker' | 'standardbrawl' | 'brawl' | 'alchemy' |
+  'paupercommander' | 'duel' | 'oldschool' | 'premodern' | 'predh';
 
 /**
  * Provides a type guard for testing game format support.
@@ -23,6 +28,7 @@ const supportedFormats: ReadonlySet<string> = Object.freeze(new Set(['standard',
 const validLegality: ReadonlySet<string> = Object.freeze(new Set(['legal', 'restricted']));
 
 export {
+   GameFormat,
    isSupportedFormat,
    supportedFormats,
    validLegality };

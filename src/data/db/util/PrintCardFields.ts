@@ -2,7 +2,7 @@ import { langCodeToName }  from '#scrydex/data/scryfall';
 
 import { CardFields }      from './CardFields';
 
-import type { Card }       from '#types';
+import type { Card }       from '#scrydex/data/db';
 
 /**
  * Provides card fields as a unified string regardless of single / dual facedl.

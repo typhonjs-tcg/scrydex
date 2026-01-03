@@ -26,8 +26,9 @@ import type {
    Card,
    CardDBMetadata,
    CardDBMetadataGenerated,
-   CardDBType,
-   GameFormat }         from '#types';
+   CardDBType }               from '#scrydex/data/db';
+
+import type { GameFormat }    from '#scrydex/data/scryfall';
 
 class CardDBStore
 {

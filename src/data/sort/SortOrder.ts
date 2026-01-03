@@ -1,9 +1,7 @@
 import { CardFields }      from '#scrydex/data/db/util';
 
-import type {
-   Card,
-   GameFormat }            from '#types';
-
+import type { Card }       from '#scrydex/data/db';
+import type { GameFormat } from '#scrydex/data/scryfall';
 import type { CardSorted } from '#scrydex/data/sort';
 
 /**

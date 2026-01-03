@@ -2,7 +2,7 @@ import {
    CardFields,
    PrintCardFields } from '#scrydex/data/db/util';
 
-import { Card }      from '#types';
+import type { Card } from '#scrydex/data/db';
 
 /**
  * Helper to create additional cell notes used in spreadsheet for note / comment on applicable cells.

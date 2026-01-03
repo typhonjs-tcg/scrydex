@@ -1,4 +1,4 @@
-import type { Card } from '#types';
+import type { Card } from '#scrydex/data/db';
 
 /**
  * Additional data added to cards when sorting.

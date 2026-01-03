@@ -1,12 +1,7 @@
-import type {
-   Borders,
-   Fill,
-   Font }                  from 'exceljs';
+import type { Borders, Fill, Font }    from 'exceljs';
 
-import type { ConfigCmd }  from '#scrydex/commands';
-
-import {
-   CardDBMetadataGroups }  from "#types";
+import type { ConfigCmd }              from '#scrydex/commands';
+import type { CardDBMetadataGroups }   from '#scrydex/data/db';
 
 export class Theme
 {

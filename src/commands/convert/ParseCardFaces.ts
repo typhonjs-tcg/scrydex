@@ -1,6 +1,6 @@
 import { ParseTypeLine }   from './ParseTypeLine';
 
-import type { CardFace }   from '#types';
+import type { CardFace }   from '#scrydex/data/db';
 
 export abstract class ParseCardFaces
 {

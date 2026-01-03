@@ -1,7 +1,7 @@
 import { parsePrice }      from '#scrydex/data/scryfall';
 import { isFiniteNumber }  from '#scrydex/util';
 
-import type { Card }       from '#types';
+import type { Card }       from '#scrydex/data/db';
 
 /**
  * Sorts a Card[] by name then price with optional price direction.

@@ -1,4 +1,4 @@
-import type { Card } from '#types';
+import type { Card } from '#scrydex/data/db';
 
 /**
  * Creates a unique composite key coalescing the <Scryfall ID>:<Foil / Finish>:<Language>.

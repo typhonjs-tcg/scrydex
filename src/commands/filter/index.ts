@@ -3,7 +3,7 @@ import { CardFilter }      from '#scrydex/data/db/util';
 import { logger }          from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';
-import type { Card }       from '#types';
+import type { Card }       from '#scrydex/data/db';
 
 export async function filter(config: ConfigCmd.Filter): Promise<void>
 {

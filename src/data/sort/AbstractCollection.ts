@@ -6,7 +6,7 @@ import type { ConfigCmd }  from '#scrydex/commands';
 import type {
    Card,
    CardDBMetadataBase,
-   CardDBMetadataGroups }  from '#types';
+   CardDBMetadataGroups }  from '#scrydex/data/db';
 
 import type {
    CardSorted,

@@ -18,12 +18,13 @@ import {
 import { logger }                   from '#scrydex/util';
 
 import type { ConfigCmd }           from '#scrydex/commands';
-import type { CardStream }          from '#scrydex/data/db';
 
 import type {
    Card,
    CardDBMetadataBase,
-   GameFormat }                     from '#types';
+   CardStream }                     from '#scrydex/data/db';
+
+import type { GameFormat }          from '#scrydex/data/scryfall';
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.

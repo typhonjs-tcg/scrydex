@@ -10,12 +10,11 @@ import { RarityNormalization }   from '../RarityNormalization';
 import { ParseCardFaces }        from '../ParseCardFaces';
 import { ParseTypeLine }         from '../ParseTypeLine';
 
-import type { CSVCollection }    from '#scrydex/data/import';
-
 import type {
    Card,
-   CSVCard }                     from '#types';
+   CSVCard }                     from '#scrydex/data/db';
 
+import type { CSVCollection }    from '#scrydex/data/import';
 import type { ConfigCmd }        from '#scrydex/commands';
 
 /**

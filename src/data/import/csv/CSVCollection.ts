@@ -12,7 +12,7 @@ import type { ConfigCmd }        from '#scrydex/commands';
 
 import type {
    CardDBMetadataGroups,
-   CSVCard }                     from '#types';
+   CSVCard }                     from '#scrydex/data/db';
 
 import type { ImportCollection } from '#scrydex/data/import';
 

@@ -1,8 +1,9 @@
 import { uniqueCardKey }   from '#scrydex/data/db/util';
 import { logger }          from '#scrydex/util';
 
-import type { CardStream } from '#scrydex/data/db';
-import type { Card }       from '#types';
+import type {
+   Card,
+   CardStream }            from '#scrydex/data/db';
 
 /**
  * Provides an async generator of cards to be exported.
