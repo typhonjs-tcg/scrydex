@@ -15,8 +15,6 @@ import {
    SortedFormat,
    SortOrder }                      from '#scrydex/data/sort';
 
-import { logger }                   from '#scrydex/util';
-
 import type { ConfigCmd }           from '#scrydex/commands';
 
 import type {
@@ -33,15 +31,17 @@ import type { GameFormat }          from '#scrydex/data/scryfall';
  */
 export async function sortFormat(config: ConfigCmd.SortFormat): Promise<void>
 {
-   logger.info(`Sorting Scrydex CardDB: ${config.input}`);
-   logger.info(`Formats: ${config.formats.join(', ')}`);
-   logger.info(`Sorted output target directory: ${config.output}`);
+   const logger = config.logger;
+
+   logger?.info(`Sorting Scrydex CardDB: ${config.input}`);
+   logger?.info(`Formats: ${config.formats.join(', ')}`);
+   logger?.info(`Sorted output target directory: ${config.output}`);
 
    if (config.clean) { await cleanOutputDir(config); }
 
    await ExportCollection.generate(config, await generate(config));
 
-   logger.info(`Finished sorting Scrydex card collection: ${config.output}`);
+   logger?.info(`Finished sorting Scrydex card collection: ${config.output}`);
 }
 
 // Internal Implementation -------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ export async function sortFormat(config: ConfigCmd.SortFormat): Promise<void>
  */
 async function cleanOutputDir(config: ConfigCmd.SortFormat): Promise<void>
 {
-   logger.verbose('Removing existing sorted output before regenerating.')
+   config.logger?.verbose('Removing existing sorted output before regenerating.')
 
    const dbFiles = await CardDBStore.loadAll({ dirpath: config.output, type: ['sorted', 'sorted_format'], walk: true });
 
@@ -144,11 +144,13 @@ function createSortedFormat(config: ConfigCmd.SortFormat, options:
 {
    sortByNameThenPrice(options.cards, 'desc');
 
+   const logger = config.logger;
+
    const sortedFormat = new SortedFormat(options);
 
    sortedFormat.sort({ alpha: true, type: config.sortByType });
 
-   logger.verbose(`Sorting '${options.name}' - unique card entry count: ${options.cards.length}`);
+   logger?.verbose(`Sorting '${options.name}' - unique card entry count: ${options.cards.length}`);
 
    if (config.mark.size)
    {
@@ -158,7 +160,7 @@ function createSortedFormat(config: ConfigCmd.SortFormat, options:
          const markedRarity: Set<string> = new Set<string>();
          for (const card of cardsMarked) { markedRarity.add(SortOrder.rarity(card, options.format)); }
 
-         logger.verbose(`  - ${cardsMarked.length} card entries marked for merging in: ${
+         logger?.verbose(`  - ${cardsMarked.length} card entries marked for merging in: ${
           [...markedRarity].sort((a, b) => a.localeCompare(b)).join(', ')}`);
       }
    }

@@ -1,7 +1,6 @@
 import path                from 'node:path';
 
 import { CardDBStore }     from '#scrydex/data/db';
-import { logger }          from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';
 import type { CardStream } from '#scrydex/data/db';
@@ -32,25 +31,27 @@ export async function exportDir({ config, exportFn, extension }:
       walk: true
    });
 
+   const logger = config.logger;
+
    if (cards.length === 0)
    {
-      logger.warn(`No sorted CardDB collections found in:\n${config.input}`);
+      logger?.warn(`No sorted CardDB collections found in:\n${config.input}`);
       return;
    }
    else
    {
-      logger.info(`Exporting ${cards.length} sorted CardDB collections.`);
-      logger.info(`Export output target directory: ${config.output}`);
+      logger?.info(`Exporting ${cards.length} sorted CardDB collections.`);
+      logger?.info(`Export output target directory: ${config.output}`);
 
       for (const db of cards)
       {
          const dbPath = path.resolve(config.output, `./${db.meta.name}.${extension}`);
 
-         logger.verbose(`${db.meta.name} - ${dbPath}`);
+         logger?.verbose(`${db.meta.name} - ${dbPath}`);
 
          await exportFn({ coalesce: config.coalesce, db, output: dbPath });
       }
 
-      logger.info(`Finished exporting sorted CardDB collections.`);
+      logger?.info(`Finished exporting sorted CardDB collections.`);
    }
 }

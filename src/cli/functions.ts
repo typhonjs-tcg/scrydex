@@ -90,6 +90,7 @@ export async function commandDiff(baseline: string, comparison: string, opts: Re
    const config: ConfigCmd.Diff = {
       baseline,
       comparison,
+      logger,
       output: opts.output
    };
 
@@ -145,6 +146,7 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
    const config: ConfigCmd.Export = {
       coalesce: typeof opts['no-coalesce'] !== 'boolean',
       input,
+      logger,
       output: opts.output
    };
 
@@ -200,6 +202,7 @@ export async function commandExportTxt(input: string, opts: Record<string, any>)
    const config: ConfigCmd.Export = {
       coalesce: typeof opts['no-coalesce'] !== 'boolean',
       input,
+      logger,
       output: opts.output
    };
 
@@ -256,6 +259,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    const config: ConfigCmd.Filter = {
       input,
+      // logger,
       output: opts.output,
       filter: filterOptions
    };
@@ -302,6 +306,7 @@ export async function commandFind(input: string, query: string, opts: Record<str
 
    const config: ConfigCmd.Find = {
       input,
+      logger,
       filter
    };
 
@@ -396,6 +401,7 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
       clean: opts.clean ?? false,
       formats,
       highValue,
+      logger,
       mark,
       sortByType: opts['by-type'] ?? false,
       theme
@@ -478,6 +484,7 @@ export function validateConvert(input: string, opts: Record<string, any>): Confi
          decks: opts['group-decks'],
          external: opts['group-external'],
          proxy: opts['group-proxy']
-      }
+      },
+      logger
    };
 }

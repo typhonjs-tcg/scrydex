@@ -4,7 +4,6 @@ import { parser }                from 'stream-json';
 import { streamArray }           from 'stream-json/streamers/StreamArray';
 
 import { CardDBStore }           from '#scrydex/data/db';
-import { logger }                from '#scrydex/util';
 
 import { RarityNormalization }   from '../RarityNormalization';
 import { ParseCardFaces }        from '../ParseCardFaces';
@@ -30,6 +29,8 @@ export class ScryfallDB
     */
    static async exportCollection(config: ConfigCmd.Convert, collection: CSVCollection): Promise<void>
    {
+      const logger = config.logger;
+
       const outputDB: Card[] = [];
 
       const rarityNormalization = new RarityNormalization();
@@ -37,7 +38,7 @@ export class ScryfallDB
       // This is a first streaming pass across the Scryfall DB collecting the `oracle_id` for cards in the collection.
       await rarityNormalization.scanForOracleID(config, collection);
 
-      logger.info(`Building Scrydex card database - this may take a moment...`);
+      logger?.info(`Building Scrydex card database - this may take a moment...`);
 
       const pipeline = chain([
          fs.createReadStream(config.db),
@@ -57,7 +58,7 @@ export class ScryfallDB
 
          if (!csvCards) { continue; }
 
-         logger.verbose(`Processing: ${scryCard.name}`);
+         logger?.verbose(`Processing: ${scryCard.name}`);
 
          for (const csvCard of csvCards)
          {
@@ -118,16 +119,16 @@ export class ScryfallDB
       // Second pass to set original / first print rarity.
       for (const card of outputDB) { rarityNormalization.updateRarity(card); }
 
-      rarityNormalization.logChangesAndCleanup();
+      rarityNormalization.logChangesAndCleanup(config);
 
-      logger.info(`Finished processing ${outputDB.length} unique card entries / total quantity: ${totalQuantity}`);
+      logger?.info(`Finished processing ${outputDB.length} unique card entries / total quantity: ${totalQuantity}`);
 
       if (collection.size !== 0)
       {
-         logger.warn(`Remaining collection / card map unprocessed: ${collection.size}`);
+         logger?.warn(`Remaining collection / card map unprocessed: ${collection.size}`);
          for (const card of collection.values())
          {
-            logger.warn(`Name: ${card.name ?? '<UNKNOWN>'}; Scryfall ID: ${
+            logger?.warn(`Name: ${card.name ?? '<UNKNOWN>'}; Scryfall ID: ${
              card.scryfall_id ?? '<UNKNOWN>'}; Filename: ${card.filename ?? '<UNKNOWN>'}`);
          }
       }
@@ -142,7 +143,7 @@ export class ScryfallDB
       }
       else
       {
-         logger.warn(`No output DB file to write.`);
+         logger?.warn(`No output DB file to write.`);
       }
    }
 

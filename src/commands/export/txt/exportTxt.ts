@@ -8,8 +8,6 @@ import {
 
 import { CardDBStore }     from '#scrydex/data/db';
 
-import { logger }          from '#scrydex/util';
-
 import {
    exportCards,
    exportDir }             from '../common';
@@ -24,23 +22,25 @@ import type { CardStream } from '#scrydex/data/db';
  */
 export async function exportTxt(config: ConfigCmd.Export): Promise<void>
 {
+   const logger = config.logger;
+
    if (isFile(config.input))
    {
-      logger.verbose(`Loading file path: ${config.input}`);
+      logger?.verbose(`Loading file path: ${config.input}`);
 
-      if (config.coalesce) { logger.verbose(`Coalescing unique card printings.`); }
+      if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
       const db = await CardDBStore.load({ filepath: config.input });
 
-      logger.info(`Export output target file: ${config.output}`);
+      logger?.info(`Export output target file: ${config.output}`);
 
       return exportDB({ coalesce: config.coalesce, db, output: config.output });
    }
    else if (isDirectory(config.input))
    {
-      logger.verbose(`Loading directory path: ${config.input}`);
+      logger?.verbose(`Loading directory path: ${config.input}`);
 
-      if (config.coalesce) { logger.verbose(`Coalescing unique card printings.`); }
+      if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
       return exportDir({ config, exportFn: exportDB, extension: 'txt' });
    }
@@ -59,14 +59,14 @@ export async function exportTxt(config: ConfigCmd.Export): Promise<void>
  *
  * @param options.output - Output file path.
  */
-async function exportDB({ coalesce, db, output }: { coalesce: boolean, db: CardStream, output: string }): Promise<void>
+async function exportDB({ config, db }: { config: ConfigCmd.Export, db: CardStream }): Promise<void>
 {
    // Ensure `output` directory exists.
-   fs.mkdirSync(path.dirname(output), { recursive: true });
+   fs.mkdirSync(path.dirname(config.output), { recursive: true });
 
-   const outputStream = fs.createWriteStream(output);
+   const outputStream = fs.createWriteStream(config.output);
 
-   for await (const card of exportCards({ coalesce, db }))
+   for await (const card of exportCards({ config, db }))
    {
       const finish = card.foil === 'foil' || card.foil === 'etched' ? ` *${card.foil[0].toUpperCase()}*` : '';
 

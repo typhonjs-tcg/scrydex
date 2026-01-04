@@ -9,11 +9,11 @@ import {
    supportedFormats,
    validLegality }               from '#scrydex/data/scryfall';
 
-import { logger }                from '#scrydex/util';
-
 import { CardFields }            from './CardFields';
 
-import type { LogLevel }         from '@typhonjs-utils/logger-color';
+import type {
+   BasicLogger,
+   LogLevel }                    from '@typhonjs-utils/logger-color';
 
 import type { Card }             from '#scrydex/data/db';
 import type { ConfigCardFilter } from '#scrydex/data/db/util';
@@ -47,9 +47,11 @@ export abstract class CardFilter
     *
     * @param config -
     *
+    * @param logger -
+    *
     * @param [logLevel] - Optional level to log message at; default: `info`.
     */
-   static logConfig(config: ConfigCardFilter, logLevel: LogLevel = 'info'): void
+   static logConfig(config: ConfigCardFilter, logger: BasicLogger, logLevel: LogLevel = 'info'): void
    {
       if (!isObject(config)) { throw new TypeError(`'config' is not an object.`); }
       if (!isObject(config.properties)) { throw new TypeError(`'config.properties' is not an object.`); }
@@ -203,8 +205,6 @@ export abstract class CardFilter
          }
          catch (err: unknown)
          {
-            if (logger.isLevelEnabled('debug')) { console.error(err); }
-
             let message = typeof err === 'string' ? err : 'Unknown error';
 
             if (err instanceof Error) { message = err.message; }

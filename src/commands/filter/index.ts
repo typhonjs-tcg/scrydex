@@ -7,14 +7,16 @@ import type { Card }       from '#scrydex/data/db';
 
 export async function filter(config: ConfigCmd.Filter): Promise<void>
 {
-   logger.info(`Filtering Scrydex CardDB: ${config.input}`);
+   const logger = config.logger;
 
-   logger.verbose(`[Filter Options]`);
-   logger.verbose(`----------------------`);
+   logger?.info(`Filtering Scrydex CardDB: ${config.input}`);
 
-   CardFilter.logConfig(config.filter, 'verbose');
+   logger?.verbose(`[Filter Options]`);
+   logger?.verbose(`----------------------`);
 
-   logger.verbose(`----------------------`);
+   if (logger) { CardFilter.logConfig(config.filter, logger, 'verbose'); }
+
+   logger?.verbose(`----------------------`);
 
    const cards = await CardDBStore.load({ filepath: config.input });
 
@@ -40,11 +42,11 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
          meta: cards.meta
       });
 
-      logger.info(`Finished filtering Scrydex CardDB: ${config.output}`);
-      logger.info(`Filtered ${outputDB.length} / ${totalUnique} unique card entries.`);
+      logger?.info(`Finished filtering Scrydex CardDB: ${config.output}`);
+      logger?.info(`Filtered ${outputDB.length} / ${totalUnique} unique card entries.`);
    }
    else
    {
-      logger.warn(`No output DB file to write.`);
+      logger?.warn(`No output DB file to write.`);
    }
 }

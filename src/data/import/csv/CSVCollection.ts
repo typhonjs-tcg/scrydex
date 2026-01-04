@@ -4,9 +4,10 @@ import {
    isFile }                      from '@typhonjs-utils/file-util';
 
 import { isGroupKind }           from '#scrydex/data/db/util';
-import { logger }                from '#scrydex/util';
 
 import { CSVCardIndex }          from './CSVCardIndex';
+
+import type { BasicLogger }      from '@typhonjs-utils/logger-color';
 
 import type { ConfigCmd }        from '#scrydex/commands';
 
@@ -38,13 +39,15 @@ export class CSVCollection implements ImportCollection
    {
       const collection = new CSVCollection();
 
-      await this.#loadPath({ path: config.input, collection });
+      const logger = config.logger;
+
+      await this.#loadPath({ path: config.input, collection, logger });
 
       for (const group in config.groups)
       {
          if (isGroupKind(group) && typeof config.groups[group] === 'string')
          {
-            await this.#loadPath({ path: config.groups[group], collection, group });
+            await this.#loadPath({ path: config.groups[group]!, collection, group, logger });
          }
       }
 
@@ -226,21 +229,23 @@ export class CSVCollection implements ImportCollection
     *
     * @param [options.group] - Mark loaded CSV card data as in the given group.
     *
+    * @param [options.logger] - Logger instance.
+    *
     * @returns A new collection of all CSV card data.
     */
-   static async #loadPath({ path, collection = new CSVCollection(), group }:
-    { path: string, collection?: CSVCollection, group?: keyof CardDBMetadataGroups }):
+   static async #loadPath({ path, collection = new CSVCollection(), group, logger }:
+    { path: string, collection?: CSVCollection, group?: keyof CardDBMetadataGroups, logger?: BasicLogger }):
      Promise<CSVCollection>
    {
       if (isDirectory(path))
       {
-         logger.verbose(`Loading directory path: ${path}`);
+         logger?.verbose(`Loading directory path: ${path}`);
 
          const files = await getFileList({ dir: path, includeFile: /\.csv$/, sort: true, resolve: true });
 
          for (const file of files)
          {
-            logger.verbose(`Loading file path: ${file}`);
+            logger?.verbose(`Loading file path: ${file}`);
 
             const cardIndex = await CSVCardIndex.fromCSV(file);
 
@@ -248,17 +253,17 @@ export class CSVCollection implements ImportCollection
             {
                if (!collection.#groups[group]) { collection.#groups[group] = new Set<string>(); }
 
-               collection.#groups[group].add(cardIndex.filename);
+               collection.#groups[group]?.add(cardIndex.filename);
             }
 
             collection.#index.push(cardIndex);
          }
 
-         logger.info(`Done extracting CSV collection files.${group ? ` (Group: ${group})` : ''}`);
+         logger?.info(`Done extracting CSV collection files.${group ? ` (Group: ${group})` : ''}`);
       }
       else if (isFile(path))
       {
-         logger.verbose(`Loading file path: ${path}`);
+         logger?.verbose(`Loading file path: ${path}`);
 
          const cardIndex = await CSVCardIndex.fromCSV(path);
 
@@ -266,12 +271,12 @@ export class CSVCollection implements ImportCollection
          {
             if (!collection.#groups[group]) { collection.#groups[group] = new Set<string>(); }
 
-            collection.#groups[group].add(cardIndex.filename);
+            collection.#groups[group]?.add(cardIndex.filename);
          }
 
          collection.#index.push(cardIndex);
 
-         logger.info(`Done extracting CSV collection file.${group ? ` (Group: ${group})` : ''}`);
+         logger?.info(`Done extracting CSV collection file.${group ? ` (Group: ${group})` : ''}`);
       }
       else
       {

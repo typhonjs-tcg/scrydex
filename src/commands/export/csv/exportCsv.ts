@@ -8,7 +8,6 @@ import {
 import { stringify }       from 'csv-stringify';
 
 import { CardDBStore }     from '#scrydex/data/db';
-import { logger }          from '#scrydex/util';
 
 import {
    exportCards,
@@ -24,23 +23,25 @@ import type { CardStream } from '#scrydex/data/db';
  */
 export async function exportCsv(config: ConfigCmd.Export): Promise<void>
 {
+   const logger = config.logger;
+
    if (isFile(config.input))
    {
-      logger.verbose(`Loading file path: ${config.input}`);
+      logger?.verbose(`Loading file path: ${config.input}`);
 
-      if (config.coalesce) { logger.verbose(`Coalescing unique card printings.`); }
+      if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
       const db = await CardDBStore.load({ filepath: config.input });
 
-      logger.info(`Export output target file: ${config.output}`);
+      logger?.info(`Export output target file: ${config.output}`);
 
-      return exportDB({ coalesce: config.coalesce, db, output: config.output });
+      return exportDB({ config, db });
    }
    else if (isDirectory(config.input))
    {
-      logger.verbose(`Loading directory path: ${config.input}`);
+      logger?.verbose(`Loading directory path: ${config.input}`);
 
-      if (config.coalesce) { logger.verbose(`Coalescing unique card printings.`); }
+      if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
       return exportDir({ config, exportFn: exportDB, extension: 'csv' });
    }
@@ -53,13 +54,11 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
  *
  * @param options - Options.
  *
- * @param options.coalesce - Combine unique card printings.
+ * @param options.config -
  *
  * @param options.db - CardDB to serialize.
- *
- * @param options.output - Output file path.
  */
-async function exportDB({ coalesce, db, output }: { coalesce: boolean, db: CardStream, output: string }): Promise<void>
+async function exportDB({ config, db }: { config: ConfigCmd.Export, db: CardStream }): Promise<void>
 {
    const stringifier = stringify({
       header: true,
@@ -76,11 +75,11 @@ async function exportDB({ coalesce, db, output }: { coalesce: boolean, db: CardS
    });
 
    // Ensure `output` directory exists.
-   fs.mkdirSync(path.dirname(output), { recursive: true });
+   fs.mkdirSync(path.dirname(config.output), { recursive: true });
 
-   stringifier.pipe(fs.createWriteStream(output));
+   stringifier.pipe(fs.createWriteStream(config.output));
 
-   for await (const card of exportCards({ coalesce, db }))
+   for await (const card of exportCards({ config, db }))
    {
       stringifier.write({
          Name: card.name,

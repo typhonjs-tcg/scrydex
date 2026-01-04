@@ -7,8 +7,6 @@ import {
    excludedSetsRecentRarity,
    excludedSetTypesRecentRarity }   from '#scrydex/data/scryfall';
 
-import { logger }                   from '#scrydex/util';
-
 import type { ConfigCmd }           from '#scrydex/commands';
 import type { Card }                from '#scrydex/data/db';
 import type { ImportCollection }    from '#scrydex/data/import';
@@ -60,19 +58,21 @@ export class RarityNormalization
    /**
     * Final logging and cleanup of data associated with rarity normalization.
     */
-   logChangesAndCleanup()
+   logChangesAndCleanup(config: ConfigCmd.Convert)
    {
+      const logger = config.logger;
+
       if (this.#rarityChangeMap.size > 0)
       {
-         logger.verbose(`--------------------`);
+         logger?.verbose(`--------------------`);
 
-         logger.verbose(`Various cards printed before June 2003 changed rarity between editions without further ` +
-         `movement in future years.`);
+         logger?.verbose(`Various cards printed before June 2003 changed rarity between editions without ` +
+         `further movement in future years.`);
 
-         logger.verbose(`To preserve historical identity the most recent rarity among pre-Mirrodin block ` +
+         logger?.verbose(`To preserve historical identity the most recent rarity among pre-Mirrodin block ` +
           `printings are utilized as the original rarity.`);
 
-         logger.verbose(`--------------------`);
+         logger?.verbose(`--------------------`);
 
          const keys = [...this.#rarityChangeMap.keys()].sort((a, b) => a.localeCompare(b));
 
@@ -81,7 +81,7 @@ export class RarityNormalization
             const changeData = this.#rarityChangeMap.get(key);
             if (!changeData) { continue; }
 
-            logger.verbose(
+            logger?.verbose(
              `[Rarity Change]: ${key} - earlier print (${this.#raritySetNameMap.get(changeData.orig_set)}) was '${
               changeData.orig_rarity}'; later print (${this.#raritySetNameMap.get(changeData.recent_set)}) is '${
                changeData.recent_rarity}'.`);
@@ -104,7 +104,9 @@ export class RarityNormalization
     */
    async scanForOracleID(config: ConfigCmd.Convert, collection: ImportCollection)
    {
-      logger.info(
+      const logger = config.logger;
+
+      logger?.info(
        `Scanning Scryfall database to identify oracle IDs used by cards in the collection - this may take a moment...`);
 
       const pipeline = chain([
@@ -123,7 +125,7 @@ export class RarityNormalization
          }
       }
 
-      logger.info(`Oracle ID scan complete.`);
+      logger?.info(`Oracle ID scan complete.`);
    }
 
    /**

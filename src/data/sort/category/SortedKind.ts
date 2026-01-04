@@ -1,8 +1,6 @@
 import { sortByNameThenPrice }   from '../sortByNameThenPrice';
 import { SortOrder }             from '../SortOrder';
 
-import { logger }                from '#scrydex/util';
-
 import type {
    CardSorted,
    SortedCategories }            from '#scrydex/data/sort';
@@ -74,7 +72,7 @@ export class SortedKind implements SortedCategories
       }
       else
       {
-         logger.warn(`SortedColor.add warning: Unknown category name '${categoryName}'.`);
+         throw new Error(`SortedColor.add warning: Unknown category name '${categoryName}'.`);
       }
    }
 

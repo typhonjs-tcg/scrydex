@@ -1,13 +1,23 @@
+import type { BasicLogger }            from '@typhonjs-utils/logger-color';
+
 import type { CardDBMetadataGroups }   from '#scrydex/data/db';
 
 import type {
    ConfigCardFilter,
    PriceExpression }                   from '#scrydex/data/db/util';
 
+interface Command
+{
+   /**
+    * Optional logger interface.
+    */
+   logger?: BasicLogger;
+}
+
 /**
  * Config object for the `convert` command.
  */
-interface Convert
+interface Convert extends Command
 {
    /**
     * File path to Scryfall JSON DB.
@@ -33,7 +43,7 @@ interface Convert
 /**
  * Config object for the `diff` command.
  */
-interface Diff
+interface Diff extends Command
 {
    /**
     * Input card JSON DB file or directory.
@@ -54,7 +64,7 @@ interface Diff
 /**
  * Config object for all `export` commands.
  */
-interface Export
+interface Export extends Command
 {
    /**
     * When true, combine identical card printings.
@@ -75,7 +85,7 @@ interface Export
 /**
  * Config object for the `filter` command.
  */
-interface Filter
+interface Filter extends Command
 {
    /**
     * Config for {@link CardFilter}.
@@ -96,7 +106,7 @@ interface Filter
 /**
  * Config object for the `find` command.
  */
-interface Find
+interface Find extends Command
 {
    /**
     * File or directory path to load.
@@ -112,7 +122,7 @@ interface Find
 /**
  * Base config object for all `sort` commands.
  */
-interface Sort
+interface Sort extends Command
 {
    /**
     * When true, remove existing sorted output before regenerating.
@@ -166,13 +176,15 @@ interface SortFormat extends Sort
  */
 declare namespace ConfigCmd
 {
-   export { Convert };
-   export { Diff };
-   export { Export };
-   export { Filter };
-   export { Find };
-   export { Sort };
-   export { SortFormat };
+   export {
+      Convert,
+      Diff,
+      Export,
+      Filter,
+      Find,
+      Sort,
+      SortFormat
+   };
 }
 
 export { type ConfigCmd };

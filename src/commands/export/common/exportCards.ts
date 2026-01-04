@@ -1,9 +1,10 @@
-import { uniqueCardKey }   from '#scrydex/data/db/util';
-import { logger }          from '#scrydex/util';
+import { uniqueCardKey }      from '#scrydex/data/db/util';
+
+import type { ConfigCmd }     from '#scrydex/commands';
 
 import type {
    Card,
-   CardStream }            from '#scrydex/data/db';
+   CardStream }               from '#scrydex/data/db';
 
 /**
  * Provides an async generator of cards to be exported.
@@ -14,10 +15,12 @@ import type {
  *
  * @param [options.coalesce] - When true, unique card entries are coalesced; default: `true`.
  */
-export async function* exportCards({ db, coalesce = true }: { db: CardStream, coalesce?: boolean }):
- AsyncGenerator<Card>
+export async function* exportCards({ config, db }:
+ { config: ConfigCmd.Export, db: CardStream }): AsyncGenerator<Card>
 {
-   if (coalesce)
+   const logger = config.logger;
+
+   if (config.coalesce)
    {
       // Duplicate card entries by unique key are coalesced into a single entry.
 
@@ -45,7 +48,7 @@ export async function* exportCards({ db, coalesce = true }: { db: CardStream, co
       {
          if (typeof card.quantity !== 'number' || !Number.isInteger(card.quantity) || card.quantity <= 0)
          {
-            logger.warn(`Skipping card (${card.name}) from '${db.meta.name}' due to invalid quantity: ${
+            logger?.warn(`Skipping card (${card.name}) from '${db.meta.name}' due to invalid quantity: ${
              card.quantity}`);
 
             continue;

@@ -3,24 +3,25 @@ import { isFile }          from '@typhonjs-utils/file-util';
 import { CardDBStore }     from '#scrydex/data/db';
 import { CardFilter }      from '#scrydex/data/db/util';
 import { SortOrder }       from '#scrydex/data/sort';
-import { logger }          from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';
 import type { CardStream } from '#scrydex/data/db';
 
 export async function find(config: ConfigCmd.Find)
 {
+   const logger = config.logger;
+
    let collections: CardStream[];
 
    if (isFile(config.input))
    {
-      logger.info(`Attempting to load Scrydex CardDB: ${config.input}`);
+      logger?.info(`Attempting to load Scrydex CardDB: ${config.input}`);
 
       const singleCollection = await CardDBStore.load({ filepath: config.input });
 
       if (!singleCollection)
       {
-         logger.error(`No card collection found.`);
+         logger?.error(`No card collection found.`);
          return;
       }
 
@@ -28,7 +29,7 @@ export async function find(config: ConfigCmd.Find)
    }
    else
    {
-      logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.input}`);
+      logger?.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.input}`);
 
       collections = await CardDBStore.loadAll({
          dirpath: config.input,
@@ -38,32 +39,32 @@ export async function find(config: ConfigCmd.Find)
 
       if (collections.length === 0)
       {
-         logger.info(`No 'sorted' or 'sorted_format' card collections found.`);
+         logger?.info(`No 'sorted' or 'sorted_format' card collections found.`);
          return;
       }
    }
 
-   logger.info(`Searching ${collections.length} card collections: ${
+   logger?.info(`Searching ${collections.length} card collections: ${
     collections.map((entry) => entry.meta.name).join(', ')}`);
 
-   logger.verbose(``);
+   logger?.verbose(``);
 
    for (const collection of collections)
    {
-      logger.verbose(`${collection.meta.name} - ${collection.filepath}`);
+      logger?.verbose(`${collection.meta.name} - ${collection.filepath}`);
    }
 
    const hasFilters = CardFilter.hasFilterChecks(config.filter);
 
    if (hasFilters)
    {
-      logger.verbose(``);
-      logger.verbose(`[Filter Options]`);
-      logger.verbose(`----------------------`);
+      logger?.verbose(``);
+      logger?.verbose(`[Filter Options]`);
+      logger?.verbose(`----------------------`);
 
-      CardFilter.logConfig(config.filter, 'verbose');
+      if (logger) { CardFilter.logConfig(config.filter, logger, 'verbose'); }
 
-      logger.verbose(`----------------------`);
+      logger?.verbose(`----------------------`);
    }
 
    for (const collection of collections)
@@ -75,7 +76,7 @@ export async function find(config: ConfigCmd.Find)
          const isInDeck = collection.isCardGroup(card, 'decks') ? `; In Deck: ${card.filename}` : '';
          const isInExternal = collection.isCardGroup(card, 'external') ? `; In External: ${card.filename}` : ''
 
-         logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
+         logger?.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
           SortOrder.rarity(card, gameFormat)}; Category: ${SortOrder.categoryName(card)}${isInDeck}${isInExternal}`);
       }
    }

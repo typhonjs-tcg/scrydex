@@ -10,8 +10,6 @@ import {
    isGroupKind,
    uniqueCardKey }            from '#scrydex/data/db/util';
 
-import { logger }             from '#scrydex/util';
-
 import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type {
@@ -226,7 +224,7 @@ class CardStream
     *
     * @returns A map of unique card identity keys to total quantities.
     */
-   async getQuantityMap(options?: CardStreamOptions): Promise<Map<string, number>>
+   async getQuantityMap(options?: CardStreamOptions, logger?: BasicLogger): Promise<Map<string, number>>
    {
       const map: Map<string, number> = new Map();
 
@@ -239,7 +237,7 @@ class CardStream
          }
          else if (options?.logger)
          {
-            logger.warn(`Skipping card (${card.name}) from '${this.meta.name}' due to invalid quantity: ${
+            logger?.warn(`Skipping card (${card.name}) from '${this.meta.name}' due to invalid quantity: ${
              card.quantity}`);
          }
       }
