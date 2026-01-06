@@ -104,22 +104,6 @@ interface Filter extends Command
 }
 
 /**
- * Config object for the `find` command.
- */
-interface Find extends Command
-{
-   /**
-    * File or directory path to load.
-    */
-   input: string;
-
-   /**
-    * Config for {@link CardFilter}.
-    */
-   filter: ConfigCardFilter;
-}
-
-/**
  * Base config object for all `sort` commands.
  */
 interface Sort extends Command
@@ -181,7 +165,6 @@ declare namespace ConfigCmd
       Diff,
       Export,
       Filter,
-      Find,
       Sort,
       SortFormat
    };

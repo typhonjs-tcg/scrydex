@@ -5,23 +5,29 @@ import {
    isDirectory,
    isFile }                      from '@typhonjs-utils/file-util';
 
+import { ColorLogger }           from '@typhonjs-utils/logger-color';
+
 import {
    convertCsv,
    diff,
    exportCsv,
    exportTxt,
    filter,
-   find,
    sortFormat }                  from '#scrydex/commands';
 
 import {
    CardFilter,
    parsePriceExpression }        from '#scrydex/data/db/util';
 
-import { logger }                from '#scrydex/util';
+import { find }                  from './commands/find';
 
 import type { ConfigCmd }        from '#scrydex/commands';
 import type { PriceExpression }  from '#scrydex/data/db/util';
+
+/**
+ * Provides a ColorLogger instance for all CLI command usage.
+ */
+const logger: ColorLogger = new ColorLogger({ tag: 'scrydex' });
 
 /**
  * Invokes `convert` with the given config.
@@ -304,10 +310,10 @@ export async function commandFind(input: string, query: string, opts: Record<str
    // A string indicates validation error is detected.
    if (typeof filter === 'string') { exit(filter); }
 
-   const config: ConfigCmd.Find = {
+   const config = {
       input,
-      logger,
-      filter
+      filter,
+      logger
    };
 
    try
