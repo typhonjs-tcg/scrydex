@@ -8,7 +8,7 @@ import type { CardStream } from '#scrydex/data/db';
 /**
  * Defines the DB export implementation.
  */
-export type ExportFn = ({ coalesce, db, output }: { coalesce: boolean, db: CardStream, output: string }) =>
+export type ExportFn = ({ config, db, output }: { config: ConfigCmd.Export, db: CardStream, output?: string }) =>
  Promise<void>
 
 /**
@@ -49,7 +49,7 @@ export async function exportDir({ config, exportFn, extension }:
 
          logger?.verbose(`${db.meta.name} - ${dbPath}`);
 
-         await exportFn({ coalesce: config.coalesce, db, output: dbPath });
+         await exportFn({ config, db, output: dbPath });
       }
 
       logger?.info(`Finished exporting sorted CardDB collections.`);

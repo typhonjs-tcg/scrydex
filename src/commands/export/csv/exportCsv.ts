@@ -57,9 +57,14 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
  * @param options.config -
  *
  * @param options.db - CardDB to serialize.
+ *
+ * @param [options.output] - Output path override.
  */
-async function exportDB({ config, db }: { config: ConfigCmd.Export, db: CardStream }): Promise<void>
+async function exportDB({ config, db, output }: { config: ConfigCmd.Export, db: CardStream, output?: string }):
+ Promise<void>
 {
+   const outputActual = output ?? config.output;
+
    const stringifier = stringify({
       header: true,
       columns: [
@@ -75,9 +80,9 @@ async function exportDB({ config, db }: { config: ConfigCmd.Export, db: CardStre
    });
 
    // Ensure `output` directory exists.
-   fs.mkdirSync(path.dirname(config.output), { recursive: true });
+   fs.mkdirSync(path.dirname(outputActual), { recursive: true });
 
-   stringifier.pipe(fs.createWriteStream(config.output));
+   stringifier.pipe(fs.createWriteStream(outputActual));
 
    for await (const card of exportCards({ config, db }))
    {

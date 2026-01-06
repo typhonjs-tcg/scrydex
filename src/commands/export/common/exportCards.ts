@@ -11,9 +11,9 @@ import type {
  *
  * @param options - Options.
  *
- * @param options.db - Source DB being exported.
+ * @param options.config -
  *
- * @param [options.coalesce] - When true, unique card entries are coalesced; default: `true`.
+ * @param options.db -
  */
 export async function* exportCards({ config, db }:
  { config: ConfigCmd.Export, db: CardStream }): AsyncGenerator<Card>

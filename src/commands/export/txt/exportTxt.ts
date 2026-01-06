@@ -34,7 +34,7 @@ export async function exportTxt(config: ConfigCmd.Export): Promise<void>
 
       logger?.info(`Export output target file: ${config.output}`);
 
-      return exportDB({ coalesce: config.coalesce, db, output: config.output });
+      return exportDB({ config, db });
    }
    else if (isDirectory(config.input))
    {
@@ -53,18 +53,21 @@ export async function exportTxt(config: ConfigCmd.Export): Promise<void>
  *
  * @param options - Options.
  *
- * @param options.coalesce - Combine unique card printings.
+ * @param options.config -
  *
  * @param options.db - CardDB to serialize.
  *
- * @param options.output - Output file path.
+ * @param [options.output] - Output path override.
  */
-async function exportDB({ config, db }: { config: ConfigCmd.Export, db: CardStream }): Promise<void>
+async function exportDB({ config, db, output }: { config: ConfigCmd.Export, db: CardStream, output?: string }):
+ Promise<void>
 {
-   // Ensure `output` directory exists.
-   fs.mkdirSync(path.dirname(config.output), { recursive: true });
+   const outputActual = output ?? config.output;
 
-   const outputStream = fs.createWriteStream(config.output);
+   // Ensure `output` directory exists.
+   fs.mkdirSync(path.dirname(outputActual), { recursive: true });
+
+   const outputStream = fs.createWriteStream(outputActual);
 
    for await (const card of exportCards({ config, db }))
    {
