@@ -265,7 +265,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    const config: ConfigCmd.Filter = {
       input,
-      // logger,
+      logger,
       output: opts.output,
       filter: filterOptions
    };
