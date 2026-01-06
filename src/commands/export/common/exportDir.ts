@@ -2,8 +2,9 @@ import path                from 'node:path';
 
 import { CardDBStore }     from '#scrydex/data/db';
 
-import type { ConfigCmd }  from '#scrydex/commands';
 import type { CardStream } from '#scrydex/data/db';
+
+import type { ConfigCmd }  from '../../types-command';
 
 /**
  * Defines the DB export implementation.

@@ -11,7 +11,7 @@ import type { GameFormat }    from '#scrydex/data/scryfall';
 
 import type {
    CardSorted,
-   SortedCategories }         from '#scrydex/data/sort';
+   SortedCategories }         from '../types-sort';
 
 export class SortedFormat extends AbstractCollection
 {

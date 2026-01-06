@@ -1,10 +1,10 @@
 import { uniqueCardKey }      from '#scrydex/data/db/util';
 
-import type { ConfigCmd }     from '#scrydex/commands';
-
 import type {
    Card,
    CardStream }               from '#scrydex/data/db';
+
+import type { ConfigCmd }     from '../../types-command';
 
 /**
  * Provides an async generator of cards to be exported.

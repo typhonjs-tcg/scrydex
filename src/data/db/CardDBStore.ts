@@ -21,13 +21,13 @@ import { supportedFormats }   from '#scrydex/data/scryfall';
 
 import { CardStream }         from './CardStream';
 
+import type { GameFormat }    from '#scrydex/data/scryfall';
+
 import type {
    Card,
    CardDBMetadata,
    CardDBMetadataGenerated,
-   CardDBType }               from '#scrydex/data/db';
-
-import type { GameFormat }    from '#scrydex/data/scryfall';
+   CardDBType }               from './types-db';
 
 class CardDBStore
 {

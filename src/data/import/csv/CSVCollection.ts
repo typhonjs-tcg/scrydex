@@ -15,7 +15,7 @@ import type {
    CardDBMetadataGroups,
    CSVCard }                     from '#scrydex/data/db';
 
-import type { ImportCollection } from '#scrydex/data/import';
+import type { ImportCollection } from '../types-import';
 
 export class CSVCollection implements ImportCollection
 {

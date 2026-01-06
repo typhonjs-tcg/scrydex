@@ -14,7 +14,8 @@ import type {
    CSVCard }                     from '#scrydex/data/db';
 
 import type { CSVCollection }    from '#scrydex/data/import';
-import type { ConfigCmd }        from '#scrydex/commands';
+
+import type { ConfigCmd }        from '../../types-command';
 
 /**
  * Provides thorough resolution and normalization of CSV collection cards with multiple streaming passes over the

@@ -1,6 +1,6 @@
 import type {
    PriceExpression,
-   PriceFilter }  from '#scrydex/data/db/util';
+   PriceFilter }  from './types-db-util';
 
 /**
  * Parses a price comparison expression.

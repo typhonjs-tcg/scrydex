@@ -2,7 +2,8 @@ import { CardFields }      from '#scrydex/data/db/util';
 
 import type { Card }       from '#scrydex/data/db';
 import type { GameFormat } from '#scrydex/data/scryfall';
-import type { CardSorted } from '#scrydex/data/sort';
+
+import type { CardSorted } from './types-sort';
 
 /**
  * Provides card data related to sort order for rarity and card category.

@@ -7,9 +7,10 @@ import {
    excludedSetsRecentRarity,
    excludedSetTypesRecentRarity }   from '#scrydex/data/scryfall';
 
-import type { ConfigCmd }           from '#scrydex/commands';
 import type { Card }                from '#scrydex/data/db';
 import type { ImportCollection }    from '#scrydex/data/import';
+
+import type { ConfigCmd }           from '../types-command';
 
 /**
  * Computes normalized card rarity keyed by `oracle_id`.

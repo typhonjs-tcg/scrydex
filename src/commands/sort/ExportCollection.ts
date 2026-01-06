@@ -7,10 +7,10 @@ import { CardDBStore }        from '#scrydex/data/db';
 
 import { ExportSpreadsheet }  from './ExportSpreadsheet';
 
-import type { ConfigCmd }     from '#scrydex/commands';
-
 import type {
    AbstractCollection }       from '#scrydex/data/sort';
+
+import type { ConfigCmd }     from '../types-command';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.

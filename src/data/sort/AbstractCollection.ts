@@ -10,7 +10,7 @@ import type {
 
 import type {
    CardSorted,
-   SortedCategories }      from '#scrydex/data/sort';
+   SortedCategories }      from './types-sort';
 
 /**
  * Base class for a sorted collection of cards by categories.

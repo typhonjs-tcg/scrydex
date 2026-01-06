@@ -12,13 +12,13 @@ import {
 
 import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
+import { ConfigCardFilter }   from "#scrydex/data/db/util";
+
 import type {
    Card,
    CardDB,
    CardDBMetadata,
-   CardDBMetadataGroups }     from '#scrydex/data/db';
-
-import { ConfigCardFilter }   from "#scrydex/data/db/util";
+   CardDBMetadataGroups }     from './types-db';
 
 /**
  * Provide a wrapper around a JSON Card DB with streaming access to cards.

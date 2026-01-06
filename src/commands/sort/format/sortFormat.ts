@@ -15,14 +15,14 @@ import {
    SortedFormat,
    SortOrder }                      from '#scrydex/data/sort';
 
-import type { ConfigCmd }           from '#scrydex/commands';
-
 import type {
    Card,
    CardDBMetadataBase,
    CardStream }                     from '#scrydex/data/db';
 
 import type { GameFormat }          from '#scrydex/data/scryfall';
+
+import type { ConfigCmd }           from '../../types-command';
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.

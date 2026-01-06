@@ -3,7 +3,7 @@ import { SortOrder }             from '../SortOrder';
 
 import type {
    CardSorted,
-   SortedCategories }            from '#scrydex/data/sort';
+   SortedCategories }            from '../types-sort';
 
 export class SortedKind implements SortedCategories
 {

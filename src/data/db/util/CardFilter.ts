@@ -1,22 +1,23 @@
 import { isObject }              from '@typhonjs-utils/object';
 
 import {
-   parsePriceFilter,
-   matchesPriceFilter }          from '#scrydex/data/db/util';
-
-import {
    parseManaCostColors,
    supportedFormats,
    validLegality }               from '#scrydex/data/scryfall';
 
 import { CardFields }            from './CardFields';
 
+import {
+   parsePriceFilter,
+   matchesPriceFilter }          from './priceFilter';
+
 import type {
    BasicLogger,
    LogLevel }                    from '@typhonjs-utils/logger-color';
 
 import type { Card }             from '#scrydex/data/db';
-import type { ConfigCardFilter } from '#scrydex/data/db/util';
+
+import type { ConfigCardFilter } from './types-db-util';
 
 /**
  * Provides a reusable card filter based on optional independent card attributes and regex search string.

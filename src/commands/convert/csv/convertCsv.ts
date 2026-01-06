@@ -2,7 +2,7 @@ import { CSVCollection }   from '#scrydex/data/import';
 
 import { ScryfallDB }      from './ScryfallDB';
 
-import type { ConfigCmd }  from '#scrydex/commands';
+import type { ConfigCmd }  from '../../types-command';
 
 /**
  * Converts the CSV collection output to compact Scryfall card data.

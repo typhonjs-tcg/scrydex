@@ -13,8 +13,9 @@ import {
    exportCards,
    exportDir }             from '../common';
 
-import type { ConfigCmd }  from '#scrydex/commands';
 import type { CardStream } from '#scrydex/data/db';
+
+import type { ConfigCmd }  from '../../types-command';
 
 /**
  * Exports a single Scrydex CardDB to CSV or all sorted CardDBs found in a directory.

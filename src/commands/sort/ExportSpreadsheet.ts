@@ -16,11 +16,11 @@ import { Theme }           from './Theme';
 import type {
    Worksheet }             from 'exceljs';
 
-import type { ConfigCmd }  from '#scrydex/commands';
-
 import type {
    AbstractCollection,
    SortedCategories }      from '#scrydex/data/sort';
+
+import type { ConfigCmd }  from '../types-command';
 
 /**
  * Export all `SortedFormat` instances as spreadsheets by rarity.

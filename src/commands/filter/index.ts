@@ -1,8 +1,9 @@
 import { CardDBStore }     from '#scrydex/data/db';
 import { CardFilter }      from '#scrydex/data/db/util';
 
-import type { ConfigCmd }  from '#scrydex/commands';
 import type { Card }       from '#scrydex/data/db';
+
+import type { ConfigCmd }  from '../types-command';
 
 export async function filter(config: ConfigCmd.Filter): Promise<void>
 {
