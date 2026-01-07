@@ -17,11 +17,9 @@ import { streamObject }       from 'stream-json/streamers/StreamObject';
 
 import { VERSION }            from '#scrydex';
 import { execTime }           from '#scrydex/data/db/util';
-import { supportedFormats }   from '#scrydex/data/scryfall';
+import { ScryfallData }       from '#scrydex/data/scryfall';
 
 import { CardStream }         from './CardStream';
-
-import type { GameFormat }    from '#scrydex/data/scryfall';
 
 import type {
    Card,
@@ -58,8 +56,8 @@ class CardDBStore
     * @returns Configured CardStream instances for the found JSON card DB collections.
     */
    static async loadAll({ dirpath, format, type, walk = false }:
-    { dirpath: string, format?: GameFormat | Iterable<GameFormat>, type?: CardDBType | Iterable<CardDBType>,
-     walk?: boolean }): Promise<CardStream[]>
+    { dirpath: string, format?: ScryfallData.GameFormat | Iterable<ScryfallData.GameFormat>, type?:
+     CardDBType | Iterable<CardDBType>, walk?: boolean }): Promise<CardStream[]>
    {
       if (!isDirectory(dirpath)) { throw new Error(`CardDBStore.loadAll error: 'dirpath' is not a directory.`); }
       if (typeof walk !== 'boolean') { throw new TypeError(`CardDBStore.loadAll error: 'walk' is not a boolean.`); }
@@ -83,7 +81,9 @@ class CardDBStore
          walk
       });
 
-      const formatSet: Set<GameFormat> | undefined = format && typeof format !== 'string' ? new Set(format) : void 0;
+      const formatSet: Set<ScryfallData.GameFormat> | undefined = format && typeof format !== 'string' ?
+       new Set(format) : void 0;
+
       const typeSet: Set<CardDBType> | undefined = type && typeof type !== 'string' ? new Set(type) : void 0;
 
       for (const filepath of dbFiles)
@@ -165,7 +165,7 @@ class CardDBStore
          throw new Error(`CardDBStore.save error: 'type' must be 'inventory', 'sorted', or 'sorted_format'.`);
       }
 
-      if (meta.type === 'sorted_format' && !supportedFormats.has(meta.format))
+      if (meta.type === 'sorted_format' && !ScryfallData.isSupportedFormat(meta.format))
       {
          throw new TypeError(
           `CardDBStore.save error: A sorted format must include a supported game format in 'meta.format'.`);

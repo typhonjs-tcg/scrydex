@@ -1,9 +1,9 @@
-import { CardFields }      from '#scrydex/data/db/util';
+import { CardFields }         from '#scrydex/data/db/util';
 
-import type { Card }       from '#scrydex/data/db';
-import type { GameFormat } from '#scrydex/data/scryfall';
+import type { Card }          from '#scrydex/data/db';
+import type { ScryfallData }  from '#scrydex/data/scryfall';
 
-import type { CardSorted } from './types-sort';
+import type { CardSorted }    from './types-sort';
 
 /**
  * Provides card data related to sort order for rarity and card category.
@@ -73,7 +73,7 @@ export abstract class SortOrder
     *
     * @param [format] - Specific game format.
     */
-   static rarity(card: Card, format?: GameFormat)
+   static rarity(card: Card, format?: ScryfallData.GameFormat)
    {
       return (format === 'oldschool' || format === 'premodern' ? card.rarity_orig : card.rarity_recent) ?? card.rarity;
    }

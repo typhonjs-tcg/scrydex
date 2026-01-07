@@ -1,9 +1,6 @@
 import { isObject }              from '@typhonjs-utils/object';
 
-import {
-   parseManaCostColors,
-   supportedFormats,
-   validLegality }               from '#scrydex/data/scryfall';
+import { ScryfallData }          from '#scrydex/data/scryfall';
 
 import { CardFields }            from './CardFields';
 
@@ -245,7 +242,7 @@ export abstract class CardFilter
       {
          if (typeof opts['color-identity'] !== 'string') { return `'color-identity' option must be a string.`; }
 
-         const colorIdentity = parseManaCostColors(opts['color-identity']);
+         const colorIdentity = ScryfallData.parseManaCostColors(opts['color-identity']);
          if (colorIdentity.size === 0)
          {
             return `'color-identity' option contains no valid WUBRG colors: ${opts['color-identity']}`;
@@ -326,7 +323,10 @@ export abstract class CardFilter
       {
          if (seen.has(format)) { return `'formats' option contains duplicate format: ${format}`; }
 
-         if (!supportedFormats.has(format)) { return `'formats' option contains an invalid format: ${format}`; }
+         if (!ScryfallData.isSupportedFormat(format))
+         {
+            return `'formats' option contains an invalid format: ${format}`;
+         }
 
          seen.add(format);
       }
@@ -378,7 +378,7 @@ export abstract class CardFilter
       {
          for (const format of config.properties.formats)
          {
-            if (!validLegality.has(card.legalities?.[format])) { return false; }
+            if (!ScryfallData.isLegal(card.legalities?.[format])) { return false; }
          }
       }
 

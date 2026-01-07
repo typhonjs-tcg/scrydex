@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import sade                   from 'sade';
+import sade             from 'sade';
 
 import {
    commandConvertCsv,
@@ -8,12 +8,12 @@ import {
    commandExportTxt,
    commandFilter,
    commandFind,
-   commandSortFormat }        from './functions';
+   commandSortFormat }  from './functions';
 
-import { wrap }               from './wrap';
+import { wrap }         from './wrap';
 
-import { VERSION }            from '#scrydex';
-import { supportedFormats }   from '#scrydex/data/scryfall';
+import { VERSION }      from '#scrydex';
+import { ScryfallData } from '#scrydex/data/scryfall';
 
 const program = sade('scrydex')
 .version(VERSION.package)
@@ -97,7 +97,10 @@ program
 .action(commandFind);
 
 program.command('formats', `List all supported Scryfall game 'formats'.`)
-.action(() => console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(supportedFormats).join(', ')}`)));
+.action(() =>
+{
+   console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(ScryfallData.supportedFormats).join(', ')}`));
+});
 
 program
 .command('sort-format [input]', 'Sort Format')

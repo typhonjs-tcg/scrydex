@@ -1,9 +1,9 @@
-import { parseManaCostColors }   from '#scrydex/data/scryfall';
+import { ScryfallData } from '#scrydex/data/scryfall';
 
 import type {
    Colors,
    Card,
-   CardFace }                    from '#scrydex/data/db';
+   CardFace }           from '#scrydex/data/db';
 
 export abstract class CardFields
 {
@@ -48,11 +48,14 @@ export abstract class CardFields
       {
          colors = new Set();
 
-         for (const face of card.card_faces) { colors = colors.union(parseManaCostColors(face.mana_cost)); }
+         for (const face of card.card_faces)
+         {
+            colors = colors.union(ScryfallData.parseManaCostColors(face.mana_cost));
+         }
       }
       else
       {
-         colors = parseManaCostColors(card.mana_cost);
+         colors = ScryfallData.parseManaCostColors(card.mana_cost);
       }
 
       return colors;

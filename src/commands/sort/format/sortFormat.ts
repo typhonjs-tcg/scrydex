@@ -6,9 +6,7 @@ import { ExportCollection }         from '../ExportCollection';
 import { CardDBStore }              from '#scrydex/data/db';
 import { matchesPriceExpression }   from '#scrydex/data/db/util';
 
-import {
-   isSupportedFormat,
-   validLegality }                  from '#scrydex/data/scryfall';
+import { ScryfallData }             from '#scrydex/data/scryfall';
 
 import {
    sortByNameThenPrice,
@@ -19,8 +17,6 @@ import type {
    Card,
    CardDBMetadataBase,
    CardStream }                     from '#scrydex/data/db';
-
-import type { GameFormat }          from '#scrydex/data/scryfall';
 
 import type { ConfigCmd }           from '../../types-command';
 
@@ -87,7 +83,7 @@ async function generate(config: ConfigCmd.SortFormat): Promise<SortedFormat[]>
    {
       if (cards.length === 0) { continue; }
 
-      const format = isSupportedFormat(name) ? name : void 0;
+      const format = ScryfallData.isSupportedFormat(name) ? name : void 0;
 
       if (format && config.highValue)
       {
@@ -140,7 +136,8 @@ async function generate(config: ConfigCmd.SortFormat): Promise<SortedFormat[]>
  * @returns The SortedFormat instance.
  */
 function createSortedFormat(config: ConfigCmd.SortFormat, options:
- { cards: Card[]; name: string; sourceMeta: CardDBMetadataBase, dirpath: string, format?: GameFormat }): SortedFormat
+ { cards: Card[]; name: string; sourceMeta: CardDBMetadataBase, dirpath: string, format?: ScryfallData.GameFormat }):
+  SortedFormat
 {
    sortByNameThenPrice(options.cards, 'desc');
 
@@ -195,7 +192,7 @@ async function presortCards(config: ConfigCmd.SortFormat, db: CardStream): Promi
 
       for (const format of config.formats)
       {
-         if (validLegality.has(card.legalities?.[format]))
+         if (ScryfallData.isLegal(card.legalities?.[format]))
          {
             presortFormat.get(format)?.push(card);
             sorted = true;

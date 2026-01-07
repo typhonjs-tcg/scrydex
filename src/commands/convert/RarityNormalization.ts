@@ -3,9 +3,7 @@ import { chain }                    from 'stream-chain';
 import { parser }                   from 'stream-json';
 import { streamArray }              from 'stream-json/streamers/StreamArray';
 
-import {
-   excludedSetsRecentRarity,
-   excludedSetTypesRecentRarity }   from '#scrydex/data/scryfall';
+import { ScryfallData }             from '#scrydex/data/scryfall';
 
 import type { Card }                from '#scrydex/data/db';
 import type { ImportCollection }    from '#scrydex/data/import';
@@ -143,7 +141,7 @@ export class RarityNormalization
       if (scryCard.lang !== 'en' || typeof oracle_id !== 'string' || !this.#oracleIDSet.has(oracle_id)) { return; }
 
       //  Exclude special / promo sets so normalized rarity reflects tournament-legal printings.
-      if (excludedSetTypesRecentRarity.has(scryCard.set_type) || excludedSetsRecentRarity.has(scryCard.set) ||
+      if (ScryfallData.isExcludedSetType(scryCard.set_type) || ScryfallData.isExcludedSet(scryCard.set) ||
        scryCard.rarity === 'special')
       {
          return;

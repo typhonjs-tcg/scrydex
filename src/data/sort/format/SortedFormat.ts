@@ -1,4 +1,4 @@
-import { isSupportedFormat }  from '#scrydex/data/scryfall';
+import { ScryfallData }       from '#scrydex/data/scryfall';
 
 import { AbstractCollection } from '../AbstractCollection';
 import { SortedKind }         from '../category/SortedKind';
@@ -6,8 +6,6 @@ import { SortOrder }          from '../SortOrder';
 
 import type {
    CardDBMetadataBase }       from '#scrydex/data/db';
-
-import type { GameFormat }    from '#scrydex/data/scryfall';
 
 import type {
    CardSorted,
@@ -30,7 +28,8 @@ export class SortedFormat extends AbstractCollection
     *        otherwise the type is `sorted`.
     */
    constructor({ cards, dirpath, name, sourceMeta, format }:
-    { cards: CardSorted[], dirpath: string, name: string, sourceMeta: CardDBMetadataBase, format?: GameFormat })
+    { cards: CardSorted[], dirpath: string, name: string, sourceMeta: CardDBMetadataBase,
+     format?: ScryfallData.GameFormat })
    {
       super({
          cards,
@@ -66,7 +65,7 @@ export class SortedFormat extends AbstractCollection
     */
    static #createMeta(name: string, sourceMeta: CardDBMetadataBase, format?: string): CardDBMetadataBase
    {
-      return isSupportedFormat(format) ?
+      return ScryfallData.isSupportedFormat(format) ?
        Object.freeze({ name, type: 'sorted_format', format, groups: sourceMeta.groups }) :
         { name, type: 'sorted', groups: sourceMeta.groups };
    }
@@ -76,7 +75,7 @@ export class SortedFormat extends AbstractCollection
     *
     * @param [format] -
     */
-   static #sortRarity(cards: CardSorted[], format?: GameFormat): Map<string, SortedCategories>
+   static #sortRarity(cards: CardSorted[], format?: ScryfallData.GameFormat): Map<string, SortedCategories>
    {
       if (cards.length === 0) { return new Map<string, SortedCategories>(); }
 

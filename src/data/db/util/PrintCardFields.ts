@@ -1,4 +1,4 @@
-import { langCodeToName }  from '#scrydex/data/scryfall';
+import { ScryfallData }    from '#scrydex/data/scryfall';
 
 import { CardFields }      from './CardFields';
 
@@ -62,7 +62,7 @@ export abstract class PrintCardFields
     */
    static langName(card: Card): string
    {
-      return langCodeToName.get(CardFields.langCode(card)) ?? '<Unknown>';
+      return ScryfallData.langCodeToName(CardFields.langCode(card)) ?? '<Unknown>';
    }
 
    /**

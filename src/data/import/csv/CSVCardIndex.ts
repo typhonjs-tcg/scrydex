@@ -2,7 +2,7 @@ import fs                  from 'node:fs';
 import path                from 'node:path';
 import { parse }           from 'csv-parse';
 
-import { supportedLang }   from '#scrydex/data/scryfall';
+import { ScryfallData }    from '#scrydex/data/scryfall';
 
 import type { CSVCard }    from '#scrydex/data/db';
 
@@ -64,7 +64,7 @@ export class CSVCardIndex
          const quantity = Number(row['Quantity']);
          const scryfall_id = row['Scryfall ID'];
          const foil = row['Foil'] ?? 'normal';
-         const lang_csv = supportedLang.get(row['Language']);
+         const lang_csv = ScryfallData.normalizeLangCode(row['Language']);
 
          if (!Number.isInteger(quantity) || quantity < 1)
          {

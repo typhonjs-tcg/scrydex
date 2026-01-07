@@ -1,4 +1,4 @@
-import type { GameFormat } from '#scrydex/data/scryfall';
+import type { ScryfallData } from '#scrydex/data/scryfall';
 
 /**
  * Defines the enriched, but reduced set of card data transferred from the Scryfall DB.
@@ -359,7 +359,7 @@ interface CardDBMetadataSortedFormat extends CardDBMetadataCommon
    type: 'sorted_format';
 
    /** Game format of CardDB. */
-   format: GameFormat;
+   format: ScryfallData.GameFormat;
 }
 
 /**

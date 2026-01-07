@@ -1,4 +1,4 @@
-import { parsePrice }      from '#scrydex/data/scryfall';
+import { ScryfallData }    from '#scrydex/data/scryfall';
 import { isFiniteNumber }  from '#scrydex/util';
 
 import type { Card }       from '#scrydex/data/db';
@@ -17,8 +17,8 @@ export function sortByNameThenPrice(cards: Card[], direction: 'asc' | 'desc' = '
       const nameCmp = a.name.localeCompare(b.name);
       if (nameCmp !== 0) { return nameCmp; }
 
-      const aPrice = parsePrice(a.price);
-      const bPrice = parsePrice(b.price);
+      const aPrice = ScryfallData.parsePrice(a.price);
+      const bPrice = ScryfallData.parsePrice(b.price);
 
       if (isFiniteNumber(aPrice) && isFiniteNumber(bPrice))
       {
