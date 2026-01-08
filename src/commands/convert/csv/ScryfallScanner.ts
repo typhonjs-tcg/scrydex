@@ -1,9 +1,5 @@
-import fs                        from 'node:fs';
-import { chain }                 from 'stream-chain';
-import { parser }                from 'stream-json';
-import { streamArray }           from 'stream-json/streamers/StreamArray';
-
 import { CardDB }                from '#scrydex/data/db';
+import { ScryfallDB }            from '#scrydex/data/scryfall';
 
 import { RarityNormalization }   from '../RarityNormalization';
 import { ParseCardFaces }        from '../ParseCardFaces';
@@ -19,7 +15,7 @@ import type { ConfigCmd }        from '../../types-command';
  * Provides thorough resolution and normalization of CSV collection cards with multiple streaming passes over the
  * Scryfall DB.
  */
-export class ScryfallDB
+export class ScryfallScanner
 {
    /**
     * @param config -
@@ -32,22 +28,18 @@ export class ScryfallDB
 
       const outputDB: CardDB.Data.Card[] = [];
 
+      const scryfallDB = await ScryfallDB.load({ filepath: config.db });
+
       const rarityNormalization = new RarityNormalization();
 
       // This is a first streaming pass across the Scryfall DB collecting the `oracle_id` for cards in the collection.
-      await rarityNormalization.scanForOracleID(config, collection);
+      await rarityNormalization.scanForOracleID(config, collection, scryfallDB);
 
       logger?.info(`Building Scrydex card database - this may take a moment...`);
 
-      const pipeline = chain([
-         fs.createReadStream(config.db),
-         parser(),
-         streamArray()
-      ]);
-
       let totalQuantity = 0;
 
-      for await (const { value: scryCard } of pipeline)
+      for await (const scryCard of scryfallDB.asStream())
       {
          if (scryCard?.object !== 'card') { continue; }
 

@@ -1,12 +1,8 @@
-import fs                           from 'node:fs';
-import { chain }                    from 'stream-chain';
-import { parser }                   from 'stream-json';
-import { streamArray }              from 'stream-json/streamers/StreamArray';
-
 import { ScryfallData }             from '#scrydex/data/scryfall';
 
 import type { CardDB }              from '#scrydex/data/db';
 import type { ImportCollection }    from '#scrydex/data/import';
+import type { ScryfallDB }          from '#scrydex/data/scryfall';
 
 import type { ConfigCmd }           from '../types-command';
 
@@ -101,20 +97,14 @@ export class RarityNormalization
     *
     * @param collection -
     */
-   async scanForOracleID(config: ConfigCmd.Convert, collection: ImportCollection)
+   async scanForOracleID(config: ConfigCmd.Convert, collection: ImportCollection, scryfallDB: ScryfallDB.Stream.Reader)
    {
       const logger = config.logger;
 
       logger?.info(
        `Scanning Scryfall database to identify oracle IDs used by cards in the collection - this may take a moment...`);
 
-      const pipeline = chain([
-         fs.createReadStream(config.db),
-         parser(),
-         streamArray()
-      ]);
-
-      for await (const { value: scryCard } of pipeline)
+      for await (const scryCard of scryfallDB.asStream())
       {
          if (scryCard?.object !== 'card') { continue; }
 
@@ -133,7 +123,7 @@ export class RarityNormalization
     *
     * @param scryCard - Scryfall card data.
     */
-   trackRarity(scryCard: CardDB.Data.Card)
+   trackRarity(scryCard: Record<string, any>)
    {
       const oracle_id = scryCard.oracle_id;
 

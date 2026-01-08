@@ -1,6 +1,6 @@
 import { CSVCollection }   from '#scrydex/data/import';
 
-import { ScryfallDB }      from './ScryfallDB';
+import { ScryfallScanner }      from './ScryfallScanner';
 
 import type { ConfigCmd }  from '../../types-command';
 
@@ -13,5 +13,5 @@ export async function convertCsv(config: ConfigCmd.Convert): Promise<void>
 {
    const collection = await CSVCollection.load(config);
 
-   await ScryfallDB.exportCollection(config, collection);
+   await ScryfallScanner.exportCollection(config, collection);
 }

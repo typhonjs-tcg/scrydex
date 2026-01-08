@@ -72,7 +72,7 @@ export class ParseTypeLine
     *
     * @returns Type category classification.
     */
-   static resolve(card: CardDB.Data.Card | string | null | undefined): string
+   static resolve(card: Record<string, any> | string | null | undefined): string
    {
       if (!card) { throw new Error(`'card' must be a card object or string.`); }
 
