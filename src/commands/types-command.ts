@@ -2,10 +2,6 @@ import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type { CardDB }        from '#scrydex/data/db';
 
-import type {
-   ConfigCardFilter,
-   PriceExpression }          from '#scrydex/data/db/util';
-
 interface Command
 {
    /**
@@ -88,9 +84,9 @@ interface Export extends Command
 interface Filter extends Command
 {
    /**
-    * Config for {@link CardFilter}.
+    * Config for {@link CardDB.CardFilter}.
     */
-   filter: ConfigCardFilter;
+   filter: CardDB.Options.CardFilter;
 
    /**
     * Input card JSON DB file.
@@ -152,7 +148,7 @@ interface SortFormat extends Sort
    /**
     * When defined sorted collections are separated into high value binders.
     */
-   highValue: PriceExpression | null;
+   highValue: CardDB.Data.PriceExpression | null;
 }
 
 /**

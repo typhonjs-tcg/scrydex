@@ -1,5 +1,4 @@
 import { CardDB }          from '#scrydex/data/db';
-import { CardFilter }      from '#scrydex/data/db/util';
 
 import type { ConfigCmd }  from '../types-command';
 
@@ -12,7 +11,7 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
    logger?.verbose(`[Filter Options]`);
    logger?.verbose(`----------------------`);
 
-   if (logger) { CardFilter.logConfig(config.filter, logger, 'verbose'); }
+   if (logger) { CardDB.CardFilter.logConfig(config.filter, logger, 'verbose'); }
 
    logger?.verbose(`----------------------`);
 
@@ -27,7 +26,7 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
       totalUnique++;
 
       // Independent filter checks.
-      if (!CardFilter.test(card, config.filter)) { continue; }
+      if (!CardDB.CardFilter.test(card, config.filter)) { continue; }
 
       outputDB.push(card);
    }

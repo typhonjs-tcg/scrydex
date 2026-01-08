@@ -3,8 +3,6 @@ import type { BasicLogger }   from "@typhonjs-utils/logger-color";
 import type { CSVCard }       from '#scrydex/data/import';
 import type { ScryfallData }  from '#scrydex/data/scryfall';
 
-import type { ConfigCardFilter } from '#scrydex/data/db/util';
-
 // Namespace Data ----------------------------------------------------------------------------------------------------
 
 /**
@@ -250,11 +248,46 @@ interface CardFace
    type_line?: string | null;
 }
 
+/**
+ * Represents a parsed price comparison expression.
+ *
+ * This is the normalized form of a user-provided price filter such as `<10`, `>=2.50`, or `<= 0.99`.
+ *
+ * The `rawValue` field is retained for diagnostics, logging, and future serialization, while `value` should be
+ * used exclusively for evaluation.
+ */
+interface PriceExpression
+{
+   /**
+    * Comparison operator to apply.
+    */
+   operator: '<' | '>' | '<=' | '>=';
+
+   /**
+    * Preserves the original numeric string.
+    */
+   rawValue: string;
+
+   /**
+    * Parsed numeric value used for all comparisons.
+    */
+   value: number;
+}
+
+/**
+ *
+ */
+type PriceFilter =
+   | { kind: 'comparison'; expr: PriceExpression }
+   | { kind: 'null' };
+
 declare namespace Data
 {
    export {
       Card,
-      CardFace
+      CardFace,
+      PriceExpression,
+      PriceFilter
    }
 }
 
@@ -382,7 +415,6 @@ interface JSON
    cards: Card[];
 }
 
-
 declare namespace File
 {
    export {
@@ -395,7 +427,86 @@ declare namespace File
    }
 }
 
-// Stream Namespace --------------------------------------------------------------------------------------------------
+// Namespace Options -------------------------------------------------------------------------------------------------
+
+/**
+ * Provides the configuration object for {@link CardFilter.filter}.
+ */
+interface CardFilter
+{
+   /**
+    * Independent card properties to filter.
+    */
+   properties: {
+      /**
+       * Card border colors to filter.
+       */
+      border?: Set<string>;
+
+      /**
+       * WUBRG color identity set.
+       */
+      colorIdentity?: Set<string>;
+
+      /**
+       * Match card `CMC`.
+       */
+      cmc?: number;
+
+      /**
+       * Game format legality.
+       */
+      formats?: string[];
+
+      /**
+       * An array of RegExp instances for keywords that a card uses such as 'Flying' and 'Cumulative upkeep'.
+       */
+      keywords?: RegExp[];
+
+      /**
+       * Match exact mana cost.
+       */
+      manaCost?: string;
+
+      /**
+       * Price filter to match.
+       */
+      price?: PriceFilter;
+   };
+
+   /**
+    * Defines a possible regex test that occurs before independent property tests.
+    */
+   regex?: {
+      /**
+       * Regex operation.
+       */
+      op: RegExp;
+
+      /**
+       * The card fields to search.
+       */
+      fields: Set<string>,
+
+      /**
+       * Info for logging config.
+       */
+      log: {
+         input: string,
+
+         caseInsensitive: boolean,
+         exact: boolean,
+         wordBoundary: boolean;
+      }
+   }
+}
+
+declare namespace Options
+{
+   export { CardFilter };
+}
+
+// Namespace Stream --------------------------------------------------------------------------------------------------
 
 /**
  * Result of diffing two card stream instances.
@@ -426,12 +537,12 @@ interface Diff
 /**
  * Options for {@link Stream.Reader.asStream}.
  */
-interface Options
+interface StreamOptions
 {
    /**
     * Optional card-level filtering configuration.
     */
-   filter?: ConfigCardFilter;
+   filter?: CardFilter;
 
    /**
     * Optional predicate applied to each card in the stream.
@@ -476,7 +587,6 @@ interface Options
    logger?: BasicLogger;
 }
 
-
 interface Reader
 {
    /**
@@ -496,7 +606,7 @@ interface Reader
     *
     * @returns Asynchronous iterator over validated card entries.
     */
-   asStream(options?: Options): AsyncIterable<Data.Card>;
+   asStream(options?: StreamOptions): AsyncIterable<Data.Card>;
 
    /**
     * Computes a quantity-based diff between this card stream and a comparison card stream instance.
@@ -522,7 +632,7 @@ interface Reader
     *
     * @returns CardStreamDiff object.
     */
-   diff(comparison: Reader, streamOptions?: Options): Promise<Stream.Diff>;
+   diff(comparison: Reader, streamOptions?: StreamOptions): Promise<Stream.Diff>;
 
    /**
     * Return synchronously all card data in the DB.
@@ -553,7 +663,7 @@ interface Reader
     *
     * @returns A map of unique card identity keys to total quantities.
     */
-   getQuantityMap(options?: Options, logger?: BasicLogger): Promise<Map<string, number>>;
+   getQuantityMap(options?: StreamOptions, logger?: BasicLogger): Promise<Map<string, number>>;
 
    /**
     * Verifies that the card is not part of a non-exportable group. Presently all groups are non-exportable.
@@ -582,10 +692,11 @@ declare namespace Stream
    export {
       Diff,
       Reader,
-      Options };
+      StreamOptions };
 }
 
 export {
    type Data,
    type File,
+   type Options,
    type Stream };

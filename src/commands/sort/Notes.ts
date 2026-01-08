@@ -1,8 +1,4 @@
-import {
-   CardFields,
-   PrintCardFields }    from '#scrydex/data/db/util';
-
-import type { CardDB }  from '#scrydex/data/db';
+import { CardDB }  from '#scrydex/data/db';
 
 /**
  * Helper to create additional cell notes used in spreadsheet for note / comment on applicable cells.
@@ -172,11 +168,11 @@ export abstract class Notes
     */
    static nameForeign(card: CardDB.Data.Card): string
    {
-      const lang = CardFields.langCode(card);
+      const lang = CardDB.CardFields.langCode(card);
 
       const name = card.lang !== lang ? '' : `${card.printed_name ?? card.name}\n`;
 
-      return `${name}Language: ${PrintCardFields.langName(card)}`;
+      return `${name}Language: ${CardDB.PrintCardFields.langName(card)}`;
    }
 
    // Internal Implementation (`manaCost`) ---------------------------------------------------------------------------

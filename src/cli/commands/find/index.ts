@@ -1,13 +1,9 @@
 import { isFile }             from '@typhonjs-utils/file-util';
 
 import { CardDB }             from '#scrydex/data/db';
-import { CardFilter }         from '#scrydex/data/db/util';
 import { SortOrder }          from '#scrydex/data/sort';
 
 import type { BasicLogger }   from "@typhonjs-utils/logger-color";
-
-import type {
-   ConfigCardFilter }         from '#scrydex/data/db/util';
 
 /**
  * `find` is a local CLI command that isn't a part of the general SDK due to it primarily being an informational /
@@ -15,7 +11,8 @@ import type {
  *
  * @param config -
  */
-export async function find(config: { input: string, filter: ConfigCardFilter, logger: BasicLogger }): Promise<void>
+export async function find(config: { input: string, filter: CardDB.Options.CardFilter, logger: BasicLogger }):
+ Promise<void>
 {
    const logger = config.logger;
 
@@ -62,7 +59,7 @@ export async function find(config: { input: string, filter: ConfigCardFilter, lo
       logger.verbose(`${collection.meta.name} - ${collection.filepath}`);
    }
 
-   const hasFilters = CardFilter.hasFilterChecks(config.filter);
+   const hasFilters = CardDB.CardFilter.hasFilterChecks(config.filter);
 
    if (hasFilters)
    {
@@ -70,7 +67,7 @@ export async function find(config: { input: string, filter: ConfigCardFilter, lo
       logger.verbose(`[Filter Options]`);
       logger.verbose(`----------------------`);
 
-      if (logger) { CardFilter.logConfig(config.filter, logger, 'verbose'); }
+      if (logger) { CardDB.CardFilter.logConfig(config.filter, logger, 'verbose'); }
 
       logger.verbose(`----------------------`);
    }

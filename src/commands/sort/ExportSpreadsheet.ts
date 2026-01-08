@@ -4,10 +4,7 @@ import path                from 'node:path';
 import { isDirectory }     from '@typhonjs-utils/file-util';
 import Excel               from 'exceljs';
 
-import {
-   CardFields,
-   PrintCardFields }       from '#scrydex/data/db/util';
-
+import { CardDB }          from '#scrydex/data/db';
 import { capitalizeStr }   from '#scrydex/util';
 
 import { Notes }           from './Notes';
@@ -133,10 +130,10 @@ export abstract class ExportSpreadsheet
 
          for (const card of cards)
          {
-            const cardManaCost = CardFields.manaCost(card);
+            const cardManaCost = CardDB.CardFields.manaCost(card);
 
             const row = ws.addRow({
-               Name: PrintCardFields.name(card),
+               Name: CardDB.PrintCardFields.name(card),
                Quantity: Number(card.quantity),
                Filename: card.filename,
                Type: card.type,
@@ -146,7 +143,7 @@ export abstract class ExportSpreadsheet
                'Collector #': card.collector_number,
                'Mana Cost': cardManaCost,
                CMC: card.cmc,
-               Colors: PrintCardFields.colors(card),
+               Colors: CardDB.PrintCardFields.colors(card),
                'Color Identity': card.color_identity?.join(', ') ?? '',
                'Price USD': card.price ?? '',
                'Scryfall Link': card.scryfall_uri
@@ -211,14 +208,14 @@ export abstract class ExportSpreadsheet
             const cardStats = Notes.cardStats(card);
             if (cardStats) { row.getCell('Type').note = cardStats; }
 
-            const oracleText = PrintCardFields.oracleText(card);
+            const oracleText = CardDB.PrintCardFields.oracleText(card);
             if (oracleText) { row.getCell('Type Line').note = oracleText; }
 
             // Add natural language note for mana cost.
             if (cardManaCost.length) { row.getCell('Mana Cost').note = Notes.manaCost(card) }
 
             // Add note for foreign card name.
-            if (CardFields.langCode(card) !== 'en') { row.getCell('Name').note = Notes.nameForeign(card); }
+            if (CardDB.CardFields.langCode(card) !== 'en') { row.getCell('Name').note = Notes.nameForeign(card); }
          }
 
          // Apply Arial + centered alignment rules.

@@ -1,6 +1,5 @@
-import { CardFields }         from '#scrydex/data/db/util';
+import { CardDB }             from '#scrydex/data/db';
 
-import type { CardDB }        from '#scrydex/data/db';
 import type { ScryfallData }  from '#scrydex/data/scryfall';
 
 import type { CardSorted }    from './types-sort';
@@ -24,7 +23,7 @@ export abstract class SortOrder
     */
    static categoryName(card: CardDB.Data.Card): string
    {
-      const colors = CardFields.colorUnion(card);
+      const colors = CardDB.CardFields.colorUnion(card);
 
       switch(colors.length)
       {
@@ -33,7 +32,7 @@ export abstract class SortOrder
             // Devoid cards lack `colors` data, but have a mana cost, so sort by mana cost colors.
             if (Array.isArray(card.keywords) && card.keywords.includes('Devoid'))
             {
-               const colorManaCost = CardFields.colorManaCost(card);
+               const colorManaCost = CardDB.CardFields.colorManaCost(card);
 
                switch (colorManaCost.size)
                {

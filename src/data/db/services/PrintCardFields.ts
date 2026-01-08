@@ -1,20 +1,22 @@
-import { ScryfallData }    from '#scrydex/data/scryfall';
+import { ScryfallData } from '#scrydex/data/scryfall';
 
-import { CardFields }      from './CardFields';
+import { CardFields }   from './CardFields';
 
-import type { CardDB }     from '#scrydex/data/db';
+import type { Data }    from '../types-db';
 
 /**
- * Provides card fields as a unified string regardless of single / dual facedl.
+ * Provides card fields as a unified string regardless of single / dual faced.
  */
 export abstract class PrintCardFields
 {
+   private constructor() {}
+
    /**
     * @param card -
     *
     * @returns `colors` string.
     */
-   static colors(card: CardDB.Data.Card): string
+   static colors(card: Data.Card): string
    {
       if (card.card_faces)
       {
@@ -32,7 +34,7 @@ export abstract class PrintCardFields
     *
     * @returns The finish / foil icon embellishment for spreadsheet card name.
     */
-   static finishIcon(card: CardDB.Data.Card): string
+   static finishIcon(card: Data.Card): string
    {
       switch (card.foil)
       {
@@ -60,7 +62,7 @@ export abstract class PrintCardFields
     *
     * @returns Normalized language name.
     */
-   static langName(card: CardDB.Data.Card): string
+   static langName(card: Data.Card): string
    {
       return ScryfallData.langCodeToName(CardFields.langCode(card)) ?? '<Unknown>';
    }
@@ -74,7 +76,7 @@ export abstract class PrintCardFields
     *
     * @returns Normalized card name for spreadsheet display.
     */
-   static name(card: CardDB.Data.Card): string
+   static name(card: Data.Card): string
    {
       const name = card.name ?? card.printed_name ?? '<Unknown>';
 
@@ -92,7 +94,7 @@ export abstract class PrintCardFields
     *
     * @returns `oracle_text` for any card.
     */
-   static oracleText(card: CardDB.Data.Card): string | undefined
+   static oracleText(card: Data.Card): string | undefined
    {
       const text = card.card_faces ? CardFields.partsOracleText(card).join('\n//\n') : card.oracle_text;
       return text.length ? text.trim() : void 0;

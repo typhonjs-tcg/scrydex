@@ -1,11 +1,11 @@
-import fs                        from 'node:fs';
-import path                      from 'node:path';
+import fs                  from 'node:fs';
+import path                from 'node:path';
 
 import {
    isDirectory,
-   isFile }                      from '@typhonjs-utils/file-util';
+   isFile }                from '@typhonjs-utils/file-util';
 
-import { ColorLogger }           from '@typhonjs-utils/logger-color';
+import { ColorLogger }     from '@typhonjs-utils/logger-color';
 
 import {
    convertCsv,
@@ -13,16 +13,14 @@ import {
    exportCsv,
    exportTxt,
    filter,
-   sortFormat }                  from '#scrydex/commands';
+   sortFormat }            from '#scrydex/commands';
 
-import {
-   CardFilter,
-   parsePriceExpression }        from '#scrydex/data/db/util';
+import { CardDB }          from '#scrydex/data/db';
 
-import { find }                  from './commands/find';
+import { find }            from './commands/find';
+import { Validate }        from './Validate';
 
-import type { ConfigCmd }        from '#scrydex/commands';
-import type { PriceExpression }  from '#scrydex/data/db/util';
+import type { ConfigCmd }  from '#scrydex/commands';
 
 /**
  * Provides a ColorLogger instance for all CLI command usage.
@@ -252,7 +250,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
-   const filterOptions = CardFilter.validateCLIOptions(opts);
+   const filterOptions = Validate.filterOptions(opts);
 
    // A string indicates validation error is detected.
    if (typeof filterOptions === 'string') { exit(filterOptions); }
@@ -305,7 +303,7 @@ export async function commandFind(input: string, query: string, opts: Record<str
 
    if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
-   const filter = CardFilter.validateCLIOptions(opts, query);
+   const filter = Validate.filterOptions(opts, query);
 
    // A string indicates validation error is detected.
    if (typeof filter === 'string') { exit(filter); }
@@ -358,7 +356,7 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
 
    if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 
-   const formats = CardFilter.validateCLIFormats(opts.formats);
+   const formats = Validate.gameFormats(opts.formats);
 
    if (typeof formats === 'string') { exit(formats); }
 
@@ -369,11 +367,11 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
       exit(`'high-value' option is not defined.`);
    }
 
-   let highValue: PriceExpression | null = null;
+   let highValue: CardDB.Data.PriceExpression | null = null;
 
    if (opts['high-value'])
    {
-      highValue = parsePriceExpression(opts['high-value']);
+      highValue = CardDB.Price.parseExpression(opts['high-value']);
 
       if (!highValue) { exit(`'high-value' option is invalid: ${opts['high-value']}`); }
 
@@ -456,7 +454,7 @@ function exit(message: string): never
  *
  * @return ConfigConvert object.
  */
-export function validateConvert(input: string, opts: Record<string, any>): ConfigCmd.Convert
+function validateConvert(input: string, opts: Record<string, any>): ConfigCmd.Convert
 {
    if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
@@ -494,3 +492,4 @@ export function validateConvert(input: string, opts: Record<string, any>): Confi
       logger
    };
 }
+

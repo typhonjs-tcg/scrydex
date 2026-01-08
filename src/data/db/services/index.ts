@@ -1,6 +1,4 @@
 export * from './CardFields';
 export * from './CardFilter';
-export * from './priceFilter';
+export * from './Price';
 export * from './PrintCardFields';
-
-export * from './types-db-util';

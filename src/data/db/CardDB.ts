@@ -1,40 +1,53 @@
-import fs               from 'node:fs';
-import path             from 'node:path';
+import fs                     from 'node:fs';
+import path                   from 'node:path';
 
 import {
    getFileList,
    isDirectory,
-   isFile }             from '@typhonjs-utils/file-util';
+   isFile }                   from '@typhonjs-utils/file-util';
 
 import {
    isIterable,
-   isObject }           from '@typhonjs-utils/object';
+   isObject }                 from '@typhonjs-utils/object';
 
-import { chain }        from 'stream-chain';
-import { parser }       from 'stream-json';
-import { pick }         from 'stream-json/filters/Pick';
-import { streamArray }  from 'stream-json/streamers/StreamArray';
-import { streamObject } from 'stream-json/streamers/StreamObject';
+import { chain }              from 'stream-chain';
+import { parser }             from 'stream-json';
+import { pick }               from 'stream-json/filters/Pick';
+import { streamArray }        from 'stream-json/streamers/StreamArray';
+import { streamObject }       from 'stream-json/streamers/StreamObject';
 
-import { VERSION }      from '#scrydex';
-import { CardFilter }   from '#scrydex/data/db/util';
-import { ScryfallData } from '#scrydex/data/scryfall';
+import { VERSION }            from '#scrydex';
 
-import type {
-   BasicLogger }        from '@typhonjs-utils/logger-color';
+import { ScryfallData }       from '#scrydex/data/scryfall';
+
+import {
+   CardFields,
+   CardFilter,
+   Price,
+   PrintCardFields }          from './services';
+
+import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type {
    Data,
    File,
-   Stream }             from './types-db';
+   Options,
+   Stream }                   from './types-db';
 
+import type { Services }      from './services/types-services';
+
+/**
+ * Provides loading / saving of Scrydex CardDB files including streaming support.
+ */
 class CardDB
 {
-   /**
-    * Provides a consistent `Date` instance for execution time of the CLI ensuring all DB files written share the same
-    * `generatedAt` date.
-    */
-   static #execTime = new Date();
+   static get CardFields(): Services.CardFields { return CardFields; }
+
+   static get CardFilter(): Services.CardFilter { return CardFilter; }
+
+   static get Price(): Services.Price { return Price; }
+
+   static get PrintCardFields(): Services.PrintCardFields { return PrintCardFields; }
 
    /**
     * Provides a type guard for {@link CardDB.File.MetadataGroups} keys.
@@ -232,6 +245,12 @@ class CardDB
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
+    * Provides a consistent `Date` instance for execution time of the CLI ensuring all DB files written share the same
+    * `generatedAt` date.
+    */
+   static #execTime = new Date();
+
+   /**
     * Loads the `meta` object of a card DB via streaming.
     *
     * @param filepath - File path to attempt to load.
@@ -273,7 +292,12 @@ class CardDB
 
 declare namespace CardDB
 {
-   export { Data, File, Stream };
+   export {
+      Data,
+      File,
+      Options,
+      Services,
+      Stream };
 }
 
 export { CardDB };
@@ -341,8 +365,8 @@ class CardStream implements CardDB.Stream.Reader
     *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream({ filter, filterFn, groups, isExportable, uniqueKeys, uniqueOnce }: CardDB.Stream.Options = {}):
-    AsyncIterable<CardDB.Data.Card>
+   async *asStream({ filter, filterFn, groups, isExportable, uniqueKeys, uniqueOnce }:
+    CardDB.Stream.StreamOptions = {}): AsyncIterable<CardDB.Data.Card>
    {
       const pipeline = chain([
          fs.createReadStream(this.#filepath),
@@ -418,7 +442,7 @@ class CardStream implements CardDB.Stream.Reader
     *
     * @returns CardStreamDiff object.
     */
-   async diff(comparison: CardStream, streamOptions?: CardDB.Stream.Options): Promise<CardDB.Stream.Diff>
+   async diff(comparison: CardStream, streamOptions?: CardDB.Stream.StreamOptions): Promise<CardDB.Stream.Diff>
    {
       // Build identity → quantity maps for both streams.
       const mapB = await this.getQuantityMap(streamOptions);
@@ -486,7 +510,7 @@ class CardStream implements CardDB.Stream.Reader
     *
     * @returns A map of unique card identity keys to total quantities.
     */
-   async getQuantityMap(options?: CardDB.Stream.Options, logger?: BasicLogger): Promise<Map<string, number>>
+   async getQuantityMap(options?: CardDB.Stream.StreamOptions, logger?: BasicLogger): Promise<Map<string, number>>
    {
       const map: Map<string, number> = new Map();
 

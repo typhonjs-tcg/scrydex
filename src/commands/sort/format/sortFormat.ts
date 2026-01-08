@@ -4,8 +4,6 @@ import path                         from 'node:path';
 import { ExportCollection }         from '../ExportCollection';
 
 import { CardDB }                   from '#scrydex/data/db';
-import { matchesPriceExpression }   from '#scrydex/data/db/util';
-
 import { ScryfallData }             from '#scrydex/data/scryfall';
 
 import {
@@ -224,7 +222,7 @@ function splitHighValue(config: ConfigCmd.SortFormat, cards: CardDB.Data.Card[])
    // Collect all high value oracle IDs.
    for (const card of cards)
    {
-      if (matchesPriceExpression(card.price, config.highValue)) { oracleHigh.add(card.oracle_id); }
+      if (CardDB.Price.matchesExpression(card.price, config.highValue)) { oracleHigh.add(card.oracle_id); }
    }
 
    // Separate all cards matching a high value oracle ID.
