@@ -3,15 +3,13 @@ import {
    isDirectory,
    isFile }                   from '@typhonjs-utils/file-util';
 
-import { isGroupKind }        from '#scrydex/data/db/util';
+import { CardDB }             from '#scrydex/data/db';
 
 import { CSVCardIndex }       from './CSVCardIndex';
 
 import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type { ConfigCmd }     from '#scrydex/commands';
-
-import type { CardDB }        from '#scrydex/data/db';
 
 import type {
    CSVCard,
@@ -45,7 +43,7 @@ export class CSVCollection implements ImportCollection
 
       for (const group in config.groups)
       {
-         if (isGroupKind(group) && typeof config.groups[group] === 'string')
+         if (CardDB.isGroupKind(group) && typeof config.groups[group] === 'string')
          {
             await this.#loadPath({ path: config.groups[group]!, collection, group, logger });
          }
@@ -62,7 +60,7 @@ export class CSVCollection implements ImportCollection
       const groups: CardDB.File.MetadataGroups = {};
       for (const group in this.#groups)
       {
-         if (isGroupKind(group)) { groups[group] = [...this.#groups[group] ?? []]; }
+         if (CardDB.isGroupKind(group)) { groups[group] = [...this.#groups[group] ?? []]; }
       }
 
       return groups;

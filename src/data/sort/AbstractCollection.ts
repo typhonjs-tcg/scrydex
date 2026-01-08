@@ -1,8 +1,7 @@
-import { isGroupKind }     from '#scrydex/data/db/util';
+import { CardDB }     from '#scrydex/data/db';
 import { capitalizeStr }   from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';
-import type { CardDB }     from '#scrydex/data/db';
 
 import type {
    CardSorted,
@@ -42,7 +41,7 @@ export abstract class AbstractCollection
 
       for (const group in meta.groups)
       {
-         if (isGroupKind(group) && Array.isArray(meta.groups[group]))
+         if (CardDB.isGroupKind(group) && Array.isArray(meta.groups[group]))
          {
             this.#groups[group] = new Set(meta.groups[group]);
          }

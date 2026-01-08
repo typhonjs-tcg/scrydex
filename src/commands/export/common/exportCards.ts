@@ -1,6 +1,4 @@
-import { uniqueCardKey }   from '#scrydex/data/db/util';
-
-import type { CardDB }     from '#scrydex/data/db';
+import { CardDB }          from '#scrydex/data/db';
 
 import type { ConfigCmd }  from '../../types-command';
 
@@ -30,7 +28,7 @@ export async function* exportCards({ config, db }:
 
       for await (const card of db.asStream({ uniqueKeys: uniqueKeyMap, uniqueOnce: true }))
       {
-         const quantity = uniqueKeyMap.get(uniqueCardKey(card));
+         const quantity = uniqueKeyMap.get(CardDB.uniqueCardKey(card));
          if (typeof quantity === 'number')
          {
             card.quantity = quantity;
