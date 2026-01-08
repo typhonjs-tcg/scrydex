@@ -54,15 +54,17 @@ export class CSVCardIndex
       {
          rowCntr++;
 
-         if (row['Quantity'] === void 0 || row['Scryfall ID'] === void 0)
+         // This handles ManaBox and Archidekt CSV fields.
+         if ((row['Quantity'] === void 0 && row['quantity'] === void 0) ||
+          (row['Scryfall ID'] === void 0 && row['scryfall ID'] === void 0))
          {
             parser.destroy(
              new Error(`CSV file does not have required 'Quantity' or 'Scryfall ID' fields:\n${filepath}`));
          }
 
-         const name = row['Name'];
-         const quantity = Number(row['Quantity']);
-         const scryfall_id = row['Scryfall ID'];
+         const name = row['Name'] ?? row['card name'];
+         const quantity = Number(row['Quantity'] ?? row['quantity']);
+         const scryfall_id = row['Scryfall ID'] ?? row['scryfall ID'];
          const foil = row['Foil'] ?? 'normal';
          const lang_csv = ScryfallData.normalizeLangCode(row['Language']);
 
