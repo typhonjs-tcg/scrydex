@@ -11,8 +11,7 @@ import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type { ConfigCmd }     from '#scrydex/commands';
 
-import type {
-   CardDBMetadataGroups }     from '#scrydex/data/db';
+import type { CardDB }        from '#scrydex/data/db';
 
 import type {
    CSVCard,
@@ -20,7 +19,7 @@ import type {
 
 export class CSVCollection implements ImportCollection
 {
-   #groups: CardDBMetadataGroups<Set<string>> = {};
+   #groups: CardDB.File.MetadataGroups<Set<string>> = {};
 
    #index: CSVCardIndex[];
 
@@ -58,9 +57,9 @@ export class CSVCollection implements ImportCollection
    /**
     * @returns The `groups` CSV file name metadata.
     */
-   get groups(): CardDBMetadataGroups
+   get groups(): CardDB.File.MetadataGroups
    {
-      const groups: CardDBMetadataGroups = {};
+      const groups: CardDB.File.MetadataGroups = {};
       for (const group in this.#groups)
       {
          if (isGroupKind(group)) { groups[group] = [...this.#groups[group] ?? []]; }
@@ -72,7 +71,7 @@ export class CSVCollection implements ImportCollection
    /**
     * @returns The `groups` CSV file name sets.
     */
-   get groupsSet(): CardDBMetadataGroups<Set<string>>
+   get groupsSet(): CardDB.File.MetadataGroups<Set<string>>
    {
       return this.#groups;
    }
@@ -142,13 +141,13 @@ export class CSVCollection implements ImportCollection
     *
     * @param card -
     */
-   getCardGroup(card: CSVCard): keyof CardDBMetadataGroups | undefined
+   getCardGroup(card: CSVCard): keyof CardDB.File.MetadataGroups | undefined
    {
       for (const group in this.#groups)
       {
-         if (this.#groups?.[group as keyof CardDBMetadataGroups]?.has(card.filename))
+         if (this.#groups?.[group as keyof CardDB.File.MetadataGroups]?.has(card.filename))
          {
-            return group as keyof CardDBMetadataGroups;
+            return group as keyof CardDB.File.MetadataGroups;
          }
       }
 
@@ -177,7 +176,7 @@ export class CSVCollection implements ImportCollection
     *
     * @param group - External card group to test for inclusion.
     */
-   isCardGroup(card: CSVCard, group: keyof CardDBMetadataGroups): boolean
+   isCardGroup(card: CSVCard, group: keyof CardDB.File.MetadataGroups): boolean
    {
       return this.#groups?.[group]?.has(card.filename) ?? false;
    }
@@ -235,7 +234,7 @@ export class CSVCollection implements ImportCollection
     * @returns A new collection of all CSV card data.
     */
    static async #loadPath({ path, collection = new CSVCollection(), group, logger }:
-    { path: string, collection?: CSVCollection, group?: keyof CardDBMetadataGroups, logger?: BasicLogger }):
+    { path: string, collection?: CSVCollection, group?: keyof CardDB.File.MetadataGroups, logger?: BasicLogger }):
      Promise<CSVCollection>
    {
       if (isDirectory(path))

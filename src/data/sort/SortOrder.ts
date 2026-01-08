@@ -1,6 +1,6 @@
 import { CardFields }         from '#scrydex/data/db/util';
 
-import type { Card }          from '#scrydex/data/db';
+import type { CardDB }        from '#scrydex/data/db';
 import type { ScryfallData }  from '#scrydex/data/scryfall';
 
 import type { CardSorted }    from './types-sort';
@@ -22,7 +22,7 @@ export abstract class SortOrder
     *
     * @returns The category for `SortedColors` card categories.
     */
-   static categoryName(card: Card): string
+   static categoryName(card: CardDB.Data.Card): string
    {
       const colors = CardFields.colorUnion(card);
 
@@ -73,7 +73,7 @@ export abstract class SortOrder
     *
     * @param [format] - Specific game format.
     */
-   static rarity(card: Card, format?: ScryfallData.GameFormat)
+   static rarity(card: CardDB.Data.Card, format?: ScryfallData.GameFormat)
    {
       return (format === 'oldschool' || format === 'premodern' ? card.rarity_orig : card.rarity_recent) ?? card.rarity;
    }

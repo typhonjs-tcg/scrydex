@@ -1,4 +1,4 @@
-import type { Card } from '#scrydex/data/db';
+import type { CardDB }  from '#scrydex/data/db';
 
 /**
  * Creates a unique composite key coalescing the <Scryfall ID>:<Foil / Finish>:<Language>.
@@ -12,7 +12,7 @@ import type { Card } from '#scrydex/data/db';
  *
  * @returns Unique card key.
  */
-export function uniqueCardKey(card: Card)
+export function uniqueCardKey(card: CardDB.Data.Card)
 {
    return `${card.scryfall_id}:${card.foil ?? 'normal'}:${card.lang_csv ?? card.lang}`;
 }

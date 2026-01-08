@@ -1,9 +1,9 @@
-import type { Card } from '#scrydex/data/db';
+import type { CardDB } from '#scrydex/data/db';
 
 /**
  * Additional data added to cards when sorting.
  */
-interface CardSorted extends Card
+interface CardSorted extends CardDB.Data.Card
 {
    /**
     * For marked files indicate merge status.

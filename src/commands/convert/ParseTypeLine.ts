@@ -1,4 +1,4 @@
-import type { Card } from '#scrydex/data/db';
+import type { CardDB } from '#scrydex/data/db';
 
 /**
  * Resolves a Scryfall type_line into a normalized card category.
@@ -72,7 +72,7 @@ export class ParseTypeLine
     *
     * @returns Type category classification.
     */
-   static resolve(card: Card | string | null | undefined): string
+   static resolve(card: CardDB.Data.Card | string | null | undefined): string
    {
       if (!card) { throw new Error(`'card' must be a card object or string.`); }
 

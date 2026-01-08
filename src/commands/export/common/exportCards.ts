@@ -1,10 +1,8 @@
-import { uniqueCardKey }      from '#scrydex/data/db/util';
+import { uniqueCardKey }   from '#scrydex/data/db/util';
 
-import type {
-   Card,
-   CardStream }               from '#scrydex/data/db';
+import type { CardDB }     from '#scrydex/data/db';
 
-import type { ConfigCmd }     from '../../types-command';
+import type { ConfigCmd }  from '../../types-command';
 
 /**
  * Provides an async generator of cards to be exported.
@@ -16,7 +14,7 @@ import type { ConfigCmd }     from '../../types-command';
  * @param options.db -
  */
 export async function* exportCards({ config, db }:
- { config: ConfigCmd.Export, db: CardStream }): AsyncGenerator<Card>
+ { config: ConfigCmd.Export, db: CardDB.Stream.Reader }): AsyncGenerator<CardDB.Data.Card>
 {
    const logger = config.logger;
 

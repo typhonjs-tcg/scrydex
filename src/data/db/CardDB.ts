@@ -1,40 +1,39 @@
-import fs                     from 'node:fs';
-import path                   from 'node:path';
+import fs               from 'node:fs';
+import path             from 'node:path';
 
 import {
    getFileList,
    isDirectory,
-   isFile }                   from '@typhonjs-utils/file-util';
+   isFile }             from '@typhonjs-utils/file-util';
 
 import {
    isIterable,
-   isObject }                 from '@typhonjs-utils/object';
+   isObject }           from '@typhonjs-utils/object';
 
-import { chain }              from 'stream-chain';
-import { parser }             from 'stream-json';
-import { pick }               from 'stream-json/filters/Pick';
-import { streamObject }       from 'stream-json/streamers/StreamObject';
+import { chain }        from 'stream-chain';
+import { parser }       from 'stream-json';
+import { pick }         from 'stream-json/filters/Pick';
+import { streamObject } from 'stream-json/streamers/StreamObject';
 
-import { VERSION }            from '#scrydex';
-import { execTime }           from '#scrydex/data/db/util';
-import { ScryfallData }       from '#scrydex/data/scryfall';
+import { VERSION }      from '#scrydex';
+import { execTime }     from '#scrydex/data/db/util';
+import { ScryfallData } from '#scrydex/data/scryfall';
 
-import { CardStream }         from './CardStream';
+import { CardStream }   from './CardStream';
 
 import type {
-   Card,
-   CardDBMetadata,
-   CardDBMetadataGenerated,
-   CardDBType }               from './types-db';
+   Data,
+   File,
+   Stream }             from './types-db';
 
-class CardDBStore
+class CardDB
 {
    /**
-    * Type guard for {@link CardDBType}.
+    * Type guard for {@link CardDB.File.DBType}.
     *
     * @param type -
     */
-   static isValidType(type: unknown): type is CardDBType
+   static isValidType(type: unknown): type is CardDB.File.DBType
    {
       return type === 'inventory' || type === 'sorted' || type === 'sorted_format';
    }
@@ -53,11 +52,11 @@ class CardDBStore
     *
     * @param [options.walk] - Walk all subdirectories for CardDB files to load; default: `false`
     *
-    * @returns Configured CardStream instances for the found JSON card DB collections.
+    * @returns Configured {@link CardDB.Stream.Reader} instances for the found JSON card DB collections.
     */
    static async loadAll({ dirpath, format, type, walk = false }:
     { dirpath: string, format?: ScryfallData.GameFormat | Iterable<ScryfallData.GameFormat>, type?:
-     CardDBType | Iterable<CardDBType>, walk?: boolean }): Promise<CardStream[]>
+     CardDB.File.DBType | Iterable<CardDB.File.DBType>, walk?: boolean }): Promise<CardDB.Stream.Reader[]>
    {
       if (!isDirectory(dirpath)) { throw new Error(`CardDBStore.loadAll error: 'dirpath' is not a directory.`); }
       if (typeof walk !== 'boolean') { throw new TypeError(`CardDBStore.loadAll error: 'walk' is not a boolean.`); }
@@ -69,10 +68,10 @@ class CardDBStore
 
       if (type !== void 0 && !this.isValidType(type) && !isIterable(type))
       {
-         throw new Error(`CardDBStore.loadAll error: 'type' is not a valid CardDBType or list of CardDBTypes.`);
+         throw new Error(`CardDBStore.loadAll error: 'type' is not a valid CardDB.File.DBType or list of CardDBTypes.`);
       }
 
-      const results: CardStream[] = [];
+      const results: CardDB.Stream.Reader[] = [];
 
       const dbFiles = await getFileList({
          dir: dirpath,
@@ -84,7 +83,7 @@ class CardDBStore
       const formatSet: Set<ScryfallData.GameFormat> | undefined = format && typeof format !== 'string' ?
        new Set(format) : void 0;
 
-      const typeSet: Set<CardDBType> | undefined = type && typeof type !== 'string' ? new Set(type) : void 0;
+      const typeSet: Set<CardDB.File.DBType> | undefined = type && typeof type !== 'string' ? new Set(type) : void 0;
 
       for (const filepath of dbFiles)
       {
@@ -92,7 +91,7 @@ class CardDBStore
          {
             const cardStream = await this.load({ filepath });
 
-            // Reject any CardDB that doesn't match the requested `CardDBType`.
+            // Reject any CardDB that doesn't match the requested `CardDB.File.DBType`.
             if (type !== void 0 && ((typeof type === 'string' && cardStream.meta.type !== type) ||
              ((typeSet instanceof Set) && !typeSet.has(cardStream.meta.type))))
             {
@@ -126,10 +125,10 @@ class CardDBStore
     *
     * @param options.filepath - Filepath to load.
     *
-    * @returns CardStream instance.
+    * @returns {@link CardDB.Stream.Reader} instance.
     * @throws Error
     */
-   static async load({ filepath }: { filepath: string }): Promise<CardStream>
+   static async load({ filepath }: { filepath: string }): Promise<CardDB.Stream.Reader>
    {
       if (isDirectory(filepath)) { throw new Error(`CardDBStore.load error: 'filepath' is a directory.`); }
       if (!isFile(filepath)) { throw new Error(`CardDBStore.load error: 'filepath' is not a valid file.`); }
@@ -173,7 +172,7 @@ class CardDBStore
 
       const name = meta.name === void 0 && typeof meta.name !== 'string' ? path.basename(filepath, '.json') : meta.name;
 
-      const metadata: CardDBMetadata = {
+      const metadata: CardDB.File.Metadata = {
          ...meta,
          name,
          cliVersion: VERSION.package,
@@ -229,15 +228,20 @@ class CardDBStore
     *
     * @param meta - Potential Meta object / unknown
     */
-   static #validateMeta(filepath: string, meta: unknown): CardDBMetadata | string
+   static #validateMeta(filepath: string, meta: unknown): CardDB.File.Metadata | string
    {
       if (!meta) { throw new Error(`CardDBStore.load error: Could not load meta data for ${filepath}`); }
 
-      return meta as CardDBMetadata;
+      return meta as CardDB.File.Metadata;
    }
 }
 
-export { CardDBStore };
+declare namespace CardDB
+{
+   export { Data, File, Stream };
+}
+
+export { CardDB };
 
 // Internal Types ----------------------------------------------------------------------------------------------------
 
@@ -251,7 +255,7 @@ type OptionalName<T> =
       : T;
 
 /**
- * Metadata shape accepted by `CardDBStore.save`.
+ * Metadata shape accepted by `CardDB.save`.
  *
  * @privateRemarks
  * This type is derived from the persisted CardDB metadata definition with generated fields
@@ -261,14 +265,14 @@ type OptionalName<T> =
  * that discriminated union narrowing (IE `type === 'sorted_format'` ⇒ `format` is present) is preserved.
  */
 type CardDBMetaSave =
-   CardDBMetadata extends infer T
+   CardDB.File.Metadata extends infer T
       ? T extends any
-         ? OptionalName<Omit<T, keyof CardDBMetadataGenerated>>
+         ? OptionalName<Omit<T, keyof CardDB.File.MetadataGenerated>>
          : never
       : never;
 
 /**
- * Options for {@link CardDBStore.save}. If you do not include an explicit `meta.name` field the filename will be used.
+ * Options for {@link CardDB.save}. If you do not include an explicit `meta.name` field the filename will be used.
  */
 interface SaveOptions
 {
@@ -280,7 +284,7 @@ interface SaveOptions
    /**
     * Cards to serialize.
     */
-   cards: Card[];
+   cards: CardDB.Data.Card[];
 
    /**
     * Partial CardDB metadata.

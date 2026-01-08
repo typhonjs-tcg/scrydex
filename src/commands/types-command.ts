@@ -1,10 +1,10 @@
-import type { BasicLogger }            from '@typhonjs-utils/logger-color';
+import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
-import type { CardDBMetadataGroups }   from '#scrydex/data/db';
+import type { CardDB }        from '#scrydex/data/db';
 
 import type {
    ConfigCardFilter,
-   PriceExpression }                   from '#scrydex/data/db/util';
+   PriceExpression }          from '#scrydex/data/db/util';
 
 interface Command
 {
@@ -27,7 +27,7 @@ interface Convert extends Command
    /**
     * Input CSV file or directory path to CSV files for card collections representing various groups.
     */
-   groups: CardDBMetadataGroups<string>;
+   groups: CardDB.File.MetadataGroups<string>;
 
    /**
     * Input CSV file or directory path to CSV files.

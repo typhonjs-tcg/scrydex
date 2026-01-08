@@ -1,8 +1,8 @@
 import {
    CardFields,
-   PrintCardFields } from '#scrydex/data/db/util';
+   PrintCardFields }    from '#scrydex/data/db/util';
 
-import type { Card } from '#scrydex/data/db';
+import type { CardDB }  from '#scrydex/data/db';
 
 /**
  * Helper to create additional cell notes used in spreadsheet for note / comment on applicable cells.
@@ -21,7 +21,7 @@ export abstract class Notes
     *
     * @param card -
     */
-   static cardStats(card: Card): string | undefined
+   static cardStats(card: CardDB.Data.Card): string | undefined
    {
       let note = '';
 
@@ -102,7 +102,7 @@ export abstract class Notes
     *
     * @returns English description.
     */
-   static manaCost(card: Card): string
+   static manaCost(card: CardDB.Data.Card): string
    {
       if (card.card_faces)
       {
@@ -170,7 +170,7 @@ export abstract class Notes
    /**
     * @param card - Card to provide any foreign name and original language code.
     */
-   static nameForeign(card: Card): string
+   static nameForeign(card: CardDB.Data.Card): string
    {
       const lang = CardFields.langCode(card);
 

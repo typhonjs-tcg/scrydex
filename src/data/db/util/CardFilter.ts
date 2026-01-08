@@ -12,7 +12,7 @@ import type {
    BasicLogger,
    LogLevel }                    from '@typhonjs-utils/logger-color';
 
-import type { Card }             from '#scrydex/data/db';
+import type { CardDB }           from '#scrydex/data/db';
 
 import type { ConfigCardFilter } from './types-db-util';
 
@@ -133,7 +133,7 @@ export abstract class CardFilter
       }
    }
 
-   static test(card: Card, config: ConfigCardFilter): boolean
+   static test(card: CardDB.Data.Card, config: ConfigCardFilter): boolean
    {
       // Start with any regex tests otherwise set `foundRegex` to true.
       const foundRegex = config.regex && config?.regex.fields?.size ? this.#testRegex(card, config) : true;
@@ -347,7 +347,7 @@ export abstract class CardFilter
     *
     * @returns Tests passed state.
     */
-   static #testProperties(card: Card, config: ConfigCardFilter): boolean
+   static #testProperties(card: CardDB.Data.Card, config: ConfigCardFilter): boolean
    {
       if (config.properties.border && !config.properties.border.has(card.border_color)) { return false; }
 
@@ -432,7 +432,7 @@ export abstract class CardFilter
     *
     * @returns Tests passed state.
     */
-   static #testRegex(card: Card, config: ConfigCardFilter): boolean
+   static #testRegex(card: CardDB.Data.Card, config: ConfigCardFilter): boolean
    {
       if (!config.regex || !config.regex.fields) { return false; }
 

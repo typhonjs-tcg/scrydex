@@ -5,7 +5,7 @@ import { streamArray }              from 'stream-json/streamers/StreamArray';
 
 import { ScryfallData }             from '#scrydex/data/scryfall';
 
-import type { Card }                from '#scrydex/data/db';
+import type { CardDB }              from '#scrydex/data/db';
 import type { ImportCollection }    from '#scrydex/data/import';
 
 import type { ConfigCmd }           from '../types-command';
@@ -133,7 +133,7 @@ export class RarityNormalization
     *
     * @param scryCard - Scryfall card data.
     */
-   trackRarity(scryCard: Card)
+   trackRarity(scryCard: CardDB.Data.Card)
    {
       const oracle_id = scryCard.oracle_id;
 
@@ -176,7 +176,7 @@ export class RarityNormalization
     *
     * @param card -
     */
-   updateRarity(card: Card)
+   updateRarity(card: CardDB.Data.Card)
    {
       const oracleId = card.oracle_id;
 

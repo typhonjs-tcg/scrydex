@@ -7,13 +7,11 @@ import {
 
 import { stringify }       from 'csv-stringify';
 
-import { CardDBStore }     from '#scrydex/data/db';
+import { CardDB }          from '#scrydex/data/db';
 
 import {
    exportCards,
    exportDir }             from '../common';
-
-import type { CardStream } from '#scrydex/data/db';
 
 import type { ConfigCmd }  from '../../types-command';
 
@@ -32,7 +30,7 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
 
       if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
-      const db = await CardDBStore.load({ filepath: config.input });
+      const db = await CardDB.load({ filepath: config.input });
 
       logger?.info(`Export output target file: ${config.output}`);
 
@@ -61,8 +59,8 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
  *
  * @param [options.output] - Output path override.
  */
-async function exportDB({ config, db, output }: { config: ConfigCmd.Export, db: CardStream, output?: string }):
- Promise<void>
+async function exportDB({ config, db, output }:
+ { config: ConfigCmd.Export, db: CardDB.Stream.Reader, output?: string }): Promise<void>
 {
    const outputActual = output ?? config.output;
 

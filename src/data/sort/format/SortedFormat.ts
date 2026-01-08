@@ -4,8 +4,7 @@ import { AbstractCollection } from '../AbstractCollection';
 import { SortedKind }         from '../category/SortedKind';
 import { SortOrder }          from '../SortOrder';
 
-import type {
-   CardDBMetadataBase }       from '#scrydex/data/db';
+import type { CardDB }        from '#scrydex/data/db';
 
 import type {
    CardSorted,
@@ -28,7 +27,7 @@ export class SortedFormat extends AbstractCollection
     *        otherwise the type is `sorted`.
     */
    constructor({ cards, dirpath, name, sourceMeta, format }:
-    { cards: CardSorted[], dirpath: string, name: string, sourceMeta: CardDBMetadataBase,
+    { cards: CardSorted[], dirpath: string, name: string, sourceMeta: CardDB.File.MetadataBase,
      format?: ScryfallData.GameFormat })
    {
       super({
@@ -63,7 +62,7 @@ export class SortedFormat extends AbstractCollection
     *
     * @param [format] - Optional game format to make this a `sorted_format` collection.
     */
-   static #createMeta(name: string, sourceMeta: CardDBMetadataBase, format?: string): CardDBMetadataBase
+   static #createMeta(name: string, sourceMeta: CardDB.File.MetadataBase, format?: string): CardDB.File.MetadataBase
    {
       return ScryfallData.isSupportedFormat(format) ?
        Object.freeze({ name, type: 'sorted_format', format, groups: sourceMeta.groups }) :

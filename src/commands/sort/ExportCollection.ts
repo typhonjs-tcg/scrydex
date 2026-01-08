@@ -3,7 +3,7 @@ import path                   from 'node:path';
 
 import { isDirectory }        from '@typhonjs-utils/file-util';
 
-import { CardDBStore }        from '#scrydex/data/db';
+import { CardDB }             from '#scrydex/data/db';
 
 import { ExportSpreadsheet }  from './ExportSpreadsheet';
 
@@ -32,7 +32,7 @@ export abstract class ExportCollection
             if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath, { recursive: true }); }
 
             // Export collection cards to JSON DB.
-            CardDBStore.save({
+            CardDB.save({
                filepath: path.resolve(collectionDirPath, `${collection.name}.json`),
                cards: collection.cards,
                meta: collection.meta

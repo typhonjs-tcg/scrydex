@@ -1,7 +1,5 @@
-import { CardDBStore }     from '#scrydex/data/db';
+import { CardDB }          from '#scrydex/data/db';
 import { CardFilter }      from '#scrydex/data/db/util';
-
-import type { Card }       from '#scrydex/data/db';
 
 import type { ConfigCmd }  from '../types-command';
 
@@ -18,9 +16,9 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
 
    logger?.verbose(`----------------------`);
 
-   const cards = await CardDBStore.load({ filepath: config.input });
+   const cards = await CardDB.load({ filepath: config.input });
 
-   const outputDB: Card[] = [];
+   const outputDB: CardDB.Data.Card[] = [];
 
    let totalUnique = 0;
 
@@ -36,7 +34,7 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
 
    if (outputDB.length > 0)
    {
-      CardDBStore.save({
+      CardDB.save({
          filepath: config.output,
          cards: outputDB,
          meta: cards.meta

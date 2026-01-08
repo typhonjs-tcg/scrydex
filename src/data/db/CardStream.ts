@@ -12,18 +12,12 @@ import {
 
 import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
-import { ConfigCardFilter }   from "#scrydex/data/db/util";
-
-import type {
-   Card,
-   CardDB,
-   CardDBMetadata,
-   CardDBMetadataGroups }     from './types-db';
+import type { CardDB }        from './CardDB';
 
 /**
  * Provide a wrapper around a JSON Card DB with streaming access to cards.
  */
-class CardStream
+export class CardStream implements CardDB.Stream.Reader
 {
    /**
     * File path of DB.
@@ -33,19 +27,19 @@ class CardStream
    /**
     * Card / filename group associations.
     */
-   readonly #groups: CardDBMetadataGroups<Set<string>> = {};
+   readonly #groups: CardDB.File.MetadataGroups<Set<string>> = {};
 
    /**
     * Metadata object in DB.
     */
-   readonly #meta: CardDBMetadata;
+   readonly #meta: CardDB.File.Metadata;
 
    /**
     * @param filepath - File path of DB.
     *
     * @param meta - Metadata object of DB.
     */
-   constructor(filepath: string, meta: CardDBMetadata)
+   constructor(filepath: string, meta: CardDB.File.Metadata)
    {
       this.#filepath = filepath;
       this.#meta = Object.freeze(meta);
@@ -69,7 +63,7 @@ class CardStream
    /**
     * @returns CardDB metadata.
     */
-   get meta(): Readonly<CardDBMetadata>
+   get meta(): Readonly<CardDB.File.Metadata>
    {
       return this.#meta;
    }
@@ -81,8 +75,8 @@ class CardStream
     *
     * @returns Asynchronous iterator over validated card entries.
     */
-   async *asStream({ filter, filterFn, groups, isExportable, uniqueKeys, uniqueOnce }: CardStreamOptions = {}):
-    AsyncIterable<Card>
+   async *asStream({ filter, filterFn, groups, isExportable, uniqueKeys, uniqueOnce }: CardDB.Stream.Options = {}):
+    AsyncIterable<CardDB.Data.Card>
    {
       const pipeline = chain([
          fs.createReadStream(this.#filepath),
@@ -135,30 +129,30 @@ class CardStream
    }
 
    /**
-    * Computes a quantity-based diff between this CardStream and a comparison CardStream instance.
+    * Computes a quantity-based diff between this card stream and a comparison card stream instance.
     *
     * Cards are compared using a composite identity key (`scryfall_id + foil + lang`) via {@link uniqueCardKey} so that
     * physically distinct printings are treated independently.
     *
     * The diff is asymmetric:
-    * - `this` CardStream instance is treated as the baseline card pool.
+    * - `this` card stream instance is treated as the baseline card pool.
     * - `comparison` is treated as the comparison target.
     *
     * The result captures:
     * - cards newly **added** in `comparison`.
     * - cards **removed** since `baseline`.
-    * - cards whose quantities **changed** between the two CardStreams.
+    * - cards whose quantities **changed** between the two card streams.
     *
     * This function is intentionally card-data–light. It operates only on identity keys and quantities. Any card
     * metadata required for reporting should be collected in a subsequent streaming pass.
     *
-    * @param comparison - Comparison CardStream.
+    * @param comparison - Comparison card stream.
     *
-    * @param [streamOptions] - Optional CardStream options. By default, only `exportable` cards are compared.
+    * @param [streamOptions] - Optional card stream options. By default, only `exportable` cards are compared.
     *
     * @returns CardStreamDiff object.
     */
-   async diff(comparison: CardStream, streamOptions?: CardStreamOptions): Promise<CardStreamDiff>
+   async diff(comparison: CardStream, streamOptions?: CardDB.Stream.Options): Promise<CardDB.Stream.Diff>
    {
       // Build identity → quantity maps for both streams.
       const mapB = await this.getQuantityMap(streamOptions);
@@ -199,15 +193,15 @@ class CardStream
     *
     * @returns All cards in the collection.
     */
-   getAll(): Card[]
+   getAll(): CardDB.Data.Card[]
    {
-      const db = JSON.parse(fs.readFileSync(this.#filepath, 'utf-8')) as CardDB;
+      const db = JSON.parse(fs.readFileSync(this.#filepath, 'utf-8')) as CardDB.File.JSON;
 
       return Array.isArray(db.cards) ? db.cards : [];
    }
 
    /**
-    * Builds a quantity map for cards in this CardStream.
+    * Builds a quantity map for cards in this card stream.
     *
     * Cards are grouped by their composite identity key (`scryfall_id + foil + lang`), and the quantities of
     * matching entries are summed.
@@ -222,9 +216,11 @@ class CardStream
     *
     * @param [options] - Optional stream selection options.
     *
+    * @param [logger] - Optional logging.
+    *
     * @returns A map of unique card identity keys to total quantities.
     */
-   async getQuantityMap(options?: CardStreamOptions, logger?: BasicLogger): Promise<Map<string, number>>
+   async getQuantityMap(options?: CardDB.Stream.Options, logger?: BasicLogger): Promise<Map<string, number>>
    {
       const map: Map<string, number> = new Map();
 
@@ -253,11 +249,11 @@ class CardStream
     *
     * @returns Whether card can be exported.
     */
-   isCardExportable(card: Card): boolean
+   isCardExportable(card: CardDB.Data.Card): boolean
    {
       for (const group in this.#groups)
       {
-         if (this.#groups?.[group as keyof CardDBMetadataGroups]?.has(card.filename)) { return false; }
+         if (this.#groups?.[group as keyof CardDB.File.MetadataGroups]?.has(card.filename)) { return false; }
       }
 
       return true;
@@ -272,92 +268,8 @@ class CardStream
     *
     * @returns Whether card is part of given group.
     */
-   isCardGroup(card: Card, group: keyof CardDBMetadataGroups): boolean
+   isCardGroup(card: CardDB.Data.Card, group: keyof CardDB.File.MetadataGroups): boolean
    {
       return this.#groups?.[group]?.has(card.filename) ?? false;
    }
 }
-
-/**
- * Result of diffing two CardStream instances.
- *
- * All keys are composite card identities (`scryfall_id + foil + lang`) via {@link uniqueCardKey}.
- */
-interface CardStreamDiff
-{
-   /**
-    * Card identities present only in the comparison stream.
-    */
-   added: Set<string>;
-
-   /**
-    * Card identities present only in the baseline stream.
-    */
-   removed: Set<string>;
-
-   /**
-    * Quantity deltas for card identities present in both streams.
-    *
-    * Positive values indicate an increase.
-    * Negative values indicate a decrease.
-    */
-   changed: Map<string, number>;
-}
-
-/**
- * Options for {@link CardStream.asStream}.
- */
-interface CardStreamOptions
-{
-   /**
-    * Optional card-level filtering configuration.
-    */
-   filter?: ConfigCardFilter;
-
-   /**
-    * Optional predicate applied to each card in the stream.
-    *
-    * When provided, the card is yielded only if this function returns `true`. This predicate is applied after all
-    * structured stream options (filters, group exclusions, identity selection) have been evaluated.
-    *
-    * Intended for advanced or ad-hoc use cases. Structured filters should be preferred where possible.
-    */
-   filterFn?: (card: Card) => boolean;
-
-   /**
-    * Exclude cards belonging to specific metadata groups.
-    *
-    * A group is excluded by specifying `false`.
-    */
-   groups?: Partial<Record<keyof CardDBMetadataGroups, false>>;
-
-   /**
-    * When true, skip all non-exportable card entries; IE all decks, externals, proxy groups.
-    */
-   isExportable?: true;
-
-   /**
-    * When provided, only cards whose composite identity matches one of these keys are yielded.
-    *
-    * Any object implementing a `has(key: string): boolean` method may be used; IE `Set`, `Map`, or a custom lookup
-    * structure.
-    *
-    * Composite identity keys are created using {@link uniqueCardKey}.
-    */
-   uniqueKeys?: { has(key: string): boolean };
-
-   /**
-    * When true, only the first card encountered for each unique key is yielded.
-    */
-   uniqueOnce?: true;
-
-   /**
-    * Optional logger for diagnostics. If omitted, no logging is performed.
-    */
-   logger?: BasicLogger;
-}
-
-export {
-   CardStream,
-   type CardStreamDiff,
-   type CardStreamOptions };

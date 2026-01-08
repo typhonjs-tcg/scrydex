@@ -1,8 +1,8 @@
-import type { Borders, Fill, Font }    from 'exceljs';
+import type { Borders, Fill, Font } from 'exceljs';
 
-import type { CardDBMetadataGroups }   from '#scrydex/data/db';
+import type { CardDB }              from '#scrydex/data/db';
 
-import type { ConfigCmd }              from '../types-command';
+import type { ConfigCmd }           from '../types-command';
 
 export class Theme
 {
@@ -29,7 +29,7 @@ class ThemeDark implements ThemeData
 
    readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font>, title: Partial<Font> };
 
-   readonly #groups: Required<CardDBMetadataGroups<{ fill: Fill, border: Partial<Borders> }>>;
+   readonly #groups: Required<CardDB.File.MetadataGroups<{ fill: Fill, border: Partial<Borders> }>>;
 
    readonly #mark: {
       error: { fill: Fill, border: Partial<Borders> };
@@ -180,7 +180,7 @@ class ThemeLight implements ThemeData
 
    readonly #fonts: { header: Partial<Font>, link: Partial<Font>, main: Partial<Font>, title: Partial<Font> };
 
-   readonly #groups: Required<CardDBMetadataGroups<{ fill: Fill, border: Partial<Borders> }>>;
+   readonly #groups: Required<CardDB.File.MetadataGroups<{ fill: Fill, border: Partial<Borders> }>>;
 
    readonly #mark: {
       error: { fill: Fill, border: Partial<Borders> };
@@ -346,7 +346,7 @@ interface ThemeData
       title: Partial<Font>
    }
 
-   get groups(): Required<CardDBMetadataGroups<{ fill: Fill, border: Partial<Borders> }>>
+   get groups(): Required<CardDB.File.MetadataGroups<{ fill: Fill, border: Partial<Borders> }>>
 
    get mark(): {
       error: { fill: Fill, border: Partial<Borders> }

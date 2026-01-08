@@ -2,11 +2,7 @@ import { isGroupKind }     from '#scrydex/data/db/util';
 import { capitalizeStr }   from '#scrydex/util';
 
 import type { ConfigCmd }  from '#scrydex/commands';
-
-import type {
-   Card,
-   CardDBMetadataBase,
-   CardDBMetadataGroups }  from '#scrydex/data/db';
+import type { CardDB }     from '#scrydex/data/db';
 
 import type {
    CardSorted,
@@ -24,7 +20,7 @@ export abstract class AbstractCollection
    /**
     * Card / filename group associations.
     */
-   readonly #groups: CardDBMetadataGroups<Set<string>> = {};
+   readonly #groups: CardDB.File.MetadataGroups<Set<string>> = {};
 
    /**
     * The subdirectory for this collection.
@@ -34,10 +30,10 @@ export abstract class AbstractCollection
    /**
     * CardDB metadata.
     */
-   readonly #meta: CardDBMetadataBase;
+   readonly #meta: CardDB.File.MetadataBase;
 
    constructor({ cards, categories, dirpath, meta }:
-    { cards: CardSorted[], categories: Map<string, SortedCategories>, dirpath: string, meta: CardDBMetadataBase })
+    { cards: CardSorted[], categories: Map<string, SortedCategories>, dirpath: string, meta: CardDB.File.MetadataBase })
    {
       this.#cards = cards;
       this.#categories = categories;
@@ -72,7 +68,7 @@ export abstract class AbstractCollection
    /**
     * @returns Collection metadata.
     */
-   get meta(): Readonly<CardDBMetadataBase>
+   get meta(): Readonly<CardDB.File.MetadataBase>
    {
       return this.#meta;
    }
@@ -129,13 +125,13 @@ export abstract class AbstractCollection
     *
     * @param card -
     */
-   getCardGroup(card: Card): keyof CardDBMetadataGroups | undefined
+   getCardGroup(card: CardDB.Data.Card): keyof CardDB.File.MetadataGroups | undefined
    {
       for (const group in this.#groups)
       {
-         if (this.#groups?.[group as keyof CardDBMetadataGroups]?.has(card.filename))
+         if (this.#groups?.[group as keyof CardDB.File.MetadataGroups]?.has(card.filename))
          {
-            return group as keyof CardDBMetadataGroups;
+            return group as keyof CardDB.File.MetadataGroups;
          }
       }
 
@@ -149,7 +145,7 @@ export abstract class AbstractCollection
     *
     * @param group - External card group to test for inclusion.
     */
-   isCardGroup(card: Card, group: keyof CardDBMetadataGroups): boolean
+   isCardGroup(card: CardDB.Data.Card, group: keyof CardDB.File.MetadataGroups): boolean
    {
       return this.#groups?.[group]?.has(card.filename) ?? false;
    }

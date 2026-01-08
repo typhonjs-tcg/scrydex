@@ -1,16 +1,14 @@
 import path                from 'node:path';
 
-import { CardDBStore }     from '#scrydex/data/db';
-
-import type { CardStream } from '#scrydex/data/db';
+import { CardDB }          from '#scrydex/data/db';
 
 import type { ConfigCmd }  from '../../types-command';
 
 /**
  * Defines the DB export implementation.
  */
-export type ExportFn = ({ config, db, output }: { config: ConfigCmd.Export, db: CardStream, output?: string }) =>
- Promise<void>
+export type ExportFn = ({ config, db, output }:
+ { config: ConfigCmd.Export, db: CardDB.Stream.Reader, output?: string }) => Promise<void>
 
 /**
  * Finds all sorted CardDBs in a given input directory and exports each to the given output directory.
@@ -26,7 +24,7 @@ export type ExportFn = ({ config, db, output }: { config: ConfigCmd.Export, db: 
 export async function exportDir({ config, exportFn, extension }:
  { config: ConfigCmd.Export, exportFn: ExportFn, extension: string }): Promise<void>
 {
-   const cards = await CardDBStore.loadAll({
+   const cards = await CardDB.loadAll({
       dirpath: config.input,
       type: ['sorted', 'sorted_format'],
       walk: true

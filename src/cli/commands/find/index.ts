@@ -1,6 +1,6 @@
 import { isFile }             from '@typhonjs-utils/file-util';
 
-import { CardDBStore }        from '#scrydex/data/db';
+import { CardDB }             from '#scrydex/data/db';
 import { CardFilter }         from '#scrydex/data/db/util';
 import { SortOrder }          from '#scrydex/data/sort';
 
@@ -8,8 +8,6 @@ import type { BasicLogger }   from "@typhonjs-utils/logger-color";
 
 import type {
    ConfigCardFilter }         from '#scrydex/data/db/util';
-
-import type { CardStream }    from '#scrydex/data/db';
 
 /**
  * `find` is a local CLI command that isn't a part of the general SDK due to it primarily being an informational /
@@ -21,13 +19,13 @@ export async function find(config: { input: string, filter: ConfigCardFilter, lo
 {
    const logger = config.logger;
 
-   let collections: CardStream[];
+   let collections: CardDB.Stream.Reader[];
 
    if (isFile(config.input))
    {
       logger.info(`Attempting to load Scrydex CardDB: ${config.input}`);
 
-      const singleCollection = await CardDBStore.load({ filepath: config.input });
+      const singleCollection = await CardDB.load({ filepath: config.input });
 
       if (!singleCollection)
       {
@@ -41,7 +39,7 @@ export async function find(config: { input: string, filter: ConfigCardFilter, lo
    {
       logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.input}`);
 
-      collections = await CardDBStore.loadAll({
+      collections = await CardDB.loadAll({
          dirpath: config.input,
          type: new Set(['sorted', 'sorted_format']),
          walk: true

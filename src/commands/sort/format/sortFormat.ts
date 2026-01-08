@@ -3,7 +3,7 @@ import path                         from 'node:path';
 
 import { ExportCollection }         from '../ExportCollection';
 
-import { CardDBStore }              from '#scrydex/data/db';
+import { CardDB }                   from '#scrydex/data/db';
 import { matchesPriceExpression }   from '#scrydex/data/db/util';
 
 import { ScryfallData }             from '#scrydex/data/scryfall';
@@ -12,11 +12,6 @@ import {
    sortByNameThenPrice,
    SortedFormat,
    SortOrder }                      from '#scrydex/data/sort';
-
-import type {
-   Card,
-   CardDBMetadataBase,
-   CardStream }                     from '#scrydex/data/db';
 
 import type { ConfigCmd }           from '../../types-command';
 
@@ -51,7 +46,7 @@ async function cleanOutputDir(config: ConfigCmd.SortFormat): Promise<void>
 {
    config.logger?.verbose('Removing existing sorted output before regenerating.')
 
-   const dbFiles = await CardDBStore.loadAll({ dirpath: config.output, type: ['sorted', 'sorted_format'], walk: true });
+   const dbFiles = await CardDB.loadAll({ dirpath: config.output, type: ['sorted', 'sorted_format'], walk: true });
 
    for (const dbFile of dbFiles)
    {
@@ -73,7 +68,7 @@ async function cleanOutputDir(config: ConfigCmd.SortFormat): Promise<void>
  */
 async function generate(config: ConfigCmd.SortFormat): Promise<SortedFormat[]>
 {
-   const db = await CardDBStore.load({ filepath: config.input });
+   const db = await CardDB.load({ filepath: config.input });
 
    const presortFormat = await presortCards(config, db);
 
@@ -136,8 +131,8 @@ async function generate(config: ConfigCmd.SortFormat): Promise<SortedFormat[]>
  * @returns The SortedFormat instance.
  */
 function createSortedFormat(config: ConfigCmd.SortFormat, options:
- { cards: Card[]; name: string; sourceMeta: CardDBMetadataBase, dirpath: string, format?: ScryfallData.GameFormat }):
-  SortedFormat
+ { cards: CardDB.Data.Card[]; name: string; sourceMeta: CardDB.File.MetadataBase, dirpath: string,
+  format?: ScryfallData.GameFormat }): SortedFormat
 {
    sortByNameThenPrice(options.cards, 'desc');
 
@@ -172,9 +167,10 @@ function createSortedFormat(config: ConfigCmd.SortFormat, options:
  *
  * @param db -
  */
-async function presortCards(config: ConfigCmd.SortFormat, db: CardStream): Promise<Map<string, Card[]>>
+async function presortCards(config: ConfigCmd.SortFormat, db: CardDB.Stream.Reader):
+ Promise<Map<string, CardDB.Data.Card[]>>
 {
-   const presortFormat: Map<string, Card[]> = new Map(config.formats.map((entry) => [entry, []]));
+   const presortFormat: Map<string, CardDB.Data.Card[]> = new Map(config.formats.map((entry) => [entry, []]));
 
    presortFormat.set('basic-land', []);
    presortFormat.set('unsorted', []);
@@ -215,12 +211,13 @@ async function presortCards(config: ConfigCmd.SortFormat, db: CardStream): Promi
  *
  * @returns Cards split by low and high value.
  */
-function splitHighValue(config: ConfigCmd.SortFormat, cards: Card[]): { cardsLow: Card[], cardsHigh: Card[] }
+function splitHighValue(config: ConfigCmd.SortFormat, cards: CardDB.Data.Card[]):
+ { cardsLow: CardDB.Data.Card[], cardsHigh: CardDB.Data.Card[] }
 {
    if (!config.highValue) { return { cardsLow: cards, cardsHigh: [] }; }
 
-   const cardsLow: Card[] = [];
-   const cardsHigh: Card[] = [];
+   const cardsLow: CardDB.Data.Card[] = [];
+   const cardsHigh: CardDB.Data.Card[] = [];
 
    const oracleHigh: Set<string> = new Set();
 

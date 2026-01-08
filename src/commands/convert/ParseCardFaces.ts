@@ -1,12 +1,12 @@
 import { ParseTypeLine }   from './ParseTypeLine';
 
-import type { CardFace }   from '#scrydex/data/db';
+import type { CardDB }     from '#scrydex/data/db';
 
 export abstract class ParseCardFaces
 {
-   static resolve(faces: Record<string, any>[]): CardFace[] | undefined
+   static resolve(faces: Record<string, any>[]): CardDB.Data.CardFace[] | undefined
    {
-      const result: CardFace[] = [];
+      const result: CardDB.Data.CardFace[] = [];
 
       if (!Array.isArray(faces)) { return void 0; }
 

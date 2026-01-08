@@ -2,7 +2,7 @@ import {
    isDirectory,
    isFile }                from '@typhonjs-utils/file-util';
 
-import { CardDBStore }     from '#scrydex/data/db';
+import { CardDB }          from '#scrydex/data/db';
 
 import type { ConfigCmd }  from '../types-command';
 
@@ -27,8 +27,8 @@ export async function diff(config: ConfigCmd.Diff): Promise<void>
       logger?.verbose(`Baseline - ${config.baseline}`);
       logger?.verbose(`Comparison - ${config.comparison}`);
 
-      const baseline = await CardDBStore.load({ filepath: config.baseline });
-      const comparison = await CardDBStore.load({ filepath: config.comparison });
+      const baseline = await CardDB.load({ filepath: config.baseline });
+      const comparison = await CardDB.load({ filepath: config.comparison });
 
       const result = await baseline.diff(comparison, { isExportable: true });
 

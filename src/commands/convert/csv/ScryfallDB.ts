@@ -3,13 +3,11 @@ import { chain }                 from 'stream-chain';
 import { parser }                from 'stream-json';
 import { streamArray }           from 'stream-json/streamers/StreamArray';
 
-import { CardDBStore }           from '#scrydex/data/db';
+import { CardDB }                from '#scrydex/data/db';
 
 import { RarityNormalization }   from '../RarityNormalization';
 import { ParseCardFaces }        from '../ParseCardFaces';
 import { ParseTypeLine }         from '../ParseTypeLine';
-
-import type { Card }             from '#scrydex/data/db';
 
 import type {
    CSVCard,
@@ -32,7 +30,7 @@ export class ScryfallDB
    {
       const logger = config.logger;
 
-      const outputDB: Card[] = [];
+      const outputDB: CardDB.Data.Card[] = [];
 
       const rarityNormalization = new RarityNormalization();
 
@@ -65,7 +63,7 @@ export class ScryfallDB
          {
             const isGroupProxy = collection.isCardGroup(csvCard, 'proxy');
 
-            const card: Card = {
+            const card: CardDB.Data.Card = {
                object: 'card',
                name: scryCard.name,
                type: ParseTypeLine.resolve(scryCard),
@@ -136,7 +134,7 @@ export class ScryfallDB
 
       if (outputDB.length > 0)
       {
-         CardDBStore.save({
+         CardDB.save({
             filepath: config.output,
             cards: outputDB.sort((a, b) => a.name.localeCompare(b.name)),
             meta: { type: 'inventory', groups: collection.groups }

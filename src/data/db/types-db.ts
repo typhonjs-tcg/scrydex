@@ -1,5 +1,11 @@
+import type { BasicLogger }   from "@typhonjs-utils/logger-color";
+
 import type { CSVCard }       from '#scrydex/data/import';
 import type { ScryfallData }  from '#scrydex/data/scryfall';
+
+import type { ConfigCardFilter } from '#scrydex/data/db/util';
+
+// Namespace Data ----------------------------------------------------------------------------------------------------
 
 /**
  * Defines the enriched, but reduced set of card data transferred from the Scryfall DB.
@@ -28,12 +34,12 @@ interface Card extends CSVCard
     * This card’s colors, if the overall card has colors defined by the rules. Otherwise, the colors will be on
     * the card_faces objects.
     */
-   colors: Colors;
+   colors: ScryfallData.Colors;
 
    /**
     * This card’s color identity.
     */
-   color_identity: Colors;
+   color_identity: ScryfallData.Colors;
 
    /**
     * The card’s mana value. Note that some funny cards have fractional mana costs.
@@ -114,7 +120,7 @@ interface Card extends CSVCard
    /**
     * Colors of mana that this card could produce.
     */
-   produced_mana?: Colors;
+   produced_mana?: ScryfallData.Colors;
 
    /**
     * This card’s rarity. One of `common`, `uncommon`, `rare`, `special`, `mythic`, or `bonus`.
@@ -191,7 +197,7 @@ interface CardFace
    /**
     * This card face colors.
     */
-   colors?: Colors | null;
+   colors?: ScryfallData.Colors | null;
 
    /**
     * The card face mana value. Note that some funny cards have fractional mana costs.
@@ -244,26 +250,25 @@ interface CardFace
    type_line?: string | null;
 }
 
-/**
- * Defines the card DB JSON file format.
- */
-interface CardDB
+declare namespace Data
 {
-   /**
-    * Metadata about this card DB.
-    */
-   meta: CardDBMetadata;
-
-   /**
-    * List of associated cards.
-    */
-   cards: Card[];
+   export {
+      Card,
+      CardFace
+   }
 }
+
+// Namespace File ----------------------------------------------------------------------------------------------------
+
+/**
+ * The different types / categories of Card DBs.
+ */
+type DBType = 'inventory' | 'sorted' | 'sorted_format';
 
 /**
  * CardDB metadata that is generated on creation.
  */
-interface CardDBMetadataGenerated
+interface MetadataGenerated
 {
    /** Generating CLI version. */
    cliVersion: string;
@@ -278,13 +283,13 @@ interface CardDBMetadataGenerated
 /**
  * CardDB metadata that is common across all DBs.
  */
-interface CardDBMetadataCommon extends CardDBMetadataGenerated
+interface MetadataCommon extends MetadataGenerated
 {
    /** Name of CardDB */
    name: string;
 
    /** Card / filename group associations. */
-   groups: CardDBMetadataGroups;
+   groups: MetadataGroups;
 }
 
 /**
@@ -294,7 +299,7 @@ interface CardDBMetadataCommon extends CardDBMetadataGenerated
  *
  * @typeParam T - data type; default metadata is `string[]`.
  */
-interface CardDBMetadataGroups<T = string[]>
+interface MetadataGroups<T = string[]>
 {
    /**
     * Active decks.
@@ -315,7 +320,7 @@ interface CardDBMetadataGroups<T = string[]>
 /**
  * CardDB metadata for a sorted game format.
  */
-interface CardDBMetadataSortedFormat extends CardDBMetadataCommon
+interface MetadataSortedFormat extends MetadataCommon
 {
    /** Type of CardDB. */
    type: 'sorted_format';
@@ -327,7 +332,7 @@ interface CardDBMetadataSortedFormat extends CardDBMetadataCommon
 /**
  * CardDB metadata for a sorted collection of cards not associated with a game format.
  */
-interface CardDBMetadataSorted extends CardDBMetadataCommon
+interface MetadataSorted extends MetadataCommon
 {
    /** Type of CardDB. */
    type: 'sorted';
@@ -336,21 +341,16 @@ interface CardDBMetadataSorted extends CardDBMetadataCommon
 /**
  * CardDB metadata for an `inventory` of cards after initial conversion.
  */
-interface CardDBMetadataInventory extends CardDBMetadataCommon
+interface MetadataInventory extends MetadataCommon
 {
    /** Type of CardDB. */
    type: 'inventory';
 }
 
 /**
- * The different types / categories of Card DBs.
- */
-type CardDBType = 'inventory' | 'sorted' | 'sorted_format';
-
-/**
  * Combined CardDB metadata definition.
  */
-type CardDBMetadata = CardDBMetadataInventory | CardDBMetadataSorted | CardDBMetadataSortedFormat;
+type Metadata = MetadataInventory | MetadataSorted | MetadataSortedFormat;
 
 /**
  * CardDB metadata base shape required during runtime without DB generated keys.
@@ -359,30 +359,233 @@ type CardDBMetadata = CardDBMetadataInventory | CardDBMetadataSorted | CardDBMet
  * This type is derived from the persisted CardDB metadata definition with generated fields
  * (CLI version, schema version, timestamp) removed.
  */
-type CardDBMetadataBase =
-   CardDBMetadata extends infer T
+type MetadataBase =
+   Metadata extends infer T
       ? T extends any
-         ? Omit<T, keyof CardDBMetadataGenerated>
+         ? Omit<T, keyof MetadataGenerated>
          : never
       : never;
 
 /**
- * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase, single-character
- * abbreviations for those colors. For example, `['W','U']` represents something that is both white and blue. Colorless
- * sources are denoted with an empty array `[]`.
- *
- * @see https://scryfall.com/docs/api/colors
+ * Defines the card DB JSON file format.
  */
-type Colors = string[];
+interface JSON
+{
+   /**
+    * Metadata about this card DB.
+    */
+   meta: Metadata;
+
+   /**
+    * List of associated cards.
+    */
+   cards: Card[];
+}
+
+
+declare namespace File
+{
+   export {
+      DBType,
+      JSON,
+      Metadata,
+      MetadataBase,
+      MetadataGenerated,
+      MetadataGroups
+   }
+}
+
+// Stream Namespace --------------------------------------------------------------------------------------------------
+
+/**
+ * Result of diffing two card stream instances.
+ *
+ * All keys are composite card identities (`scryfall_id + foil + lang`) via {@link uniqueCardKey}.
+ */
+interface Diff
+{
+   /**
+    * Card identities present only in the comparison stream.
+    */
+   added: Set<string>;
+
+   /**
+    * Card identities present only in the baseline stream.
+    */
+   removed: Set<string>;
+
+   /**
+    * Quantity deltas for card identities present in both streams.
+    *
+    * Positive values indicate an increase.
+    * Negative values indicate a decrease.
+    */
+   changed: Map<string, number>;
+}
+
+/**
+ * Options for {@link Stream.Reader.asStream}.
+ */
+interface Options
+{
+   /**
+    * Optional card-level filtering configuration.
+    */
+   filter?: ConfigCardFilter;
+
+   /**
+    * Optional predicate applied to each card in the stream.
+    *
+    * When provided, the card is yielded only if this function returns `true`. This predicate is applied after all
+    * structured stream options (filters, group exclusions, identity selection) have been evaluated.
+    *
+    * Intended for advanced or ad-hoc use cases. Structured filters should be preferred where possible.
+    */
+   filterFn?: (card: Data.Card) => boolean;
+
+   /**
+    * Exclude cards belonging to specific metadata groups.
+    *
+    * A group is excluded by specifying `false`.
+    */
+   groups?: Partial<Record<keyof File.MetadataGroups, false>>;
+
+   /**
+    * When true, skip all non-exportable card entries; IE all decks, externals, proxy groups.
+    */
+   isExportable?: true;
+
+   /**
+    * When provided, only cards whose composite identity matches one of these keys are yielded.
+    *
+    * Any object implementing a `has(key: string): boolean` method may be used; IE `Set`, `Map`, or a custom lookup
+    * structure.
+    *
+    * Composite identity keys are created using {@link uniqueCardKey}.
+    */
+   uniqueKeys?: { has(key: string): boolean };
+
+   /**
+    * When true, only the first card encountered for each unique key is yielded.
+    */
+   uniqueOnce?: true;
+
+   /**
+    * Optional logger for diagnostics. If omitted, no logging is performed.
+    */
+   logger?: BasicLogger;
+}
+
+
+interface Reader
+{
+   /**
+    * @returns The associated filepath.
+    */
+   get filepath(): string;
+
+   /**
+    * @returns CardDB metadata.
+    */
+   get meta(): Readonly<File.Metadata>;
+
+   /**
+    * Stream the card data in the DB asynchronously.
+    *
+    * @param [options] - Optional options.
+    *
+    * @returns Asynchronous iterator over validated card entries.
+    */
+   asStream(options?: Options): AsyncIterable<Data.Card>;
+
+   /**
+    * Computes a quantity-based diff between this card stream and a comparison card stream instance.
+    *
+    * Cards are compared using a composite identity key (`scryfall_id + foil + lang`) via {@link uniqueCardKey} so that
+    * physically distinct printings are treated independently.
+    *
+    * The diff is asymmetric:
+    * - `this` card stream instance is treated as the baseline card pool.
+    * - `comparison` is treated as the comparison target.
+    *
+    * The result captures:
+    * - cards newly **added** in `comparison`.
+    * - cards **removed** since `baseline`.
+    * - cards whose quantities **changed** between the two CardStreams.
+    *
+    * This function is intentionally card-data–light. It operates only on identity keys and quantities. Any card
+    * metadata required for reporting should be collected in a subsequent streaming pass.
+    *
+    * @param comparison - Comparison card stream.
+    *
+    * @param [streamOptions] - Optional card stream options. By default, only `exportable` cards are compared.
+    *
+    * @returns CardStreamDiff object.
+    */
+   diff(comparison: Reader, streamOptions?: Options): Promise<Stream.Diff>;
+
+   /**
+    * Return synchronously all card data in the DB.
+    *
+    * Note: Individual entries are not validated for typeof `object` or the Scryfall `object: 'card'` association.
+    *
+    * @returns All cards in the collection.
+    */
+   getAll(): Data.Card[];
+
+   /**
+    * Builds a quantity map for cards in this card stream.
+    *
+    * Cards are grouped by their composite identity key (`scryfall_id + foil + lang`), and the quantities of
+    * matching entries are summed.
+    *
+    * This method is streaming and memory-efficient: it does not retain card objects, only identity keys and
+    * aggregated quantities.
+    *
+    * The returned map is suitable for:
+    * - diff operations
+    * - export coalescing
+    * - analytics and reporting
+    *
+    * @param [options] - Optional stream selection options.
+    *
+    * @param [logger] - Optional logging.
+    *
+    * @returns A map of unique card identity keys to total quantities.
+    */
+   getQuantityMap(options?: Options, logger?: BasicLogger): Promise<Map<string, number>>;
+
+   /**
+    * Verifies that the card is not part of a non-exportable group. Presently all groups are non-exportable.
+    * IE `decks`, `external` or `proxy`.
+    *
+    * @param card -
+    *
+    * @returns Whether card can be exported.
+    */
+   isCardExportable(card: Data.Card): boolean;
+
+   /**
+    * Checks the meta _external_ file names for a card file name match.
+    *
+    * @param card -
+    *
+    * @param group - External card group to test for inclusion.
+    *
+    * @returns Whether card is part of given group.
+    */
+   isCardGroup(card: Data.Card, group: keyof File.MetadataGroups): boolean;
+}
+
+declare namespace Stream
+{
+   export {
+      Diff,
+      Reader,
+      Options };
+}
 
 export {
-   type Card,
-   type CardDB,
-   type CardDBMetadata,
-   type CardDBMetadataBase,
-   type CardDBMetadataGenerated,
-   type CardDBMetadataGroups,
-   type CardDBType,
-   type CardFace,
-   type Colors,
-   type CSVCard };
+   type Data,
+   type File,
+   type Stream };

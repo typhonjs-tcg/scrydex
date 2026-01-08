@@ -1,9 +1,6 @@
 import { ScryfallData } from '#scrydex/data/scryfall';
 
-import type {
-   Colors,
-   Card,
-   CardFace }           from '#scrydex/data/db';
+import type { CardDB }  from '#scrydex/data/db';
 
 export abstract class CardFields
 {
@@ -14,7 +11,7 @@ export abstract class CardFields
     *
     * @returns Read only union of all card colors.
     */
-   static colorUnion(card: Card): Readonly<Colors>
+   static colorUnion(card: CardDB.Data.Card): Readonly<ScryfallData.Colors>
    {
       if (card.card_faces)
       {
@@ -40,7 +37,7 @@ export abstract class CardFields
     *
     * @returns A set with mana cost colors.
     */
-   static colorManaCost(card: Card): Set<string>
+   static colorManaCost(card: CardDB.Data.Card): Set<string>
    {
       let colors: Set<string>;
 
@@ -73,7 +70,7 @@ export abstract class CardFields
     *
     * @returns Normalized language code.
     */
-   static langCode(card: Card): string
+   static langCode(card: CardDB.Data.Card): string
    {
       return typeof card.lang_csv === 'string' && card.lang !== card.lang_csv ? card.lang_csv : card.lang;
    }
@@ -85,7 +82,7 @@ export abstract class CardFields
     *
     * @returns The mana cost string.
     */
-   static manaCost(card: Card): string
+   static manaCost(card: CardDB.Data.Card): string
    {
       return card.card_faces ? this.partsManaCost(card).join(' // ') : card.mana_cost;
    }
@@ -97,7 +94,7 @@ export abstract class CardFields
     *
     * @returns The `colors` string array parts.
     */
-   static partsColors(card: Card): Colors[]
+   static partsColors(card: CardDB.Data.Card): ScryfallData.Colors[]
    {
       return this.#partsPropArray(card, 'colors');
    }
@@ -109,7 +106,7 @@ export abstract class CardFields
     *
     * @returns The `colors` string array parts.
     */
-   static partsCMC(card: Card): number[]
+   static partsCMC(card: CardDB.Data.Card): number[]
    {
       return this.#partsPropNumber(card, 'cmc');
    }
@@ -121,7 +118,7 @@ export abstract class CardFields
     *
     * @returns `mana_cost` text parts.
     */
-   static partsManaCost(card: Card): string[]
+   static partsManaCost(card: CardDB.Data.Card): string[]
    {
       return this.#partsPropStr(card, 'mana_cost');
    }
@@ -133,7 +130,7 @@ export abstract class CardFields
     *
     * @returns `name` text parts.
     */
-   static partsName(card: Card): string[]
+   static partsName(card: CardDB.Data.Card): string[]
    {
       return this.#partsPropStr(card, 'name');
    }
@@ -145,7 +142,7 @@ export abstract class CardFields
     *
     * @returns `printed_name` text parts.
     */
-   static partsPrintedName(card: Card): string[]
+   static partsPrintedName(card: CardDB.Data.Card): string[]
    {
       return this.#partsPropStr(card, 'printed_name');
    }
@@ -157,7 +154,7 @@ export abstract class CardFields
     *
     * @returns `oracle_text` text parts.
     */
-   static partsOracleText(card: Card): string[]
+   static partsOracleText(card: CardDB.Data.Card): string[]
    {
       return this.#partsPropStr(card, 'oracle_text');
    }
@@ -169,14 +166,14 @@ export abstract class CardFields
     *
     * @returns `type_line` text parts.
     */
-   static partsTypeLine(card: Card): string[]
+   static partsTypeLine(card: CardDB.Data.Card): string[]
    {
       return this.#partsPropStr(card, 'type_line');
    }
 
    // Internal Implementation ----------------------------------------------------------------------------------------
 
-   static #partsPropArray(card: Card, prop: keyof Card | keyof CardFace): string[][]
+   static #partsPropArray(card: CardDB.Data.Card, prop: keyof CardDB.Data.Card | keyof CardDB.Data.CardFace): string[][]
    {
       const results: string[][] = [];
 
@@ -184,9 +181,9 @@ export abstract class CardFields
       {
          for (const face of card.card_faces)
          {
-            if (Array.isArray(face[prop as keyof CardFace]))
+            if (Array.isArray(face[prop as keyof CardDB.Data.CardFace]))
             {
-               results.push(face[prop as keyof CardFace] as string[]);
+               results.push(face[prop as keyof CardDB.Data.CardFace] as string[]);
             }
          }
 
@@ -200,7 +197,7 @@ export abstract class CardFields
       return results;
    }
 
-   static #partsPropNumber(card: Card, prop: keyof Card | keyof CardFace): number[]
+   static #partsPropNumber(card: CardDB.Data.Card, prop: keyof CardDB.Data.Card | keyof CardDB.Data.CardFace): number[]
    {
       const results: number[] = [];
 
@@ -208,26 +205,26 @@ export abstract class CardFields
       {
          for (const face of card.card_faces)
          {
-            if (Number.isFinite(face[prop as keyof CardFace] as number))
+            if (Number.isFinite(face[prop as keyof CardDB.Data.CardFace] as number))
             {
-               results.push(face[prop as keyof CardFace] as number);
+               results.push(face[prop as keyof CardDB.Data.CardFace] as number);
             }
          }
 
-         if (results.length === 0 && Number.isFinite(card[prop as keyof Card]))
+         if (results.length === 0 && Number.isFinite(card[prop as keyof CardDB.Data.Card]))
          {
-            results.push(card[prop as keyof Card] as number);
+            results.push(card[prop as keyof CardDB.Data.Card] as number);
          }
       }
       else
       {
-         if (Number.isFinite(card[prop as keyof Card])) { results.push(card[prop as keyof Card] as number); }
+         if (Number.isFinite(card[prop as keyof CardDB.Data.Card])) { results.push(card[prop as keyof CardDB.Data.Card] as number); }
       }
 
       return results;
    }
 
-   static #partsPropStr(card: Card, prop: keyof Card | keyof CardFace): string[]
+   static #partsPropStr(card: CardDB.Data.Card, prop: keyof CardDB.Data.Card | keyof CardDB.Data.CardFace): string[]
    {
       const results: string[] = [];
 
@@ -235,9 +232,9 @@ export abstract class CardFields
       {
          for (const face of card.card_faces)
          {
-            if (typeof face[prop as keyof CardFace] === 'string')
+            if (typeof face[prop as keyof CardDB.Data.CardFace] === 'string')
             {
-               results.push(face[prop as keyof CardFace] as string);
+               results.push(face[prop as keyof CardDB.Data.CardFace] as string);
             }
          }
 

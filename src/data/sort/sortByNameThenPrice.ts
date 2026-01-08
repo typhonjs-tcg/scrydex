@@ -1,7 +1,7 @@
 import { ScryfallData }    from '#scrydex/data/scryfall';
 import { isFiniteNumber }  from '#scrydex/util';
 
-import type { Card }       from '#scrydex/data/db';
+import type { CardDB }     from '#scrydex/data/db';
 
 /**
  * Sorts a Card[] by name then price with optional price direction.
@@ -10,9 +10,9 @@ import type { Card }       from '#scrydex/data/db';
  *
  * @param [direction] - Default ascending.
  */
-export function sortByNameThenPrice(cards: Card[], direction: 'asc' | 'desc' = 'asc'): void
+export function sortByNameThenPrice(cards: CardDB.Data.Card[], direction: 'asc' | 'desc' = 'asc'): void
 {
-   cards.sort((a: Card, b: Card) =>
+   cards.sort((a: CardDB.Data.Card, b: CardDB.Data.Card) =>
    {
       const nameCmp = a.name.localeCompare(b.name);
       if (nameCmp !== 0) { return nameCmp; }
