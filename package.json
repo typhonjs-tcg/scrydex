@@ -34,10 +34,6 @@
       "types": "./dist-npm/data/db/index.d.ts",
       "import": "./dist-npm/data/db/index.js"
     },
-    "./data/db/util": {
-      "types": "./dist-npm/data/db/util/index.d.ts",
-      "import": "./dist-npm/data/db/util/index.js"
-    },
     "./data/import": {
       "types": "./dist-npm/data/import/index.d.ts",
       "import": "./dist-npm/data/import/index.js"
@@ -64,8 +60,7 @@
     "test-convert": "bun ./src/cli/index.ts convert-csv ./test/fixture/data --output ./test/fixture/output/collection-small.json --db ./test/fixture/data/db-small.json --loglevel debug",
     "test-export": "bun ./src/cli/index.ts export-csv ./test/fixture/output/collection-small.json --output ./test/fixture/output/collection-small.csv --loglevel debug",
     "test-filter": "bun ./src/cli/index.ts filter ./test/fixture/output/collection-small.json --border black:borderless --color-identity {W}{U}{G} --formats premodern --output ./test/fixture/output/collection-small-wug.json --loglevel debug",
-    "test-sort": "bun ./src/cli/index.ts sort-format ./test/fixture/output/collection-small.json --formats premodern:oldschool:predh:commander --output ./test/fixture/output/sorted --loglevel debug"
-  },
+    "test-sort": "bun ./src/cli/index.ts sort-format ./test/fixture/output/collection-small.json --formats premodern:oldschool:predh:commander --output ./test/fixture/output/sorted --loglevel debug"  },
   "dependencies": {
     "@typhonjs-utils/file-util": "^0.1.0",
     "@typhonjs-utils/logger-color": "^0.2.0",
@@ -81,7 +76,7 @@
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/stream-json": "^1.7.8",
-    "@typhonjs-build-test/esm-d-ts": "^0.3.0-next.14",
+    "@typhonjs-build-test/esm-d-ts": "^0.3.0-next.16",
     "@typhonjs-build-test/rollup-plugin-pkg-imports": "^0.7.0",
     "@typhonjs-typedoc/typedoc-pkg": "^0.4.0",
     "@typhonjs-config/eslint-config": "^0.6.0",
