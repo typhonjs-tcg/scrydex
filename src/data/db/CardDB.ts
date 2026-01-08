@@ -150,7 +150,7 @@ class CardDB
    }
 
    /**
-    * Attempts to load a JSON card DB from the given file path.
+    * Attempts to load a Scrydex JSON card DB from the given file path.
     *
     * @param options - Options.
     *

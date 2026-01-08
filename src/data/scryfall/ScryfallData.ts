@@ -1,10 +1,5 @@
 abstract class ScryfallData
 {
-   /**
-    * Extracts mana cost tokens like `{W}`, `{2}{U/B}`, `{G/P}`, `{X}`.
-    */
-   static #REGEX_MANA_COST = /\{([^}]+)}/g;
-
    static get supportedFormats(): ReadonlySet<string>
    {
       return this.#supportedFormats;
@@ -137,6 +132,11 @@ abstract class ScryfallData
    }
 
    // Internal Implementation ----------------------------------------------------------------------------------------
+
+   /**
+    * Extracts mana cost tokens like `{W}`, `{2}{U/B}`, `{G/P}`, `{X}`.
+    */
+   static #REGEX_MANA_COST = /\{([^}]+)}/g;
 
    /**
     * These set types are excluded from determining a cards recent rarity. Over time a card such as `Force of Will`
@@ -278,9 +278,9 @@ abstract class ScryfallData
 declare namespace ScryfallData
 {
    /**
-    * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase, single-character
-    * abbreviations for those colors. For example, `['W','U']` represents something that is both white and blue. Colorless
-    * sources are denoted with an empty array `[]`.
+    * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase,
+    * single-character abbreviations for those colors. For example, `['W','U']` represents something that is both white
+    * and blue. Colorless sources are denoted with an empty array `[]`.
     *
     * @see https://scryfall.com/docs/api/colors
     */
