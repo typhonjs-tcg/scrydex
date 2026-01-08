@@ -1,4 +1,43 @@
 /**
+ * Defines the base card data loaded from CSV files.
+ */
+interface CSVCard
+{
+   object: 'card';
+
+   /**
+    * Associated CSV filename.
+    */
+   filename: string;
+
+   /**
+    * Foil variation if any.
+    */
+   foil: string;
+
+   /**
+    * Language code from CSV file. This is meta-data and various online collection services allow this to be freely
+    * set by the user, so it may not correlate to actual associated Scryfall ID / data.
+    */
+   lang_csv?: string;
+
+   /**
+    * Card name when defined in CSV file.
+    */
+   name?: string;
+
+   /**
+    * Total count of this card.
+    */
+   quantity: number;
+
+   /**
+    * Scryfall ID / UUID.
+    */
+   scryfall_id: string;
+}
+
+/**
  * Common interface for all imported collection data.
  */
 interface ImportCollection
@@ -11,4 +50,6 @@ interface ImportCollection
    has(key: string): boolean;
 }
 
-export { ImportCollection };
+export {
+   CSVCard,
+   ImportCollection };

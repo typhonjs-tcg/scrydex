@@ -1,21 +1,22 @@
 import {
    getFileList,
    isDirectory,
-   isFile }                      from '@typhonjs-utils/file-util';
+   isFile }                   from '@typhonjs-utils/file-util';
 
-import { isGroupKind }           from '#scrydex/data/db/util';
+import { isGroupKind }        from '#scrydex/data/db/util';
 
-import { CSVCardIndex }          from './CSVCardIndex';
+import { CSVCardIndex }       from './CSVCardIndex';
 
-import type { BasicLogger }      from '@typhonjs-utils/logger-color';
+import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
-import type { ConfigCmd }        from '#scrydex/commands';
+import type { ConfigCmd }     from '#scrydex/commands';
 
 import type {
-   CardDBMetadataGroups,
-   CSVCard }                     from '#scrydex/data/db';
+   CardDBMetadataGroups }     from '#scrydex/data/db';
 
-import type { ImportCollection } from '../types-import';
+import type {
+   CSVCard,
+   ImportCollection }         from '../types-import';
 
 export class CSVCollection implements ImportCollection
 {

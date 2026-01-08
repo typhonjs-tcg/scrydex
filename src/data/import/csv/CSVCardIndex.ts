@@ -4,7 +4,7 @@ import { parse }           from 'csv-parse';
 
 import { ScryfallData }    from '#scrydex/data/scryfall';
 
-import type { CSVCard }    from '#scrydex/data/db';
+import type { CSVCard }    from '../types-import';
 
 /**
  * Parses and stores intermediate card data from a single CSV file.
