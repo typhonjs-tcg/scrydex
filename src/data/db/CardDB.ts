@@ -76,17 +76,17 @@ class CardDB
     { dirpath: string, format?: ScryfallData.GameFormat | Iterable<ScryfallData.GameFormat>, type?:
      CardDB.File.DBType | Iterable<CardDB.File.DBType>, walk?: boolean }): Promise<CardDB.Stream.Reader[]>
    {
-      if (!isDirectory(dirpath)) { throw new Error(`CardDBStore.loadAll error: 'dirpath' is not a directory.`); }
-      if (typeof walk !== 'boolean') { throw new TypeError(`CardDBStore.loadAll error: 'walk' is not a boolean.`); }
+      if (!isDirectory(dirpath)) { throw new Error(`CardDB.loadAll error: 'dirpath' is not a directory.`); }
+      if (typeof walk !== 'boolean') { throw new TypeError(`CardDB.loadAll error: 'walk' is not a boolean.`); }
 
       if (format !== void 0 && typeof format !== 'string' && !isIterable(format))
       {
-         throw new TypeError(`CardDBStore.loadAll error: 'format' is not a string or list of strings.`);
+         throw new TypeError(`CardDB.loadAll error: 'format' is not a string or list of strings.`);
       }
 
       if (type !== void 0 && !this.isValidType(type) && !isIterable(type))
       {
-         throw new Error(`CardDBStore.loadAll error: 'type' is not a valid CardDB.File.DBType or list of CardDBTypes.`);
+         throw new Error(`CardDB.loadAll error: 'type' is not a valid CardDB.File.DBType or list of DB types.`);
       }
 
       const results: CardDB.Stream.Reader[] = [];
@@ -148,14 +148,14 @@ class CardDB
     */
    static async load({ filepath }: { filepath: string }): Promise<CardDB.Stream.Reader>
    {
-      if (isDirectory(filepath)) { throw new Error(`CardDBStore.load error: 'filepath' is a directory.`); }
-      if (!isFile(filepath)) { throw new Error(`CardDBStore.load error: 'filepath' is not a valid file.`); }
+      if (isDirectory(filepath)) { throw new Error(`CardDB.load error: 'filepath' is a directory.`); }
+      if (!isFile(filepath)) { throw new Error(`CardDB.load error: 'filepath' is not a valid file.`); }
 
       const result = this.#validateMeta(filepath, await this.#loadMeta(filepath));
 
       if (typeof result === 'string')
       {
-         throw new Error(`CardDBStore.load error: Meta data failed validation.\n${result}`);
+         throw new Error(`CardDB.load error: Meta data failed validation.\n${result}`);
       }
       else
       {
@@ -179,13 +179,13 @@ class CardDB
 
       if (meta.type !== 'inventory' && meta.type !== 'sorted' && meta.type !== 'sorted_format')
       {
-         throw new Error(`CardDBStore.save error: 'type' must be 'inventory', 'sorted', or 'sorted_format'.`);
+         throw new Error(`CardDB.save error: 'type' must be 'inventory', 'sorted', or 'sorted_format'.`);
       }
 
       if (meta.type === 'sorted_format' && !ScryfallData.isSupportedFormat(meta.format))
       {
          throw new TypeError(
-          `CardDBStore.save error: A sorted format must include a supported game format in 'meta.format'.`);
+          `CardDB.save error: A sorted format must include a supported game format in 'meta.format'.`);
       }
 
       const name = meta.name === void 0 && typeof meta.name !== 'string' ? path.basename(filepath, '.json') : meta.name;
@@ -265,7 +265,7 @@ class CardDB
     */
    static #validateMeta(filepath: string, meta: unknown): CardDB.File.Metadata | string
    {
-      if (!meta) { throw new Error(`CardDBStore.load error: Could not load meta data for ${filepath}`); }
+      if (!meta) { throw new Error(`CardDB.load error: Could not load meta data for ${filepath}`); }
 
       return meta as CardDB.File.Metadata;
    }
