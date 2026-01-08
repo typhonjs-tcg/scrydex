@@ -238,7 +238,7 @@ export abstract class AbstractCollection
 
          const existingIDCard = idMap.get(card.scryfall_id);
 
-         if (existingIDCard && existingIDCard.count >= 4)
+         if (existingIDCard && (existingIDCard.count + card.quantity) > 4)
          {
             card.mark = 'error';
             result.push(card);
