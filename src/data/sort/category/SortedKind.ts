@@ -1,9 +1,9 @@
-import { sortByNameThenPrice }   from '../sortByNameThenPrice';
-import { SortOrder }             from '../SortOrder';
+import { SortCards }    from '../SortCards';
+import { SortOrder }    from '../SortOrder';
 
 import type {
    CardSorted,
-   SortedCategories }            from '../types-sort';
+   SortedCategories }   from '../types-sort';
 
 export class SortedKind implements SortedCategories
 {
@@ -95,12 +95,15 @@ export class SortedKind implements SortedCategories
    {
       if (options.alpha)
       {
-         for (const cards of this.#categories.values()) { sortByNameThenPrice(cards, 'desc'); }
+         for (const cards of this.#categories.values())
+         {
+            SortCards.byNameThenPrice({ cards, priceDirection: 'desc' });
+         }
       }
 
       if (options.type)
       {
-         for (const cards of this.#categories.values()) { cards.sort((a, b) => a.type.localeCompare(b.type)); }
+         for (const cards of this.#categories.values()) { SortCards.byType({ cards }); }
       }
    }
 }

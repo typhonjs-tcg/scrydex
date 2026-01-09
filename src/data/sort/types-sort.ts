@@ -12,6 +12,11 @@ interface CardSorted extends CardDB.Data.Card
 }
 
 /**
+ * Defines ascending or descending sort order.
+ */
+type SortDirection = 'asc' | 'desc';
+
+/**
  * Defines the interface for a collection of cards with sub-category sorting.
  */
 interface SortedCategories
@@ -41,4 +46,5 @@ interface SortedCategories
 
 export {
    type CardSorted,
-   type SortedCategories };
+   type SortedCategories,
+   type SortDirection };

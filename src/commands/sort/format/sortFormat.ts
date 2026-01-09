@@ -7,7 +7,7 @@ import { CardDB }                   from '#scrydex/data/db';
 import { ScryfallData }             from '#scrydex/data/scryfall';
 
 import {
-   sortByNameThenPrice,
+   SortCards,
    SortedFormat,
    SortOrder }                      from '#scrydex/data/sort';
 
@@ -132,7 +132,7 @@ function createSortedFormat(config: ConfigCmd.SortFormat, options:
  { cards: CardDB.Data.Card[]; name: string; sourceMeta: CardDB.File.MetadataBase, dirpath: string,
   format?: ScryfallData.GameFormat }): SortedFormat
 {
-   sortByNameThenPrice(options.cards, 'desc');
+   SortCards.byNameThenPrice({ cards: options.cards, priceDirection: 'desc' });
 
    const logger = config.logger;
 
