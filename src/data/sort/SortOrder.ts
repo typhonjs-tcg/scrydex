@@ -15,11 +15,12 @@ export abstract class SortOrder
    private constructor() {}
 
    /**
-    * Returns the card category sort name for `SortedColors`.
+    * Returns the card category sort name for {@link SortedKind}.
     *
     * @param card -
     *
-    * @returns The category for `SortedColors` card categories.
+    * @returns The `kind` category: `W`, `U`, `B`, `R`, `G`, `Multicolor`, `Artifact (Colorless)`,
+    *          `Non-artifact (Colorless)`, `Land`, or `Land (Basic)`.
     */
    static categoryName(card: CardDB.Data.Card): string
    {
@@ -70,7 +71,7 @@ export abstract class SortOrder
     *
     * @param card -
     *
-    * @param [format] - Specific game format.
+    * @param [format] - Specific game format. When omitted `card.rarity` is returned.
     */
    static rarity(card: CardDB.Data.Card, format?: ScryfallData.GameFormat)
    {
