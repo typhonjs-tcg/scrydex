@@ -81,6 +81,55 @@ abstract class ScryfallData
    }
 
    /**
+    * Best-effort parser for Scryfall collector numbers.
+    *
+    * Collector numbers are identifiers, not ordinals. This function extracts optional numeric tokens for sorting and
+    * grouping heuristics only.
+    *
+    * No guarantees are made about release order or canonical meaning.
+    *
+    * For sorting by collector number see {@link @typhonjs-tcg/scrydex/data/sort!SortCards.byCollectorNumber}.
+    */
+   static parseCollectorNumber(value: string): ScryfallData.ParsedCollectorNumber
+   {
+      const raw = value;
+
+      let leadingNumber: number | undefined;
+      let trailingNumber: number | undefined;
+      let middle: string | undefined;
+
+      // Extract leading digits
+      const leadingMatch = raw.match(/^(\d+)/);
+      if (leadingMatch) { leadingNumber = Number(leadingMatch[1]); }
+
+      // Extract trailing digits.
+      const trailingMatch = raw.match(/(\d+)$/);
+      if (trailingMatch) { trailingNumber = Number(trailingMatch[1]); }
+
+      // Extract middle segment if both ends are numeric and non-overlapping.
+      if (leadingMatch || trailingMatch)
+      {
+         const start = leadingMatch ? leadingMatch[1].length : 0;
+         const end = trailingMatch ? raw.length - trailingMatch[1].length : raw.length;
+
+         if (end > start)
+         {
+            const mid = raw.slice(start, end);
+            middle = mid.length ? mid : undefined;
+         }
+      }
+
+      return {
+         raw,
+         leadingNumber,
+         trailingNumber,
+         middle,
+         hasLeadingNumber: typeof leadingNumber === 'number',
+         hasTrailingNumber: typeof trailingNumber === 'number'
+      };
+   }
+
+   /**
     * Parses a Scryfall mana_cost string such as `{2}{W}{U/B}{G/P}` and returns a set of MTG color letters actually
     * required to CAST the spell.
     *
@@ -292,6 +341,71 @@ declare namespace ScryfallData
    export type GameFormat = 'standard' | 'future' | 'historic' | 'timeless' | 'gladiator' | 'pioneer' | 'modern' |
     'legacy' | 'pauper' | 'vintage' | 'penny' | 'commander' | 'oathbreaker' | 'standardbrawl' | 'brawl' | 'alchemy' |
      'paupercommander' | 'duel' | 'oldschool' | 'premodern' | 'predh';
+
+   /**
+    * Represents a best-effort structural decomposition of a Scryfall collector number.
+    *
+    * Collector numbers are **identifiers**, not guaranteed ordinals. Their format varies widely across sets, promos,
+    * reprints, and special releases (IE variant suffixes, hyphenated set-qualified identifiers such as "CN2-22",
+    * symbolic forms, etc.).
+    *
+    * This structure exposes **optional numeric tokens** and simple flags that may be used for sorting, grouping, or
+    * display heuristics. No semantic meaning such as release order or canonical numbering is implied or guaranteed.
+    *
+    * All extracted fields are advisory and should be treated as heuristics only.
+    *
+    * @see {@link @typhonjs-tcg/scrydex/data/sort!SortCards}
+    */
+   export interface ParsedCollectorNumber
+   {
+      /**
+       * The original collector number string exactly as provided by Scryfall.
+       * This value is always preserved and should be used as the authoritative identifier.
+       */
+      raw: string;
+
+      /**
+       * A contiguous sequence of digits at the **start** of the collector number, if present.
+       *
+       * Examples:
+       * - "123a"  → 123
+       * - "10★"   → 10
+       * - "CN2-22" → undefined
+       */
+      leadingNumber?: number;
+
+      /**
+       * A contiguous sequence of digits at the **end** of the collector number, if present.
+       *
+       * Examples:
+       * - "CN2-22"   → 22
+       * - "PLIST-001" → 1
+       * - "123a"     → undefined
+       */
+      trailingNumber?: number;
+
+      /**
+       * The substring between the leading and trailing numeric components, if any.
+       *
+       * This may include set codes, separators, variant symbols, or other non-numeric
+       * identifiers and carries no assumed semantics.
+       *
+       * Examples:
+       * - "CN2-22" → "CN2-"
+       * - "123a"   → "a"
+       */
+      middle?: string;
+
+      /**
+       * Indicates whether the collector number begins with a numeric sequence.
+       */
+      hasLeadingNumber: boolean;
+
+      /**
+       * Indicates whether the collector number ends with a numeric sequence.
+       */
+      hasTrailingNumber: boolean;
+   }
 }
 
 export { ScryfallData };

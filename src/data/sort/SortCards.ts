@@ -13,13 +13,59 @@ export abstract class SortCards
    private constructor() {}
 
    /**
-    * Sort cards by name.
+    * Sort in-place cards by collector numbers using a best-effort numeric heuristic: leading digits are preferred,
+    * trailing digits are used as a fallback, and a lexicographic comparison is used as a final fallback.
     *
     * @param options - Options.
     *
     * @param options.cards - List of cards.
     *
     * @param [options.direction] - Sort direction; default: `asc`.
+    *
+    * @returns Sorted cards / original instance.
+    */
+   static byCollectorNumber({ cards, direction = 'asc' }:
+    { cards: CardDB.Data.Card[], direction?: SortDirection }): CardDB.Data.Card[]
+   {
+      const parsed = new Map<CardDB.Data.Card, ScryfallData.ParsedCollectorNumber>();
+
+      for (const card of cards) { parsed.set(card, ScryfallData.parseCollectorNumber(card.collector_number)); }
+
+      const factor = direction === 'asc' ? 1 : -1;
+
+      return cards.sort((a, b) =>
+      {
+         const pa = parsed.get(a)!;
+         const pb = parsed.get(b)!;
+
+         let cmp = 0;
+
+         // Prefer leading numeric tokens, fallback to trailing numeric tokens, otherwise treat as non-numeric.
+         const aNum = pa.leadingNumber ?? pa.trailingNumber ?? NaN;
+         const bNum = pb.leadingNumber ?? pb.trailingNumber ?? NaN;
+
+         if (Number.isFinite(aNum) && Number.isFinite(bNum)) { cmp = aNum - bNum; }
+
+         // Secondary comparison: middle segment if both present.
+         if (cmp === 0 && pa.middle && pb.middle) { cmp = pa.middle.localeCompare(pb.middle); }
+
+         // Final fallback: raw string comparison.
+         if (cmp === 0) { cmp = pa.raw.localeCompare(pb.raw); }
+
+         return cmp * factor;
+      });
+   }
+
+   /**
+    * Sort in-place cards by name.
+    *
+    * @param options - Options.
+    *
+    * @param options.cards - List of cards.
+    *
+    * @param [options.direction] - Sort direction; default: `asc`.
+    *
+    * @returns Sorted cards / original instance.
     */
    static byName({ cards, direction = 'asc' }: { cards: CardDB.Data.Card[], direction?: SortDirection }):
     CardDB.Data.Card[]
@@ -30,7 +76,7 @@ export abstract class SortCards
    }
 
    /**
-    * Sort cards by name then price.
+    * Sort in-place cards by name then price.
     *
     * @param options - Options.
     *
@@ -39,6 +85,8 @@ export abstract class SortCards
     * @param [options.nameDirection] - Name sort direction; default: `asc`.
     *
     * @param [options.priceDirection] - Price sort direction; default: `asc`.
+    *
+    * @returns Sorted cards / original instance.
     */
    static byNameThenPrice({ cards, nameDirection = 'asc', priceDirection = 'asc' }:
     { cards: CardDB.Data.Card[], nameDirection?: SortDirection, priceDirection?: SortDirection }): CardDB.Data.Card[]
@@ -61,13 +109,15 @@ export abstract class SortCards
    }
 
    /**
-    * Sort cards by price.
+    * Sort in-place cards by price.
     *
     * @param options - Options.
     *
     * @param options.cards - List of cards.
     *
     * @param [options.direction] - Sort direction; default: `asc`.
+    *
+    * @returns Sorted cards / original instance.
     */
    static byPrice({ cards, direction = 'asc' }: { cards: CardDB.Data.Card[], direction?: SortDirection }):
     CardDB.Data.Card[]
@@ -86,13 +136,15 @@ export abstract class SortCards
    }
 
    /**
-    * Sort cards by normalized type line.
+    * Sort in-place cards by normalized type line.
     *
     * @param options - Options.
     *
     * @param options.cards - List of cards.
     *
     * @param [options.direction] - Sort direction; default: `asc`.
+    *
+    * @returns Sorted cards / original instance.
     */
    static byType({ cards, direction = 'asc' }: { cards: CardDB.Data.Card[], direction?: SortDirection }):
     CardDB.Data.Card[]
