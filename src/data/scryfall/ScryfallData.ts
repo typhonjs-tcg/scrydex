@@ -6,33 +6,6 @@ abstract class ScryfallData
    }
 
    /**
-    * Is the given set type / `set_type` excluded from determining a cards recent rarity. Over time a card such as
-    * `Force of Will` and `Demonic Tutor` have gone from `Uncommon` to `Rare` / `Mythic Rare`. Ignore these set types
-    * in determining highest rarity for a card.
-    *
-    * @param setType - The card `set_type` field.
-    *
-    * @returns Whether this cards set is excluded from recent rarity calculation.
-    */
-   static isExcludedSetType(setType: string): boolean
-   {
-      return this.#excludedSetTypesRecentRarity.has(setType);
-   }
-
-   /**
-    * Is the given set code excluded from determining a cards recent rarity. Several early sets are excluded from
-    * determining a cards recent rarity.
-    *
-    * @param setCode - The card `set` field.
-    *
-    * @returns Whether this cards set is excluded from recent rarity calculation.
-    */
-   static isExcludedSet(setCode: string): boolean
-   {
-      return this.#excludedSetsRecentRarity.has(setCode);
-   }
-
-   /**
     * Is the card `legalities` entry legal for the game format?
     *
     * @param legality - Game format entry in `legalities`.
@@ -186,34 +159,6 @@ abstract class ScryfallData
     * Extracts mana cost tokens like `{W}`, `{2}{U/B}`, `{G/P}`, `{X}`.
     */
    static #REGEX_MANA_COST = /\{([^}]+)}/g;
-
-   /**
-    * These set types are excluded from determining a cards recent rarity. Over time a card such as `Force of Will`
-    * and `Demonic Tutor` have gone from `Uncommon` to `Rare` / `Mythic Rare`. Ignore these set types in determining
-    * highest rarity for a card.
-    */
-   static #excludedSetTypesRecentRarity: ReadonlySet<string> = Object.freeze(new Set([
-      'duel_deck',
-      'from_the_vault',
-      'memorabilia',
-      'premium_deck',
-      'promo',
-      'sld',   // Secret Lair
-      'spellbook',
-      'starter'
-   ]));
-
-   /**
-    * These early sets are excluded from determining a cards recent rarity.
-    */
-   static #excludedSetsRecentRarity: ReadonlySet<string> = Object.freeze(new Set([
-      '4bb',   // Fourth Edition Foreign Black Border
-      'bchr',  // Chronicles Foreign Black Border
-      'ced',   // Collector's Edition
-      'cei',   // International Collector's Edition
-      'fbb',   // Foreign Black Border
-      'sum'    // Summer Magic
-   ]));
 
    /**
     * Scryfall / ISO language code to name.

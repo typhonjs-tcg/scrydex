@@ -1,5 +1,3 @@
-import { ScryfallData }             from '#scrydex/data/scryfall';
-
 import type { CardDB }              from '#scrydex/data/db';
 import type { ImportCollection }    from '#scrydex/data/import';
 import type { ScryfallDB }          from '#scrydex/data/scryfall';
@@ -14,6 +12,34 @@ import type { ConfigCmd }           from '../types-command';
  */
 export class RarityNormalization
 {
+   /**
+    * These set types are excluded from determining a cards recent rarity. Over time a card such as `Force of Will`
+    * and `Demonic Tutor` have gone from `Uncommon` to `Rare` / `Mythic Rare`. Ignore these set types in determining
+    * highest rarity for a card.
+    */
+    #excludedSetTypes: ReadonlySet<string> = Object.freeze(new Set([
+      'duel_deck',
+      'from_the_vault',
+      'memorabilia',
+      'premium_deck',
+      'promo',
+      'sld',   // Secret Lair
+      'spellbook',
+      'starter'
+   ]));
+
+   /**
+    * These early sets are excluded from determining a cards recent rarity.
+    */
+   #excludedSets: ReadonlySet<string> = Object.freeze(new Set([
+      '4bb',   // Fourth Edition Foreign Black Border
+      'bchr',  // Chronicles Foreign Black Border
+      'ced',   // Collector's Edition
+      'cei',   // International Collector's Edition
+      'fbb',   // Foreign Black Border
+      'sum'    // Summer Magic
+   ]));
+
    /**
     * Old school rarity change cut-off.
     */
@@ -131,7 +157,7 @@ export class RarityNormalization
       if (scryCard.lang !== 'en' || typeof oracle_id !== 'string' || !this.#oracleIDSet.has(oracle_id)) { return; }
 
       //  Exclude special / promo sets so normalized rarity reflects tournament-legal printings.
-      if (ScryfallData.isExcludedSetType(scryCard.set_type) || ScryfallData.isExcludedSet(scryCard.set) ||
+      if (this.#excludedSetTypes.has(scryCard.set_type) || this.#excludedSets.has(scryCard.set) ||
        scryCard.rarity === 'special')
       {
          return;
