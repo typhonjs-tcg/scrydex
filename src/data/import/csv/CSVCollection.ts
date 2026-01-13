@@ -3,13 +3,13 @@ import {
    isDirectory,
    isFile }                   from '@typhonjs-utils/file-util';
 
+import { isObject }           from '@typhonjs-utils/object';
+
 import { CardDB }             from '#scrydex/data/db';
 
 import { CSVCardIndex }       from './CSVCardIndex';
 
 import type { BasicLogger }   from '@typhonjs-utils/logger-color';
-
-import type { ConfigCmd }     from '#scrydex/commands';
 
 import type {
    CSVCard,
@@ -29,23 +29,32 @@ export class CSVCollection implements ImportCollection
    /**
     * Load collection.
     *
-    * @param config -
+    * @param options - Options.
+    *
+    * @param options.input - A single CSV file path or a directory path to load all `.csv` files.
+    *
+    * @param [options.groups] - Input CSV file or directory path to CSV files for card collections representing various
+    *        groups.
+    *
+    * @param [options.logger] - Optional logger instance.
     *
     * @returns A new collection of all CSV card data.
     */
-   static async load(config: ConfigCmd.Convert): Promise<CSVCollection>
+   static async load({ input, groups, logger }:
+    { input: string, groups: CardDB.File.MetadataGroups<string>, logger?: BasicLogger }): Promise<CSVCollection>
    {
       const collection = new CSVCollection();
 
-      const logger = config.logger;
+      await this.#loadPath({ path: input, collection, logger });
 
-      await this.#loadPath({ path: config.input, collection, logger });
-
-      for (const group in config.groups)
+      if (isObject(groups))
       {
-         if (CardDB.isGroupKind(group) && typeof config.groups[group] === 'string')
+         for (const group in groups)
          {
-            await this.#loadPath({ path: config.groups[group]!, collection, group, logger });
+            if (CardDB.isGroupKind(group) && typeof groups[group] === 'string')
+            {
+               await this.#loadPath({ path: groups[group]!, collection, group, logger });
+            }
          }
       }
 

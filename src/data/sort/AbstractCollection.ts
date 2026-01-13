@@ -1,7 +1,5 @@
-import { CardDB }     from '#scrydex/data/db';
+import { CardDB }          from '#scrydex/data/db';
 import { capitalizeStr }   from '#scrydex/util';
-
-import type { ConfigCmd }  from '#scrydex/commands';
 
 import type {
    CardSorted,
@@ -104,11 +102,11 @@ export abstract class AbstractCollection
    /**
     * Calculate any `mark` merging.
     *
-    * @param config -
+    * @param mark - A set of CSV file names in the conversion process to mark / highlight for merging.
     */
-   calculateMarked(config: ConfigCmd.Sort): CardSorted[]
+   calculateMarked(mark: Set<string>): CardSorted[]
    {
-      return this.#cards.length ? this.#calculateMarked(config) : [];
+      return this.#cards.length ? this.#calculateMarked(mark) : [];
    }
 
    /**
@@ -167,11 +165,11 @@ export abstract class AbstractCollection
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
-    * @param config -
+    * @param mark - A set of CSV file names in the conversion process to mark / highlight for merging.
     *
     * @returns Any cards that were marked for merging.
     */
-   #calculateMarked(config: ConfigCmd.Sort): CardSorted[]
+   #calculateMarked(mark: Set<string>): CardSorted[]
    {
       /**
        * Collects any cards were marked.
@@ -187,8 +185,6 @@ export abstract class AbstractCollection
        * Scryfall card ID map.
        */
       const idMap: Map<string, { count: number }> = new Map();
-
-      const mark = config.mark;
 
       for (const card of this.#cards)
       {

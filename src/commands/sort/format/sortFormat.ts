@@ -144,7 +144,7 @@ function createSortedFormat(config: ConfigCmd.SortFormat, options:
 
    if (config.mark.size)
    {
-      const cardsMarked = sortedFormat.calculateMarked(config);
+      const cardsMarked = sortedFormat.calculateMarked(config.mark);
       if (cardsMarked.length)
       {
          const markedRarity: Set<string> = new Set<string>();
