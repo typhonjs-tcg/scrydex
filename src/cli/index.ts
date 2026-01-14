@@ -8,6 +8,7 @@ import {
    commandExportTxt,
    commandFilter,
    commandFind,
+   commandScryfallDownload,
    commandSortFormat }  from './functions';
 
 import { wrap }         from './wrap';
@@ -101,6 +102,16 @@ program.command('formats', `List all supported Scryfall game 'formats'.`)
 {
    console.log(wrap(`Supported Scryfall game 'formats':\n${Array.from(ScryfallData.supportedFormats).join(', ')}`));
 });
+
+program
+.command('scryfall-download', 'Scryfall Download')
+.describe(`Downloads the Scryfall DB.`)
+.option('--no-compress', 'No compression.')
+.option('--output', 'Provide a directory path for Scryfall DB.')
+.option('--force', 'Ignore cache and re-download.')
+.example('scryfall-download')
+.example('scryfall-download --output ./custom-db')
+.action(commandScryfallDownload);
 
 program
 .command('sort-format [input]', 'Sort Format')

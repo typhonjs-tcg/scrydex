@@ -18,6 +18,9 @@ import {
 import { CardDB }          from '#scrydex/data/db';
 
 import { find }            from './commands/find';
+import {
+   scryfallDownload }      from './commands/scryfall/download';
+
 import { Validate }        from './Validate';
 
 import type { ConfigCmd }  from '#scrydex/commands';
@@ -265,7 +268,7 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
       input,
       logger,
       output: opts.output,
-      filter: filterOptions
+      filter: filterOptions as CardDB.Options.CardFilter
    };
 
    try
@@ -317,6 +320,48 @@ export async function commandFind(input: string, query: string, opts: Record<str
    try
    {
       await find(config);
+   }
+   catch (err)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
+ * Invokes `sort` with the given config and `dotenv` options.
+ *
+ * @param {string}   input - Scryfall converted card DB.
+ *
+ * @param {object}   opts - CLI options.
+ *
+ * @returns {Promise<void>}
+ */
+export async function commandScryfallDownload(opts: Record<string, any>): Promise<void>
+{
+   // TODO: Automatically create directory.
+   if (opts.output !== void 0 && !isDirectory(opts.output)) { exit(`'output' option is not a directory: ${opts.output}`); }
+
+   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   const config = {
+      output: opts.output,
+      logger
+   };
+
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   try
+   {
+      await scryfallDownload(config);
    }
    catch (err)
    {
