@@ -24,17 +24,6 @@ import type { ConfigCmd }  from '../types-command';
  */
 export abstract class ExportSpreadsheet
 {
-   /**
-    * Category kind to full name.
-    */
-   static #categoryNameFull = new Map([
-      ['W', 'White'],
-      ['U', 'Blue'],
-      ['B', 'Black'],
-      ['R', 'Red'],
-      ['G', 'Green']
-   ]);
-
    private constructor() {}
 
    /**
@@ -53,11 +42,11 @@ export abstract class ExportSpreadsheet
       // Create collection subdirectory if it doesn't exist already.
       if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath, { recursive: true }); }
 
-      for (const [categoriesName, categories] of collection.entries())
+      for (const categories of collection.values())
       {
          if (categories.size > 0)
          {
-            await this.#exportSpreadsheet(config, collection, categoriesName, categories, collectionDirPath);
+            await this.#exportSpreadsheet(config, collection, categories, collectionDirPath);
          }
       }
    }
@@ -67,13 +56,11 @@ export abstract class ExportSpreadsheet
     *
     * @param collection -
     *
-    * @param categoriesName -
-    *
     * @param categories -
     *
     * @param collectionDirPath -
     */
-   static async #exportSpreadsheet(config: ConfigCmd.Sort, collection: AbstractCollection, categoriesName: string,
+   static async #exportSpreadsheet(config: ConfigCmd.Sort, collection: AbstractCollection,
     categories: SortedCategories, collectionDirPath: string): Promise<void>
    {
       const wb = new Excel.Workbook();
@@ -82,11 +69,11 @@ export abstract class ExportSpreadsheet
 
       const theme = Theme.get(config);
 
-      for (const [categoryName, cards] of categories.entries())
+      for (const category of categories.values())
       {
-         if (cards.length <= 0) { continue; }
+         if (category.cards.length <= 0) { continue; }
 
-         const ws = wb.addWorksheet(categoryName);
+         const ws = wb.addWorksheet(category.nameShort);
 
          // Column definitions + alignment rules.
          ws.columns = [
@@ -121,14 +108,13 @@ export abstract class ExportSpreadsheet
          titleRow.height = 22;
          titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
 
-         titleCell.value = `${collection.printName} (${capitalizeStr(categoriesName)}) - ${
-          this.#categoryNameFull.get(categoryName) ?? categoryName}`;
+         titleCell.value = `${collection.printName} (${capitalizeStr(categories.name)}) - ${category.nameFull}`;
 
          // Card rows ------------------------------------------------------------------------------------------------
 
          let prevType: string | undefined = void 0;
 
-         for (const card of cards)
+         for (const card of category.cards)
          {
             const cardManaCost = CardDB.CardFields.manaCost(card);
 

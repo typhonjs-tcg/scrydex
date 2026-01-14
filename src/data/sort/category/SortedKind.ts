@@ -1,7 +1,10 @@
-import { SortCards }    from '../SortCards';
-import { SortOrder }    from '../SortOrder';
+import { SortedCategory }  from './SortedCategory';
+
+import { SortCards }       from '../SortCards';
+import { SortOrder }       from '../SortOrder';
 
 import type {
+   CardCategory,
    CardSorted,
    SortedCategories }   from '../types-sort';
 
@@ -9,7 +12,7 @@ export class SortedKind implements SortedCategories
 {
    /**
     */
-   #categories: Map<string, CardSorted[]> = new Map();
+   #categories: Map<string, CardCategory>;
 
    /**
     * Name for this collection of cards.
@@ -19,27 +22,39 @@ export class SortedKind implements SortedCategories
    /**
     * @param name - Name for this collection of cards.
     */
-   constructor(name: string)
+   constructor({ name }: { name: string })
    {
       this.#name = name;
 
-      this.#categories = new Map();
+      this.#categories = new Map<string, CardCategory>();
 
-      this.#categories.set('W', []);
-      this.#categories.set('U', []);
-      this.#categories.set('B', []);
-      this.#categories.set('R', []);
-      this.#categories.set('G', []);
-      this.#categories.set('Multicolor', []);
-      this.#categories.set('Artifact (Colorless)', []);
-      this.#categories.set('Non-artifact (Colorless)', []);
-      this.#categories.set('Land', []);
-      this.#categories.set('Land (Basic)', []);
-      this.#categories.set('Unsorted', []);
+      this.#categories.set('W', new SortedCategory({ nameFull: 'White', nameShort: 'W' }));
+
+      this.#categories.set('U', new SortedCategory({ nameFull: 'Blue', nameShort: 'U' }));
+
+      this.#categories.set('B', new SortedCategory({ nameFull: 'Black', nameShort: 'B' }));
+
+      this.#categories.set('R', new SortedCategory({ nameFull: 'Red', nameShort: 'R' }));
+
+      this.#categories.set('G', new SortedCategory({ nameFull: 'Green', nameShort: 'G' }));
+
+      this.#categories.set('Multicolor', new SortedCategory({ nameFull: 'Multicolor', nameShort: 'Multicolor' }));
+
+      this.#categories.set('Artifact (Colorless)',
+       new SortedCategory({ nameFull: 'Artifact (Colorless)', nameShort: 'Artifact (Colorless)' }));
+
+      this.#categories.set('Non-artifact (Colorless)',
+       new SortedCategory({ nameFull: 'Non-artifact (Colorless)', nameShort: 'Non-artifact (Colorless)' }));
+
+      this.#categories.set('Land', new SortedCategory({ nameFull: 'Land', nameShort: 'Land' }));
+
+      this.#categories.set('Land (Basic)', new SortedCategory({ nameFull: 'Land (Basic)', nameShort: 'Land (Basic)' }));
+
+      this.#categories.set('Unsorted', new SortedCategory({ nameFull: 'Unsorted', nameShort: 'Unsorted' }));
    }
 
    /**
-    * @returns Rarity name for this group of cards.
+    * @returns Name for this collection of cards.
     */
    get name(): string
    {
@@ -47,13 +62,13 @@ export class SortedKind implements SortedCategories
    }
 
    /**
-    * @returns The total amount of cards at this rarity.
+    * @returns The total amount of cards in this collection.
     */
    get size(): number
    {
       let result = 0;
 
-      for (const cards of this.#categories.values()) { result += cards.length; }
+      for (const category of this.#categories.values()) { result += category.cards.length; }
 
       return result;
    }
@@ -68,7 +83,7 @@ export class SortedKind implements SortedCategories
 
       if (category)
       {
-         category.push(card);
+         category.cards.push(card);
       }
       else
       {
@@ -79,9 +94,9 @@ export class SortedKind implements SortedCategories
    /**
     * @returns Entry iterator for category / cards.
     */
-   entries(): MapIterator<[string, CardSorted[]]>
+   values(): IterableIterator<CardCategory>
    {
-      return this.#categories.entries();
+      return this.#categories.values();
    }
 
    /**
@@ -95,15 +110,15 @@ export class SortedKind implements SortedCategories
    {
       if (options.alpha)
       {
-         for (const cards of this.#categories.values())
+         for (const category of this.#categories.values())
          {
-            SortCards.byNameThenPrice({ cards, priceDirection: 'desc' });
+            SortCards.byNameThenPrice({ cards: category.cards, priceDirection: 'desc' });
          }
       }
 
       if (options.type)
       {
-         for (const cards of this.#categories.values()) { SortCards.byType({ cards }); }
+         for (const category of this.#categories.values()) { SortCards.byType({ cards: category.cards }); }
       }
    }
 }

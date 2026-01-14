@@ -89,7 +89,7 @@ export class SortedFormat extends AbstractCollection
          let categoryRarity = sortedCategories.has(rarity) ? sortedCategories.get(rarity) : void 0;
          if (!categoryRarity)
          {
-            categoryRarity = new SortedKind(rarity);
+            categoryRarity = new SortedKind({ name: rarity });
             sortedCategories.set(rarity, categoryRarity);
          }
 

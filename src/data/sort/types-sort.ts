@@ -19,7 +19,7 @@ type SortDirection = 'asc' | 'desc';
 /**
  * Defines the interface for a collection of cards with sub-category sorting.
  */
-interface SortedCategories
+interface SortedCategories<T = CardSorted>
 {
    /**
     * @returns Name of the collection of cards.
@@ -34,17 +34,39 @@ interface SortedCategories
    /**
     * @param card - Card to add.
     */
-   add(card: CardSorted): void;
+   add(card: T): void;
 
    /**
-    * @returns Entry iterator for category / cards.
+    * @returns Values iterator for all categories / cards.
     */
-   entries(): MapIterator<[string, CardSorted[]]>;
+   values(): IterableIterator<CardCategory<T>>;
 
    sort(options: Record<string, boolean>): void;
 }
 
+/**
+ * Defines an individual sorted category.
+ */
+interface CardCategory<T = CardSorted>
+{
+   /**
+    * All cards in category.
+    */
+   get cards(): T[];
+
+   /**
+    * Full name of category.
+    */
+   get nameFull(): string;
+
+   /**
+    * Abbreviated short name for category.
+    */
+   get nameShort(): string;
+}
+
 export {
+   type CardCategory,
    type CardSorted,
    type SortedCategories,
    type SortDirection };
