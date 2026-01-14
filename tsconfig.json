@@ -6,6 +6,7 @@
     "moduleResolution": "Bundler",
     "target": "ES2024",
     "customConditions": ["node"],
+    "types": ["node"],
 
     "strict": true
   },
