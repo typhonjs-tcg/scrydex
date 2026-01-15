@@ -1,14 +1,15 @@
-import fs            from 'node:fs';
-import zlib          from 'node:zlib';
-import { pipeline }  from 'node:stream/promises';
-import { Transform } from 'node:stream';
+import fs               from 'node:fs';
+import zlib             from 'node:zlib';
+import { pipeline }     from 'node:stream/promises';
+import { Transform }    from 'node:stream';
 
-import { VERSION }   from '#scrydex';
+import { isFile }       from '@typhonjs-utils/file-util';
+
+import { VERSION }      from '#scrydex';
+import { ScryfallDB }   from '#scrydex/data/scryfall';
 
 import type { ReadableStream }   from 'node:stream/web';
 import type { BasicLogger }      from '@typhonjs-utils/logger-color';
-
-import type { ScryfallDB }       from '#scrydex/data/scryfall';
 
 const s_USER_AGENT = `Scrydex/${VERSION.package} (https://github.com/typhonjs-tcg/scrydex)`;
 
@@ -25,19 +26,70 @@ const s_USER_AGENT = `Scrydex/${VERSION.package} (https://github.com/typhonjs-tc
 export async function scryfallDownload(config: { dbType: string, force: boolean, logger: BasicLogger }):
  Promise<void>
 {
+   const logger = config.logger;
+
+   logger.info(`Fetching latest remote Scryfall (${config.dbType}) metadata.`);
+
    const sourceMetadata = await fetchMetadata(config.dbType);
 
    let update = true;
 
-   if (!config.force) { update = await checkCache(sourceMetadata); }
+   if (!config.force)
+   {
+      update = await checkCache(sourceMetadata, logger);
+   }
+   else
+   {
+      logger.info(`Automatic download of ScryfallDB initiated as 'force' option is enabled.`);
+   }
 
    if (update) { await download(sourceMetadata, config); }
 }
 
-// TODO: IMPLEMENT
-async function checkCache(sourceMetadata: ScryfallDB.Meta.ScryfallBulkData): Promise<boolean>
+/**
+ * Verifies the fetched Scryfall bulk data object / `sourceMeta` date against any stored local ScryfallDB.
+ *
+ * @param sourceMeta - Recently fetched build data object.
+ *
+ * @param logger - Logger instance.
+ *
+ * @returns Whether an update / re-download is necessary.
+ */
+async function checkCache(sourceMeta: ScryfallDB.Meta.ScryfallBulkData, logger: BasicLogger): Promise<boolean>
 {
-   console.log(`!!! checkCache - metadata:\n${JSON.stringify(sourceMetadata, null, 2)}`);
+   logger.debug(`Checking cached data.`);
+
+   const filepath = `./db/scryfall_${sourceMeta.type}.json.gz`;
+
+   if (!isFile(filepath))
+   {
+      logger.debug(`Existing ScryfallDB does not exist: ${filepath}`);
+      return true;
+   }
+
+   logger.debug(`New sourceMeta:\n${JSON.stringify(sourceMeta, null, 2)}`);
+
+   try
+   {
+      const scryStream = await ScryfallDB.load({ filepath });
+
+      logger.debug(`Remote sourceMeta date: ${scryStream.sourceMeta.updated_at}`);
+      logger.debug(`Existing sourceMeta date: ${sourceMeta.updated_at}`);
+
+      const existingDate = new Date(scryStream.sourceMeta.updated_at);
+      const sourceDate = new Date(sourceMeta.updated_at);
+
+      if (existingDate < sourceDate)
+      {
+         logger.debug(`Existing DB is older.`);
+      }
+      else
+      {
+         logger.info(`Existing ScryfallDB is up to date: ${filepath}`);
+         return false;
+      }
+   }
+   catch { /**/ }
 
    return true;
 }
@@ -49,8 +101,8 @@ async function checkCache(sourceMetadata: ScryfallDB.Meta.ScryfallBulkData): Pro
  *
  * @param config - CLI config.
  */
-async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData, config:
- { dbType: string, logger: BasicLogger }): Promise<void>
+async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
+ config: { dbType: string, logger: BasicLogger }): Promise<void>
 {
    const res = await fetch(sourceMeta.download_uri, {
       headers: { 'User-Agent': s_USER_AGENT, Accept: 'application/json' }
