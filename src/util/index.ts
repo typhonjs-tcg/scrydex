@@ -1,4 +1,4 @@
 export * from './capitalizeStr';
-export * from './createReadableSource';
+export * from './createReadable';
 export * from './isFileGzip';
 export * from './isFiniteNumber';

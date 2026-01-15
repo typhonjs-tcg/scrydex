@@ -19,7 +19,7 @@ import type { Readable }   from 'node:stream';
  *
  * @throws {Error} If the file cannot be opened or read.
  */
-export function createReadableSource(filepath: string): Readable
+export function createReadable(filepath: string): Readable
 {
    const isGzip = isFileGzip(filepath);
 
