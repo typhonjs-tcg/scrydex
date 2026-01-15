@@ -104,13 +104,12 @@ program.command('formats', `List all supported Scryfall game 'formats'.`)
 });
 
 program
-.command('scryfall-download', 'Scryfall Download')
-.describe(`Downloads the Scryfall DB.`)
-.option('--no-compress', 'No compression.')
-.option('--output', 'Provide a directory path for Scryfall DB.')
-.option('--force', 'Ignore cache and re-download.')
+.command('scryfall-download', 'Scryfall DB Download')
+.describe(`Downloads the Scryfall DB to './db'.`)
+.option('--all-cards', 'Download the very large (~2.3GB) all cards DB which includes all languages.')
+.option('--force', 'Ignore cache and force re-download.')
 .example('scryfall-download')
-.example('scryfall-download --output ./custom-db')
+.example('scryfall-download --all-cards')
 .action(commandScryfallDownload);
 
 program

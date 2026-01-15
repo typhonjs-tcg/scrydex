@@ -334,9 +334,7 @@ export async function commandFind(input: string, query: string, opts: Record<str
 }
 
 /**
- * Invokes `sort` with the given config and `dotenv` options.
- *
- * @param {string}   input - Scryfall converted card DB.
+ * Invokes `scryfallDownload` with the given config.
  *
  * @param {object}   opts - CLI options.
  *
@@ -344,13 +342,21 @@ export async function commandFind(input: string, query: string, opts: Record<str
  */
 export async function commandScryfallDownload(opts: Record<string, any>): Promise<void>
 {
-   // TODO: Automatically create directory.
-   if (opts.output !== void 0 && !isDirectory(opts.output)) { exit(`'output' option is not a directory: ${opts.output}`); }
+   if (opts['all-cards'] !== void 0 && typeof opts['all-cards'] !== 'boolean')
+   {
+      exit(`'all-cards' option is not a boolean.`);
+   }
+
+   if (opts.force !== void 0 && typeof opts.force !== 'boolean')
+   {
+      exit(`'force' option is not a boolean.`);
+   }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    const config = {
-      output: opts.output,
+      dbType: opts['all-cards'] ? 'all-cards' : 'default-cards',
+      force: opts.force as boolean ?? false,
       logger
    };
 
@@ -376,7 +382,7 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
 }
 
 /**
- * Invokes `sort` with the given config and `dotenv` options.
+ * Invokes `sort` with the given config.
  *
  * @param {string}   input - Scryfall converted card DB.
  *
