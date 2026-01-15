@@ -8,7 +8,7 @@ const s_SOURCEMAP = true;
 
 const s_DTS_OPTIONS = { tsconfig: './tsconfig.json' };
 
-const s_EXTERNAL = [/csv-/g, 'exceljs', 'sade', /stream-/g, /@typhonjs*/g];
+const s_EXTERNAL = [/csv-/g, 'exceljs', 'node:stream', 'sade', /stream-/g, /@typhonjs*/g];
 
 // These bundles are for the Node distribution.
 export default () =>
