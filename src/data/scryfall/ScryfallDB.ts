@@ -1,12 +1,19 @@
-import fs               from 'node:fs';
+import fs                  from 'node:fs';
+import zlib                from 'node:zlib';
 
 import {
    isDirectory,
-   isFile }             from '@typhonjs-utils/file-util';
+   isFile }                from '@typhonjs-utils/file-util';
 
-import { chain }        from 'stream-chain';
-import { parser }       from 'stream-json';
-import { streamArray }  from 'stream-json/streamers/StreamArray';
+import { chain }           from 'stream-chain';
+import { parser }          from 'stream-json';
+import { pick }            from 'stream-json/filters/Pick';
+import { streamArray }     from 'stream-json/streamers/StreamArray';
+import { streamObject }    from 'stream-json/streamers/StreamObject';
+
+import { isFileGzip }      from '#scrydex/util';
+
+import type { Readable }   from 'node:stream';
 
 /**
  * Provides a reusable / generic streamable interface over the Scryfall card DB.
@@ -34,6 +41,93 @@ abstract class ScryfallDB
 
 declare namespace ScryfallDB
 {
+   export namespace File
+   {
+      /**
+       * Defines the Scrydex / Scryfall DB card DB JSON file format.
+       */
+      export interface JSON
+      {
+         /**
+          * Scrydex specific metadata.
+          */
+         meta: Meta.Scrydex;
+
+         /**
+          * The Scryfall bulk data object describing this card DB.
+          */
+         sourceMeta: Meta.ScryfallBulkData;
+
+         /**
+          * Array of Scryfall card objects.
+          *
+          * @privateRemarks
+          * TODO: Eventually update with TS types for Scryfall card shape.
+          */
+         cards: Record<string, any>[];
+      }
+   }
+
+   /**
+    * Defines the metadata objects stored in {@link File.JSON}.
+    */
+   export namespace Meta
+   {
+      /**
+       * The Scrydex specific metadata stored as `meta` in a `ScryfallDB` data file.
+       */
+      export interface Scrydex
+      {
+         type: 'scryfall-db-cards';
+
+         /** Generating CLI version. */
+         cliVersion: string;
+
+         /** UTC Date when generated. */
+         generatedAt: string;
+      }
+
+      /**
+       * Scryfall API bulk data object metadata response. This is stored as `sourceMeta` in a `ScryfallDB` data file.
+       *
+       * @see https://scryfall.com/docs/api/bulk-data/type
+       */
+      export interface ScryfallBulkData
+      {
+         object: 'bulk_data';
+
+         /** A unique ID for this bulk item. */
+         id: string;
+
+         /** A computer-readable string for the kind of bulk item */
+         type: string;
+
+         /** The time when this file was last updated. */
+         updated_at: string;
+
+         /** The URI that hosts this bulk file for fetching. */
+         uri: string;
+
+         /** A human-readable name for this file. */
+         name: string;
+
+         /** A human-readable description for this file. */
+         description: string,
+
+         /** The size of this file in integer bytes. */
+         size: number;
+
+         /** The URI that hosts this bulk file for fetching. */
+         download_uri: string;
+
+         /** The MIME type of this file. */
+         content_type: string;
+
+         /** The Content-Encoding encoding that will be used to transmit this file when you download it. */
+         content_encoding: string;
+      }
+   }
+
    export namespace Stream
    {
       export interface Reader
@@ -107,12 +201,22 @@ class ScryCardStream implements ScryfallDB.Stream.Reader
     * @param [options] - Optional options.
     *
     * @returns Asynchronous iterator over validated card entries.
+    *
+    * @privateRemarks
+    * TODO: Eventually update with TS types for Scryfall card shape.
     */
    async* asStream({ filterFn }: ScryfallDB.Stream.StreamOptions = {}): AsyncIterable<Record<string, any>>
    {
+      const isGzip = isFileGzip(this.#filepath);
+
+      const input = fs.createReadStream(this.#filepath);
+
+      const source: Readable = isGzip ? input.pipe(zlib.createGunzip()) : input;
+
       const pipeline = chain([
-         fs.createReadStream(this.#filepath),
+         source,
          parser(),
+         pick({ filter: 'cards' }),
          streamArray()
       ]);
 
