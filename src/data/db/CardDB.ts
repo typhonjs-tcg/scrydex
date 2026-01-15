@@ -1,3 +1,4 @@
+import { once }               from 'node:events';
 import fs                     from 'node:fs';
 import path                   from 'node:path';
 
@@ -14,11 +15,12 @@ import { chain }              from 'stream-chain';
 import { parser }             from 'stream-json';
 import { pick }               from 'stream-json/filters/Pick';
 import { streamArray }        from 'stream-json/streamers/StreamArray';
-import { streamObject }       from 'stream-json/streamers/StreamObject';
+import { streamValues }       from 'stream-json/streamers/StreamValues';
 
 import { VERSION }            from '#scrydex';
 
 import { ScryfallData }       from '#scrydex/data/scryfall';
+import { createReadable }     from '#scrydex/util';
 
 import {
    CardFields,
@@ -106,7 +108,7 @@ class CardDB
 
       const dbFiles = await getFileList({
          dir: dirpath,
-         includeFile: /\.json$/,
+         includeFile: /\.json(\.gz)?$/,
          resolve: true,
          walk
       });
@@ -259,32 +261,38 @@ class CardDB
     */
    static async #loadMeta(filepath: string): Promise<Record<string, any> | undefined>
    {
-      const metaPipeline = chain([
-         fs.createReadStream(filepath),
+      const source = fs.createReadStream(filepath);
+
+      const pipeline = chain([
+         source,
          parser(),
          pick({ filter: 'meta' }),
-         streamObject()
+         streamValues()
       ]);
 
-      let meta: Record<string, any> = {};
+      const [{ value: meta }] = await once(pipeline, 'data');
 
-      for await (const { key, value } of metaPipeline) { meta[key] = value; }
+      pipeline.destroy();
+      source.destroy();
 
-      return Object.keys(meta).length ? meta : void 0;
+      return isObject(meta) ? meta : void 0;
    }
 
    /**
-    * TODO: Finish validation
-    *
     * Validates a JSON card DB meta object.
     *
     * @param filepath - File path meta object loaded from.
     *
     * @param meta - Potential Meta object / unknown
+    *
+    * @returns CardDB metadata
+    *
+    * @privateRemarks
+    * TODO: Eventually more thorough validation.
     */
    static #validateMeta(filepath: string, meta: unknown): CardDB.File.Metadata | string
    {
-      if (!meta) { throw new Error(`CardDB.load error: Could not load meta data for ${filepath}`); }
+      if (!isObject(meta)) { throw new Error(`CardDB.load error: Could not load meta data for ${filepath}`); }
 
       return meta as CardDB.File.Metadata;
    }
@@ -368,8 +376,10 @@ class CardStream implements CardDB.Stream.Reader
    async *asStream({ filter, filterFn, groups, isExportable, uniqueKeys, uniqueOnce }:
     CardDB.Stream.StreamOptions = {}): AsyncIterable<CardDB.Data.Card>
    {
+      const source = createReadable(this.#filepath);
+
       const pipeline = chain([
-         fs.createReadStream(this.#filepath),
+         source,
          parser(),
          pick({ filter: 'cards' }),
          streamArray()
