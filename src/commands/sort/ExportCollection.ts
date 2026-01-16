@@ -32,7 +32,7 @@ export abstract class ExportCollection
             if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath, { recursive: true }); }
 
             // Export collection cards to JSON DB.
-            CardDB.save({
+            await CardDB.save({
                filepath: path.resolve(collectionDirPath, `${collection.name}.json`),
                cards: collection.cards,
                meta: collection.meta

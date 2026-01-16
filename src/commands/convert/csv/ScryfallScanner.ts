@@ -126,7 +126,7 @@ export class ScryfallScanner
 
       if (outputDB.length > 0)
       {
-         CardDB.save({
+         await CardDB.save({
             filepath: config.output,
             cards: outputDB.sort((a, b) => a.name.localeCompare(b.name)),
             meta: { type: 'inventory', groups: collection.groups }
