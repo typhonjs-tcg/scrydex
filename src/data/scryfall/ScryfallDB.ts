@@ -243,11 +243,17 @@ class ScryCardStream implements ScryfallDB.Stream.Reader
       return this.#filepath;
    }
 
+   /**
+    * @returns The Scrydex metadata for a Scryfall DB.
+    */
    get meta(): ScryfallDB.Meta.Scrydex
    {
       return this.#metadata.meta;
    }
 
+   /**
+    * @returns The Scryfall bulk data object associated with this DB.
+    */
    get sourceMeta(): ScryfallDB.Meta.ScryfallBulkData
    {
       return this.#metadata.sourceMeta;
