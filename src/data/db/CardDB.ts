@@ -376,7 +376,7 @@ class CardStream implements CardDB.Stream.Reader
    async *asStream({ filter, filterFn, groups, isExportable, uniqueKeys, uniqueOnce }:
     CardDB.Stream.StreamOptions = {}): AsyncIterable<CardDB.Data.Card>
    {
-      const source = createReadable(this.#filepath);
+      const source = createReadable({ filepath: this.#filepath });
 
       const pipeline = chain([
          source,

@@ -136,8 +136,8 @@ abstract class ScryfallDB
    static async #loadMeta(filepath: string):
     Promise<{ meta: Record<string, any>, sourceMeta: Record<string, any> } | undefined>
    {
-      const metaReadable = createReadable(filepath);
-      const metaSourceReadable = createReadable(filepath);
+      const metaReadable = createReadable({ filepath });
+      const metaSourceReadable = createReadable({ filepath });
 
       const metaPipeline = chain([
          metaReadable,
@@ -271,7 +271,7 @@ class ScryCardStream implements ScryfallDB.Stream.Reader
     */
    async* asStream({ filterFn }: ScryfallDB.Stream.StreamOptions = {}): AsyncIterable<Record<string, any>>
    {
-      const source = createReadable(this.#filepath);
+      const source = createReadable({ filepath: this.#filepath });
 
       const pipeline = chain([
          source,

@@ -13,13 +13,15 @@ import type { Readable }   from 'node:stream';
  * The file is inspected using magic bytes and not the extension to determine whether gzip decompression should be
  * applied. The returned stream is always a Node `Readable` suitable for consumption by parsing pipelines.
  *
- * @param filepath - Input file path.
+ * @param options - Options.
+ *
+ * @param [options.filepath] - Input file path.
  *
  * @returns A readable stream yielding decompressed or raw file contents.
  *
  * @throws {Error} If the file cannot be opened or read.
  */
-export function createReadable(filepath: string): Readable
+export function createReadable({ filepath }: { filepath: string }): Readable
 {
    const isGzip = isFileGzip(filepath);
 
