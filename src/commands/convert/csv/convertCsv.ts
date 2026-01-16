@@ -1,6 +1,6 @@
 import { CSVCollection }   from '#scrydex/data/import';
 
-import { ScryfallScanner }      from './ScryfallScanner';
+import { ScryfallScanner } from './ScryfallScanner';
 
 import type { ConfigCmd }  from '../../types-command';
 
