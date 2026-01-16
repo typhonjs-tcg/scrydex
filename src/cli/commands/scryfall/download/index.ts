@@ -1,12 +1,12 @@
-import fs               from 'node:fs';
-import zlib             from 'node:zlib';
-import { pipeline }     from 'node:stream/promises';
-import { Transform }    from 'node:stream';
+import fs                  from 'node:fs';
+import { pipeline }        from 'node:stream/promises';
+import { Transform }       from 'node:stream';
 
-import { isFile }       from '@typhonjs-utils/file-util';
+import { isFile }          from '@typhonjs-utils/file-util';
 
-import { VERSION }      from '#scrydex';
-import { ScryfallDB }   from '#scrydex/data/scryfall';
+import { VERSION }         from '#scrydex';
+import { ScryfallDB }      from '#scrydex/data/scryfall';
+import { createWritable }  from "#scrydex/util";
 
 import type { ReadableStream }   from 'node:stream/web';
 import type { BasicLogger }      from '@typhonjs-utils/logger-color';
@@ -57,31 +57,31 @@ export async function scryfallDownload(config: { dbType: string, force: boolean,
  */
 async function checkCache(sourceMeta: ScryfallDB.Meta.ScryfallBulkData, logger: BasicLogger): Promise<boolean>
 {
-   logger.debug(`Checking cached data.`);
+   logger.verbose(`Checking cached DB date.`);
 
    const filepath = `./db/scryfall_${sourceMeta.type}.json.gz`;
 
    if (!isFile(filepath))
    {
-      logger.debug(`Existing ScryfallDB does not exist: ${filepath}`);
+      logger.verbose(`Existing ScryfallDB does not exist: ${filepath}`);
       return true;
    }
 
-   logger.debug(`New sourceMeta:\n${JSON.stringify(sourceMeta, null, 2)}`);
+   logger.debug(`Newly fetched sourceMeta:\n${JSON.stringify(sourceMeta, null, 2)}`);
 
    try
    {
       const scryStream = await ScryfallDB.load({ filepath });
 
-      logger.debug(`Remote sourceMeta date: ${scryStream.sourceMeta.updated_at}`);
-      logger.debug(`Existing sourceMeta date: ${sourceMeta.updated_at}`);
+      logger.verbose(`Remote sourceMeta date: ${scryStream.sourceMeta.updated_at}`);
+      logger.verbose(`Existing sourceMeta date: ${sourceMeta.updated_at}`);
 
       const existingDate = new Date(scryStream.sourceMeta.updated_at);
       const sourceDate = new Date(sourceMeta.updated_at);
 
       if (existingDate < sourceDate)
       {
-         logger.debug(`Existing DB is older.`);
+         logger.verbose(`Existing DB is older.`);
       }
       else
       {
@@ -113,11 +113,11 @@ async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
    // Ensure output directory exists.
    fs.mkdirSync('./db', { recursive: true });
 
-   const outputPath = `./db/scryfall_${sourceMeta.type}.json.gz`;
+   const filepath = `./db/scryfall_${sourceMeta.type}.json.gz`;
 
    const logger = config.logger;
 
-   logger.info(`Downloading Scryfall DB (${config.dbType}) to: ${outputPath}`);
+   logger.info(`Downloading Scryfall DB (${config.dbType}) to: ${filepath}`);
    logger.info(`Total network bandwidth: ${(sourceMeta.size / 1024 / 1024).toFixed(2)} MB`);
 
    let bytes = 0;
@@ -140,10 +140,7 @@ async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
 
    const body = res.body as ReadableStream<Uint8Array>;
 
-   const gzip = zlib.createGzip({ level: 9 });
-   const out = fs.createWriteStream(outputPath);
-
-   gzip.pipe(out);
+   const out = createWritable({ filepath, compress: true });
 
    const meta: ScryfallDB.Meta.Scrydex = {
       type: 'scryfall-db-cards',
@@ -153,7 +150,7 @@ async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
 
    const header = `{"meta":${JSON.stringify(meta)},"sourceMeta":${JSON.stringify(sourceMeta)},"cards":`;
 
-   gzip.write(header);
+   out.write(header);
 
    await pipeline(
       body,
@@ -161,15 +158,15 @@ async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
       new Transform({
          transform(chunk, _, cb)
          {
-            gzip.write(chunk);
+            out.write(chunk);
             cb();
          }
       })
    );
 
    // Close object.
-   gzip.write('}');
-   gzip.end();
+   out.write('}');
+   out.end();
 
    logger?.info(`Downloaded ${Math.round(sourceMeta.size / 1024 / 1024)} MB (100%)`);
 }
