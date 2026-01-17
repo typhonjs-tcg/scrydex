@@ -1,3 +1,4 @@
+import { once }            from 'node:events';
 import fs                  from 'node:fs';
 import { pipeline }        from 'node:stream/promises';
 import { Transform }       from 'node:stream';
@@ -117,10 +118,12 @@ async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
 
    const logger = config.logger;
 
-   logger.info(`Downloading Scryfall DB (${config.dbType}) to: ${filepath}`);
+   logger.info(`Downloading and compressing Scryfall DB (${config.dbType}) to: ${filepath}`);
    logger.info(`Total network bandwidth: ${(sourceMeta.size / 1024 / 1024).toFixed(2)} MB`);
 
    let bytes = 0;
+
+   let dlPercent = '0';
 
    /**
     * Transform logging download progress.
@@ -131,8 +134,9 @@ async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
          bytes += chunk.length;
          if (bytes % (10 * 1024 * 1024) < chunk.length)
          {
-            logger?.info(`Downloaded ${Math.round(bytes / 1024 / 1024)} MB (${
-             ((bytes / sourceMeta.size) * 100).toFixed(1)}%)`);
+            dlPercent = ((bytes / sourceMeta.size) * 100).toFixed(1);
+
+            logger?.info(`Downloaded ${Math.round(bytes / 1024 / 1024)} MB (${dlPercent}%)`);
          }
          cb(null, chunk);
       }
@@ -168,7 +172,16 @@ async function download(sourceMeta: ScryfallDB.Meta.ScryfallBulkData,
    out.write('}');
    out.end();
 
-   logger?.info(`Downloaded ${Math.round(sourceMeta.size / 1024 / 1024)} MB (100%)`);
+   if (dlPercent !== '100.0')
+   {
+      logger?.info(`Downloaded ${Math.round(sourceMeta.size / 1024 / 1024)} MB (100.0%)`);
+   }
+
+   await once(out, 'finish');
+
+   const { size } = fs.statSync(filepath);
+
+   logger?.info(`Final compressed file size ${Math.round(size / 1024 / 1024)} MB.`);
 }
 
 /**
