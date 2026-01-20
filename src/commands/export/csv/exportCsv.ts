@@ -1,5 +1,4 @@
-import fs                  from 'node:fs';
-import path                from 'node:path';
+import { once }            from 'node:events';
 
 import {
    isDirectory,
@@ -8,6 +7,7 @@ import {
 import { stringify }       from 'csv-stringify';
 
 import { CardDB }          from '#scrydex/data/db';
+import { createWritable }  from '#scrydex/util';
 
 import {
    exportCards,
@@ -78,14 +78,13 @@ async function exportDB({ config, db, output }:
       ]
    });
 
-   // Ensure `output` directory exists.
-   fs.mkdirSync(path.dirname(outputActual), { recursive: true });
+   const out = createWritable({ filepath: outputActual });
 
-   stringifier.pipe(fs.createWriteStream(outputActual));
+   stringifier.pipe(out);
 
    for await (const card of exportCards({ config, db }))
    {
-      stringifier.write({
+      const data = {
          Name: card.name,
          Quantity: card.quantity,
          'Set code': card.set,
@@ -94,6 +93,12 @@ async function exportDB({ config, db, output }:
          'Foil': card.foil,
          'Language': card.lang_csv ?? card.lang,
          'Scryfall ID': card.scryfall_id
-      });
+      }
+
+      if (!stringifier.write(data)) { await once(stringifier, 'drain'); }
    }
+
+   stringifier.end();
+
+   await once(out, 'finish');
 }

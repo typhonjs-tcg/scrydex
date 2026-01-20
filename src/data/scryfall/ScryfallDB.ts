@@ -146,7 +146,10 @@ abstract class ScryfallDB
          streamValues()
       ]);
 
-      const [{ value: meta }] = await once(metaPipeline, 'data');
+      const meta = await Promise.race([
+         once(metaPipeline, 'data').then(([{ value }]) => value),
+         once(metaPipeline, 'end').then(() => null)
+      ]);
 
       metaPipeline.destroy();
       metaReadable.destroy();
@@ -158,7 +161,10 @@ abstract class ScryfallDB
          streamValues()
       ]);
 
-      const [{ value: sourceMeta }] = await once(metaSourcePipeline, 'data');
+      const sourceMeta = await Promise.race([
+         once(metaSourcePipeline, 'data').then(([{ value }]) => value),
+         once(metaSourcePipeline, 'end').then(() => null)
+      ]);
 
       metaSourcePipeline.destroy();
       metaSourceReadable.destroy();

@@ -20,7 +20,9 @@ import { streamValues }       from 'stream-json/streamers/StreamValues';
 import { VERSION }            from '#scrydex';
 
 import { ScryfallData }       from '#scrydex/data/scryfall';
-import { createReadable }     from '#scrydex/util';
+import {
+   createReadable,
+   createWritable }           from '#scrydex/util';
 
 import {
    CardFields,
@@ -183,11 +185,10 @@ class CardDB
     *
     * @param options - Options.
     */
-   static save({ filepath, cards, meta }: SaveOptions)
+   static async save({ filepath, cards, meta, compress = false }: SaveOptions): Promise<void>
    {
       if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a string.`); }
       if (!filepath.endsWith('.json')) { throw new TypeError(`'filepath' does not have the '.json' file extension.`); }
-      if (isDirectory(filepath)) { throw new Error(`'filepath' is a directory.`); }
 
       if (!Array.isArray(cards)) { throw new TypeError(`'cards' is not an array.`); }
       if (!isObject(meta)) { throw new TypeError(`'meta' is not an object.`); }
@@ -213,18 +214,21 @@ class CardDB
          generatedAt: this.#execTime.toISOString()
       }
 
-      let output = `{\n  "meta": ${JSON.stringify(metadata)},\n  "cards": [\n`;
+      const out = createWritable({ filepath });
+
+      out.write(`{\n  "meta": ${JSON.stringify(metadata)},\n  "cards": [\n`);
 
       for (let i = 0; i < cards.length; i++)
       {
          const notLast = i !== cards.length - 1;
 
-         output += `    ${JSON.stringify(cards[i])}${notLast ? ',': ''}\n`;
+         if (!out.write(`    ${JSON.stringify(cards[i])}${notLast ? ',': ''}\n`)) { await once(out, 'drain'); }
       }
 
-      output += `  ]\n}\n`;
+      out.write(`  ]\n}\n`);
+      out.end();
 
-      fs.writeFileSync(filepath, output, 'utf-8');
+      await once(out, 'finish');
    }
 
    /**
@@ -270,7 +274,10 @@ class CardDB
          streamValues()
       ]);
 
-      const [{ value: meta }] = await once(pipeline, 'data');
+      const meta = await Promise.race([
+         once(pipeline, 'data').then(([{ value }]) => value),
+         once(pipeline, 'end').then(() => null)
+      ]);
 
       pipeline.destroy();
       source.destroy();
@@ -620,5 +627,12 @@ interface SaveOptions
     * Partial CardDB metadata.
     */
    meta: CardDBMetaSave;
+
+   /**
+    * Use gunzip compression.
+    *
+    * @defaultValue `false`
+    */
+   compress?: boolean;
 }
 

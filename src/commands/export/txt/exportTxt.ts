@@ -1,12 +1,11 @@
 import { once }            from 'node:events';
-import fs                  from 'node:fs';
-import path                from 'node:path';
 
 import {
    isDirectory,
    isFile }                from '@typhonjs-utils/file-util';
 
 import { CardDB }          from '#scrydex/data/db';
+import { createWritable }  from '#scrydex/util';
 
 import {
    exportCards,
@@ -63,10 +62,7 @@ async function exportDB({ config, db, output }:
 {
    const outputActual = output ?? config.output;
 
-   // Ensure `output` directory exists.
-   fs.mkdirSync(path.dirname(outputActual), { recursive: true });
-
-   const outputStream = fs.createWriteStream(outputActual);
+   const out = createWritable({ filepath: outputActual });
 
    for await (const card of exportCards({ config, db }))
    {
@@ -74,9 +70,10 @@ async function exportDB({ config, db, output }:
 
       const line =`${card.quantity} ${card.name} (${card.set.toUpperCase()}) ${card.collector_number}${finish}\n`;
 
-      if (!outputStream.write(line)) { await once(outputStream, 'drain'); }
+      if (!out.write(line)) { await once(out, 'drain'); }
    }
 
-   outputStream.end();
-   await once(outputStream, 'finish');
+   out.end();
+
+   await once(out, 'finish');
 }
