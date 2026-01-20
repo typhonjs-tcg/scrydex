@@ -1,5 +1,7 @@
 abstract class ScryfallData
 {
+   private constructor() {}
+
    static get supportedFormats(): ReadonlySet<string>
    {
       return this.#supportedFormats;

@@ -9,6 +9,8 @@ import { CardDB }  from '#scrydex/data/db';
  */
 export abstract class Notes
 {
+   private constructor() {}
+
    // Extract symbols between `{}`.
    static #regexManaCost = /\{([^}]+)/g;
 

@@ -28,6 +28,8 @@ import type {
  */
 abstract class ScryfallDB
 {
+   private constructor() {}
+
    /**
     * Type guard for {@link ScryfallDB.File.DBType}.
     *

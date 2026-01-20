@@ -4,6 +4,8 @@ import type { CardDB }     from '#scrydex/data/db';
 
 export abstract class ParseCardFaces
 {
+   private constructor() {}
+
    static resolve(faces: Record<string, any>[]): CardDB.Data.CardFace[] | undefined
    {
       const result: CardDB.Data.CardFace[] = [];
