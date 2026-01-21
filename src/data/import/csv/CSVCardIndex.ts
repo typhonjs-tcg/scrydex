@@ -21,7 +21,7 @@ export class CSVCardIndex
    /**
     * Stores the imported card data by Scryfall ID.
     */
-   #data: Map<string, CSVCard> = new Map();
+   #data: Map<string, Map<string, CSVCard>> = new Map();
 
    /**
     * Stores the CSV file name.
@@ -70,8 +70,8 @@ export class CSVCardIndex
 
          if (!Number.isInteger(quantity) || quantity < 1)
          {
-            parser.destroy(
-             new Error(`CSV file on row '${rowCntr}' has invalid quantity '${row['Quantity']}':\n${filepath}`));
+            parser.destroy(new Error(`CSV file on row '${rowCntr}' has invalid quantity '${
+             row['Quantity'] ?? row['quantity']}':\n${filepath}`));
          }
 
          if (!this.#regexUUID.test(scryfall_id))
@@ -80,16 +80,15 @@ export class CSVCardIndex
              new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
          }
 
-         const existingCard = cardIndex.get(scryfall_id);
+         const existingCard = cardIndex.getVariant({ scryfall_id, foil, lang_user });
 
-         // TODO: Must consider foil state.
          if (existingCard)
          {
             existingCard.quantity += quantity;
          }
          else
          {
-            cardIndex.set(scryfall_id, {
+            cardIndex.add({
                object: 'card',
                name,
                foil,
@@ -113,11 +112,42 @@ export class CSVCardIndex
    }
 
    /**
-    * @returns Number of unique cards in index.
+    * @returns Number of unique cards by Scryfall ID in index.
     */
    get size(): number
    {
       return this.#data.size;
+   }
+
+   /**
+    * @param card - CSVCard to add to index.
+    *
+    * @returns This instance.
+    */
+   add(card: CSVCard): this
+   {
+      const variantKey = CSVCardIndex.#variantKey(card);
+
+      let variants = this.#data.get(card.scryfall_id);
+
+      if (!variants)
+      {
+         variants = new Map();
+         this.#data.set(card.scryfall_id, variants);
+      }
+
+      const existing = variants.get(variantKey);
+
+      if (existing)
+      {
+         existing.quantity += card.quantity;
+      }
+      else
+      {
+         variants.set(variantKey, card);
+      }
+
+      return this;
    }
 
    /**
@@ -132,9 +162,6 @@ export class CSVCardIndex
     * @param key - Scryfall ID.
     *
     * @returns Was the card deleted.
-    *
-    * @privateRemarks
-    * TODO: Must consider foil state.
     */
    delete(key: string): boolean
    {
@@ -144,22 +171,42 @@ export class CSVCardIndex
    /**
     * @returns Iterator over entries.
     */
-   entries(): MapIterator<[string, CSVCard]>
+   *entries(): IterableIterator<[string, readonly CSVCard[]]>
    {
-      return this.#data.entries();
+      for (const [key, variants] of this.#data)
+      {
+         yield [key, [...variants.values()]];
+      }
    }
 
    /**
+    * Does this index contain any card w/ matching Scryfall ID?
+    *
     * @param key - Scryfall ID.
     *
     * @returns Does this index contain the card?
-    *
-    * @privateRemarks
-    * TODO: Must consider foil state.
     */
    has(key: string): boolean
    {
       return this.#data.has(key);
+   }
+
+   /**
+    * Does this index contain a specific variant by Scryfall ID?
+    *
+    * @param query - Specific variant query.
+    *
+    * @param query.scryfall_id - Scryfall ID
+    *
+    * @param [query.foil] - Finish; default: `normal`.
+    *
+    * @param [query.lang_user] - User defined language code; default: `en`.
+    */
+   hasVariant(query: { scryfall_id: string, foil?: string, lang_user?: string }): boolean
+   {
+      const variantKey = CSVCardIndex.#variantKey(query);
+
+      return this.#data.get(query?.scryfall_id)?.has(variantKey) ?? false;
    }
 
    /**
@@ -173,34 +220,50 @@ export class CSVCardIndex
    /**
     * @param key - Scryfall ID
     *
-    * @returns CSVCard data.
-    *
-    * @privateRemarks
-    * TODO: Must consider foil state.
+    * @returns CSVCard data for all variants.
     */
-   get(key: string): CSVCard | undefined
+   get(key: string): readonly CSVCard[] | undefined
    {
-      return this.#data.get(key);
+      const variants = this.#data.get(key);
+      return variants ? [...variants.values()] : void 0;
    }
 
    /**
-    * @param key - Scryfall ID.
+    * @param query - Specific variant query.
     *
-    * @param value - CSVCard data.
+    * @param query.scryfall_id - Scryfall ID
     *
-    * @returns This instance.
+    * @param [query.foil] - Finish; default: `normal`.
+    *
+    * @param [query.lang_user] - User defined language code; default: `en`.
     */
-   set(key: string, value: CSVCard): this
+   getVariant(query: { scryfall_id: string, foil?: string, lang_user?: string }): CSVCard | undefined
    {
-      this.#data.set(key, value);
-      return this;
+      const variantKey = CSVCardIndex.#variantKey(query);
+
+      return this.#data.get(query?.scryfall_id)?.get(variantKey);
    }
 
    /**
     * @returns CSVCard iterator.
     */
-   values(): MapIterator<CSVCard>
+   *values(): IterableIterator<CSVCard>
    {
-      return this.#data.values();
+      for (const variants of this.#data.values())
+      {
+         for (const card of variants.values()) { yield card; }
+      }
+   }
+
+   // Internal Implementation ----------------------------------------------------------------------------------------
+
+   /**
+    * @param card - Object containing `foil` / `lang_user` keys.
+    *
+    * @returns Variant key.
+    */
+   static #variantKey({ foil = 'normal', lang_user = 'en' }: { foil?: string, lang_user?: string }): string
+   {
+      return `${foil ?? 'normal'}:${lang_user ?? 'en'}`;
    }
 }

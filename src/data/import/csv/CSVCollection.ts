@@ -31,7 +31,7 @@ export class CSVCollection implements ImportCollection
     *
     * @param options - Options.
     *
-    * @param options.input - A single CSV file path or a directory path to load all `.csv` files.
+    * @param options.path - A single CSV file path or a directory path to load all `.csv` files.
     *
     * @param [options.groups] - Input CSV file or directory path to CSV files for card collections representing various
     *        groups.
@@ -40,12 +40,12 @@ export class CSVCollection implements ImportCollection
     *
     * @returns A new collection of all CSV card data.
     */
-   static async load({ input, groups, logger }:
-    { input: string, groups: CardDB.File.MetadataGroups<string>, logger?: BasicLogger }): Promise<CSVCollection>
+   static async load({ path, groups, logger }:
+    { path: string, groups: CardDB.File.MetadataGroups<string>, logger?: BasicLogger }): Promise<CSVCollection>
    {
       const collection = new CSVCollection();
 
-      await this.#loadPath({ path: input, collection, logger });
+      await this.#loadPath({ path, collection, logger });
 
       if (isObject(groups))
       {
@@ -111,7 +111,7 @@ export class CSVCollection implements ImportCollection
    /**
     * @returns Entries iterator.
     */
-   *entries(): IterableIterator<[string, CSVCard]>
+   *entries(): IterableIterator<[string, readonly CSVCard[]]>
    {
       for (let i = 0; i < this.#index.length; i++)
       {
@@ -135,9 +135,9 @@ export class CSVCollection implements ImportCollection
 
       for (let i = 0; i < this.#index.length; i++)
       {
-         const card = this.#index[i].get(key);
+         const cards = this.#index[i].get(key);
 
-         if (card) { result.push(card);}
+         if (Array.isArray(cards)) { result.push(...cards); }
       }
 
       return result.length ? result : void 0;
