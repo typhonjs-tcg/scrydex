@@ -20,9 +20,11 @@ import { streamValues }       from 'stream-json/streamers/StreamValues';
 import { VERSION }            from '#scrydex';
 
 import { ScryfallData }       from '#scrydex/data/scryfall';
+
 import {
    createReadable,
-   createWritable }           from '#scrydex/util';
+   createWritable,
+   isFileGzip }               from '#scrydex/util';
 
 import {
    CardFields,
@@ -176,7 +178,7 @@ class CardDB
       }
       else
       {
-         return new CardStream(filepath, result);
+         return new CardStream(filepath, result, isFileGzip(filepath));
       }
    }
 
@@ -325,6 +327,11 @@ export { CardDB };
 class CardStream implements CardDB.Stream.Reader
 {
    /**
+    * Is the backing CardDB compressed.
+    */
+   readonly #compressed: boolean;
+
+   /**
     * File path of DB.
     */
    readonly #filepath: string;
@@ -343,11 +350,14 @@ class CardStream implements CardDB.Stream.Reader
     * @param filepath - File path of DB.
     *
     * @param meta - Metadata object of DB.
+    *
+    * @param compressed - Is the CardDB compressed.
     */
-   constructor(filepath: string, meta: CardDB.File.Metadata)
+   constructor(filepath: string, meta: CardDB.File.Metadata, compressed: boolean)
    {
       this.#filepath = filepath;
       this.#meta = Object.freeze(meta);
+      this.#compressed = compressed;
 
       for (const group in meta.groups)
       {
@@ -355,6 +365,14 @@ class CardStream implements CardDB.Stream.Reader
 
          if (Array.isArray(meta.groups[group])) { this.#groups[group] = new Set(meta.groups[group]); }
       }
+   }
+
+   /**
+    * @returns Whether backing CardDB is compressed.
+    */
+   get compressed(): boolean
+   {
+      return this.#compressed;
    }
 
    /**

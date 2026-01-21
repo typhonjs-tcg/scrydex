@@ -590,6 +590,11 @@ interface StreamOptions
 interface Reader
 {
    /**
+    * @returns Whether backing CardDB is compressed.
+    */
+   get compressed(): boolean;
+
+   /**
     * @returns The associated filepath.
     */
    get filepath(): string;
