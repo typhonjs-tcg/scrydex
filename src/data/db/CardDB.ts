@@ -265,7 +265,7 @@ class CardDB
     */
    static async #loadMeta(filepath: string): Promise<Record<string, any> | undefined>
    {
-      const source = fs.createReadStream(filepath);
+      const source = createReadable({ filepath });
 
       const pipeline = chain([
          source,
