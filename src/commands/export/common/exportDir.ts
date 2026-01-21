@@ -25,7 +25,7 @@ export async function exportDir({ config, exportFn, extension }:
  { config: ConfigCmd.Export, exportFn: ExportFn, extension: string }): Promise<void>
 {
    const cards = await CardDB.loadAll({
-      dirpath: config.input,
+      dirpath: config.path,
       type: ['sorted', 'sorted_format'],
       walk: true
    });
@@ -34,7 +34,7 @@ export async function exportDir({ config, exportFn, extension }:
 
    if (cards.length === 0)
    {
-      logger?.warn(`No sorted CardDB collections found in:\n${config.input}`);
+      logger?.warn(`No sorted CardDB collections found in:\n${config.path}`);
       return;
    }
    else

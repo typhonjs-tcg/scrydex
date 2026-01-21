@@ -6,7 +6,7 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
 {
    const logger = config.logger;
 
-   logger?.info(`Filtering Scrydex CardDB: ${config.input}`);
+   logger?.info(`Filtering Scrydex CardDB: ${config.path}`);
 
    logger?.verbose(`[Filter Options]`);
    logger?.verbose(`----------------------`);
@@ -15,7 +15,7 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
 
    logger?.verbose(`----------------------`);
 
-   const cards = await CardDB.load({ filepath: config.input });
+   const cards = await CardDB.load({ filepath: config.path });
 
    const outputDB: CardDB.Data.Card[] = [];
 

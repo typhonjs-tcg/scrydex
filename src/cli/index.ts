@@ -24,7 +24,7 @@ const program = sade('scrydex')
  `'trace', or 'all'.`);
 
 program
-.command('convert-csv [input]', 'Convert')
+.command('convert-csv [path]', 'Convert')
 .describe(`Converts CSV card collection files to a compact Scrydex CardDB.`)
 .option('--db', `Provide a path to a Scryfall JSON DB.`)
 .option('--group-decks', 'Provide a file or directory path of CSV card collections representing active decks.')
@@ -44,7 +44,7 @@ program
 .action(commandDiff);
 
 program
-.command('export-csv [input]', 'Export CSV')
+.command('export-csv [path]', 'Export CSV')
 .describe('Exports all sorted Scrydex CardDB files from a directory or file path to a single CardDB outputting collection CSV files.')
 .option('--no-coalesce', 'Export cards without combining identical printings.')
 .option('--output', 'Provide an output file path or directory path for generated CSV card collection file(s).')
@@ -53,7 +53,7 @@ program
 .action(commandExportCsv);
 
 program
-.command('export-txt [input]', 'Export Text')
+.command('export-txt [path]', 'Export Text')
 .describe('Exports all sorted Scrydex CardDB files from a directory or file path to a single CardDB outputting collection text files.')
 .option('--no-coalesce', 'Export cards without combining identical printings.')
 .option('--output', 'Provide an output file path or directory path for generated text card collection file(s).')
@@ -62,7 +62,7 @@ program
 .action(commandExportTxt);
 
 program
-.command('filter [input]', 'Filter')
+.command('filter [path]', 'Filter')
 .describe(`Filters an existing Scrydex CardDB by game formats and other card attributes.`)
 .option('--border', 'Provide a colon separated list of border colors including: black, white, borderless, yellow, silver, or gold.')
 .option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to match by color identity.')
@@ -78,9 +78,9 @@ program
 .action(commandFilter);
 
 program
-.command('find [input] [query]', 'Find Card')
+.command('find [path] [query]', 'Find Card')
 .describe('Finds a card by text / regular expression from a sorted format directory or file path to a single CardDB.')
-.describe('You may omit `[query]` and provide just `[input]` when only using independent filter options.')
+.describe('You may omit `[query]` and provide just `[path]` when only using independent filter options.')
 .option('-i', 'Case insensitive search.')
 .option('-b', 'Enforce word boundaries on search.')
 .option('--exact', 'Match the search query exactly.')
@@ -113,7 +113,7 @@ program
 .action(commandScryfallDownload);
 
 program
-.command('sort-format [input]', 'Sort Format')
+.command('sort-format [path]', 'Sort Format')
 .describe(`Sorts a converted Scrydex CardDB by game format legalities outputting spreadsheets.`)
 .option('--by-type', 'Sorts alphabetically then by normalized type of card.')
 .option('--clean', 'Remove existing sorted output before regenerating.')

@@ -22,7 +22,7 @@ export async function sortFormat(config: ConfigCmd.SortFormat): Promise<void>
 {
    const logger = config.logger;
 
-   logger?.info(`Sorting Scrydex CardDB: ${config.input}`);
+   logger?.info(`Sorting Scrydex CardDB: ${config.path}`);
    logger?.info(`Formats: ${config.formats.join(', ')}`);
    logger?.info(`Sorted output target directory: ${config.output}`);
 
@@ -66,7 +66,7 @@ async function cleanOutputDir(config: ConfigCmd.SortFormat): Promise<void>
  */
 async function generate(config: ConfigCmd.SortFormat): Promise<SortedFormat[]>
 {
-   const db = await CardDB.load({ filepath: config.input });
+   const db = await CardDB.load({ filepath: config.path });
 
    const presortFormat = await presortCards(config, db);
 

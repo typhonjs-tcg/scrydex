@@ -26,14 +26,14 @@ interface Convert extends Command
    groups: CardDB.File.MetadataGroups<string>;
 
    /**
-    * Input CSV file or directory path to CSV files.
-    */
-   input: string;
-
-   /**
     * Output file path for converted card JSON DB.
     */
    output: string;
+
+   /**
+    * Input CSV file or directory path to CSV files.
+    */
+   path: string;
 }
 
 /**
@@ -68,14 +68,14 @@ interface Export extends Command
    coalesce: boolean;
 
    /**
-    * Input card JSON DB file or directory.
-    */
-   input: string;
-
-   /**
     * Output file or directory path for exported data.
     */
    output: string;
+
+   /**
+    * Input card JSON DB file or directory path.
+    */
+   path: string;
 }
 
 /**
@@ -89,14 +89,14 @@ interface Filter extends Command
    filter: CardDB.Options.CardFilter;
 
    /**
-    * Input card JSON DB file.
-    */
-   input: string;
-
-   /**
     * Output file path for filtered card JSON DB.
     */
    output: string;
+
+   /**
+    * Input card JSON DB file path.
+    */
+   path: string;
 }
 
 /**
@@ -110,11 +110,6 @@ interface Sort extends Command
    clean: boolean;
 
    /**
-    * Input JSON file post conversion.
-    */
-   input: string;
-
-   /**
     * A set of CSV file names in the conversion process to mark / highlight for merging.
     */
    mark: Set<string>;
@@ -123,6 +118,11 @@ interface Sort extends Command
     * Output directory for spreadsheets.
     */
    output: string;
+
+   /**
+    * Input JSON file path post conversion.
+    */
+   path: string;
 
    /**
     * When true, sort by type of card after alpha sorting.

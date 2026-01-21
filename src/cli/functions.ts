@@ -1,5 +1,5 @@
 import fs                  from 'node:fs';
-import path                from 'node:path';
+import { dirname }         from 'node:path';
 
 import {
    isDirectory,
@@ -33,13 +33,13 @@ const logger: ColorLogger = new ColorLogger({ tag: 'scrydex' });
 /**
  * Invokes `convert` with the given config.
  *
- * @param input - CSV input file path or directory path.
+ * @param path - CSV input file path or directory path.
  *
  * @param opts - CLI options.
  */
-export async function commandConvertCsv(input: string, opts: Record<string, any>): Promise<void>
+export async function commandConvertCsv(path: string, opts: Record<string, any>): Promise<void>
 {
-   const config = validateConvert(input, opts);
+   const config = validateConvert(path, opts);
 
    // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
@@ -120,22 +120,22 @@ export async function commandDiff(baseline: string, comparison: string, opts: Re
 /**
  * Invokes `exportCsv` with the given config.
  *
- * @param input - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ * @param path - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
  *
  * @param opts - CLI options.
  */
-export async function commandExportCsv(input: string, opts: Record<string, any>): Promise<void>
+export async function commandExportCsv(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
-   if (isFile(input) && fs.existsSync(opts.output) && isDirectory(opts.output))
+   if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
       exit(`'input' option is a file; 'output' option must also be a file.`);
    }
 
-   if (isDirectory(input) && fs.existsSync(opts.output) && isFile(opts.output))
+   if (isDirectory(path) && fs.existsSync(opts.output) && isFile(opts.output))
    {
       exit(`'input' option is a directory; 'output' option must also be a directory.`);
    }
@@ -152,9 +152,9 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
 
    const config: ConfigCmd.Export = {
       coalesce: typeof opts['no-coalesce'] !== 'boolean',
-      input,
       logger,
-      output: opts.output
+      output: opts.output,
+      path
    };
 
    try
@@ -176,22 +176,22 @@ export async function commandExportCsv(input: string, opts: Record<string, any>)
 /**
  * Invokes `exportTxt` with the given config.
  *
- * @param input - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ * @param path - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
  *
  * @param opts - CLI options.
  */
-export async function commandExportTxt(input: string, opts: Record<string, any>): Promise<void>
+export async function commandExportTxt(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
-   if (isFile(input) && fs.existsSync(opts.output) && isDirectory(opts.output))
+   if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
       exit(`'input' option is a file; 'output' option must also be a file.`);
    }
 
-   if (isDirectory(input) && fs.existsSync(opts.output) && isFile(opts.output))
+   if (isDirectory(path) && fs.existsSync(opts.output) && isFile(opts.output))
    {
       exit(`'input' option is a directory; 'output' option must also be a directory.`);
    }
@@ -208,9 +208,9 @@ export async function commandExportTxt(input: string, opts: Record<string, any>)
 
    const config: ConfigCmd.Export = {
       coalesce: typeof opts['no-coalesce'] !== 'boolean',
-      input,
       logger,
-      output: opts.output
+      output: opts.output,
+      path
    };
 
    try
@@ -232,19 +232,19 @@ export async function commandExportTxt(input: string, opts: Record<string, any>)
 /**
  * Invokes `filter` with the given config.
  *
- * @param input - Existing JSON card DB.
+ * @param path - Existing JSON card DB.
  *
  * @param opts - CLI options.
  */
-export async function commandFilter(input: string, opts: Record<string, any>): Promise<void>
+export async function commandFilter(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(input)) { exit(`'input' option is not a file.`); }
+   if (!isFile(path)) { exit(`'input' option is not a file.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
    if (isDirectory(opts.output)) { exit(`'output' option is an already existing directory.`); }
 
-   if (!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
+   if (!isDirectory(dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
@@ -265,10 +265,10 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
    }
 
    const config: ConfigCmd.Filter = {
-      input,
+      filter: filterOptions as CardDB.Options.CardFilter,
       logger,
       output: opts.output,
-      filter: filterOptions as CardDB.Options.CardFilter
+      path
    };
 
    try
@@ -290,15 +290,15 @@ export async function commandFilter(input: string, opts: Record<string, any>): P
 /**
  * Invokes `find` with the given config.
  *
- * @param input - File or directory path to search for _sorted_ JSON CardDBs.
+ * @param path - File or directory path to search for _sorted_ JSON CardDBs.
  *
  * @param query - Search text / regular expression.
  *
  * @param opts - CLI options.
  */
-export async function commandFind(input: string, query: string, opts: Record<string, any>)
+export async function commandFind(path: string, query: string, opts: Record<string, any>)
 {
-   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
 
    if (query !== void 0 && typeof query !== 'string') { exit(`'query' option must be a string.`); }
 
@@ -312,9 +312,9 @@ export async function commandFind(input: string, query: string, opts: Record<str
    if (typeof filter === 'string') { exit(filter); }
 
    const config = {
-      input,
       filter,
-      logger
+      logger,
+      path
    };
 
    try
@@ -336,9 +336,7 @@ export async function commandFind(input: string, query: string, opts: Record<str
 /**
  * Invokes `scryfallDownload` with the given config.
  *
- * @param {object}   opts - CLI options.
- *
- * @returns {Promise<void>}
+ * @param opts - CLI options.
  */
 export async function commandScryfallDownload(opts: Record<string, any>): Promise<void>
 {
@@ -384,15 +382,13 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
 /**
  * Invokes `sort` with the given config.
  *
- * @param {string}   input - Scryfall converted card DB.
+ * @param path - Scryfall converted card DB.
  *
- * @param {object}   opts - CLI options.
- *
- * @returns {Promise<void>}
+ * @param opts - CLI options.
  */
-export async function commandSortFormat(input: string, opts: Record<string, any>): Promise<void>
+export async function commandSortFormat(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(input)) { exit(`'input' option path is not a file.`); }
+   if (!isFile(path)) { exit(`'input' option path is not a file.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
@@ -451,13 +447,13 @@ export async function commandSortFormat(input: string, opts: Record<string, any>
    const theme = opts.theme === 'dark' ? 'dark' : 'light';
 
    const config: ConfigCmd.SortFormat = {
-      input,
-      output: opts.output,
       clean: opts.clean ?? false,
       formats,
       highValue,
       logger,
       mark,
+      output: opts.output,
+      path,
       sortByType: opts['by-type'] ?? false,
       theme
    };
@@ -499,15 +495,15 @@ function exit(message: string): never
 /**
  * Validate the CLI options for `covert` commands.
  *
- * @param input - CSV input file path or directory path.
+ * @param path - CSV input file path or directory path.
  *
  * @param opts - CLI options.
  *
  * @return ConfigConvert object.
  */
-function validateConvert(input: string, opts: Record<string, any>): ConfigCmd.Convert
+function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Convert
 {
-   if (!isFile(input) && !isDirectory(input)) { exit(`'input' option is not a file or directory path.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'path' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
 
    if (opts['group-decks'] !== void 0 && !isFile(opts['group-decks']) && !isDirectory(opts['group-decks']))
@@ -529,10 +525,10 @@ function validateConvert(input: string, opts: Record<string, any>): ConfigCmd.Co
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
-   if (!isDirectory(path.dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
+   if (!isDirectory(dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
    return {
-      input,
+      path,
       output: opts.output,
       db: opts.db,
       groups: {

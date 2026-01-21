@@ -24,21 +24,21 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
 {
    const logger = config.logger;
 
-   if (isFile(config.input))
+   if (isFile(config.path))
    {
-      logger?.verbose(`Loading file path: ${config.input}`);
+      logger?.verbose(`Loading file path: ${config.path}`);
 
       if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
-      const db = await CardDB.load({ filepath: config.input });
+      const db = await CardDB.load({ filepath: config.path });
 
       logger?.info(`Export output target file: ${config.output}`);
 
       return exportDB({ config, db });
    }
-   else if (isDirectory(config.input))
+   else if (isDirectory(config.path))
    {
-      logger?.verbose(`Loading directory path: ${config.input}`);
+      logger?.verbose(`Loading directory path: ${config.path}`);
 
       if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 

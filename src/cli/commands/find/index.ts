@@ -11,18 +11,18 @@ import type { BasicLogger }   from "@typhonjs-utils/logger-color";
  *
  * @param config -
  */
-export async function find(config: { input: string, filter: CardDB.Options.CardFilter, logger: BasicLogger }):
+export async function find(config: { path: string, filter: CardDB.Options.CardFilter, logger: BasicLogger }):
  Promise<void>
 {
    const logger = config.logger;
 
    let collections: CardDB.Stream.Reader[];
 
-   if (isFile(config.input))
+   if (isFile(config.path))
    {
-      logger.info(`Attempting to load Scrydex CardDB: ${config.input}`);
+      logger.info(`Attempting to load Scrydex CardDB: ${config.path}`);
 
-      const singleCollection = await CardDB.load({ filepath: config.input });
+      const singleCollection = await CardDB.load({ filepath: config.path });
 
       if (!singleCollection)
       {
@@ -34,10 +34,10 @@ export async function find(config: { input: string, filter: CardDB.Options.CardF
    }
    else
    {
-      logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.input}`);
+      logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.path}`);
 
       collections = await CardDB.loadAll({
-         dirpath: config.input,
+         dirpath: config.path,
          type: new Set(['sorted', 'sorted_format']),
          walk: true
       });
