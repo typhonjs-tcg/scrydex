@@ -91,7 +91,7 @@ async function exportDB({ config, db, output }:
          'Set name': card.set_name,
          'Collector number': card.collector_number,
          'Foil': card.foil,
-         'Language': card.lang_csv ?? card.lang,
+         'Language': card.lang_user ?? card.lang,
          'Scryfall ID': card.scryfall_id
       }
 

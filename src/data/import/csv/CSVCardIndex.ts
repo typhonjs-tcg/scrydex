@@ -66,7 +66,7 @@ export class CSVCardIndex
          const quantity = Number(row['Quantity'] ?? row['quantity']);
          const scryfall_id = row['Scryfall ID'] ?? row['scryfall ID'];
          const foil = row['Foil'] ?? 'normal';
-         const lang_csv = ScryfallData.normalizeLangCode(row['Language']);
+         const lang_user = ScryfallData.normalizeLangCode(row['Language']);
 
          if (!Number.isInteger(quantity) || quantity < 1)
          {
@@ -93,7 +93,7 @@ export class CSVCardIndex
                object: 'card',
                name,
                foil,
-               lang_csv,
+               lang_user,
                quantity,
                scryfall_id,
                filename

@@ -16,10 +16,10 @@ interface CSVCard
    foil: string;
 
    /**
-    * Language code from CSV file. This is meta-data and various online collection services allow this to be freely
-    * set by the user, so it may not correlate to actual associated Scryfall ID / data.
+    * Language code from external user managed source / CSV file. This is metadata and various online collection
+    * services allow this to be freely set by the user, so it may not correlate to actual associated Scryfall ID / data.
     */
-   lang_csv?: string;
+   lang_user?: string;
 
    /**
     * Card name when defined in CSV file.
