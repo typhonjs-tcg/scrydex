@@ -527,6 +527,11 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
       exit(`'group-proxy' option is not a file or directory path.`);
    }
 
+   if (opts.compress !== void 0 && typeof opts.compress !== 'boolean')
+   {
+      exit(`'compress' option is not a boolean.`);
+   }
+
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
@@ -534,15 +539,16 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
    if (!isDirectory(dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
    return {
-      path,
-      output: opts.output,
+      compress: opts.compress ?? false,
       db: opts.db,
       groups: {
          decks: opts['group-decks'],
          external: opts['group-external'],
          proxy: opts['group-proxy']
       },
-      logger
+      logger,
+      output: opts.output,
+      path,
    };
 }
 

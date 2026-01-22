@@ -30,6 +30,7 @@ program
 .option('--group-decks', 'Provide a file or directory path of CSV card collections representing active decks.')
 .option('--group-external', 'Provide a file or directory path of CSV card collections representing externally organized collections.')
 .option('--group-proxy', 'Provide a file or directory path of CSV card collections representing proxy cards.')
+.option('--compress', 'Enables compression of the inventory output CardDB.')
 .option('--output', 'Provide a file path for generated JSON card DB output.')
 .example('convert ./collection.csv --output ./collection.json -db ./scryfall.json')
 .example('convert ./collection-dir --output ./collection-all.json -db ./scryfall.json')

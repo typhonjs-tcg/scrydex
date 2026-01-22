@@ -127,8 +127,9 @@ export class ScryfallScanner
       if (outputDB.length > 0)
       {
          await CardDB.save({
-            filepath: config.output,
             cards: outputDB.sort((a, b) => a.name.localeCompare(b.name)),
+            compress: config.compress,
+            filepath: config.output,
             meta: { type: 'inventory', groups: collection.groups }
          });
       }

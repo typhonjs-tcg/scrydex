@@ -26,6 +26,11 @@ interface Convert extends Command
    groups: CardDB.File.MetadataGroups<string>;
 
    /**
+    * When true, the output inventory CardDB is compressed.
+    */
+   compress: boolean;
+
+   /**
     * Output file path for converted card JSON DB.
     */
    output: string;
