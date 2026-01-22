@@ -12,6 +12,7 @@ import {
    diff,
    exportCsv,
    exportTxt,
+   fileCompress,
    filter,
    sortFormat }            from '#scrydex/commands';
 
@@ -49,6 +50,46 @@ export async function commandConvertCsv(path: string, opts: Record<string, any>)
    try
    {
       await convertCsv(config);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
+ * Invokes `fileCompress` with the given config.
+ *
+ * @param path - File path target.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandFileCompress(path: string, opts: Record<string, any>): Promise<void>
+{
+   if (!isFile(path)) { exit(`'path' option is not a file.`); }
+
+   if (opts.mode !== 'compress' && opts.mode !== 'decompress') { exit(`'mode' option invalid.`); }
+
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   const config: ConfigCmd.FileCompress = {
+      logger,
+      mode: opts.mode,
+      path
+   };
+
+   try
+   {
+      await fileCompress(config);
    }
    catch (err: unknown)
    {

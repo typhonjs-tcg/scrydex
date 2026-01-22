@@ -84,6 +84,22 @@ interface Export extends Command
 }
 
 /**
+ * Config object for the `fileCompress` command.
+ */
+interface FileCompress extends Command
+{
+   /**
+    * Either compress or decompress.
+    */
+   mode: 'compress' | 'decompress';
+
+   /**
+    * Target file path.
+    */
+   path: string;
+}
+
+/**
  * Config object for the `filter` command.
  */
 interface Filter extends Command
@@ -175,6 +191,7 @@ declare namespace ConfigCmd
       Convert,
       Diff,
       Export,
+      FileCompress,
       Filter,
       Sort,
       SortFormat

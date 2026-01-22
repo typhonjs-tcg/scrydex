@@ -6,6 +6,7 @@ import {
    commandDiff,
    commandExportCsv,
    commandExportTxt,
+   commandFileCompress,
    commandFilter,
    commandFind,
    commandScryfallDownload,
@@ -40,7 +41,7 @@ program
 .command('diff [baseline] [comparison]', 'Compare CardDBs')
 .describe('Compares two CardDBs or two directories of sorted CardDBs and generates a spreadsheet report of added, removed, and changed cards.')
 .option('--output', 'Provide an output directory for generated diff report spreadsheets.')
-.example('diff ./carddb-a.json ./carddb-b.json --output ./diff-report')
+.example('diff ./card-db-a.json ./card-db-b.json --output ./diff-report')
 .example('diff ./sorted-a ./sorted-b --output ./diff-report-sorted')
 .action(commandDiff);
 
@@ -61,6 +62,18 @@ program
 .example('export-txt ./collection.json --output ./collection.txt')
 .example('export-txt ./sorted-directory --output ./txt-sorted')
 .action(commandExportTxt);
+
+program
+   .command('file-compress [path]', 'Compress file (gzip)')
+   .describe(`Creates a .gz version of the input file using streaming compression (gzip).`)
+   .example('file-compress ./card-db.json')
+   .action((path, opts) => commandFileCompress(path, { ...opts, mode: 'compress' }));
+
+program
+   .command('file-decompress [path]', 'Decompress file (gzip)')
+   .describe(`Restores the original file by removing the .gz layer using streaming decompression (gzip).`)
+   .example('file-decompress ./card-db.json.gz')
+   .action((path, opts) => commandFileCompress(path, { ...opts, mode: 'decompress' }));
 
 program
 .command('filter [path]', 'Filter')
