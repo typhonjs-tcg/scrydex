@@ -120,7 +120,7 @@ interface Sort extends Command
    mark: Set<string>;
 
    /**
-    * When true, the output sorted format CardDBs is compressed.
+    * When true, the output sorted format CardDBs are compressed.
     */
    compress: boolean;
 

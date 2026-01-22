@@ -403,7 +403,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
 
    if (opts.compress !== void 0 && typeof opts.compress !== 'boolean')
    {
-      exit(`'no-compress' option is not a boolean.`);
+      exit(`'compress' option is not a boolean.`);
    }
 
    if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
@@ -457,7 +457,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       highValue,
       logger,
       mark,
-      compress: opts.compress ?? true,
+      compress: opts.compress ?? false,
       output: opts.output,
       path,
       sortByType: opts['by-type'] ?? false,
