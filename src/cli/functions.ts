@@ -246,6 +246,8 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
 
    if (!isDirectory(dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
 
+   if (opts.compress !== void 0 && typeof opts.compress !== 'boolean') { exit(`'compress' option is not a boolean.`); }
+
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    // Set default log level to verbose.
@@ -265,6 +267,7 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
    }
 
    const config: ConfigCmd.Filter = {
+      compress: opts.compress ?? false,
       filter: filterOptions as CardDB.Options.CardFilter,
       logger,
       output: opts.output,
@@ -401,10 +404,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       exit(`'by-type' option is not a boolean.`);
    }
 
-   if (opts.compress !== void 0 && typeof opts.compress !== 'boolean')
-   {
-      exit(`'compress' option is not a boolean.`);
-   }
+   if (opts.compress !== void 0 && typeof opts.compress !== 'boolean') { exit(`'compress' option is not a boolean.`); }
 
    if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 
@@ -527,10 +527,7 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
       exit(`'group-proxy' option is not a file or directory path.`);
    }
 
-   if (opts.compress !== void 0 && typeof opts.compress !== 'boolean')
-   {
-      exit(`'compress' option is not a boolean.`);
-   }
+   if (opts.compress !== void 0 && typeof opts.compress !== 'boolean') { exit(`'compress' option is not a boolean.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 

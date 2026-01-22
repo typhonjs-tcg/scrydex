@@ -34,8 +34,9 @@ export async function filter(config: ConfigCmd.Filter): Promise<void>
    if (outputDB.length > 0)
    {
       await CardDB.save({
-         filepath: config.output,
          cards: outputDB,
+         compress: config.compress,
+         filepath: config.output,
          meta: cards.meta
       });
 

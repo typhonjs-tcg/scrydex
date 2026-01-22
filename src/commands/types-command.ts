@@ -89,6 +89,11 @@ interface Export extends Command
 interface Filter extends Command
 {
    /**
+    * When true, the output CardDB is compressed.
+    */
+   compress: boolean;
+
+   /**
     * Config for {@link CardDB.CardFilter}.
     */
    filter: CardDB.Options.CardFilter;

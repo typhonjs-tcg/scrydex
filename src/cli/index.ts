@@ -67,6 +67,7 @@ program
 .describe(`Filters an existing Scrydex CardDB by game formats and other card attributes.`)
 .option('--border', 'Provide a colon separated list of border colors including: black, white, borderless, yellow, silver, or gold.')
 .option('--color-identity', 'Provide a WUBRG color string such as `{W}{U}{B}` to match by color identity.')
+.option('--compress', 'Enables compression of the filtered output CardDB.')
 .option('--cmc', 'Provide `0` to a positive finite number to match CMC / converted mana cost.')
 .option('--formats', 'Provide a colon separated list of legal game formats.')
 .option('--keywords', 'Provide a colon separated list of keywords such as `Flying` or `Cumulative upkeep`.')
