@@ -79,8 +79,9 @@ program
 
 program
 .command('find [path] [query]', 'Find Card')
-.describe('Finds a card by text / regular expression from a sorted format directory or file path to a single CardDB.')
-.describe('You may omit `[query]` and provide just `[path]` when only using independent filter options.')
+.describe(
+ 'Finds a card by text / regular expression from a sorted format directory or file path to a single CardDB.\n' +
+  '    You may omit `[query]` and provide just `[path]` when only using independent filter options.')
 .option('-i', 'Case insensitive search.')
 .option('-b', 'Enforce word boundaries on search.')
 .option('--exact', 'Match the search query exactly.')
@@ -114,12 +115,14 @@ program
 
 program
 .command('sort-format [path]', 'Sort Format')
-.describe(`Sorts a converted Scrydex CardDB by game format legalities outputting spreadsheets.`)
+.describe(`Sorts a converted Scrydex CardDB by game format legalities outputting spreadsheets.\n` +
+ `    [path] is the file path to a converted inventory Card DB.`)
 .option('--by-type', 'Sorts alphabetically then by normalized type of card.')
 .option('--clean', 'Remove existing sorted output before regenerating.')
 .option('--formats', 'Provide a colon separated list of game formats for sorting.')
 .option('--high-value', 'Separate high-value cards into a derived binder; requires a positive price comparison (IE ">=10").')
 .option('--mark', 'Provide a colon separated list of CSV file names to highlight merge status.')
+.option('--no-compress', 'Do not compress the sorted format output CardDBs.')
 .option('--output', 'Provide a directory path for generated spreadsheets and sorted card DBs.')
 .option('--theme', 'Options are `light` or `dark`; light theme is default.')
 .example('sort-format ./collection.json --formats premodern:oldschool:predh:commander --output ./spreadsheets')

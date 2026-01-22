@@ -115,6 +115,11 @@ interface Sort extends Command
    mark: Set<string>;
 
    /**
+    * When true, the output sorted format CardDBs is compressed.
+    */
+   compress: boolean;
+
+   /**
     * Output directory for spreadsheets.
     */
    output: string;

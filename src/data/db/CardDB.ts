@@ -22,9 +22,11 @@ import { VERSION }            from '#scrydex';
 import { ScryfallData }       from '#scrydex/data/scryfall';
 
 import {
+   baseFilename,
    createReadable,
    createWritable,
-   isFileGzip }               from '#scrydex/util';
+   isFileGzip,
+   normalizeFilepath }        from '#scrydex/util';
 
 import {
    CardFields,
@@ -186,11 +188,13 @@ class CardDB
     * Save a Card array as a JSON card DB collection.
     *
     * @param options - Options.
+    *
+    * @returns File path of saved CardDB.
     */
-   static async save({ filepath, cards, meta, compress = false }: SaveOptions): Promise<void>
+   static async save({ filepath, cards, meta, compress = false }: SaveOptions): Promise<string>
    {
       if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a string.`); }
-      if (!filepath.endsWith('.json')) { throw new TypeError(`'filepath' does not have the '.json' file extension.`); }
+      if (!/\.json(\.gz)?$/.test(filepath)) { throw new Error(`'filepath' must end with '.json' or '.json.gz'.`); }
 
       if (!Array.isArray(cards)) { throw new TypeError(`'cards' is not an array.`); }
       if (!isObject(meta)) { throw new TypeError(`'meta' is not an object.`); }
@@ -206,7 +210,9 @@ class CardDB
           `CardDB.save error: A sorted format must include a supported game format in 'meta.format'.`);
       }
 
-      const name = meta.name === void 0 && typeof meta.name !== 'string' ? path.basename(filepath, '.json') : meta.name;
+      const actualFilepath = normalizeFilepath({ filepath, compress });
+
+      const name = meta.name === void 0 && typeof meta.name !== 'string' ? baseFilename(filepath) : meta.name;
 
       const metadata: CardDB.File.Metadata = {
          ...meta,
@@ -216,7 +222,7 @@ class CardDB
          generatedAt: this.#execTime.toISOString()
       }
 
-      const out = createWritable({ filepath });
+      const out = createWritable({ filepath: actualFilepath, compress });
 
       out.write(`{\n  "meta": ${JSON.stringify(metadata)},\n  "cards": [\n`);
 
@@ -231,6 +237,8 @@ class CardDB
       out.end();
 
       await once(out, 'finish');
+
+      return actualFilepath;
    }
 
    /**

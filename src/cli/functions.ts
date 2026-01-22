@@ -401,6 +401,11 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       exit(`'by-type' option is not a boolean.`);
    }
 
+   if (opts.compress !== void 0 && typeof opts.compress !== 'boolean')
+   {
+      exit(`'no-compress' option is not a boolean.`);
+   }
+
    if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
 
    const formats = Validate.gameFormats(opts.formats);
@@ -452,6 +457,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       highValue,
       logger,
       mark,
+      compress: opts.compress ?? true,
       output: opts.output,
       path,
       sortByType: opts['by-type'] ?? false,

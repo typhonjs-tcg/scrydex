@@ -35,6 +35,7 @@ export abstract class ExportCollection
             await CardDB.save({
                filepath: path.resolve(collectionDirPath, `${collection.name}.json`),
                cards: collection.cards,
+               compress: config.compress,
                meta: collection.meta
             });
 
