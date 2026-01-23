@@ -13,6 +13,13 @@ import type { ScryfallData }  from '#scrydex/data/scryfall';
 interface Card extends CSVCard
 {
    /**
+    * If this card is closely related to other cards, this property will be an array with Related Card Objects.
+    *
+    * @see https://scryfall.com/docs/api/cards#related-card-objects
+    */
+   all_parts?: ScryfallData.CardRelated[] | null;
+
+   /**
     * This card’s border color: black, white, borderless, yellow, silver, or gold
     */
    border_color: string;
@@ -21,6 +28,11 @@ interface Card extends CSVCard
     * An array of Card Face objects, if this card is multifaced.
     */
    card_faces?: CardFace[] | null;
+
+   /**
+    * This card’s ID on Cardmarket’s API, also known as the idProduct.
+    */
+   cardmarket_id?: number | null;
 
    /**
     * This card’s collector number. Note that collector numbers can contain non-numeric characters, such as letters or
@@ -50,11 +62,49 @@ interface Card extends CSVCard
    defense?: string | null;
 
    /**
+    * This card’s overall rank/popularity on EDHREC. Not all cards are ranked.
+    */
+   edhrec_rank?: number | null;
+
+   /**
+    * The flavor text, if any.
+    */
+   flavor_text?: string | null;
+
+   /**
     * True if this card is on the Commander Game Changer list.
     *
     * @see https://mtg.wiki/page/Commander_(format)/Game_Changers
     */
    game_changer: boolean;
+
+   /**
+    * A list of games that this card print is available in: `paper`, `arena`, `mtgo`, `astral`, and / or `sega`.
+    */
+   games: string[];
+
+   /**
+    * This card’s hand modifier, if it is Vanguard card. This value will contain a delta, such as -1.
+    */
+   hand_modifier?: string | null;
+
+   /**
+    * True if this card’s imagery is high resolution.
+    */
+   highres_image: boolean;
+
+   /**
+    * A computer-readable indicator for the state of this card’s image, one of `missing`, `placeholder`, `lowres`, or
+    * `highres_scan`.
+    */
+   image_status: string;
+
+   /**
+    * An object listing available imagery for this card. See the Card Imagery article for more information.
+    *
+    * @see https://scryfall.com/docs/api/images
+    */
+   image_uris?: Record<string, string>;
 
    /**
     * An array of keywords that this card uses, such as 'Flying' and 'Cumulative upkeep'.
@@ -67,10 +117,20 @@ interface Card extends CSVCard
    lang: string;
 
    /**
+    * A code for this card’s layout.
+    */
+   layout: ScryfallData.CardLayout;
+
+   /**
     * An object describing the legality of this card across play formats. Possible legalities are `legal`, `not_legal`,
     * `restricted`, and `banned`.
     */
    legalities: Record<string, string>;
+
+   /**
+    * This card’s life modifier, if it is Vanguard card. This value will contain a delta, such as +2.
+    */
+   life_modifier?: string | null;
 
    /**
     * This loyalty if any. Note that some cards have loyalties that are not numeric, such as X.
@@ -83,6 +143,18 @@ interface Card extends CSVCard
     * value in card faces.
     */
    mana_cost: string;
+
+   /**
+    * This card’s Magic Online ID (also known as the Catalog ID), if any. A large percentage of cards are not available
+    * on Magic Online and do not have this ID.
+    */
+   mtgo_id?: number | null;
+
+   /**
+    * This card’s foil Magic Online ID (also known as the Catalog ID), if any. A large percentage of cards are not
+    * available on Magic Online and do not have this ID.
+    */
+   mtgo_foil_id?: number | null;
 
    /**
     * The name of this card. If this card has multiple faces, this field will contain both names separated by ␣//␣.
@@ -111,9 +183,9 @@ interface Card extends CSVCard
    price: string | null;
 
    /**
-    * The card name as printed in associated language.
+    * The localized name printed on this card, if any.
     */
-   printed_name?: string;
+   printed_name?: string | null;
 
    /**
     * Colors of mana that this card could produce.
@@ -139,6 +211,37 @@ interface Card extends CSVCard
     * The date this card was first released.
     */
    released_at: string;
+
+   /**
+    * This card’s Resource ID on Gatherer, if any.
+    */
+   resource_id?: string | null;
+
+   /**
+    * A link to this card’s rulings list on Scryfall’s API.
+    *
+    * @see https://scryfall.com/docs/api/rulings
+    */
+   rulings_uri: string;
+
+   /**
+    * The security stamp on this card, if any. One of `oval`, `triangle`, `acorn`, `circle`, `arena`, or `heart`.
+    */
+   security_stamp?: string | null;
+
+   /**
+    * This card’s ID on TCGplayer’s API, also known as the productId.
+    *
+    * @see https://docs.tcgplayer.com/docs
+    */
+   tcgplayer_id?: number | null;
+
+   /**
+    * This card’s ID on TCGplayer’s API, for its etched version if that version is a separate product.
+    *
+    * @see https://docs.tcgplayer.com/docs
+    */
+   tcgplayer_etched_id?: number | null;
 
    /**
     * This card’s toughness, if any. Note that some cards have toughnesses that are not numeric, such as *.

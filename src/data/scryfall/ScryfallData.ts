@@ -1,3 +1,5 @@
+import type { CardDB } from '#scrydex/data/db';
+
 abstract class ScryfallData
 {
    private constructor() {}
@@ -273,6 +275,193 @@ abstract class ScryfallData
 
 declare namespace ScryfallData
 {
+   /**
+    * Defines the Scryfall card layout which is available in {@link CardDB.Data.Card.layout}.
+    */
+   export type CardLayout =
+      /**
+       * A standard Magic card with one face.
+       * @see https://scryfall.com/search?q=layout%3Anormal
+       */
+      | 'normal'
+
+      /**
+       * A split-faced card.
+       * @see https://scryfall.com/search?q=layout%3Asplit
+       */
+      | 'split'
+
+      /**
+       * Cards that invert vertically with the flip keyword.
+       * @see https://scryfall.com/search?q=layout%3Aflip
+       */
+      | 'flip'
+
+      /**
+       * Double-sided cards that transform.
+       * @see https://scryfall.com/search?q=layout%3Atransform
+       */
+      | 'transform'
+
+      /**
+       * Double-sided cards that can be played either-side.
+       * @see https://scryfall.com/search?q=layout%3Amodal_dfc
+       */
+      | 'modal_dfc'
+
+      /**
+       * Cards with meld parts printed on the back.
+       * @see https://scryfall.com/search?q=layout%3Ameld
+       */
+      | 'meld'
+
+      /**
+       * Cards with Level Up.
+       * @see https://scryfall.com/search?q=layout%3Aleveler
+       */
+      | 'leveler'
+
+      /**
+       * Class-type enchantment cards.
+       * @see https://scryfall.com/search?q=layout%3Aclass
+       */
+      | 'class'
+
+      /**
+       * Case-type enchantment cards.
+       * @see https://scryfall.com/search?q=layout%3Acase
+       */
+      | 'case'
+
+      /**
+       * Saga-type cards.
+       * @see https://scryfall.com/search?q=layout%3Asaga
+       */
+      | 'saga'
+
+      /**
+       * Cards with an Adventure spell part.
+       * @see https://scryfall.com/search?q=layout%3Aadventure
+       */
+      | 'adventure'
+
+      /**
+       * Cards with Mutate.
+       * @see https://scryfall.com/search?q=layout%3Amutate
+       */
+      | 'mutate'
+
+      /**
+       * Cards with Prototype.
+       * @see https://scryfall.com/search?q=layout%3Aprototype
+       */
+      | 'prototype'
+
+      /**
+       * Battle-type cards.
+       * @see https://scryfall.com/search?q=layout%3Abattle
+       */
+      | 'battle'
+
+      /**
+       * Plane and Phenomenon-type cards.
+       * @see https://scryfall.com/search?q=layout%3Aplanar
+       */
+      | 'planar'
+
+      /**
+       * Scheme-type cards.
+       * @see https://scryfall.com/search?q=layout%3Ascheme
+       */
+      | 'scheme'
+
+      /**
+       * Vanguard-type cards.
+       * @see https://scryfall.com/search?q=layout%3Avanguard
+       */
+      | 'vanguard'
+
+      /**
+       * Token cards.
+       * @see https://scryfall.com/search?q=layout%3Atoken
+       */
+      | 'token'
+
+      /**
+       * Tokens with another token printed on the back.
+       * @see https://scryfall.com/search?q=layout%3Adouble_faced_token
+       */
+      | 'double_faced_token'
+
+      /**
+       * Emblem cards.
+       * @see https://scryfall.com/search?q=layout%3Aemblem
+       */
+      | 'emblem'
+
+      /**
+       * Cards with Augment.
+       * @see https://scryfall.com/search?q=layout%3Aaugment
+       */
+      | 'augment'
+
+      /**
+       * Host-type cards.
+       * @see https://scryfall.com/search?q=layout%3Ahost
+       */
+      | 'host'
+
+      /**
+       * Art Series collectable double-faced cards.
+       * @see https://scryfall.com/search?q=layout%3Aart_series
+       */
+      | 'art_series'
+
+      /**
+       * A Magic card with two sides that are unrelated.
+       * @see https://scryfall.com/search?q=layout%3Areversible_card
+       */
+      | 'reversible_card';
+
+   /**
+    * Cards that are closely related to other cards (because they call them by name, or generate a token, or meld, etc)
+    * have an `all_parts` property that contains Related Card objects.
+    *
+    * @see https://scryfall.com/docs/api/cards#related-card-objects
+    */
+   export interface CardRelated {
+      /**
+       * A unique ID for this card in Scryfall’s database.
+       */
+      id: string;
+
+      /**
+       * A content type for this object, always related_card.
+       */
+      object: 'related_card';
+
+      /**
+       * A field explaining what role this card plays in this relationship, one of `token`, `meld_part`, `meld_result`,
+       * or `combo_piece`.
+       */
+      component: string;
+
+      /**
+       * The name of this particular related card.
+       */
+      name: string;
+
+      /**
+       * The type line of this card.
+       */
+      type_line: string;
+
+      /**
+       * A URI where you can retrieve a full object describing this card on Scryfall’s API.
+       */
+      uri: string;
+   }
+
    /**
     * Whenever the API presents set of Magic colors, the field will be an array that uses the uppercase,
     * single-character abbreviations for those colors. For example, `['W','U']` represents something that is both white
