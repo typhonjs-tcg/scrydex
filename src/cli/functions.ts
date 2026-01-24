@@ -181,7 +181,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
       exit(`'input' option is a directory; 'output' option must also be a directory.`);
    }
 
-   if (opts['no-coalesce'] !== void 0 && typeof opts['no-coalesce'] !== 'boolean')
+   if (opts.coalesce !== void 0 && typeof opts.coalesce !== 'boolean')
    {
       exit(`'no-coalesce' option is not a boolean.`);
    }
@@ -192,7 +192,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.Export = {
-      coalesce: typeof opts['no-coalesce'] !== 'boolean',
+      coalesce: typeof opts.coalesce === 'boolean' ? opts.coalesce : true,
       logger,
       output: opts.output,
       path
@@ -237,7 +237,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
       exit(`'input' option is a directory; 'output' option must also be a directory.`);
    }
 
-   if (opts['no-coalesce'] !== void 0 && typeof opts['no-coalesce'] !== 'boolean')
+   if (opts.coalesce !== void 0 && typeof opts.coalesce !== 'boolean')
    {
       exit(`'no-coalesce' option is not a boolean.`);
    }
@@ -248,7 +248,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.Export = {
-      coalesce: typeof opts['no-coalesce'] !== 'boolean',
+      coalesce: typeof opts.coalesce === 'boolean' ? opts.coalesce : true,
       logger,
       output: opts.output,
       path
