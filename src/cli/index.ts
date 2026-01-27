@@ -48,7 +48,7 @@ program
 program
 .command('export-csv [path]', 'Export CSV')
 .describe('Exports all sorted Scrydex CardDB files from a directory or file path to a single CardDB outputting collection CSV files.')
-.option('--no-coalesce', 'Export cards without combining identical printings.')
+.option('--coalesce', 'Export cards with combining identical printings.')
 .option('--output', 'Provide an output file path or directory path for generated CSV card collection file(s).')
 .example('export-csv ./collection.json --output ./collection.csv')
 .example('export-csv ./sorted-directory --output ./csv-sorted')
@@ -57,7 +57,7 @@ program
 program
 .command('export-txt [path]', 'Export Text')
 .describe('Exports all sorted Scrydex CardDB files from a directory or file path to a single CardDB outputting collection text files.')
-.option('--no-coalesce', 'Export cards without combining identical printings.')
+.option('--coalesce', 'Export cards with combining identical printings.')
 .option('--output', 'Provide an output file path or directory path for generated text card collection file(s).')
 .example('export-txt ./collection.json --output ./collection.txt')
 .example('export-txt ./sorted-directory --output ./txt-sorted')

@@ -183,7 +183,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
 
    if (opts.coalesce !== void 0 && typeof opts.coalesce !== 'boolean')
    {
-      exit(`'no-coalesce' option is not a boolean.`);
+      exit(`'coalesce' option is not a boolean.`);
    }
 
    // Set default log level to verbose.
@@ -192,7 +192,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.Export = {
-      coalesce: typeof opts.coalesce === 'boolean' ? opts.coalesce : true,
+      coalesce: opts.coalesce ?? false,
       logger,
       output: opts.output,
       path
@@ -239,7 +239,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
 
    if (opts.coalesce !== void 0 && typeof opts.coalesce !== 'boolean')
    {
-      exit(`'no-coalesce' option is not a boolean.`);
+      exit(`'coalesce' option is not a boolean.`);
    }
 
    // Set default log level to verbose.
@@ -248,7 +248,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.Export = {
-      coalesce: typeof opts.coalesce === 'boolean' ? opts.coalesce : true,
+      coalesce: opts.coalesce ?? false,
       logger,
       output: opts.output,
       path
