@@ -409,6 +409,9 @@ interface MetadataGenerated
    /** Generating CLI version. */
    cliVersion: string;
 
+   /** Extra unprocessed CSV column keys stored in {@link Card.csv_extra}. */
+   csvExtraKeys: string[];
+
    /** UTC Date when generated. */
    generatedAt: string;
 

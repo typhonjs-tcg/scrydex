@@ -68,6 +68,34 @@ export class CSVCardIndex
          const foil = row['Foil'] ?? 'normal';
          const lang_user = ScryfallData.normalizeLangCode(row['Language']);
 
+         // Delete parsed column data.
+         delete row['Name'];
+         delete row['card name'];
+         delete row['Quantity'];
+         delete row['quantity'];
+         delete row['Scryfall ID'];
+         delete row['scryfall ID'];
+         delete row['Finish'];
+         delete row['Foil'];
+         delete row['Language'];
+
+         // TODO: Determine additional derived CSV column data that can be removed and not considered `extra`.
+
+         // Delete Manabox Scryfall derived column data.
+         delete row['Collector number'];
+         delete row['Rarity'];
+         delete row['Set code'];
+         delete row['Set name'];
+
+         // Delete Archidekt Scryfall derived column data.
+         delete row['Collector Number'];
+         delete row['Edition Code'];
+         delete row['Edition Name'];
+         delete row['Multiverse Id'];
+
+         // Save any additional raw unprocessed CSV data.
+         const csv_extra = row;
+
          if (!Number.isInteger(quantity) || quantity < 1)
          {
             parser.destroy(new Error(`CSV file on row '${rowCntr}' has invalid quantity '${
@@ -95,7 +123,8 @@ export class CSVCardIndex
                lang_user,
                quantity,
                scryfall_id,
-               filename
+               filename,
+               csv_extra
             });
          }
       }

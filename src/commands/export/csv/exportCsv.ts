@@ -4,6 +4,8 @@ import {
    isDirectory,
    isFile }                from '@typhonjs-utils/file-util';
 
+import { isObject }        from '@typhonjs-utils/object';
+
 import { stringify }       from 'csv-stringify';
 
 import { CardDB }          from '#scrydex/data/db';
@@ -64,6 +66,8 @@ async function exportDB({ config, db, output }:
 {
    const outputActual = output ?? config.output;
 
+   const csvExtraKeys = Array.isArray(db.meta.csvExtraKeys) ? db.meta.csvExtraKeys : [];
+
    const stringifier = stringify({
       header: true,
       columns: [
@@ -74,7 +78,8 @@ async function exportDB({ config, db, output }:
          'Collector number',
          'Foil',
          'Language',
-         'Scryfall ID'
+         'Scryfall ID',
+         ...csvExtraKeys,
       ]
    });
 
@@ -92,7 +97,8 @@ async function exportDB({ config, db, output }:
          'Collector number': card.collector_number,
          'Foil': card.foil,
          'Language': card.lang_user ?? card.lang,
-         'Scryfall ID': card.scryfall_id
+         'Scryfall ID': card.scryfall_id,
+         ...(csvExtraKeys.length && isObject(card.csv_extra) ? card.csv_extra : {})
       }
 
       if (!stringifier.write(data)) { await once(stringifier, 'drain'); }

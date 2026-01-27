@@ -212,12 +212,24 @@ class CardDB
 
       const actualFilepath = normalizeFilepath({ filepath, compress });
 
+      // Collect any CSV extra keys.
+      const csvKeys = new Set<string>();
+
+      for (const card of cards)
+      {
+         if (isObject(card.csv_extra))
+         {
+            for (const key of Object.keys(card.csv_extra)) { csvKeys.add(key); }
+         }
+      }
+
       const name = meta.name === void 0 && typeof meta.name !== 'string' ? baseFilename(filepath) : meta.name;
 
       const metadata: CardDB.File.Metadata = {
          ...meta,
          name,
          cliVersion: VERSION.package,
+         csvExtraKeys: [...csvKeys],
          schemaVersion: VERSION.schema,
          generatedAt: this.#execTime.toISOString()
       }

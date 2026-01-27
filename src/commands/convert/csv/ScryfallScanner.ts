@@ -114,7 +114,8 @@ export class ScryfallScanner
                legalities: scryCard.legalities ?? {},
                scryfall_uri: scryCard.scryfall_uri,
                oracle_id: scryCard.oracle_id,
-               scryfall_id: csvCard.scryfall_id
+               scryfall_id: csvCard.scryfall_id,
+               csv_extra: csvCard.csv_extra
             };
 
             totalQuantity += card.quantity;

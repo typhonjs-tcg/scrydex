@@ -6,6 +6,11 @@ interface CSVCard
    object: 'card';
 
    /**
+    * Extra CSV fields not processed in CardDB conversion. These fields are added to card entries on export.
+    */
+   csv_extra?: { [key: string]: string };
+
+   /**
     * Associated CSV filename.
     */
    filename: string;
