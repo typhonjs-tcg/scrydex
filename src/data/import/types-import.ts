@@ -21,12 +21,6 @@ interface CSVCard
    foil: string;
 
    /**
-    * Language code from external user managed source / CSV file. This is metadata and various online collection
-    * services allow this to be freely set by the user, so it may not correlate to actual associated Scryfall ID / data.
-    */
-   lang_user?: string;
-
-   /**
     * Card name when defined in CSV file.
     */
    name?: string;
@@ -40,6 +34,12 @@ interface CSVCard
     * Scryfall ID / UUID.
     */
    scryfall_id: string;
+
+   /**
+    * Language code from external user managed source / CSV file. This is metadata and various online collection
+    * services allow this to be freely set by the user, so it may not correlate to actual associated Scryfall ID / data.
+    */
+   user_lang?: string;
 }
 
 /**

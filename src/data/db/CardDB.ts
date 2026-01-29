@@ -267,7 +267,7 @@ class CardDB
     */
    static uniqueCardKey(card: CardDB.Data.Card)
    {
-      return `${card.scryfall_id}:${card.foil ?? 'normal'}:${card.lang_user ?? card.lang}`;
+      return `${card.scryfall_id}:${card.foil ?? 'normal'}:${card.user_lang ?? card.lang}`;
    }
 
    // Internal Implementation ----------------------------------------------------------------------------------------

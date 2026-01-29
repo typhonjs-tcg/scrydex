@@ -74,7 +74,7 @@ export abstract class CardFields
     */
    static langCode(card: Data.Card): string
    {
-      return typeof card.lang_user === 'string' && card.lang !== card.lang_user ? card.lang_user : card.lang;
+      return typeof card.user_lang === 'string' && card.lang !== card.user_lang ? card.user_lang : card.lang;
    }
 
    /**

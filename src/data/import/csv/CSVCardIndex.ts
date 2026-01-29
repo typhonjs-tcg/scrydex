@@ -66,7 +66,7 @@ export class CSVCardIndex
          const quantity = Number(row['Quantity'] ?? row['quantity']);
          const scryfall_id = row['Scryfall ID'] ?? row['scryfall ID'];
          const foil = row['Foil'] ?? 'normal';
-         const lang_user = ScryfallData.normalizeLangCode(row['Language']);
+         const user_lang = ScryfallData.normalizeLangCode(row['Language'] ?? row['language']);
 
          // Delete parsed column data.
          delete row['Name'];
@@ -78,6 +78,7 @@ export class CSVCardIndex
          delete row['Finish'];
          delete row['Foil'];
          delete row['Language'];
+         delete row['language'];
 
          // TODO: Determine additional derived CSV column data that can be removed and not considered `extra`.
 
@@ -108,7 +109,7 @@ export class CSVCardIndex
              new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
          }
 
-         const existingCard = cardIndex.getVariant({ scryfall_id, foil, lang_user });
+         const existingCard = cardIndex.getVariant({ scryfall_id, foil, user_lang });
 
          if (existingCard)
          {
@@ -120,7 +121,7 @@ export class CSVCardIndex
                object: 'card',
                name,
                foil,
-               lang_user,
+               user_lang,
                quantity,
                scryfall_id,
                filename,
@@ -229,13 +230,13 @@ export class CSVCardIndex
     *
     * @param [query.foil] - Finish; default: `normal`.
     *
-    * @param [query.lang_user] - User defined language code; default: `en`.
+    * @param [query.user_lang] - User defined language code; default: `en`.
     */
-   hasVariant(query: { scryfall_id: string, foil?: string, lang_user?: string }): boolean
+   hasVariant(query: { scryfall_id: string, foil?: string, user_lang?: string }): boolean
    {
       const variantKey = CSVCardIndex.#variantKey(query);
 
-      return this.#data.get(query?.scryfall_id)?.has(variantKey) ?? false;
+      return this.#data.get(query.scryfall_id)?.has(variantKey) ?? false;
    }
 
    /**
@@ -264,13 +265,13 @@ export class CSVCardIndex
     *
     * @param [query.foil] - Finish; default: `normal`.
     *
-    * @param [query.lang_user] - User defined language code; default: `en`.
+    * @param [query.user_lang] - User defined language code; default: `en`.
     */
-   getVariant(query: { scryfall_id: string, foil?: string, lang_user?: string }): CSVCard | undefined
+   getVariant(query: { scryfall_id: string, foil?: string, user_lang?: string }): CSVCard | undefined
    {
       const variantKey = CSVCardIndex.#variantKey(query);
 
-      return this.#data.get(query?.scryfall_id)?.get(variantKey);
+      return this.#data.get(query.scryfall_id)?.get(variantKey);
    }
 
    /**
@@ -287,12 +288,12 @@ export class CSVCardIndex
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
-    * @param card - Object containing `foil` / `lang_user` keys.
+    * @param card - Object containing `foil` / `user_lang` keys.
     *
     * @returns Variant key.
     */
-   static #variantKey({ foil = 'normal', lang_user = 'en' }: { foil?: string, lang_user?: string }): string
+   static #variantKey({ foil = 'normal', user_lang = 'en' }: { foil?: string, user_lang?: string }): string
    {
-      return `${foil ?? 'normal'}:${lang_user ?? 'en'}`;
+      return `${foil ?? 'normal'}:${user_lang ?? 'en'}`;
    }
 }
