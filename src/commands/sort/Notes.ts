@@ -88,6 +88,13 @@ export abstract class Notes
       {
          note += `Keywords:\n`;
          note += `➤ ${card.keywords.join('\n➤ ')}`;
+         note += '\n';
+      }
+
+      if (Array.isArray(card.user_tags) && card.user_tags.length)
+      {
+         note += `User Tags:\n`;
+         note += `➤ ${card.user_tags.join('\n➤ ')}`;
       }
 
       return note.length ? note.trim() : void 0;
