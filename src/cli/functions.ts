@@ -574,8 +574,6 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
-   if (!isDirectory(dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
-
    return {
       compress: opts.compress ?? false,
       db: opts.db,
