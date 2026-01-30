@@ -65,10 +65,25 @@ export class CSVCardIndex
          const name = row['Name'] ?? row['card name'];
          const quantity = Number(row['Quantity'] ?? row['quantity']);
          const scryfall_id = row['Scryfall ID'] ?? row['scryfall ID'];
-         const foil = row['Foil'] ?? 'normal';
+         const foil = row['Foil'] ?? row['Finish'] ?? 'normal';
          const user_lang = ScryfallData.normalizeLangCode(row['Language'] ?? row['language']);
 
-         // Delete parsed column data.
+         // Verify minimum requirements of Scryfall ID and quantity. -------------------------------------------------
+
+         if (!Number.isInteger(quantity) || quantity < 1)
+         {
+            parser.destroy(new Error(`CSV file on row '${rowCntr}' has invalid quantity '${
+             row['Quantity'] ?? row['quantity']}':\n${filepath}`));
+         }
+
+         if (!this.#regexUUID.test(scryfall_id))
+         {
+            parser.destroy(
+             new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
+         }
+
+         // Delete parsed column data. -------------------------------------------------------------------------------
+
          delete row['Name'];
          delete row['card name'];
          delete row['Quantity'];
@@ -94,20 +109,37 @@ export class CSVCardIndex
          delete row['Edition Name'];
          delete row['Multiverse Id'];
 
-         // Save any additional raw unprocessed CSV data.
+         // Derived `user_tags` --------------------------------------------------------------------------------------
+
+         const userTagSet: Set<string> = new Set();
+
+         /**
+          * @param value - tag value to split and normalize.
+          */
+         function addTags(value: unknown)
+         {
+            if (typeof value !== 'string') { return; }
+
+            for (const tag of value.split(','))
+            {
+               const normalized = tag.trim().toLowerCase();
+               if (normalized) { userTagSet.add(normalized); }
+            }
+         }
+
+         // Presently Archidekt supports collection `Tags`, but not deck `tags`. It is expected Manabox may soon
+         // support this.
+         addTags(row.Tags ?? row.tags);
+
+         // Support Archidekt `category` and `secondary categories` CSV fields in deck CSV exports.
+         addTags(row.Category ?? row.category);
+         addTags(row['Secondary Categories'] ?? row['secondary categories']);
+
+         // Save any additional raw unprocessed CSV data. ------------------------------------------------------------
+
          const csv_extra = row;
 
-         if (!Number.isInteger(quantity) || quantity < 1)
-         {
-            parser.destroy(new Error(`CSV file on row '${rowCntr}' has invalid quantity '${
-             row['Quantity'] ?? row['quantity']}':\n${filepath}`));
-         }
-
-         if (!this.#regexUUID.test(scryfall_id))
-         {
-            parser.destroy(
-             new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
-         }
+         // Serialize data -------------------------------------------------------------------------------------------
 
          const existingCard = cardIndex.getVariant({ scryfall_id, foil, user_lang });
 
@@ -121,10 +153,11 @@ export class CSVCardIndex
                object: 'card',
                name,
                foil,
-               user_lang,
                quantity,
                scryfall_id,
                filename,
+               user_lang,
+               user_tags: [...userTagSet],
                csv_extra
             });
          }

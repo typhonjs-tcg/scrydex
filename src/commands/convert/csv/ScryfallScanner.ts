@@ -68,6 +68,7 @@ export class ScryfallScanner
                collector_number: scryCard.collector_number,
                lang: scryCard.lang,
                user_lang: csvCard.user_lang,
+               user_tags: csvCard.user_tags,
                cmc: scryCard.cmc,
                colors: scryCard.colors,
                color_identity: scryCard.color_identity,
