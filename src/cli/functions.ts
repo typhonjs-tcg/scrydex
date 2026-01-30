@@ -436,8 +436,6 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
 
    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
 
-   if (!isDirectory(opts.output)) { exit(`'output' option is not a directory: ${opts.output}`); }
-
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts['by-type'] !== void 0 && typeof opts['by-type'] !== 'boolean')
