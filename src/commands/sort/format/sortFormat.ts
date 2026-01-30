@@ -12,6 +12,7 @@ import {
    SortOrder }                      from '#scrydex/data/sort';
 
 import type { ConfigCmd }           from '../../types-command';
+import {isDirectory} from "@typhonjs-utils/file-util";
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
@@ -25,6 +26,8 @@ export async function sortFormat(config: ConfigCmd.SortFormat): Promise<void>
    logger?.info(`Sorting Scrydex CardDB: ${config.path}`);
    logger?.info(`Formats: ${config.formats.join(', ')}`);
    logger?.info(`Sorted output target directory: ${config.output}`);
+
+   if (!isDirectory(config.output)) { fs.mkdirSync(config.output, { recursive: true }); }
 
    if (config.clean) { await cleanOutputDir(config); }
 
