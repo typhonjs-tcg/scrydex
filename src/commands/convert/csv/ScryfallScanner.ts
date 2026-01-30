@@ -51,14 +51,29 @@ export class ScryfallScanner
 
          logger?.verbose(`Processing: ${scryCard.name}`);
 
+         const card_faces = ParseCardFaces.resolve(scryCard.card_faces);
+         const type = ParseTypeLine.resolve(scryCard);
+
+         // Properties used to remove semantic duplication in `user_tags`. -------------------------------------------
+
+         const keywordSet = Array.isArray(scryCard.keywords) ? new Set(scryCard.keywords.map(k => k.toLowerCase())) :
+          new Set();
+
+         const typeCheck = type.toLowerCase();
+
+         // Resolve all CSV cards for the given Scryfall card. -------------------------------------------------------
+
          for (const csvCard of csvCards)
          {
             const isGroupProxy = collection.isCardGroup(csvCard, 'proxy');
 
+            // Remove any user tags that duplicate normalized type line or existing Scryfall keyword.
+            const filteredUserTags = csvCard.user_tags.filter((tag) => !keywordSet.has(tag) && tag !== typeCheck);
+
             const card: CardDB.Data.Card = {
                object: 'card',
                name: scryCard.name,
-               type: ParseTypeLine.resolve(scryCard),
+               type,
                quantity: csvCard.quantity,
                filename: csvCard.filename,
                rarity: scryCard.rarity,
@@ -68,7 +83,7 @@ export class ScryfallScanner
                collector_number: scryCard.collector_number,
                lang: scryCard.lang,
                user_lang: csvCard.user_lang,
-               user_tags: csvCard.user_tags,
+               user_tags: filteredUserTags,
                cmc: scryCard.cmc,
                colors: scryCard.colors,
                color_identity: scryCard.color_identity,
@@ -109,7 +124,7 @@ export class ScryfallScanner
                // The following may contain a lot of nested data and are reserved toward the end of the Card object.
 
                all_parts: scryCard.all_parts,
-               card_faces: ParseCardFaces.resolve(scryCard.card_faces),
+               card_faces,
                image_uris: scryCard.image_uris,
                rulings_uri: scryCard.rulings_uri,
                legalities: scryCard.legalities ?? {},

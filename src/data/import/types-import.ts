@@ -45,13 +45,16 @@ interface CSVCard
     * User or platform derived categorization tags.
     *
     * Populated opportunistically during CSV import from platform-specific fields (IE for Archidekt `Category` /
-    * `Secondary Category`). Not all platforms provide tag or category data. Values are normalized to lowercase and
-    * trimmed.
+    * `Secondary Category` for deck exports or `Tags` for collection export). Not all platforms provide tag or
+    * category data. Values are normalized to lowercase and trimmed.
+    *
+    * Tags that case-insensitively match Scryfall keywords for the card are excluded to avoid semantic duplication
+    * (IE `Cycling` vs `cycling`). Tags that case-insensitively match the normalized type line are also excluded.
     *
     * This field is derived and non-authoritative:
-    * - Source CSV values are preserved verbatim in `csv_extra`
-    * - `user_tags` is ignored when exporting CardDBs back to CSV
-    * - `user_tags` is included in `export-llm` output for semantic enrichment
+    * - Source CSV values are preserved verbatim in `csv_extra`.
+    * - `user_tags` is ignored when exporting CardDBs back to CSV.
+    * - `user_tags` is included in `export-llm` output for semantic enrichment.
     *
     * Always defined; empty array indicates no tags were derived.
     */
