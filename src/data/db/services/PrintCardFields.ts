@@ -36,7 +36,7 @@ export abstract class PrintCardFields
     */
    static finishIcon(card: Data.Card): string
    {
-      switch (card.foil)
+      switch (card.finish)
       {
          case 'etched':
             return ' ◈'

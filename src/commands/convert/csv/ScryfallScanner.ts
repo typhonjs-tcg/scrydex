@@ -92,7 +92,7 @@ export class ScryfallScanner
                defense: scryCard.defense,
                edhrec_rank: scryCard.edhrec_rank,
                flavor_text: scryCard.flavor_text,
-               foil: csvCard.foil,
+               finish: csvCard.finish,
                game_changer: scryCard.game_changer,
                games: scryCard.games,
                hand_modifier: scryCard.hand_modifier,
@@ -182,7 +182,7 @@ export class ScryfallScanner
    static #priceLookup(scryCard: Record<string, any>, csvCard: CSVCard): string | null
    {
       // Scryfall `prices` property.
-      const index = csvCard.foil === 'normal' ? 'usd' : `usd_${csvCard.foil}`;
+      const index = csvCard.finish === 'normal' ? 'usd' : `usd_${csvCard.finish}`;
 
       return scryCard?.prices?.[index] ?? null;
    }

@@ -95,7 +95,7 @@ async function exportDB({ config, db, output }:
          'Set code': card.set,
          'Set name': card.set_name,
          'Collector number': card.collector_number,
-         'Foil': card.foil,
+         'Foil': card.finish,
          'Language': card.user_lang ?? card.lang,
          'Scryfall ID': card.scryfall_id,
          ...(csvExtraKeys.length && isObject(card.csv_extra) ? card.csv_extra : {})

@@ -66,7 +66,7 @@ async function exportDB({ config, db, output }:
 
    for await (const card of exportCards({ config, db }))
    {
-      const finish = card.foil === 'foil' || card.foil === 'etched' ? ` *${card.foil[0].toUpperCase()}*` : '';
+      const finish = card.finish === 'foil' || card.finish === 'etched' ? ` *${card.finish[0].toUpperCase()}*` : '';
 
       const line =`${card.quantity} ${card.name} (${card.set.toUpperCase()}) ${card.collector_number}${finish}\n`;
 

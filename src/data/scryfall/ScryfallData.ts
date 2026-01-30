@@ -46,6 +46,18 @@ abstract class ScryfallData
    }
 
    /**
+    * Normalizes card finish.
+    *
+    * @param finish - Finish to normalize.
+    *
+    * @returns Normalized finish property.
+    */
+   static normalizeFinish(finish: string): ScryfallData.CardFinish | undefined
+   {
+      return this.#supportedFinish.get(finish);
+   }
+
+   /**
     * Normalizes supported ISO lang codes.
     *
     * @param code - Language code to normalize.
@@ -198,6 +210,17 @@ abstract class ScryfallData
    static #supportedFormats: ReadonlySet<string> = Object.freeze(new Set(['standard', 'future', 'historic', 'timeless',
     'gladiator', 'pioneer', 'modern', 'legacy', 'pauper', 'vintage', 'penny', 'commander', 'oathbreaker',
      'standardbrawl', 'brawl', 'alchemy', 'paupercommander', 'duel', 'oldschool', 'premodern', 'predh']));
+
+   static #supportedFinish: ReadonlyMap<string, ScryfallData.CardFinish> = Object.freeze(
+    new Map<string, ScryfallData.CardFinish>([
+      ['normal', 'normal'],
+      ['etched', 'etched'],
+      ['foil', 'foil'],
+
+      ['Normal', 'normal'],
+      ['Etched', 'etched'],
+      ['Foil', 'foil']
+   ]));
 
    static #supportedLang: ReadonlyMap<string, string> = Object.freeze(new Map<string, string>([
       ['en', 'en'],
@@ -470,6 +493,16 @@ declare namespace ScryfallData
     * @see https://scryfall.com/docs/api/colors
     */
    export type Colors = string[];
+
+   /**
+    * Card finish variant.
+    *
+    * Mirrors Scryfall finish semantics:
+    * - `normal` → non-foil print.
+    * - `foil`   → traditional foil print.
+    * - `etched` → etched foil print.
+    */
+   export type CardFinish = 'normal' | 'foil' | 'etched';
 
    /**
     * Valid Scryfall game formats.

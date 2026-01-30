@@ -65,8 +65,9 @@ export class CSVCardIndex
          const name = row['Name'] ?? row['card name'];
          const quantity = Number(row['Quantity'] ?? row['quantity']);
          const scryfall_id = row['Scryfall ID'] ?? row['scryfall ID'];
-         const foil = row['Foil'] ?? row['Finish'] ?? 'normal';
          const user_lang = ScryfallData.normalizeLangCode(row['Language'] ?? row['language']);
+         const finish = ScryfallData.normalizeFinish(row['Foil'] ?? row['foil'] ?? row['Finish'] ?? row['finish']) ??
+          'normal';
 
          // Verify minimum requirements of Scryfall ID and quantity. -------------------------------------------------
 
@@ -127,7 +128,7 @@ export class CSVCardIndex
             }
          }
 
-         // Presently Archidekt supports collection `Tags`, but not deck `tags`. It is expected Manabox may soon
+         // Presently Archidekt supports collection `tags`, but not deck `tags`. It is expected Manabox may soon
          // support this.
          addTags(row.Tags ?? row.tags);
 
@@ -141,7 +142,7 @@ export class CSVCardIndex
 
          // Serialize data -------------------------------------------------------------------------------------------
 
-         const existingCard = cardIndex.getVariant({ scryfall_id, foil, user_lang });
+         const existingCard = cardIndex.getVariant({ scryfall_id, finish, user_lang });
 
          if (existingCard)
          {
@@ -152,7 +153,7 @@ export class CSVCardIndex
             cardIndex.add({
                object: 'card',
                name,
-               foil,
+               finish,
                quantity,
                scryfall_id,
                filename,
@@ -261,11 +262,11 @@ export class CSVCardIndex
     *
     * @param query.scryfall_id - Scryfall ID
     *
-    * @param [query.foil] - Finish; default: `normal`.
+    * @param [query.finish] - Finish; default: `normal`.
     *
     * @param [query.user_lang] - User defined language code; default: `en`.
     */
-   hasVariant(query: { scryfall_id: string, foil?: string, user_lang?: string }): boolean
+   hasVariant(query: { scryfall_id: string, finish?: ScryfallData.CardFinish, user_lang?: string }): boolean
    {
       const variantKey = CSVCardIndex.#variantKey(query);
 
@@ -296,11 +297,11 @@ export class CSVCardIndex
     *
     * @param query.scryfall_id - Scryfall ID
     *
-    * @param [query.foil] - Finish; default: `normal`.
+    * @param [query.finish] - Finish; default: `normal`.
     *
     * @param [query.user_lang] - User defined language code; default: `en`.
     */
-   getVariant(query: { scryfall_id: string, foil?: string, user_lang?: string }): CSVCard | undefined
+   getVariant(query: { scryfall_id: string, finish?: ScryfallData.CardFinish, user_lang?: string }): CSVCard | undefined
    {
       const variantKey = CSVCardIndex.#variantKey(query);
 
@@ -321,12 +322,13 @@ export class CSVCardIndex
    // Internal Implementation ----------------------------------------------------------------------------------------
 
    /**
-    * @param card - Object containing `foil` / `user_lang` keys.
+    * @param card - Object containing `finish` / `user_lang` keys.
     *
     * @returns Variant key.
     */
-   static #variantKey({ foil = 'normal', user_lang = 'en' }: { foil?: string, user_lang?: string }): string
+   static #variantKey({ finish = 'normal', user_lang = 'en' }:
+    { finish?: ScryfallData.CardFinish, user_lang?: string }): string
    {
-      return `${foil ?? 'normal'}:${user_lang ?? 'en'}`;
+      return `${finish ?? 'normal'}:${user_lang ?? 'en'}`;
    }
 }

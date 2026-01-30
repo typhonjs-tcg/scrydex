@@ -16,9 +16,9 @@ interface CSVCard
    filename: string;
 
    /**
-    * Foil variation if any.
+    * Finish variation if any.
     */
-   foil: string;
+   finish: 'normal' | 'foil' | 'etched';
 
    /**
     * Card name when defined in CSV file.
