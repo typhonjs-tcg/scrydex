@@ -122,7 +122,7 @@ export abstract class ExportSpreadsheet
                Name: CardDB.PrintCardFields.name(card),
                Quantity: Number(card.quantity),
                Filename: card.filename,
-               Type: card.type,
+               Type: card.norm_type,
                'Type Line': card.type_line,
                Set: card.set,
                'Set Name': card.set_name,
@@ -169,7 +169,7 @@ export abstract class ExportSpreadsheet
             }
 
             // Embellish type separation by setting a colored border.
-            if (byType && prevType !== card.type)
+            if (byType && prevType !== card.norm_type)
             {
                // Potentially, skip top border for first category.
                if (prevType !== void 0)
@@ -180,7 +180,7 @@ export abstract class ExportSpreadsheet
                   });
                }
 
-               prevType = card.type;
+               prevType = card.norm_type;
             }
 
             // Turn the link into a real hyperlink.

@@ -73,7 +73,7 @@ export class ScryfallScanner
             const card: CardDB.Data.Card = {
                object: 'card',
                name: scryCard.name,
-               type,
+               norm_type: type,
                quantity: csvCard.quantity,
                filename: csvCard.filename,
                rarity: scryCard.rarity,

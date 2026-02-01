@@ -27,7 +27,7 @@ export abstract class ParseCardFaces
             oracle_text: typeof face.oracle_text === 'string' ? face.oracle_text : void 0,
             power: typeof face.power === 'string' ? face.power : void 0,
             toughness: typeof face.toughness === 'string' ? face.toughness : void 0,
-            type: type_line !== void 0 ? ParseTypeLine.resolve(type_line) : void 0,
+            norm_type: type_line !== void 0 ? ParseTypeLine.resolve(type_line) : void 0,
             type_line
          });
       }

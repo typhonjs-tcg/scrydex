@@ -162,6 +162,11 @@ interface Card extends CSVCard
    name: string;
 
    /**
+    * Normalized card type based on `type line` parsing.
+    */
+   norm_type: string;
+
+   /**
     * A unique ID for this card’s oracle identity. This value is consistent across reprinted card editions, and unique
     * among different cards with the same name.
     */
@@ -249,11 +254,6 @@ interface Card extends CSVCard
    toughness?: string | null;
 
    /**
-    * Normalized card type based on `type line` parsing.
-    */
-   type: string;
-
-   /**
     * The type line of this card.
     */
    type_line: string;
@@ -326,6 +326,11 @@ interface CardFace
    name: string;
 
    /**
+    * Normalized card type based on `type line` parsing.
+    */
+   norm_type?: string | null;
+
+   /**
     * The Oracle text for this card face, if any.
     */
    oracle_text?: string;
@@ -339,11 +344,6 @@ interface CardFace
     * This face’s toughness, if any. Note that some cards have toughnesses that are not numeric, such as *.
     */
    toughness?: string | null;
-
-   /**
-    * Normalized card type based on `type line` parsing.
-    */
-   type?: string | null;
 
    /**
     * The type line of this card face.

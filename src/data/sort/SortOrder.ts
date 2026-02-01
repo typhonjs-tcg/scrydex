@@ -91,7 +91,7 @@ export abstract class SortOrder
       {
          return 'Artifact (Colorless)';
       }
-      else if (card.type.startsWith('Land - Basic'))
+      else if (card.norm_type.startsWith('Land - Basic'))
       {
          return 'Land (Basic)';
       }

@@ -179,7 +179,7 @@ async function presortCards(config: ConfigCmd.SortFormat, db: CardDB.Stream.Read
    for await (const card of db.asStream())
    {
       // Separate all basic land.
-      if (card.type.startsWith('Land - Basic'))
+      if (card.norm_type.startsWith('Land - Basic'))
       {
          presortFormat.get('basic-land')?.push(card);
          continue;

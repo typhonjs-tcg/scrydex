@@ -243,6 +243,6 @@ export abstract class SortCards
    {
       const factor = direction === 'asc' ? 1 : -1;
 
-      return cards.sort((a: CardDB.Data.Card, b: CardDB.Data.Card) => factor * a.type.localeCompare(b.type));
+      return cards.sort((a: CardDB.Data.Card, b: CardDB.Data.Card) => factor * a.norm_type.localeCompare(b.norm_type));
    }
 }
