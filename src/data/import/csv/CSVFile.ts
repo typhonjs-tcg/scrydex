@@ -35,8 +35,10 @@ import { createWritable }  from '#scrydex/util';
  * await CSVFile.save({ filepath: './manabox-processed.csv', rows });
  * ```
  */
-export class CSVFile
+export abstract class CSVFile
 {
+   private constructor() {}
+
    /**
     * Stream row by row the given CSV file.
     *
