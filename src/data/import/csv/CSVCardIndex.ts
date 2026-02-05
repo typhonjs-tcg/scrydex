@@ -92,7 +92,9 @@ export class CSVCardIndex
          delete row['Scryfall ID'];
          delete row['scryfall ID'];
          delete row['Finish'];
+         delete row['finish'];
          delete row['Foil'];
+         delete row['foil'];
          delete row['Language'];
          delete row['language'];
 
