@@ -1,11 +1,11 @@
-import fs                  from 'node:fs';
-import { dirname }         from 'node:path';
+import fs                     from 'node:fs';
+import { dirname }            from 'node:path';
 
 import {
    isDirectory,
-   isFile }                from '@typhonjs-utils/file-util';
+   isFile }                   from '@typhonjs-utils/file-util';
 
-import { ColorLogger }     from '@typhonjs-utils/logger-color';
+import { ColorLogger }        from '@typhonjs-utils/logger-color';
 
 import {
    convertCsv,
@@ -14,17 +14,17 @@ import {
    exportTxt,
    fileCompress,
    filter,
-   sortFormat }            from '#scrydex/commands';
+   sortFormat }               from '#scrydex/commands';
 
-import { CardDB }          from '#scrydex/data/db';
+import { CardDB }             from '#scrydex/data/db';
+import { scryfallDownload }   from '#scrydex/data/scryfall';
 
-import { find }            from './commands/find';
-import {
-   scryfallDownload }      from './commands/scryfall/download';
+import { find }               from './commands/find';
 
-import { Validate }        from './Validate';
+import { Validate }           from './Validate';
 
-import type { ConfigCmd }  from '#scrydex/commands';
+import type { ConfigCmd }     from '#scrydex/commands';
+import type { ScryfallDB }    from '#scrydex/data/scryfall';
 
 /**
  * Provides a ColorLogger instance for all CLI command usage.
@@ -397,7 +397,8 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    const config = {
-      dbType: opts['all-cards'] ? 'all-cards' : 'default-cards',
+      dbType: (opts['all-cards'] ? 'all_cards' : 'default_cards') as ScryfallDB.File.DBType,
+      dirpath: './db',
       force: opts.force as boolean ?? false,
       logger
    };
