@@ -38,6 +38,10 @@
       "types": "./dist-npm/data/import/index.d.ts",
       "import": "./dist-npm/data/import/index.js"
     },
+    "./data/export": {
+      "types": "./dist-npm/data/export/index.d.ts",
+      "import": "./dist-npm/data/export/index.js"
+    },
     "./data/scryfall": {
       "types": "./dist-npm/data/scryfall/index.d.ts",
       "import": "./dist-npm/data/scryfall/index.js"

@@ -79,6 +79,22 @@ export default () =>
          ]
       },
       {
+         input: 'src/data/export/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/data/export/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/data/export/**/*'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
          input: 'src/data/import/index.ts',
          external: s_EXTERNAL,
          output: [{
