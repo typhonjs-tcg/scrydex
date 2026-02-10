@@ -1,4 +1,4 @@
-import type { BasicLogger }   from "@typhonjs-utils/logger-color";
+import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type { CSVCard }       from '#scrydex/data/import';
 import type { ScryfallData }  from '#scrydex/data/scryfall';
