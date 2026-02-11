@@ -5,6 +5,7 @@ import {
    commandConvertCsv,
    commandDiff,
    commandExportCsv,
+   commandExportLLM,
    commandExportTxt,
    commandFileCompress,
    commandFilter,
@@ -53,6 +54,16 @@ program
 .example('export-csv ./collection.json --output ./collection.csv')
 .example('export-csv ./sorted-directory --output ./csv-sorted')
 .action(commandExportCsv);
+
+program
+.command('export-llm [path]', 'Export LLM')
+.describe('Exports any Scrydex CardDB files from a directory or file path to a single CardDB outputting LLM optimized JSON files.')
+.option('--no-oracle-text', 'Omit oracle rules text from the exported LLM card data to reduce output size and token usage.')
+.option('--output', 'Provide an output file path or directory path for generated LLMDB card collection file(s).')
+.option('--types', `Additional export of 'llmdb.d.ts' Typescript declarations useful in providing to an LLM to parse LLMDB JSON files.`)
+.example('export-llm ./collection.json --output ./llm-collection.json')
+.example('export-llm ./sorted-directory --output ./llm-sorted')
+.action(commandExportLLM);
 
 program
 .command('export-txt [path]', 'Export Text')

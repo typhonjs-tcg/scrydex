@@ -63,7 +63,7 @@ interface Diff extends Command
 }
 
 /**
- * Config object for all `export` commands.
+ * Config object for all text / CSV `export` commands.
  */
 interface Export extends Command
 {
@@ -81,6 +81,32 @@ interface Export extends Command
     * Input card JSON DB file or directory path.
     */
    path: string;
+}
+
+/**
+ * Config object for `export-llm` command.
+ */
+interface ExportLLM extends Command
+{
+   /**
+    * When false, rules oracle text is omitted to reduce LLM token count.
+    */
+   oracleText: boolean;
+
+   /**
+    * Output file or directory path for exported data.
+    */
+   output: string;
+
+   /**
+    * Input card JSON DB file or directory path.
+    */
+   path: string;
+
+   /**
+    * When true, the `llmdb.d.ts` type declaration is output.
+    */
+   types: boolean;
 }
 
 /**
@@ -191,6 +217,7 @@ declare namespace ConfigCmd
       Convert,
       Diff,
       Export,
+      ExportLLM,
       FileCompress,
       Filter,
       Sort,

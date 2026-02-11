@@ -11,6 +11,7 @@ import {
    convertCsv,
    diff,
    exportCsv,
+   exportLLM,
    exportTxt,
    fileCompress,
    filter,
@@ -201,6 +202,68 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
    try
    {
       await exportCsv(config);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
+ * Invokes `exportLLM` with the given config.
+ *
+ * @param path - File path of CardDB or directory path to search for JSON CardDBs.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandExportLLM(path: string, opts: Record<string, any>): Promise<void>
+{
+   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
+   {
+      exit(`'input' option is a file; 'output' option must also be a file.`);
+   }
+
+   if (isDirectory(path) && fs.existsSync(opts.output) && isFile(opts.output))
+   {
+      exit(`'input' option is a directory; 'output' option must also be a directory.`);
+   }
+
+   if (opts['oracle-text'] !== void 0 && typeof opts['oracle-text'] !== 'boolean')
+   {
+      exit(`'no-oracle-text' option is not a boolean.`);
+   }
+
+   if (opts.types !== void 0 && typeof opts.types !== 'boolean')
+   {
+      exit(`'types' option is not a boolean.`);
+   }
+
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   const config: ConfigCmd.ExportLLM = {
+      logger,
+      oracleText: opts['oracle-text'] ?? true,
+      output: opts.output,
+      path,
+      types: opts.types ?? false,
+   };
+
+   try
+   {
+      await exportLLM(config);
    }
    catch (err: unknown)
    {
