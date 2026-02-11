@@ -4,6 +4,8 @@ import { createWritable }  from '#scrydex/util';
 
 import type { CardDB }     from '#scrydex/data/db';
 
+import type { LLMCard }    from './types-llm';
+
 /**
  * Provides a mechanism to reduce a Scrydex CardDB to a simplified form suitable for AI / LLM consumption. This process
  * removes the CardDB metadata and outputs a basic array of {@link LLMCard} entries which also have just necessary
@@ -22,8 +24,7 @@ export abstract class ExportLLM
     *
     * @param [opts.options] - Additional control over properties exported.
     */
-   static async cardDB({ db, filepath, options = { id: true, oracleText: true } }:
-    { db: CardDB.Stream.Reader, filepath: string, options?: { id?: boolean, oracleText?: boolean, stream?: CardDB.Stream.StreamOptions } })
+   static async cardDB({ db, filepath, options = { oracleText: true } }: LLMOptions)
    {
       if (isDirectory(filepath)) { throw new Error(`'filepath' is a directory.`); }
 
@@ -38,10 +39,29 @@ export abstract class ExportLLM
          // Append `,\n` to last written entry; this skips adding this to the last card entry.
          if (!first) { out.write(',\n  '); }
 
-         const entry = {
+         const entry: LLMCard = {
+            object: 'card',
             name: card.name,
+            quantity: card.quantity,
+            norm_type: card.norm_type,
+            rarity: card.rarity,
+            cmc: card.cmc,
+            colors: card.colors,
+            color_identity: card.color_identity,
+            defense: card.defense,
+            game_changer: card.game_changer,
+            keywords: card.keywords,
+            loyalty: card.loyalty,
+            reserved: card.reserved,
+            mana_cost: card.mana_cost,
+            power: card.power,
+            produced_mana: card.produced_mana,
+            toughness: card.toughness,
+            type_line: card.type_line,
             oracle_text: options.oracleText ?? true ? card.oracle_text : void 0,
-            id: options.id ?? true ? card.scryfall_id : void 0
+            card_faces: card.card_faces,
+            user_tags: card.user_tags,
+            scryfall_id: card.scryfall_id
          }
 
          out.write(`${first ? '  ' : ''}${JSON.stringify(entry)}`);
@@ -53,7 +73,7 @@ export abstract class ExportLLM
    }
 }
 
-export interface LLMOptions
+interface LLMOptions
 {
    /**
     * Source CardDB stream reader instance.
@@ -84,33 +104,4 @@ export interface LLMOptions
        */
       stream?: CardDB.Stream.StreamOptions
    }
-}
-
-/**
- * SCHEMA: LLMCard[]
- * DOMAIN: Magic: The Gathering (MTG)
- * SOURCE: Scryfall API
- * PRODUCER: Scrydex CLI
- */
-export interface LLMCard
-{
-   /** Scryfall card UUID */
-   id?: string;
-
-   /** Card name */
-   name: string;
-
-   /** Mana cost using Scryfall syntax; IE `{1}{U}{G}`. */
-   mana_cost?: string;
-
-   /** Oracle type line; IE `Creature — Elf Druid`. */
-   type_line: string;
-
-   /** Oracle rules text; may include MTG keywords and actions. */
-   oracle_text?: string;
-
-   /** Card colors as defined by Scryfall */
-   colors?: string[];
-
-   quantity: number;
 }
