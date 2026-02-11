@@ -1,4 +1,10 @@
 /**
+ * NOTE:
+ * Fields are explicit and non-inferential.
+ * Do not assume omitted fields, derived rules, or gameplay legality.
+ */
+
+/**
  * SCHEMA: LLMDB
  * TYPE: Array of LLMCard
  *
@@ -27,6 +33,9 @@ export type LLMDB = LLMCard[];
  */
 export interface LLMCard
 {
+   /**
+    * Discriminator identifying this record as a card.
+    */
    object: 'card';
 
    /**
@@ -147,6 +156,9 @@ export interface LLMCard
  */
 export interface LLMCardFace
 {
+   /**
+    * Discriminator identifying this record as a card face.
+    */
    object: 'card_face';
 
    /**
