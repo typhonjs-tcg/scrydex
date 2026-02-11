@@ -1,7 +1,3 @@
-import fs                  from 'node:fs';
-import path                from 'node:path';
-
-import { isDirectory }     from '@typhonjs-utils/file-util';
 import Excel               from 'exceljs';
 
 import { CardDB }          from '#scrydex/data/db';
@@ -17,57 +13,34 @@ import type {
    AbstractCollection,
    SortedCategories }      from '#scrydex/data/sort';
 
-import type { ConfigCmd }  from '../types-command';
-
 /**
- * Export all `SortedFormat` instances as spreadsheets by rarity.
+ * Provides Excel / spreadsheet exports of {@link AbstractCollection} card collections.
  */
-export abstract class ExportSpreadsheet
+export abstract class ExportExcel
 {
-   private constructor() {}
-
    /**
-    * @param options -
+    * @param options - Options.
     *
-    * @param options.config -
+    * @param options.collection - The entire collection being exported.
     *
-    * @param options.collection -
+    * @param options.categories - Specific categories group to export.
+    *
+    * @param options.sortByType - When true, sort by type of card after alpha sorting.
+    *
+    * @param options.theme - Theme name.
+    *
+    * @param [options.mergeMark] - An optional Set of CSV file names in the conversion process to mark / highlight for
+    *        merging.
+    *
+    * @returns An Excel workbook.
     */
-   static async writeCollection({ config, collection }: { config: ConfigCmd.Sort, collection: AbstractCollection }):
-      Promise<void>
-   {
-      // Store spreadsheets in format subdirectories.
-      const collectionDirPath = path.resolve(config.output, collection.dirpath);
-
-      // Create collection subdirectory if it doesn't exist already.
-      if (!isDirectory(collectionDirPath)) { fs.mkdirSync(collectionDirPath, { recursive: true }); }
-
-      for (const categories of collection.values())
-      {
-         if (categories.size > 0)
-         {
-            await this.#exportSpreadsheet(config, collection, categories, collectionDirPath);
-         }
-      }
-   }
-
-   /**
-    * @param config -
-    *
-    * @param collection -
-    *
-    * @param categories -
-    *
-    * @param collectionDirPath -
-    */
-   static async #exportSpreadsheet(config: ConfigCmd.Sort, collection: AbstractCollection,
-    categories: SortedCategories, collectionDirPath: string): Promise<void>
+   static async collection({ collection, categories, sortByType, theme, mergeMark }:
+    { collection: AbstractCollection, categories: SortedCategories, sortByType: boolean, theme: 'dark' | 'light',
+     mergeMark: Set<string> }): Promise<Excel.Workbook>
    {
       const wb = new Excel.Workbook();
 
-      const byType = config.sortByType;
-
-      const theme = Theme.get(config);
+      const themeData = Theme.get(theme);
 
       for (const category of categories.values())
       {
@@ -98,7 +71,7 @@ export abstract class ExportSpreadsheet
          ws.spliceRows(1, 0, []);
 
          const titleRow = ws.getRow(1);
-         titleRow.fill = theme.row.fill.default;
+         titleRow.fill = themeData.row.fill.default;
 
          // Merge across all columns.
          ws.mergeCells(1, 1, 1, ws.columnCount);
@@ -135,7 +108,7 @@ export abstract class ExportSpreadsheet
                'Scryfall Link': card.scryfall_uri
             });
 
-            row.fill = theme.row.fill.default;
+            row.fill = themeData.row.fill.default;
 
             // Potentially color / fill if that the card is an external group.
             const groupName = collection.getCardGroup(card);
@@ -146,15 +119,15 @@ export abstract class ExportSpreadsheet
 
                row.eachCell({ includeEmpty: true }, (cell) =>
                {
-                  cell.fill = theme.groups[groupName].fill;
-                  cell.border = theme.groups[groupName].border;
+                  cell.fill = themeData.groups[groupName].fill;
+                  cell.border = themeData.groups[groupName].border;
                });
 
                row.getCell('Filename').note = `Group: ${groupName}`;
             }
 
             // Potentially mark merge status for marked filenames / cards.
-            if (config.mark.has(card.filename) && typeof card.mark === 'string')
+            if (mergeMark?.has(card.filename) && typeof card.mark === 'string')
             {
                // Indicate that this row has been colored.
                (row as any)._marked = true;
@@ -163,20 +136,20 @@ export abstract class ExportSpreadsheet
 
                row.eachCell({ includeEmpty: true }, (cell) =>
                {
-                  cell.fill = theme.mark[mark].fill;
-                  cell.border = theme.mark[mark].border;
+                  cell.fill = themeData.mark[mark].fill;
+                  cell.border = themeData.mark[mark].border;
                });
             }
 
             // Embellish type separation by setting a colored border.
-            if (byType && prevType !== card.norm_type)
+            if (sortByType && prevType !== card.norm_type)
             {
                // Potentially, skip top border for first category.
                if (prevType !== void 0)
                {
                   row.eachCell({ includeEmpty: true }, (cell) =>
                   {
-                     cell.border = { ...(cell.border ?? {}), ...theme.sortByType.border }
+                     cell.border = { ...(cell.border ?? {}), ...themeData.sortByType.border }
                   });
                }
 
@@ -188,7 +161,7 @@ export abstract class ExportSpreadsheet
             if (linkCell.value)
             {
                linkCell.value = { text: `Open ${card.name}`, hyperlink: card.scryfall_uri };
-               linkCell.font = theme.fonts.link;
+               linkCell.font = themeData.fonts.link;
             }
 
             const cardStats = Notes.cardStats(card);
@@ -209,7 +182,7 @@ export abstract class ExportSpreadsheet
          {
             row.eachCell({ includeEmpty: true }, (cell, colNumber) =>
             {
-               cell.font = theme.fonts.main;
+               cell.font = themeData.fonts.main;
 
                // Name column stays left aligned, others center.
                const isNameColumn = colNumber === 1;
@@ -217,18 +190,18 @@ export abstract class ExportSpreadsheet
 
                cell.border = {
                   ...(cell.border ?? {}),
-                  ...theme.cell.border
+                  ...themeData.cell.border
                };
             });
          });
 
          // Bold headers.
-         titleCell.font = theme.fonts.title;
-         titleCell.border = { ...theme.cell.border, ...theme.row.lastRow.border };
+         titleCell.font = themeData.fonts.title;
+         titleCell.border = { ...themeData.cell.border, ...themeData.row.lastRow.border };
 
          const headerRow = ws.getRow(2);
-         headerRow.fill = theme.row.fill.default;
-         headerRow.font = theme.fonts.header;
+         headerRow.fill = themeData.row.fill.default;
+         headerRow.font = themeData.fonts.header;
 
          // Freeze header rows.
          ws.views = [{ state: 'frozen', ySplit: 2 }];
@@ -243,7 +216,7 @@ export abstract class ExportSpreadsheet
 
             if (rowNum % 2 === 1)
             {
-               row.eachCell({ includeEmpty: true }, (cell) => cell.fill = theme.row.fill.alternate);
+               row.eachCell({ includeEmpty: true }, (cell) => cell.fill = themeData.row.fill.alternate);
             }
          });
 
@@ -252,7 +225,7 @@ export abstract class ExportSpreadsheet
          {
             if (!cell.border.bottom)
             {
-               cell.border = { ...cell.border, ...theme.row.lastRow.border };
+               cell.border = { ...cell.border, ...themeData.row.lastRow.border };
             }
          });
 
@@ -260,16 +233,14 @@ export abstract class ExportSpreadsheet
          for (let i = 0; i < 200; i++)
          {
             const row = ws.addRow({});
-            row.fill = theme.row.fill.default;
+            row.fill = themeData.row.fill.default;
          }
 
          // Auto size to actual content.
          this.#autosize(ws);
       }
 
-      const outputPath = path.resolve(collectionDirPath, `${collection.name}-${categories.name}.xlsx`);
-
-      await wb.xlsx.writeFile(outputPath);
+      return wb;
    }
 
    // Internal Implementation ----------------------------------------------------------------------------------------

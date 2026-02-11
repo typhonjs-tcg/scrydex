@@ -2,18 +2,16 @@ import type { Borders, Fill, Font } from 'exceljs';
 
 import type { CardDB }              from '#scrydex/data/db';
 
-import type { ConfigCmd }           from '../types-command';
-
 export class Theme
 {
    /**
-    * @param config -
+    * @param theme - Theme name.
     *
     * @returns Theme data.
     */
-   static get(config: ConfigCmd.Sort): ThemeData
+   static get(theme: 'dark' | 'light'): ThemeData
    {
-      switch (config.theme)
+      switch (theme)
       {
          case 'dark': return new ThemeDark();
 

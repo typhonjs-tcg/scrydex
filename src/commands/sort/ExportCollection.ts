@@ -4,8 +4,7 @@ import path                   from 'node:path';
 import { isDirectory }        from '@typhonjs-utils/file-util';
 
 import { CardDB }             from '#scrydex/data/db';
-
-import { ExportSpreadsheet }  from './ExportSpreadsheet';
+import { ExportExcel }        from '#scrydex/data/export';
 
 import type {
    AbstractCollection }       from '#scrydex/data/sort';
@@ -39,7 +38,23 @@ export abstract class ExportCollection
                meta: collection.meta
             });
 
-            await ExportSpreadsheet.writeCollection({ config, collection });
+            for (const categories of collection.values())
+            {
+               if (categories.size > 0)
+               {
+                  const workbook = await ExportExcel.collection({
+                     collection,
+                     categories,
+                     sortByType: config.sortByType,
+                     theme: config.theme,
+                     mergeMark: config.mark
+                  });
+
+                  const outputPath = path.resolve(collectionDirPath, `${collection.name}-${categories.name}.xlsx`);
+
+                  await workbook.xlsx.writeFile(outputPath);
+               }
+            }
          }
       }
    }
