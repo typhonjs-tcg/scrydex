@@ -19,16 +19,12 @@ export abstract class ExportLLM
    /**
     * @param opts - Options.
     *
-    * @param opts.db - CardDB stream to export.
-    *
-    * @param opts.filepath - Output file path for LLM simplified / reduced card array; `LLMCard[]`.
-    *
-    * @param [opts.options] - Additional control over properties exported.
-    *
     * @returns Estimated token count for LLM consumption of output LLMDB.
     */
    static async cardDB({ db, filepath, options = { oracleText: true } }: LLMOptions): Promise<number>
    {
+      const oracleText = options.oracleText ?? true;
+
       const counter = new TokenEstimateStream();
       const sink = createWritable({ filepath });
 
@@ -42,6 +38,14 @@ export abstract class ExportLLM
       {
          // Append `,\n` to last written entry; this skips adding this to the last card entry.
          if (!first) { counter.write(',\n  '); }
+
+         let card_faces = card.card_faces;
+
+         // Potentially remove `oracle_text` from card faces.
+         if (!oracleText && Array.isArray(card_faces))
+         {
+            for (const face of card_faces) { delete face.oracle_text; }
+         }
 
          const entry: LLMCard = {
             object: 'card',
@@ -62,8 +66,8 @@ export abstract class ExportLLM
             produced_mana: card.produced_mana,
             toughness: card.toughness,
             type_line: card.type_line,
-            oracle_text: options.oracleText ?? true ? card.oracle_text : void 0,
-            card_faces: card.card_faces,
+            oracle_text: oracleText ? card.oracle_text : void 0,
+            card_faces,
             user_tags: card.user_tags,
             scryfall_id: card.scryfall_id
          }
