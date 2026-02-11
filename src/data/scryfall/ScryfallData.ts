@@ -300,150 +300,128 @@ declare namespace ScryfallData
 {
    /**
     * Defines the Scryfall card layout which is available in {@link CardDB.Data.Card.layout}.
+    *
+    * See the links below for Scryfall examples of each layout.
+    *
+    * @see [normal](https://scryfall.com/search?q=layout%3Anormal)
+    *
+    * @see [split](https://scryfall.com/search?q=layout%3Asplit)
+    *
+    * @see [flip](https://scryfall.com/search?q=layout%3Aflip)
+    *
+    * @see [transform](https://scryfall.com/search?q=layout%3Atransform)
+    *
+    * @see [modal_dfc](https://scryfall.com/search?q=layout%3Amodal_dfc)
+    *
+    * @see [meld](https://scryfall.com/search?q=layout%3Ameld)
+    *
+    * @see [leveler](https://scryfall.com/search?q=layout%3Aleveler)
+    *
+    * @see [class](https://scryfall.com/search?q=layout%3Aclass)
+    *
+    * @see [case](https://scryfall.com/search?q=layout%3Acase)
+    *
+    * @see [saga](https://scryfall.com/search?q=layout%3Asaga)
+    *
+    * @see [adventure](https://scryfall.com/search?q=layout%3Aadventure)
+    *
+    * @see [mutate](https://scryfall.com/search?q=layout%3Amutate)
+    *
+    * @see [prototype](https://scryfall.com/search?q=layout%3Aprototype)
+    *
+    * @see [battle](https://scryfall.com/search?q=layout%3Abattle)
+    *
+    * @see [planar](https://scryfall.com/search?q=layout%3Aplanar)
+    *
+    * @see [scheme](https://scryfall.com/search?q=layout%3Ascheme)
+    *
+    * @see [vanguard](https://scryfall.com/search?q=layout%3Avanguard)
+    *
+    * @see [token](https://scryfall.com/search?q=layout%3Atoken)
+    *
+    * @see [double_faced_token](https://scryfall.com/search?q=layout%3Adouble_faced_token)
+    *
+    * @see [emblem](https://scryfall.com/search?q=layout%3Aemblem)
+    *
+    * @see [augment](https://scryfall.com/search?q=layout%3Aaugment)
+    *
+    * @see [host](https://scryfall.com/search?q=layout%3Ahost)
+    *
+    * @see [art_series](https://scryfall.com/search?q=layout%3Aart_series)
+    *
+    * @see [reversible_card](https://scryfall.com/search?q=layout%3Areversible_card)
     */
    export type CardLayout =
-      /**
-       * A standard Magic card with one face.
-       * @see https://scryfall.com/search?q=layout%3Anormal
-       */
+      /** A standard Magic card with one face. */
       | 'normal'
 
-      /**
-       * A split-faced card.
-       * @see https://scryfall.com/search?q=layout%3Asplit
-       */
+      /** A split-faced card. */
       | 'split'
 
-      /**
-       * Cards that invert vertically with the flip keyword.
-       * @see https://scryfall.com/search?q=layout%3Aflip
-       */
+      /** Cards that invert vertically with the flip keyword. */
       | 'flip'
 
-      /**
-       * Double-sided cards that transform.
-       * @see https://scryfall.com/search?q=layout%3Atransform
-       */
+      /** Double-sided cards that transform. */
       | 'transform'
 
-      /**
-       * Double-sided cards that can be played either-side.
-       * @see https://scryfall.com/search?q=layout%3Amodal_dfc
-       */
+      /** Double-sided cards that can be played either-side. */
       | 'modal_dfc'
 
-      /**
-       * Cards with meld parts printed on the back.
-       * @see https://scryfall.com/search?q=layout%3Ameld
-       */
+      /** Cards with meld parts printed on the back. */
       | 'meld'
 
-      /**
-       * Cards with Level Up.
-       * @see https://scryfall.com/search?q=layout%3Aleveler
-       */
+      /** Cards with Level Up. */
       | 'leveler'
 
-      /**
-       * Class-type enchantment cards.
-       * @see https://scryfall.com/search?q=layout%3Aclass
-       */
+      /** Class-type enchantment cards. */
       | 'class'
 
-      /**
-       * Case-type enchantment cards.
-       * @see https://scryfall.com/search?q=layout%3Acase
-       */
+      /** Case-type enchantment cards. */
       | 'case'
 
-      /**
-       * Saga-type cards.
-       * @see https://scryfall.com/search?q=layout%3Asaga
-       */
+      /** Saga-type cards. */
       | 'saga'
 
-      /**
-       * Cards with an Adventure spell part.
-       * @see https://scryfall.com/search?q=layout%3Aadventure
-       */
+      /** Cards with an Adventure spell part. */
       | 'adventure'
 
-      /**
-       * Cards with Mutate.
-       * @see https://scryfall.com/search?q=layout%3Amutate
-       */
+      /** Cards with Mutate. */
       | 'mutate'
 
-      /**
-       * Cards with Prototype.
-       * @see https://scryfall.com/search?q=layout%3Aprototype
-       */
+      /** Cards with Prototype. */
       | 'prototype'
 
-      /**
-       * Battle-type cards.
-       * @see https://scryfall.com/search?q=layout%3Abattle
-       */
+      /** Battle-type cards. */
       | 'battle'
 
-      /**
-       * Plane and Phenomenon-type cards.
-       * @see https://scryfall.com/search?q=layout%3Aplanar
-       */
+      /** Plane and Phenomenon-type cards. */
       | 'planar'
 
-      /**
-       * Scheme-type cards.
-       * @see https://scryfall.com/search?q=layout%3Ascheme
-       */
+      /** Scheme-type cards. */
       | 'scheme'
 
-      /**
-       * Vanguard-type cards.
-       * @see https://scryfall.com/search?q=layout%3Avanguard
-       */
+      /** Vanguard-type cards. */
       | 'vanguard'
 
-      /**
-       * Token cards.
-       * @see https://scryfall.com/search?q=layout%3Atoken
-       */
+      /** Token cards. */
       | 'token'
 
-      /**
-       * Tokens with another token printed on the back.
-       * @see https://scryfall.com/search?q=layout%3Adouble_faced_token
-       */
+      /** Tokens with another token printed on the back. */
       | 'double_faced_token'
 
-      /**
-       * Emblem cards.
-       * @see https://scryfall.com/search?q=layout%3Aemblem
-       */
+      /** Emblem cards. */
       | 'emblem'
 
-      /**
-       * Cards with Augment.
-       * @see https://scryfall.com/search?q=layout%3Aaugment
-       */
+      /** Cards with Augment. */
       | 'augment'
 
-      /**
-       * Host-type cards.
-       * @see https://scryfall.com/search?q=layout%3Ahost
-       */
+      /** Host-type cards. */
       | 'host'
 
-      /**
-       * Art Series collectable double-faced cards.
-       * @see https://scryfall.com/search?q=layout%3Aart_series
-       */
+      /** Art Series collectable double-faced cards. */
       | 'art_series'
 
-      /**
-       * A Magic card with two sides that are unrelated.
-       * @see https://scryfall.com/search?q=layout%3Areversible_card
-       */
+      /** A Magic card with two sides that are unrelated. */
       | 'reversible_card';
 
    /**
