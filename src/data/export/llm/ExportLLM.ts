@@ -17,13 +17,25 @@ export abstract class ExportLLM
    private constructor() {}
 
    /**
-    * @param opts - Options.
+    * Exports a single Scrydex CardDB to a reduced LLMDB JSON file.
+    *
+    * @param options - Options.
+    *
+    * @param options.db - Source CardDB stream reader instance.
+    *
+    * @param options.filepath - Output file path for simplified LLM export JSON file.
+    *
+    * @param [options.oracleText] - When false, card rules oracle text is removed.
+    *
+    * @param [options.streamOptions] - Optional options for potentially filtering the CardDB.
     *
     * @returns Estimated token count for LLM consumption of output LLMDB.
     */
-   static async cardDB({ db, filepath, options = { oracleText: true } }: LLMOptions): Promise<number>
+   static async cardDB({ db, filepath, oracleText = true, streamOptions }:
+    { db: CardDB.Stream.Reader, filepath: string, oracleText?: boolean, streamOptions?: CardDB.Stream.StreamOptions }):
+     Promise<number>
    {
-      const oracleText = options.oracleText ?? true;
+      oracleText = oracleText ?? true;
 
       const counter = new TokenEstimateStream();
       const sink = createWritable({ filepath });
@@ -34,7 +46,7 @@ export abstract class ExportLLM
 
       counter.write('[\n');
 
-      for await (const card of db.asStream(options.stream))
+      for await (const card of db.asStream(streamOptions))
       {
          // Append `,\n` to last written entry; this skips adding this to the last card entry.
          if (!first) { counter.write(',\n  '); }
@@ -134,39 +146,6 @@ class TokenEstimateStream extends Transform
    get estimatedTokens(): number
    {
       return Math.ceil(this.#chars / 4);
-   }
-}
-
-interface LLMOptions
-{
-   /**
-    * Source CardDB stream reader instance.
-    */
-   db: CardDB.Stream.Reader,
-
-   /**
-    * Output file path for simplified LLM export JSON file.
-    */
-   filepath: string,
-
-   /**
-    * Additional options.
-    */
-   options?: {
-      /**
-       * When false, Scryfall UUID is removed.
-       */
-      id?: boolean,
-
-      /**
-       * When false, card oracle text is removed.
-       */
-      oracleText?: boolean,
-
-      /**
-       * Optional options for potentially filtering the CardDB
-       */
-      stream?: CardDB.Stream.StreamOptions
    }
 }
 
