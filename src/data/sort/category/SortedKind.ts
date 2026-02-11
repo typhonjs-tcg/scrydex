@@ -8,6 +8,9 @@ import type {
    CardSorted,
    SortedCategories }   from '../types-sort';
 
+/**
+ * Provides a {@link SortedCategories} implementation that groups cards into WUBRG+ sub-categories.
+ */
 export class SortedKind implements SortedCategories
 {
    /**
@@ -94,7 +97,47 @@ export class SortedKind implements SortedCategories
    /**
     * @returns Entry iterator for category / cards.
     */
-   values(): IterableIterator<CardCategory>
+   entries(): MapIterator<[string, CardCategory]>
+   {
+      return this.#categories.entries();
+   }
+
+   /**
+    * Get a specific card category.
+    *
+    * @param key - Card category name.
+    *
+    * @returns Specific card category.
+    */
+   get(key: string): CardCategory | undefined
+   {
+      return this.#categories.get(key);
+   }
+
+   /**
+    * Is there a specific card category?
+    *
+    * @param key - Card category name.
+    *
+    * @returns Whether a specific card category exists for the given key.
+    */
+   has(key: string): boolean
+   {
+      return this.#categories.has(key);
+   }
+
+   /**
+    * @returns Key iterator for category / cards.
+    */
+   keys(): MapIterator<string>
+   {
+      return this.#categories.keys();
+   }
+
+   /**
+    * @returns Values iterator for category / cards.
+    */
+   values(): MapIterator<CardCategory>
    {
       return this.#categories.values();
    }

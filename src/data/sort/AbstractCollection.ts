@@ -4,6 +4,7 @@ import { capitalizeStr }   from '#scrydex/util';
 import type {
    CardSorted,
    SortedCategories }      from './types-sort';
+import {SortOrder} from "./SortOrder";
 
 /**
  * Base class for a sorted collection of cards by categories.
@@ -118,6 +119,16 @@ export abstract class AbstractCollection
    }
 
    /**
+    * Get a specific sorted category.
+    *
+    * @param key - SortedCategory key / name.
+    */
+   get(key: string): SortedCategories | undefined
+   {
+      return this.#categories.get(key);
+   }
+
+   /**
     * Returns the group name this card belongs to if any..
     *
     * @param card -
@@ -136,6 +147,18 @@ export abstract class AbstractCollection
    }
 
    /**
+    * Does this collection have a specific sorted category.
+    *
+    * @param key - SortedCategory key / name.
+    *
+    * @returns Whether this collection has the sorted category.
+    */
+   has(key: string): boolean
+   {
+      return this.#categories.has(key);
+   }
+
+   /**
     * Checks the meta _external_ file names for a card file name match.
     *
     * @param card -
@@ -145,6 +168,14 @@ export abstract class AbstractCollection
    isCardGroup(card: CardDB.Data.Card, group: keyof CardDB.File.MetadataGroups): boolean
    {
       return this.#groups?.[group]?.has(card.filename) ?? false;
+   }
+
+   /**
+    * @returns Key iterator of sorted categories in collection.
+    */
+   keys(): MapIterator<string>
+   {
+      return this.#categories.keys();
    }
 
    /**
