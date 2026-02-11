@@ -1,10 +1,12 @@
 import fs                           from 'node:fs';
 import path                         from 'node:path';
 
-import { ExportCollection }         from '../ExportCollection';
+import { isDirectory }              from '@typhonjs-utils/file-util';
 
 import { CardDB }                   from '#scrydex/data/db';
 import { ScryfallData }             from '#scrydex/data/scryfall';
+
+import { ExportCollection }         from '../ExportCollection';
 
 import {
    SortCards,
@@ -12,7 +14,6 @@ import {
    SortOrder }                      from '#scrydex/data/sort';
 
 import type { ConfigCmd }           from '../../types-command';
-import {isDirectory} from "@typhonjs-utils/file-util";
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.
