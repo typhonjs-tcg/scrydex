@@ -1,4 +1,5 @@
 import { once }            from 'node:events';
+import { Transform }       from 'node:stream';
 
 import { createWritable }  from '#scrydex/util';
 
@@ -23,19 +24,24 @@ export abstract class ExportLLM
     * @param opts.filepath - Output file path for LLM simplified / reduced card array; `LLMCard[]`.
     *
     * @param [opts.options] - Additional control over properties exported.
+    *
+    * @returns Estimated token count for LLM consumption of output LLMDB.
     */
-   static async cardDB({ db, filepath, options = { oracleText: true } }: LLMOptions): Promise<void>
+   static async cardDB({ db, filepath, options = { oracleText: true } }: LLMOptions): Promise<number>
    {
-      const out = createWritable({ filepath });
+      const counter = new TokenEstimateStream();
+      const sink = createWritable({ filepath });
+
+      counter.pipe(sink);
 
       let first = true;
 
-      out.write('[\n');
+      counter.write('[\n');
 
       for await (const card of db.asStream(options.stream))
       {
          // Append `,\n` to last written entry; this skips adding this to the last card entry.
-         if (!first) { out.write(',\n  '); }
+         if (!first) { counter.write(',\n  '); }
 
          const entry: LLMCard = {
             object: 'card',
@@ -62,15 +68,17 @@ export abstract class ExportLLM
             scryfall_id: card.scryfall_id
          }
 
-         out.write(`${first ? '  ' : ''}${JSON.stringify(entry)}`);
+         if (!counter.write(`${first ? '  ' : ''}${JSON.stringify(entry)}`)) { await once(counter, 'drain'); }
 
          first = false;
       }
 
-      out.write('\n]');
-      out.end();
+      counter.write('\n]');
+      counter.end();
 
-      await once(out, 'finish');
+      await once(counter, 'finish');
+
+      return counter.estimatedTokens;
    }
 
    /**
@@ -82,17 +90,46 @@ export abstract class ExportLLM
     * @param options - Options
     *
     * @param options.filepath - Output file path. Must end in `.d.ts` file extension.
+    *
+    * @returns Estimated token count for LLM consumption of type declaration file.
     */
-   static async types({ filepath }: { filepath: string }): Promise<void>
+   static async types({ filepath }: { filepath: string }): Promise<number>
    {
       if (!filepath?.endsWith('.d.ts')) { throw new Error(`'filepath' must end with '.d.ts'.`); }
 
-      const out = createWritable({ filepath });
+      const counter = new TokenEstimateStream();
+      const sink = createWritable({ filepath });
 
-      out.write(s_LLM_TYPES);
-      out.end();
+      counter.pipe(sink);
 
-      await once(out, 'finish');
+      counter.write(s_LLM_TYPES);
+      counter.end();
+
+      await once(counter, 'finish');
+
+      return counter.estimatedTokens;
+   }
+}
+
+/**
+ * Provides an internal stream transform to estimate LLM token consumption costs of output files.
+ */
+class TokenEstimateStream extends Transform
+{
+   #chars = 0;
+
+   _transform(chunk: Buffer, _enc: BufferEncoding, cb: Function)
+   {
+      this.#chars += chunk.length;
+      cb(null, chunk);
+   }
+
+   /**
+    * @returns Estimated token count.
+    */
+   get estimatedTokens(): number
+   {
+      return Math.ceil(this.#chars / 4);
    }
 }
 
