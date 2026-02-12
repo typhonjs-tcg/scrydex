@@ -299,7 +299,8 @@ abstract class ScryfallData
 declare namespace ScryfallData
 {
    /**
-    * Defines the Scryfall card layout which is available in {@link CardDB.Data.Card.layout}.
+    * Defines the Scryfall card `layout` which is available in
+    * {@link @typhonjs-tcg/scrydex/data/db!CardDB.Data.Card.layout}.
     *
     * See the links below for Scryfall examples of each layout.
     *

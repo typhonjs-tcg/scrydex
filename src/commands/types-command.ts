@@ -214,6 +214,7 @@ interface SortFormat extends Sort
 declare namespace ConfigCmd
 {
    export {
+      Command,
       Convert,
       Diff,
       Export,

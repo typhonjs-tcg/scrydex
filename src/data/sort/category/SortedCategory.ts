@@ -1,6 +1,6 @@
 import type {
    CardCategory,
-   CardSorted}    from '../types-sort';
+   CardSorted }   from '../types-sort';
 
 export class SortedCategory<T = CardSorted> implements CardCategory<T>
 {

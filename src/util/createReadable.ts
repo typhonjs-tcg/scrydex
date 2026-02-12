@@ -7,8 +7,8 @@ import type { Readable }   from 'node:stream';
 
 /**
  * Creates a readable stream for a file, transparently handling gzip decompression when required. By default, all
- * Scrydex DB files are gzip compressed and this utility function makes it easy to transparently open a compressed or
- * uncompressed file.
+ * Scrydex DB files are not compressed, but when compression is enabled this utility function makes it easy to
+ * transparently open a compressed or uncompressed file.
  *
  * The file is inspected using magic bytes and not the extension to determine whether gzip decompression should be
  * applied. The returned stream is always a Node `Readable` suitable for consumption by parsing pipelines.

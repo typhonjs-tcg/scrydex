@@ -5,12 +5,14 @@ import { createWritable }  from '#scrydex/util';
 
 import type { CardDB }     from '#scrydex/data/db';
 
-import type { LLMCard }    from './types-llm';
+import type {
+   LLMCard,
+   LLMCardFace }           from './types-llm';
 
 /**
  * Provides a mechanism to reduce a Scrydex CardDB to a simplified form suitable for AI / LLM consumption. This process
- * removes the CardDB metadata and outputs a basic array of {@link LLMCard} entries which also have just necessary
- * data about the card to reduce token count / costs and provide simpler parsing.
+ * removes the CardDB metadata and outputs a {@link LLMDB} which is a basic JSON array of {@link LLMCard} entries that
+ * has just necessary data about the card to reduce token count / costs enabling more reliable parsing by LLMs.
  */
 export abstract class ExportLLM
 {
@@ -27,7 +29,7 @@ export abstract class ExportLLM
     *
     * @param [options.oracleText] - When false, card rules oracle text is removed.
     *
-    * @param [options.streamOptions] - Optional options for potentially filtering the CardDB.
+    * @param [options.streamOptions] - Optional stream options for potentially filtering the CardDB.
     *
     * @returns Estimated token count for LLM consumption of output LLMDB.
     */
@@ -51,16 +53,20 @@ export abstract class ExportLLM
          // Append `,\n` to last written entry; this skips adding this to the last card entry.
          if (!first) { counter.write(',\n  '); }
 
-         let card_faces = card.card_faces;
+         let card_faces: LLMCardFace[] = card.card_faces as unknown as LLMCardFace[];
 
          // Potentially remove `oracle_text` from card faces.
-         if (!oracleText && Array.isArray(card_faces))
+         if (Array.isArray(card_faces))
          {
-            for (const face of card_faces) { delete face.oracle_text; }
+            for (const face of card_faces)
+            {
+               face.object = 'llm_card_face';
+               if (!oracleText) { delete face.oracle_text; }
+            }
          }
 
          const entry: LLMCard = {
-            object: 'card',
+            object: 'llm_card',
             name: card.name,
             quantity: card.quantity,
             norm_type: card.norm_type,

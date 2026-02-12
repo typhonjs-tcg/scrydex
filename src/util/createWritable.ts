@@ -8,8 +8,8 @@ import type { Writable }   from 'node:stream';
 
 /**
  * Creates a writable output stream to a file, transparently handling gzip compression. By default, all
- * Scrydex DB files are gzip compressed and this utility function makes it easy to transparently write a compressed or
- * uncompressed file.
+ * Scrydex DB files are not compressed, but when compression is enabled this utility function makes it easy to
+ * transparently write a compressed or uncompressed file.
  *
  * @param options - Options.
  *
@@ -21,7 +21,7 @@ import type { Writable }   from 'node:stream';
  *
  * @throws {Error} If the filepath is already an existing directory.
  */
-export function createWritable({ compress, filepath }: { compress?: boolean, filepath: string }): Writable
+export function createWritable({ filepath, compress }: { filepath: string, compress?: boolean }): Writable
 {
    if (isDirectory(filepath)) { throw new Error(`'filepath' is an existing directory.`); }
 

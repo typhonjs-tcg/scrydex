@@ -36,7 +36,7 @@ export interface LLMCard
    /**
     * Discriminator identifying this record as a card.
     */
-   object: 'card';
+   object: 'llm_card';
 
    /**
     * An array of Card Face objects, if this card is multifaced.
@@ -159,7 +159,7 @@ export interface LLMCardFace
    /**
     * Discriminator identifying this record as a card face.
     */
-   object: 'card_face';
+   object: 'llm_card_face';
 
    /**
     * This card face colors.

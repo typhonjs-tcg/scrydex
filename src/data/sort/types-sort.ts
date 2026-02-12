@@ -24,12 +24,12 @@ interface SortedCategories<T = CardSorted>
    /**
     * @returns Name of the collection of cards.
     */
-   get name(): string;
+   readonly name: string;
 
    /**
     * @returns The total amount of cards in collection.
     */
-   get size(): number;
+   readonly size: number;
 
    /**
     * @param card - Card to add.
@@ -52,17 +52,17 @@ interface CardCategory<T = CardSorted>
    /**
     * All cards in category.
     */
-   get cards(): T[];
+   readonly cards: T[];
 
    /**
     * Full name of category.
     */
-   get nameFull(): string;
+   readonly nameFull: string;
 
    /**
     * Abbreviated short name for category.
     */
-   get nameShort(): string;
+   readonly nameShort: string;
 }
 
 export {

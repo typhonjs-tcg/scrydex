@@ -494,6 +494,8 @@ type Metadata = MetadataInventory | MetadataSorted | MetadataSortedFormat;
 /**
  * CardDB metadata base shape required during runtime without DB generated keys.
  *
+ * @template T - Inferred metadata.
+ *
  * @privateRemarks
  * This type is derived from the persisted CardDB metadata definition with generated fields
  * (CLI version, schema version, timestamp) removed.
@@ -528,8 +530,12 @@ declare namespace File
       JSON,
       Metadata,
       MetadataBase,
+      MetadataCommon,
       MetadataGenerated,
-      MetadataGroups
+      MetadataGroups,
+      MetadataInventory,
+      MetadataSorted,
+      MetadataSortedFormat
    }
 }
 
@@ -607,9 +613,64 @@ interface CardFilter
    }
 }
 
+/**
+ * Make `name` optional in metadata.
+ */
+type OptionalName<T> =
+   T extends { name: string }
+      ? Omit<T, 'name'> & { name?: string }
+      : T;
+
+/**
+ * Metadata shape accepted by `CardDB.save`.
+ *
+ * @privateRemarks
+ * This type is derived from the persisted CardDB metadata definition with generated fields
+ * (CLI version, schema version, timestamp) removed.
+ *
+ * The conditional / `infer` form is used intentionally to *distribute* `Omit` across the `CardDBMetadata` union so
+ * that discriminated union narrowing (IE `type === 'sorted_format'` ⇒ `format` is present) is preserved.
+ */
+type CardDBMetaSave =
+   File.Metadata extends infer T
+      ? T extends any
+         ? OptionalName<Omit<T, keyof File.MetadataGenerated>>
+         : never
+      : never;
+
+/**
+ * Options for {@link CardDB.save}. If you do not include an explicit `meta.name` field the filename will be used.
+ */
+interface Save
+{
+   /**
+    * A valid file path ending with the `.json` file extension.
+    */
+   filepath: string;
+
+   /**
+    * Cards to serialize.
+    */
+   cards: Data.Card[];
+
+   /**
+    * Partial CardDB metadata.
+    */
+   meta: CardDBMetaSave;
+
+   /**
+    * Use gunzip compression.
+    *
+    * @defaultValue `false`
+    */
+   compress?: boolean;
+}
+
 declare namespace Options
 {
-   export { CardFilter };
+   export {
+      CardFilter,
+      Save };
 }
 
 // Namespace Stream --------------------------------------------------------------------------------------------------
