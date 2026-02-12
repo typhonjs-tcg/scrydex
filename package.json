@@ -60,7 +60,7 @@
     "build-exec": "bun scripts/build-exec.js",
     "build-npm": "rollup -c scripts/build-npm.js",
     "check": "esm-d-ts check src/cli/index.ts -t ./tsconfig.json",
-    "docs": "typedoc-pkg --api-link es",
+    "docs": "typedoc-pkg --api-link es --link-checker",
     "test-convert": "bun ./src/cli/index.ts convert-csv ./test/fixture/data --output ./test/fixture/output/collection-small.json --db ./test/fixture/data/db-small.json --loglevel debug",
     "test-export": "bun ./src/cli/index.ts export-csv ./test/fixture/output/collection-small.json --output ./test/fixture/output/collection-small.csv --loglevel debug",
     "test-file-compress": "bun ./src/cli/index.ts file-compress ./test/fixture/output/collection-small.json",
@@ -94,5 +94,30 @@
     "rollup": "^4.54.0",
     "tslib": "^2.8.0",
     "typescript": "^5.9.3"
+  },
+  "typedocOptions": {
+    "excludeInternal": true,
+    "dmtLinksService": {
+      "Discord": "https://typhonjs.io/discord/",
+      "GitHub": "https://github.com/typhonjs-tcg/scrydex",
+      "NPM": "https://www.npmjs.com/package/@typhonjs-tcg/scrydex"
+    },
+    "externalSymbolLinkMappings": {
+      "@typhonjs-utils/logger-color": {
+        "BasicLogger": "https://typhonjs-node-utils.github.io/logger-color/interfaces/_typhonjs-utils_logger-color.BasicLogger.html",
+        "ColorLogger": "https://typhonjs-node-utils.github.io/logger-color/classes/_typhonjs-utils_logger-color.ColorLogger.html",
+        "LogLevel": "https://typhonjs-node-utils.github.io/logger-color/types/_typhonjs-utils_logger-color.LogLevel.html"
+      },
+      "exceljs": {
+        "Workbook": "https://github.com/exceljs/exceljs?tab=readme-ov-file#create-a-workbook"
+      },
+      "@types/node": {
+        "Stream.Readable": "https://nodejs.org/api/stream.html#class-streamreadable",
+        "Stream.Writable": "https://nodejs.org/api/stream.html#class-streamwritable"
+      }
+    },
+    "projectDocuments": [
+      "./CHANGELOG.md"
+    ]
   }
 }
