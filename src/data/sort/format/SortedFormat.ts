@@ -8,10 +8,16 @@ import type { CardDB }        from '#scrydex/data/db';
 
 import type {
    CardSorted,
-   SortedCategories }         from '../types-sort';
+   SortedCategories,
+   SortOptions }              from '../types-sort';
 
+/**
+ *
+ */
 export class SortedFormat extends AbstractCollection
 {
+   #sortOptions?: SortOptions;
+
    /**
     * @param options - Required options.
     *
@@ -39,7 +45,17 @@ export class SortedFormat extends AbstractCollection
    }
 
    /**
-    * @param options -
+    * Returns the most recently applied sort configuration.
+    *
+    * @returns Any sort options applied.
+    */
+   getSortOptions(): Readonly<SortOptions> | undefined
+   {
+      return this.#sortOptions ? { ...this.#sortOptions } : {};
+   }
+
+   /**
+    * @param options - Sort options to apply.
     *
     * @param [options.alpha] - Sort by alphabetical name.
     *
@@ -47,6 +63,8 @@ export class SortedFormat extends AbstractCollection
     */
    sort(options: { alpha?: boolean, type?: boolean })
    {
+      this.#sortOptions = { ...options };
+
       for (const category of this.values()) { category.sort(options); }
    }
 

@@ -3,8 +3,8 @@ import { capitalizeStr }   from '#scrydex/util';
 
 import type {
    CardSorted,
-   SortedCategories }      from './types-sort';
-import {SortOrder} from "./SortOrder";
+   SortedCategories,
+   SortOptions }           from './types-sort';
 
 /**
  * Base class for a sorted collection of cards by categories.
@@ -51,6 +51,33 @@ export abstract class AbstractCollection
          }
       }
    }
+
+   // Abstract Methods -----------------------------------------------------------------------------------------------
+
+   /**
+    * Returns the most recently applied sort configuration.
+    *
+    * @returns Any sort options applied.
+    */
+   abstract getSortOptions(): Readonly<SortOptions> | undefined;
+
+   /**
+    * Applies sorting to the collection using the provided configuration.
+    *
+    * Implementations must:
+    * ```
+    * - Reorder the collection deterministically according to the supplied options.
+    * - Propagate sorting behavior to any underlying categories or grouped views.
+    * - Persist the applied sort configuration so it may be retrieved later by `getSortOptions`.
+    * ```
+    *
+    * Calling this method should fully define the active ordering state of the collection.
+    *
+    * @param options - Sorting configuration flags.
+    */
+   abstract sort(options: SortOptions): void;
+
+   // Accessors ------------------------------------------------------------------------------------------------------
 
    /**
     * @returns All cards for the format.
@@ -112,6 +139,8 @@ export abstract class AbstractCollection
    {
       return this.#cards.length;
    }
+
+   // Methods --------------------------------------------------------------------------------------------------------
 
    /**
     * Calculate any `mark` merging.
@@ -202,13 +231,6 @@ export abstract class AbstractCollection
 
       for (const card of this.#cards) { card.mark = void 0; }
    }
-
-   /**
-    * Implement this method to forward on the sort options to the collection categories.
-    *
-    * @param options - Sort options.
-    */
-   abstract sort(options: Record<string, boolean>): void;
 
    /**
     * @returns Iterator of category groups.

@@ -45,7 +45,6 @@ export abstract class ExportCollection
                   const workbook = await ExportExcel.collection({
                      collection,
                      categories,
-                     sortByType: config.sortByType,
                      theme: config.theme
                   });
 

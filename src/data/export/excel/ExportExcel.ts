@@ -27,14 +27,12 @@ export abstract class ExportExcel
     *
     * @param options.categories - Specific categories group to export.
     *
-    * @param options.sortByType - When true, sort by type of card after alpha sorting.
-    *
     * @param options.theme - Theme name.
     *
     * @returns An Excel workbook.
     */
-   static async collection({ collection, categories, sortByType, theme }:
-    { collection: AbstractCollection, categories: SortedCategories, sortByType: boolean, theme: 'dark' | 'light' }):
+   static async collection({ collection, categories, theme }:
+    { collection: AbstractCollection, categories: SortedCategories, theme: 'dark' | 'light' }):
      Promise<Excel.Workbook>
    {
       const wb = new Excel.Workbook();
@@ -42,6 +40,7 @@ export abstract class ExportExcel
       const themeData = Theme.get(theme);
 
       const mergeMark = collection.mergeMark;
+      const sortByType = collection.getSortOptions()?.type;
 
       for (const category of categories.values())
       {
