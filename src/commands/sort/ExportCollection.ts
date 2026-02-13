@@ -42,7 +42,7 @@ export abstract class ExportCollection
             {
                if (category.size > 0)
                {
-                  const workbook = await ExportExcel.collection({
+                  const workbook = await ExportExcel.collectionCategory({
                      collection,
                      category,
                      theme: config.theme

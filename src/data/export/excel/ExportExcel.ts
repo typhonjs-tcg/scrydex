@@ -12,6 +12,7 @@ import type {
 import type {
    AbstractCollection,
    SortedCategory }      from '#scrydex/data/sort';
+import path from "node:path";
 
 /**
  * Provides Excel / spreadsheet exports of {@link AbstractCollection} card collections.
@@ -21,17 +22,52 @@ export abstract class ExportExcel
    private constructor() {}
 
    /**
+    * Creates Excel / spreadsheet workbooks for all categories in a collection.
+    *
     * @param options - Options.
     *
-    * @param options.collection - The entire collection being exported.
+    * @param options.collection - The collection being exported.
     *
-    * @param options.category - Specific category group to export.
+    * @param options.theme - Theme name.
+    *
+    * @returns Excel workbooks for each non-empty category indexed by category name.
+    */
+   static async collection({ collection, theme }: { collection: AbstractCollection, theme: 'dark' | 'light' }):
+    Promise<Map<string, Excel.Workbook>>
+   {
+      const result: Map<string, Excel.Workbook> = new Map();
+
+      for (const category of collection.values())
+      {
+         if (category.size > 0)
+         {
+            const workbook = await ExportExcel.collectionCategory({
+               collection,
+               category,
+               theme
+            });
+
+            result.set(category.name, workbook);
+         }
+      }
+
+      return result;
+   }
+
+   /**
+    * Creates an Excel / spreadsheet workbook for a specific collection category.
+    *
+    * @param options - Options.
+    *
+    * @param options.collection - The collection being exported.
+    *
+    * @param options.category - Specific category to export.
     *
     * @param options.theme - Theme name.
     *
     * @returns An Excel workbook.
     */
-   static async collection({ collection, category, theme }:
+   static async collectionCategory({ collection, category, theme }:
     { collection: AbstractCollection, category: SortedCategory, theme: 'dark' | 'light' }):
      Promise<Excel.Workbook>
    {
