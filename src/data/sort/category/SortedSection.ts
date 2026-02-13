@@ -1,8 +1,11 @@
 import type {
-   CardCategory,
+   CardSection,
    CardSorted }   from '../types-sort';
 
-export class SortedCategory<T = CardSorted> implements CardCategory<T>
+/**
+ * Provides a basic card section implementation.
+ */
+export class SortedSection<T = CardSorted> implements CardSection<T>
 {
    readonly #cards: T[];
 

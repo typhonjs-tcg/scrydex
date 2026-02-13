@@ -1,21 +1,21 @@
-import { SortedCategory }  from './SortedCategory';
+import { SortedSection }  from './SortedSection';
 
 import { SortCards }       from '../SortCards';
 import { SortOrder }       from '../SortOrder';
 
 import type {
-   CardCategory,
+   CardSection,
    CardSorted,
-   SortedCategories }   from '../types-sort';
+   SortedCategory }   from '../types-sort';
 
 /**
- * Provides a {@link SortedCategories} implementation that groups cards into WUBRG+ sub-categories.
+ * Provides a {@link SortedCategory} implementation that groups cards into WUBRG+ sub-categories.
  */
-export class SortedKind implements SortedCategories
+export class SortedKind implements SortedCategory
 {
    /**
     */
-   #categories: Map<string, CardCategory>;
+   #categories: Map<string, CardSection>;
 
    /**
     * Name for this collection of cards.
@@ -29,31 +29,31 @@ export class SortedKind implements SortedCategories
    {
       this.#name = name;
 
-      this.#categories = new Map<string, CardCategory>();
+      this.#categories = new Map<string, CardSection>();
 
-      this.#categories.set('W', new SortedCategory({ nameFull: 'White', nameShort: 'W' }));
+      this.#categories.set('W', new SortedSection({ nameFull: 'White', nameShort: 'W' }));
 
-      this.#categories.set('U', new SortedCategory({ nameFull: 'Blue', nameShort: 'U' }));
+      this.#categories.set('U', new SortedSection({ nameFull: 'Blue', nameShort: 'U' }));
 
-      this.#categories.set('B', new SortedCategory({ nameFull: 'Black', nameShort: 'B' }));
+      this.#categories.set('B', new SortedSection({ nameFull: 'Black', nameShort: 'B' }));
 
-      this.#categories.set('R', new SortedCategory({ nameFull: 'Red', nameShort: 'R' }));
+      this.#categories.set('R', new SortedSection({ nameFull: 'Red', nameShort: 'R' }));
 
-      this.#categories.set('G', new SortedCategory({ nameFull: 'Green', nameShort: 'G' }));
+      this.#categories.set('G', new SortedSection({ nameFull: 'Green', nameShort: 'G' }));
 
-      this.#categories.set('Multicolor', new SortedCategory({ nameFull: 'Multicolor', nameShort: 'Multicolor' }));
+      this.#categories.set('Multicolor', new SortedSection({ nameFull: 'Multicolor', nameShort: 'Multicolor' }));
 
       this.#categories.set('Artifact (Colorless)',
-       new SortedCategory({ nameFull: 'Artifact (Colorless)', nameShort: 'Artifact (Colorless)' }));
+       new SortedSection({ nameFull: 'Artifact (Colorless)', nameShort: 'Artifact (Colorless)' }));
 
       this.#categories.set('Non-artifact (Colorless)',
-       new SortedCategory({ nameFull: 'Non-artifact (Colorless)', nameShort: 'Non-artifact (Colorless)' }));
+       new SortedSection({ nameFull: 'Non-artifact (Colorless)', nameShort: 'Non-artifact (Colorless)' }));
 
-      this.#categories.set('Land', new SortedCategory({ nameFull: 'Land', nameShort: 'Land' }));
+      this.#categories.set('Land', new SortedSection({ nameFull: 'Land', nameShort: 'Land' }));
 
-      this.#categories.set('Land (Basic)', new SortedCategory({ nameFull: 'Land (Basic)', nameShort: 'Land (Basic)' }));
+      this.#categories.set('Land (Basic)', new SortedSection({ nameFull: 'Land (Basic)', nameShort: 'Land (Basic)' }));
 
-      this.#categories.set('Unsorted', new SortedCategory({ nameFull: 'Unsorted', nameShort: 'Unsorted' }));
+      this.#categories.set('Unsorted', new SortedSection({ nameFull: 'Unsorted', nameShort: 'Unsorted' }));
    }
 
    /**
@@ -97,7 +97,7 @@ export class SortedKind implements SortedCategories
    /**
     * @returns Entry iterator for category / cards.
     */
-   entries(): MapIterator<[string, CardCategory]>
+   entries(): MapIterator<[string, CardSection]>
    {
       return this.#categories.entries();
    }
@@ -109,7 +109,7 @@ export class SortedKind implements SortedCategories
     *
     * @returns Specific card category.
     */
-   get(key: string): CardCategory | undefined
+   get(key: string): CardSection | undefined
    {
       return this.#categories.get(key);
    }
@@ -137,7 +137,7 @@ export class SortedKind implements SortedCategories
    /**
     * @returns Values iterator for category / cards.
     */
-   values(): MapIterator<CardCategory>
+   values(): MapIterator<CardSection>
    {
       return this.#categories.values();
    }

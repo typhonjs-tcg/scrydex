@@ -8,7 +8,7 @@ import type { CardDB }        from '#scrydex/data/db';
 
 import type {
    CardSorted,
-   SortedCategories,
+   SortedCategory,
    SortOptions }              from '../types-sort';
 
 /**
@@ -92,11 +92,11 @@ export class SortedFormat extends AbstractCollection
     *
     * @param [format] -
     */
-   static #sortRarity(cards: CardSorted[], format?: ScryfallData.GameFormat): Map<string, SortedCategories>
+   static #sortRarity(cards: CardSorted[], format?: ScryfallData.GameFormat): Map<string, SortedCategory>
    {
-      if (cards.length === 0) { return new Map<string, SortedCategories>(); }
+      if (cards.length === 0) { return new Map<string, SortedCategory>(); }
 
-      const sortedCategories = new Map<string, SortedCategories>();
+      const sortedCategories = new Map<string, SortedCategory>();
 
       for (const card of cards)
       {

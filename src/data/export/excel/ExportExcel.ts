@@ -11,7 +11,7 @@ import type {
 
 import type {
    AbstractCollection,
-   SortedCategories }      from '#scrydex/data/sort';
+   SortedCategory }      from '#scrydex/data/sort';
 
 /**
  * Provides Excel / spreadsheet exports of {@link AbstractCollection} card collections.
@@ -25,14 +25,14 @@ export abstract class ExportExcel
     *
     * @param options.collection - The entire collection being exported.
     *
-    * @param options.categories - Specific categories group to export.
+    * @param options.category - Specific category group to export.
     *
     * @param options.theme - Theme name.
     *
     * @returns An Excel workbook.
     */
-   static async collection({ collection, categories, theme }:
-    { collection: AbstractCollection, categories: SortedCategories, theme: 'dark' | 'light' }):
+   static async collection({ collection, category, theme }:
+    { collection: AbstractCollection, category: SortedCategory, theme: 'dark' | 'light' }):
      Promise<Excel.Workbook>
    {
       const wb = new Excel.Workbook();
@@ -42,11 +42,11 @@ export abstract class ExportExcel
       const mergeMark = collection.mergeMark;
       const sortByType = collection.getSortOptions()?.type;
 
-      for (const category of categories.values())
+      for (const section of category.values())
       {
-         if (category.cards.length <= 0) { continue; }
+         if (section.cards.length <= 0) { continue; }
 
-         const ws = wb.addWorksheet(category.nameShort);
+         const ws = wb.addWorksheet(section.nameShort);
 
          // Column definitions + alignment rules.
          ws.columns = [
@@ -81,13 +81,13 @@ export abstract class ExportExcel
          titleRow.height = 22;
          titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
 
-         titleCell.value = `${collection.printName} (${capitalizeStr(categories.name)}) - ${category.nameFull}`;
+         titleCell.value = `${collection.printName} (${capitalizeStr(category.name)}) - ${section.nameFull}`;
 
          // Card rows ------------------------------------------------------------------------------------------------
 
          let prevType: string | undefined = void 0;
 
-         for (const card of category.cards)
+         for (const card of section.cards)
          {
             const cardManaCost = CardDB.CardFields.manaCost(card);
 

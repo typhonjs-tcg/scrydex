@@ -3,7 +3,7 @@ import type { CardDB } from '#scrydex/data/db';
 /**
  * Defines an individual sorted category.
  */
-interface CardCategory<T = CardSorted>
+interface CardSection<T = CardSorted>
 {
    /**
     * All cards in category.
@@ -35,7 +35,7 @@ interface CardSorted extends CardDB.Data.Card
 /**
  * Defines the interface for a collection of cards with sub-category sorting.
  */
-interface SortedCategories<T = CardSorted>
+interface SortedCategory<T = CardSorted>
 {
    /**
     * @returns Name of the collection of cards.
@@ -55,9 +55,14 @@ interface SortedCategories<T = CardSorted>
    /**
     * @returns Values iterator for all categories / cards.
     */
-   values(): IterableIterator<CardCategory<T>>;
+   values(): IterableIterator<CardSection<T>>;
 
-   sort(options: Record<string, boolean>): void;
+   /**
+    * Sorts this category.
+    *
+    * @param options - Sort options.
+    */
+   sort(options: SortOptions): void;
 }
 
 /**
@@ -100,8 +105,8 @@ interface SortOptions
 }
 
 export {
-   type CardCategory,
+   type CardSection,
    type CardSorted,
-   type SortedCategories,
+   type SortedCategory,
    type SortDirection,
    type SortOptions };

@@ -38,17 +38,17 @@ export abstract class ExportCollection
                meta: collection.meta
             });
 
-            for (const categories of collection.values())
+            for (const category of collection.values())
             {
-               if (categories.size > 0)
+               if (category.size > 0)
                {
                   const workbook = await ExportExcel.collection({
                      collection,
-                     categories,
+                     category,
                      theme: config.theme
                   });
 
-                  const outputPath = path.resolve(collectionDirPath, `${collection.name}-${categories.name}.xlsx`);
+                  const outputPath = path.resolve(collectionDirPath, `${collection.name}-${category.name}.xlsx`);
 
                   await workbook.xlsx.writeFile(outputPath);
                }
