@@ -16,6 +16,11 @@ export abstract class AbstractCollection
    #categories: Map<string, SortedCategories>;
 
    /**
+    * Potentially contains a set of collection import file names marked for merging.
+    */
+   #mergeMark?: Set<string>
+
+   /**
     * Card / filename group associations.
     */
    readonly #groups: CardDB.File.MetadataGroups<Set<string>> = {};
@@ -64,6 +69,14 @@ export abstract class AbstractCollection
    }
 
    /**
+    * Returns any set of collection import file names marked for merging.
+    */
+   get mergeMark(): Set<string> | undefined
+   {
+      return this.#mergeMark;
+   }
+
+   /**
     * @returns Collection metadata.
     */
    get meta(): Readonly<CardDB.File.MetadataBase>
@@ -107,6 +120,8 @@ export abstract class AbstractCollection
     */
    calculateMarked(mark: Set<string>): CardSorted[]
    {
+      this.#mergeMark = new Set(mark);
+
       return this.#cards.length ? this.#calculateMarked(mark) : [];
    }
 
@@ -179,6 +194,16 @@ export abstract class AbstractCollection
    }
 
    /**
+    * Resets any cards marked for merging.
+    */
+   resetMarked()
+   {
+      this.#mergeMark = void 0;
+
+      for (const card of this.#cards) { card.mark = void 0; }
+   }
+
+   /**
     * Implement this method to forward on the sort options to the collection categories.
     *
     * @param options - Sort options.
@@ -219,6 +244,9 @@ export abstract class AbstractCollection
 
       for (const card of this.#cards)
       {
+         // Remove any previous mark.
+         delete card.mark;
+
          // Skip proxy cards.
          if (this.isCardGroup(card, 'proxy')) { continue; }
 

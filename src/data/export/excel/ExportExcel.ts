@@ -18,6 +18,8 @@ import type {
  */
 export abstract class ExportExcel
 {
+   private constructor() {}
+
    /**
     * @param options - Options.
     *
@@ -29,18 +31,17 @@ export abstract class ExportExcel
     *
     * @param options.theme - Theme name.
     *
-    * @param [options.mergeMark] - An optional Set of CSV file names in the conversion process to mark / highlight for
-    *        merging.
-    *
     * @returns An Excel workbook.
     */
-   static async collection({ collection, categories, sortByType, theme, mergeMark }:
-    { collection: AbstractCollection, categories: SortedCategories, sortByType: boolean, theme: 'dark' | 'light',
-     mergeMark: Set<string> }): Promise<Excel.Workbook>
+   static async collection({ collection, categories, sortByType, theme }:
+    { collection: AbstractCollection, categories: SortedCategories, sortByType: boolean, theme: 'dark' | 'light' }):
+     Promise<Excel.Workbook>
    {
       const wb = new Excel.Workbook();
 
       const themeData = Theme.get(theme);
+
+      const mergeMark = collection.mergeMark;
 
       for (const category of categories.values())
       {

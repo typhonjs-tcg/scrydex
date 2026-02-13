@@ -46,8 +46,7 @@ export abstract class ExportCollection
                      collection,
                      categories,
                      sortByType: config.sortByType,
-                     theme: config.theme,
-                     mergeMark: config.mark
+                     theme: config.theme
                   });
 
                   const outputPath = path.resolve(collectionDirPath, `${collection.name}-${categories.name}.xlsx`);
