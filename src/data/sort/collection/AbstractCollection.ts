@@ -2,8 +2,8 @@ import { CardDB }          from '#scrydex/data/db';
 import { capitalizeStr }   from '#scrydex/util';
 
 import type {
+   CardCategory,
    CardSorted,
-   SortedCategory,
    SortOptions }           from '../types-sort';
 
 /**
@@ -13,7 +13,7 @@ export abstract class AbstractCollection
 {
    readonly #cards: CardSorted[];
 
-   #categories: Map<string, SortedCategory>;
+   #categories: Map<string, CardCategory>;
 
    /**
     * Potentially contains a set of collection import file names marked for merging.
@@ -35,7 +35,7 @@ export abstract class AbstractCollection
     */
    readonly #meta: CardDB.File.MetadataBase;
 
-   constructor({ cards, categories, dirpath, meta }: { cards: CardSorted[], categories: Map<string, SortedCategory>,
+   constructor({ cards, categories, dirpath, meta }: { cards: CardSorted[], categories: Map<string, CardCategory>,
     dirpath: string, meta?: CardDB.File.MetadataCommon })
    {
       this.#cards = cards;
@@ -157,7 +157,7 @@ export abstract class AbstractCollection
    /**
     * @returns Entry iterator of sorted categories in collection.
     */
-   entries(): MapIterator<[string, SortedCategory]>
+   entries(): MapIterator<[string, CardCategory]>
    {
       return this.#categories.entries();
    }
@@ -167,7 +167,7 @@ export abstract class AbstractCollection
     *
     * @param key - SortedCategory key / name.
     */
-   get(key: string): SortedCategory | undefined
+   get(key: string): CardCategory | undefined
    {
       return this.#categories.get(key);
    }
@@ -235,7 +235,7 @@ export abstract class AbstractCollection
    /**
     * @returns Iterator of category groups.
     */
-   values(): MapIterator<SortedCategory>
+   values(): MapIterator<CardCategory>
    {
       return this.#categories.values();
    }

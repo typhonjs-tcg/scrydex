@@ -6,7 +6,7 @@ import type { CardDB }        from '#scrydex/data/db';
 
 import type {
    CardSorted,
-   SortedCategory,
+   CardCategory,
    SortOptions }              from '../types-sort';
 
 /**
@@ -26,7 +26,7 @@ export class BasicCollection extends AbstractCollection
     * @param [options.meta] - CardDB metadata from source of cards.
     */
    constructor({ cards, dirpath, sortByKind, meta }:
-    { cards: CardSorted[], dirpath: string, name: string, sortByKind?: boolean, meta?: CardDB.File.MetadataCommon })
+    { cards: CardSorted[], dirpath: string, sortByKind?: boolean, meta?: CardDB.File.MetadataCommon })
    {
       super({
          cards,
@@ -68,11 +68,11 @@ export class BasicCollection extends AbstractCollection
     * @param sortByKind -
     */
    static #createCategories(cards: CardSorted[], sortByKind?: boolean):
-    Map<string, SortedCategory>
+    Map<string, CardCategory>
    {
-      if (cards.length === 0) { return new Map<string, SortedCategory>(); }
+      if (cards.length === 0) { return new Map<string, CardCategory>(); }
 
-      const categories = new Map<string, SortedCategory>();
+      const categories = new Map<string, CardCategory>();
 
       const category = sortByKind ? new SortedKind({ name: 'all' }) : new BasicCategory({ name: 'all' });
 

@@ -3,14 +3,14 @@ import { BasicSection }    from './section';
 import { SortCards }       from '../../util/SortCards';
 
 import type {
+   CardCategory,
    CardSection,
-   CardSorted,
-   SortedCategory }        from '../../types-sort';
+   CardSorted }            from '../../types-sort';
 
 /**
- * Provides a {@link SortedCategory} implementation that groups cards into WUBRG+ sub-categories.
+ * Provides a {@link CardCategory} implementation that groups cards into WUBRG+ sub-categories.
  */
-export class BasicCategory implements SortedCategory
+export class BasicCategory implements CardCategory
 {
    /**
     */
