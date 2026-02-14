@@ -544,7 +544,7 @@ declare namespace File
 /**
  * Provides the configuration object for {@link CardFilter.filter}.
  */
-interface CardFilter
+interface CardFilterOptions
 {
    /**
     * Independent card properties to filter.
@@ -669,7 +669,7 @@ interface Save
 declare namespace Options
 {
    export {
-      CardFilter,
+      CardFilterOptions as CardFilter,
       Save };
 }
 
@@ -709,7 +709,7 @@ interface StreamOptions
    /**
     * Optional card-level filtering configuration.
     */
-   filter?: CardFilter;
+   filter?: Options.CardFilter;
 
    /**
     * Optional predicate applied to each card in the stream.
