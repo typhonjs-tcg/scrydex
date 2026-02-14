@@ -36,7 +36,7 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
 
       logger?.info(`Export output target file: ${config.output}`);
 
-      return exportDB({ config, db });
+      return exportDBCsv({ config, db });
    }
    else if (isDirectory(config.path))
    {
@@ -44,7 +44,7 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
 
       if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
-      return exportDir({ config, exportFn: exportDB, extension: 'csv' });
+      return exportDir({ config, exportFn: exportDBCsv, extension: 'csv' });
    }
 }
 
@@ -61,7 +61,7 @@ export async function exportCsv(config: ConfigCmd.Export): Promise<void>
  *
  * @param [options.output] - Output path override.
  */
-async function exportDB({ config, db, output }:
+async function exportDBCsv({ config, db, output }:
  { config: ConfigCmd.Export, db: CardDB.Stream.Reader, output?: string }): Promise<void>
 {
    const outputActual = output ?? config.output;

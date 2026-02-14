@@ -32,7 +32,7 @@ export async function exportTxt(config: ConfigCmd.Export): Promise<void>
 
       logger?.info(`Export output target file: ${config.output}`);
 
-      return exportDB({ config, db });
+      return exportDBTxt({ config, db });
    }
    else if (isDirectory(config.path))
    {
@@ -40,7 +40,7 @@ export async function exportTxt(config: ConfigCmd.Export): Promise<void>
 
       if (config.coalesce) { logger?.verbose(`Coalescing unique card printings.`); }
 
-      return exportDir({ config, exportFn: exportDB, extension: 'txt' });
+      return exportDir({ config, exportFn: exportDBTxt, extension: 'txt' });
    }
 }
 
@@ -57,7 +57,7 @@ export async function exportTxt(config: ConfigCmd.Export): Promise<void>
  *
  * @param [options.output] - Output path override.
  */
-async function exportDB({ config, db, output }:
+async function exportDBTxt({ config, db, output }:
  { config: ConfigCmd.Export, db: CardDB.Stream.Reader, output?: string }): Promise<void>
 {
    const outputActual = output ?? config.output;
