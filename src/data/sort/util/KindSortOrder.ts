@@ -2,12 +2,12 @@ import { CardDB }             from '#scrydex/data/db';
 
 import type { ScryfallData }  from '#scrydex/data/scryfall';
 
-import type { CardSorted }    from './types-sort';
+import type { CardSorted }    from '../types-sort';
 
 /**
  * Provides card data related to sort order for rarity and card category.
  */
-export abstract class SortOrder
+export abstract class KindSortOrder
 {
    static #regexArtifact = /\bartifact\b/i;
    static #regexLand = /\bland\b/i

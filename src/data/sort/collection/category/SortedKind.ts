@@ -1,12 +1,12 @@
-import { SortedSection }   from './SortedSection';
+import { BasicSection }    from './section';
 
-import { SortCards }       from '../SortCards';
-import { SortOrder }       from '../SortOrder';
+import { SortCards }       from '../../util/SortCards';
+import { KindSortOrder }   from '../../util/KindSortOrder';
 
 import type {
    CardSection,
    CardSorted,
-   SortedCategory }        from '../types-sort';
+   SortedCategory }        from '../../types-sort';
 
 /**
  * Provides a {@link SortedCategory} implementation that groups cards into WUBRG+ sub-categories.
@@ -31,29 +31,29 @@ export class SortedKind implements SortedCategory
 
       this.#categories = new Map<string, CardSection>();
 
-      this.#categories.set('W', new SortedSection({ nameFull: 'White', nameShort: 'W' }));
+      this.#categories.set('W', new BasicSection({ nameFull: 'White', nameShort: 'W' }));
 
-      this.#categories.set('U', new SortedSection({ nameFull: 'Blue', nameShort: 'U' }));
+      this.#categories.set('U', new BasicSection({ nameFull: 'Blue', nameShort: 'U' }));
 
-      this.#categories.set('B', new SortedSection({ nameFull: 'Black', nameShort: 'B' }));
+      this.#categories.set('B', new BasicSection({ nameFull: 'Black', nameShort: 'B' }));
 
-      this.#categories.set('R', new SortedSection({ nameFull: 'Red', nameShort: 'R' }));
+      this.#categories.set('R', new BasicSection({ nameFull: 'Red', nameShort: 'R' }));
 
-      this.#categories.set('G', new SortedSection({ nameFull: 'Green', nameShort: 'G' }));
+      this.#categories.set('G', new BasicSection({ nameFull: 'Green', nameShort: 'G' }));
 
-      this.#categories.set('Multicolor', new SortedSection({ nameFull: 'Multicolor', nameShort: 'Multicolor' }));
+      this.#categories.set('Multicolor', new BasicSection({ nameFull: 'Multicolor', nameShort: 'Multicolor' }));
 
       this.#categories.set('Artifact (Colorless)',
-       new SortedSection({ nameFull: 'Artifact (Colorless)', nameShort: 'Artifact (Colorless)' }));
+       new BasicSection({ nameFull: 'Artifact (Colorless)', nameShort: 'Artifact (Colorless)' }));
 
       this.#categories.set('Non-artifact (Colorless)',
-       new SortedSection({ nameFull: 'Non-artifact (Colorless)', nameShort: 'Non-artifact (Colorless)' }));
+       new BasicSection({ nameFull: 'Non-artifact (Colorless)', nameShort: 'Non-artifact (Colorless)' }));
 
-      this.#categories.set('Land', new SortedSection({ nameFull: 'Land', nameShort: 'Land' }));
+      this.#categories.set('Land', new BasicSection({ nameFull: 'Land', nameShort: 'Land' }));
 
-      this.#categories.set('Land (Basic)', new SortedSection({ nameFull: 'Land (Basic)', nameShort: 'Land (Basic)' }));
+      this.#categories.set('Land (Basic)', new BasicSection({ nameFull: 'Land (Basic)', nameShort: 'Land (Basic)' }));
 
-      this.#categories.set('Unsorted', new SortedSection({ nameFull: 'Unsorted', nameShort: 'Unsorted' }));
+      this.#categories.set('Unsorted', new BasicSection({ nameFull: 'Unsorted', nameShort: 'Unsorted' }));
    }
 
    /**
@@ -81,7 +81,7 @@ export class SortedKind implements SortedCategory
     */
    add(card: CardSorted)
    {
-      const categoryName = SortOrder.categoryName(card);
+      const categoryName = KindSortOrder.categoryName(card);
       const category = this.#categories.get(categoryName)
 
       if (category)

@@ -1,11 +1,11 @@
-import { SortedSection }   from './SortedSection';
+import { BasicSection }    from './section';
 
-import { SortCards }       from '../SortCards';
+import { SortCards }       from '../../util/SortCards';
 
 import type {
    CardSection,
    CardSorted,
-   SortedCategory }        from '../types-sort';
+   SortedCategory }        from '../../types-sort';
 
 /**
  * Provides a {@link SortedCategory} implementation that groups cards into WUBRG+ sub-categories.
@@ -30,7 +30,7 @@ export class BasicCategory implements SortedCategory
 
       this.#categories = new Map<string, CardSection>();
 
-      this.#categories.set('All', new SortedSection({ nameFull: 'All', nameShort: 'All' }));
+      this.#categories.set('All', new BasicSection({ nameFull: 'All', nameShort: 'All' }));
    }
 
    /**

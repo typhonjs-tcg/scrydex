@@ -3,7 +3,7 @@ import { isFiniteNumber }     from '#scrydex/util';
 
 import type { CardDB }        from '#scrydex/data/db';
 
-import type { SortDirection } from './types-sort';
+import type { SortDirection } from '../types-sort';
 
 /**
  * Provides various sorting and partitioning of lists of {@link CardDB.Data.Card} instances.

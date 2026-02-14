@@ -4,7 +4,7 @@ import { capitalizeStr }   from '#scrydex/util';
 import type {
    CardSorted,
    SortedCategory,
-   SortOptions }           from './types-sort';
+   SortOptions }           from '../types-sort';
 
 /**
  * Base class for a sorted collection of cards by categories.
@@ -31,23 +31,23 @@ export abstract class AbstractCollection
    readonly #dirpath: string;
 
    /**
-    * CardDB metadata.
+    * CardDB common metadata.
     */
    readonly #meta: CardDB.File.MetadataBase;
 
-   constructor({ cards, categories, dirpath, meta }:
-    { cards: CardSorted[], categories: Map<string, SortedCategory>, dirpath: string, meta: CardDB.File.MetadataBase })
+   constructor({ cards, categories, dirpath, meta }: { cards: CardSorted[], categories: Map<string, SortedCategory>,
+    dirpath: string, meta?: CardDB.File.MetadataCommon })
    {
       this.#cards = cards;
       this.#categories = categories;
       this.#dirpath = dirpath;
-      this.#meta = meta;
+      this.#meta = Object.freeze(meta ? { type: 'sorted', ...meta } : { type: 'sorted', name: 'Unknown', groups: {} });
 
-      for (const group in meta.groups)
+      for (const group in this.#meta.groups)
       {
-         if (CardDB.isGroupKind(group) && Array.isArray(meta.groups[group]))
+         if (CardDB.isGroupKind(group) && Array.isArray(this.#meta.groups[group]))
          {
-            this.#groups[group] = new Set(meta.groups[group]);
+            this.#groups[group] = new Set(this.#meta.groups[group]);
          }
       }
    }

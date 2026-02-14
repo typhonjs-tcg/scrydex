@@ -1,8 +1,8 @@
 import { ScryfallData }       from '#scrydex/data/scryfall';
 
-import { AbstractCollection } from '../AbstractCollection';
-import { SortedKind }         from '../category/SortedKind';
-import { SortOrder }          from '../SortOrder';
+import { AbstractCollection } from './AbstractCollection';
+import { SortedKind }         from './category/SortedKind';
+import { KindSortOrder }      from '../util/KindSortOrder';
 
 import type { CardDB }        from '#scrydex/data/db';
 
@@ -102,7 +102,7 @@ export class SortedFormat extends AbstractCollection
       {
          // For just the `oldschool` & `premodern` formats use original rarity otherwise for all other formats use
          // recent rarity. Fallback if necessary to the actual card rarity.
-         const rarity = SortOrder.rarity(card, format);
+         const rarity = KindSortOrder.rarity(card, format);
 
          let categoryRarity = sortedCategories.has(rarity) ? sortedCategories.get(rarity) : void 0;
          if (!categoryRarity)

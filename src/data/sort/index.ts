@@ -1,7 +1,4 @@
-export * from './category';
-export * from './format';
-export * from './AbstractCollection';
-export * from './SortCards';
-export * from './SortOrder';
+export * from './collection';
+export * from './util';
 
 export * from './types-sort';

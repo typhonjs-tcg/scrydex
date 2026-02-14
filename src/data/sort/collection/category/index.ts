@@ -1,3 +1,4 @@
+export * from './section';
+
 export * from './BasicCategory';
-export * from './SortedSection';
 export * from './SortedKind';

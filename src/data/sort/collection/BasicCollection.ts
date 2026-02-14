@@ -1,6 +1,6 @@
-import { AbstractCollection } from '../AbstractCollection';
-import { SortedKind }         from '../category/SortedKind';
-import { BasicCategory }      from '../category/BasicCategory';
+import { AbstractCollection } from './AbstractCollection';
+import { SortedKind }         from './category';
+import { BasicCategory }      from './category';
 
 import type { CardDB }        from '#scrydex/data/db';
 
@@ -23,19 +23,16 @@ export class BasicCollection extends AbstractCollection
     *
     * @param options.dirpath - The subdirectory for this collection.
     *
-    * @param options.name - Name of this collection.
-    *
-    * @param options.sourceMeta - CardDB metadata from source of cards.
+    * @param [options.meta] - CardDB metadata from source of cards.
     */
-   constructor({ cards, dirpath, name, sourceMeta, sortByKind }:
-    { cards: CardSorted[], dirpath: string, name: string, sourceMeta: CardDB.File.MetadataBase,
-     sortByKind?: boolean })
+   constructor({ cards, dirpath, sortByKind, meta }:
+    { cards: CardSorted[], dirpath: string, name: string, sortByKind?: boolean, meta?: CardDB.File.MetadataCommon })
    {
       super({
          cards,
          categories: BasicCollection.#createCategories(cards, sortByKind),
          dirpath,
-         meta: Object.freeze({ name, type: 'sorted', groups: sourceMeta.groups }),
+         meta,
       });
    }
 
