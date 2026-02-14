@@ -402,6 +402,18 @@ declare namespace Data
 type DBType = 'inventory' | 'sorted' | 'sorted_format';
 
 /**
+ * CardDB metadata that is common across all DBs.
+ */
+interface MetadataCommon
+{
+   /** Name of CardDB */
+   name: string;
+
+   /** Card / filename group associations. */
+   groups: MetadataGroups;
+}
+
+/**
  * CardDB metadata that is generated on creation.
  */
 interface MetadataGenerated
@@ -417,18 +429,6 @@ interface MetadataGenerated
 
    /** CardDB schema version. */
    schemaVersion: string;
-}
-
-/**
- * CardDB metadata that is common across all DBs.
- */
-interface MetadataCommon extends MetadataGenerated
-{
-   /** Name of CardDB */
-   name: string;
-
-   /** Card / filename group associations. */
-   groups: MetadataGroups;
 }
 
 /**
@@ -459,7 +459,7 @@ interface MetadataGroups<T = string[]>
 /**
  * CardDB metadata for a sorted game format.
  */
-interface MetadataSortedFormat extends MetadataCommon
+interface MetadataSortedFormat extends MetadataCommon, MetadataGenerated
 {
    /** Type of CardDB. */
    type: 'sorted_format';
@@ -471,7 +471,7 @@ interface MetadataSortedFormat extends MetadataCommon
 /**
  * CardDB metadata for a sorted collection of cards not associated with a game format.
  */
-interface MetadataSorted extends MetadataCommon
+interface MetadataSorted extends MetadataCommon, MetadataGenerated
 {
    /** Type of CardDB. */
    type: 'sorted';
@@ -480,7 +480,7 @@ interface MetadataSorted extends MetadataCommon
 /**
  * CardDB metadata for an `inventory` of cards after initial conversion.
  */
-interface MetadataInventory extends MetadataCommon
+interface MetadataInventory extends MetadataCommon, MetadataGenerated
 {
    /** Type of CardDB. */
    type: 'inventory';
