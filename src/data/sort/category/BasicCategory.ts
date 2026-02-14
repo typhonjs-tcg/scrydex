@@ -1,7 +1,6 @@
 import { SortedSection }   from './SortedSection';
 
 import { SortCards }       from '../SortCards';
-import { SortOrder }       from '../SortOrder';
 
 import type {
    CardSection,
@@ -11,7 +10,7 @@ import type {
 /**
  * Provides a {@link SortedCategory} implementation that groups cards into WUBRG+ sub-categories.
  */
-export class SortedKind implements SortedCategory
+export class BasicCategory implements SortedCategory
 {
    /**
     */
@@ -31,29 +30,7 @@ export class SortedKind implements SortedCategory
 
       this.#categories = new Map<string, CardSection>();
 
-      this.#categories.set('W', new SortedSection({ nameFull: 'White', nameShort: 'W' }));
-
-      this.#categories.set('U', new SortedSection({ nameFull: 'Blue', nameShort: 'U' }));
-
-      this.#categories.set('B', new SortedSection({ nameFull: 'Black', nameShort: 'B' }));
-
-      this.#categories.set('R', new SortedSection({ nameFull: 'Red', nameShort: 'R' }));
-
-      this.#categories.set('G', new SortedSection({ nameFull: 'Green', nameShort: 'G' }));
-
-      this.#categories.set('Multicolor', new SortedSection({ nameFull: 'Multicolor', nameShort: 'Multicolor' }));
-
-      this.#categories.set('Artifact (Colorless)',
-       new SortedSection({ nameFull: 'Artifact (Colorless)', nameShort: 'Artifact (Colorless)' }));
-
-      this.#categories.set('Non-artifact (Colorless)',
-       new SortedSection({ nameFull: 'Non-artifact (Colorless)', nameShort: 'Non-artifact (Colorless)' }));
-
-      this.#categories.set('Land', new SortedSection({ nameFull: 'Land', nameShort: 'Land' }));
-
-      this.#categories.set('Land (Basic)', new SortedSection({ nameFull: 'Land (Basic)', nameShort: 'Land (Basic)' }));
-
-      this.#categories.set('Unsorted', new SortedSection({ nameFull: 'Unsorted', nameShort: 'Unsorted' }));
+      this.#categories.set('All', new SortedSection({ nameFull: 'All', nameShort: 'All' }));
    }
 
    /**
@@ -81,16 +58,11 @@ export class SortedKind implements SortedCategory
     */
    add(card: CardSorted)
    {
-      const categoryName = SortOrder.categoryName(card);
-      const category = this.#categories.get(categoryName)
+      const category = this.#categories.get('All')
 
       if (category)
       {
          category.cards.push(card);
-      }
-      else
-      {
-         throw new Error(`SortedColor.add warning: Unknown category name '${categoryName}'.`);
       }
    }
 

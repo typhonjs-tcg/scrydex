@@ -1,6 +1,7 @@
 import Excel               from 'exceljs';
 
 import { CardDB }          from '#scrydex/data/db';
+import { BasicCollection } from '#scrydex/data/sort/basic';
 import { capitalizeStr }   from '#scrydex/util';
 
 import { Notes }           from './Notes';
@@ -12,7 +13,6 @@ import type {
 import type {
    AbstractCollection,
    SortedCategory }      from '#scrydex/data/sort';
-import path from "node:path";
 
 /**
  * Provides Excel / spreadsheet exports of {@link AbstractCollection} card collections.
@@ -20,6 +20,39 @@ import path from "node:path";
 export abstract class ExportExcel
 {
    private constructor() {}
+
+   static async cardDB({ db, theme, sortByKind, sortByType, rarity }: { db: CardDB.Stream.Reader,
+    theme: 'dark' | 'light', rarity?: boolean, sortByKind?: boolean, sortByType?: boolean }):
+     Promise<Excel.Workbook | undefined>
+   {
+      return ExportExcel.cards({
+         cards: db.getAll(),
+         meta: db.meta,
+         theme,
+         rarity,
+         sortByKind,
+         sortByType
+      })
+   }
+
+   static async cards({ cards, meta, theme, name, sortByKind, sortByType, rarity }: { cards: CardDB.Data.Card[],
+    meta: CardDB.File.MetadataBase, theme: 'dark' | 'light', name?: string, rarity?: boolean, sortByKind?: boolean,
+     sortByType?: boolean }): Promise<Excel.Workbook | undefined>
+   {
+      const collection = new BasicCollection({
+         cards,
+         dirpath: '',
+         name: name ? name : 'Cards',
+         sourceMeta: meta,
+         sortByKind
+      });
+
+      collection.sort({ alpha: true, type: sortByType });
+
+      const category = collection.get('all');
+
+      return category ? ExportExcel.collectionCategory({ collection, category, theme }) : void 0;
+   }
 
    /**
     * Creates Excel / spreadsheet workbooks for all categories in a collection.
