@@ -142,11 +142,11 @@ function createSortedFormat(config: ConfigCmd.SortFormat, options:
 
    const sortedFormat = new SortedFormat(options);
 
-   sortedFormat.sort({ alpha: true, type: config.sortByType });
+   sortedFormat.sort({ alpha: true, type: config.sort?.byType });
 
    logger?.verbose(`Sorting '${options.name}' - unique card entry count: ${options.cards.length}`);
 
-   if (config.mark.size)
+   if (config?.mark?.size)
    {
       const cardsMarked = sortedFormat.calculateMarked(config.mark);
       if (cardsMarked.length)
