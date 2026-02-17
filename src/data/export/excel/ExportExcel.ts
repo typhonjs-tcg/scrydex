@@ -111,6 +111,7 @@ abstract class ExportExcel
       const themeData = Themes.get(theme ?? 'light');
 
       // Selective control over some columns.
+      const colFilename = typeof columns?.filename === 'boolean' ? columns?.filename : true;
       const colPrice = typeof columns?.price === 'boolean' ? columns?.price : true;
       const colRarity = typeof columns?.rarity === 'boolean' ? columns?.rarity : false;
 
@@ -140,6 +141,12 @@ abstract class ExportExcel
             { header: 'Price USD', key: 'Price USD', width: 12, alignment: { horizontal: 'center' } },
             { header: 'Scryfall Link', key: 'Scryfall Link', width: 20, alignment: { horizontal: 'center' } }
          ];
+
+         // Potentially remove filename column.
+         if (!colFilename)
+         {
+            colData.splice(colData.findIndex((entry) => entry.key === 'Filename'), 1);
+         }
 
          // Potentially remove price column.
          if (!colPrice)
@@ -185,7 +192,6 @@ abstract class ExportExcel
             const rowData: Record<string, string | number> = {
                Name: CardDB.PrintCardFields.name(card),
                Quantity: Number(card.quantity),
-               Filename: card.filename,
                Type: card.norm_type,
                'Type Line': card.type_line,
                Set: card.set,
@@ -198,6 +204,7 @@ abstract class ExportExcel
                'Scryfall Link': card.scryfall_uri
             };
 
+            if (colFilename) { rowData['Filename'] = card.filename ?? ''; }
             if (colPrice) { rowData['Price USD'] = card.price ?? ''; }
             if (colRarity) { rowData['Rarity'] = card.rarity; }
 

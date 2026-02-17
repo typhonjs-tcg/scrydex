@@ -4,6 +4,13 @@
 interface Columns
 {
    /**
+    * Include originating import file name for card.
+    *
+    * @defaultValue `true`
+    */
+   filename?: boolean;
+
+   /**
     * Include card price.
     *
     * @defaultValue `true`
