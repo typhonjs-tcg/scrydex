@@ -2,7 +2,7 @@ import type { Borders, Fill, Font } from 'exceljs';
 
 import type { CardDB }              from '#scrydex/data/db';
 
-export class Theme
+export class Themes
 {
    /**
     * @param theme - Theme name.

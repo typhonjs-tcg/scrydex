@@ -1,57 +1,59 @@
 import Excel               from 'exceljs';
 
 import { CardDB }          from '#scrydex/data/db';
-import { BasicCollection } from '#scrydex/data/sort/basic';
+import { BasicCollection } from '#scrydex/data/sort';
 import { capitalizeStr }   from '#scrydex/util';
 
 import { Notes }           from './Notes';
-import { Theme }           from './Theme';
+import { Themes }          from './Themes';
 
 import type {
    Worksheet }             from 'exceljs';
 
 import type {
    AbstractCollection,
-   SortedCategory }      from '#scrydex/data/sort';
+   CardCategory }          from '#scrydex/data/sort';
+
+import type {
+   Columns,
+   Sort,
+   Theme }                 from './types-excel';
 
 /**
  * Provides Excel / spreadsheet exports of {@link AbstractCollection} card collections.
  */
-export abstract class ExportExcel
+abstract class ExportExcel
 {
    private constructor() {}
 
-   static async cardDB({ db, theme, sortByKind, sortByType, rarity }: { db: CardDB.Stream.Reader,
-    theme: 'dark' | 'light', rarity?: boolean, sortByKind?: boolean, sortByType?: boolean }):
+   static async cardDB({ db, theme, columns, sort }: { db: CardDB.Stream.Reader,
+    theme?: 'dark' | 'light', columns?: ExportExcel.Options.Columns, sort?: ExportExcel.Options.Sort }):
      Promise<Excel.Workbook | undefined>
    {
       return ExportExcel.cards({
          cards: db.getAll(),
          meta: db.meta,
          theme,
-         rarity,
-         sortByKind,
-         sortByType
+         columns,
+         sort
       })
    }
 
-   static async cards({ cards, meta, theme, name, sortByKind, sortByType, rarity }: { cards: CardDB.Data.Card[],
-    meta: CardDB.File.MetadataBase, theme: 'dark' | 'light', name?: string, rarity?: boolean, sortByKind?: boolean,
-     sortByType?: boolean }): Promise<Excel.Workbook | undefined>
+   static async cards({ cards, theme, columns, sort, meta }: { cards: CardDB.Data.Card[],
+    theme?: 'dark' | 'light', columns?: ExportExcel.Options.Columns, sort?: ExportExcel.Options.Sort,
+     meta: CardDB.File.MetadataCommon }): Promise<Excel.Workbook | undefined>
    {
       const collection = new BasicCollection({
          cards,
-         dirpath: '',
-         name: name ? name : 'Cards',
-         sourceMeta: meta,
-         sortByKind
+         meta,
+         sortByKind: sort?.byKind
       });
 
-      collection.sort({ alpha: true, type: sortByType });
+      collection.sort({ alpha: true, type: sort?.byType });
 
       const category = collection.get('all');
 
-      return category ? ExportExcel.collectionCategory({ collection, category, theme }) : void 0;
+      return category ? ExportExcel.collectionCategory({ collection, category, columns, theme }) : void 0;
    }
 
    /**
@@ -65,8 +67,8 @@ export abstract class ExportExcel
     *
     * @returns Excel workbooks for each non-empty category indexed by category name.
     */
-   static async collection({ collection, theme }: { collection: AbstractCollection, theme: 'dark' | 'light' }):
-    Promise<Map<string, Excel.Workbook>>
+   static async collection({ collection, columns, theme }: { collection: AbstractCollection,
+    columns?: ExportExcel.Options.Columns, theme?: 'dark' | 'light' }): Promise<Map<string, Excel.Workbook>>
    {
       const result: Map<string, Excel.Workbook> = new Map();
 
@@ -77,6 +79,7 @@ export abstract class ExportExcel
             const workbook = await ExportExcel.collectionCategory({
                collection,
                category,
+               columns,
                theme
             });
 
@@ -100,13 +103,16 @@ export abstract class ExportExcel
     *
     * @returns An Excel workbook.
     */
-   static async collectionCategory({ collection, category, theme }:
-    { collection: AbstractCollection, category: SortedCategory, theme: 'dark' | 'light' }):
-     Promise<Excel.Workbook>
+   static async collectionCategory({ collection, category, columns, theme }: { collection: AbstractCollection,
+    category: CardCategory, columns?: ExportExcel.Options.Columns, theme?: 'dark' | 'light' }): Promise<Excel.Workbook>
    {
       const wb = new Excel.Workbook();
 
-      const themeData = Theme.get(theme);
+      const themeData = Themes.get(theme ?? 'light');
+
+      // Selective control over some columns.
+      const colPrice = typeof columns?.price === 'boolean' ? columns?.price : true;
+      const colRarity = typeof columns?.rarity === 'boolean' ? columns?.rarity : false;
 
       const mergeMark = collection.mergeMark;
       const sortByType = collection.getSortOptions()?.type;
@@ -118,7 +124,7 @@ export abstract class ExportExcel
          const ws = wb.addWorksheet(section.nameShort);
 
          // Column definitions + alignment rules.
-         ws.columns = [
+         const colData: Partial<Excel.Column>[] = [
             { header: 'Name', key: 'Name', width: 32, alignment: { horizontal: 'left' } },
             { header: 'Quantity', key: 'Quantity', width: 8, alignment: { horizontal: 'center' } },
             { header: 'Filename', key: 'Filename', width: 28, alignment: { horizontal: 'center' } },
@@ -134,6 +140,22 @@ export abstract class ExportExcel
             { header: 'Price USD', key: 'Price USD', width: 12, alignment: { horizontal: 'center' } },
             { header: 'Scryfall Link', key: 'Scryfall Link', width: 20, alignment: { horizontal: 'center' } }
          ];
+
+         // Potentially remove price column.
+         if (!colPrice)
+         {
+            colData.splice(colData.findIndex((entry) => entry.key === 'Price USD'), 1);
+         }
+
+         // Potentially add `rarity` column.
+         if (colRarity)
+         {
+            colData.splice(colData.findIndex((entry) => entry.key === 'Set'), 0, {
+               header: 'Rarity', key: 'Rarity', width: 8, alignment: { horizontal: 'center' }
+            });
+         }
+
+         ws.columns = colData;
 
          // Splice top row / sheet title -----------------------------------------------------------------------------
 
@@ -160,7 +182,7 @@ export abstract class ExportExcel
          {
             const cardManaCost = CardDB.CardFields.manaCost(card);
 
-            const row = ws.addRow({
+            const rowData: Record<string, string | number> = {
                Name: CardDB.PrintCardFields.name(card),
                Quantity: Number(card.quantity),
                Filename: card.filename,
@@ -173,9 +195,13 @@ export abstract class ExportExcel
                CMC: card.cmc,
                Colors: CardDB.PrintCardFields.colors(card),
                'Color Identity': card.color_identity?.join(', ') ?? '',
-               'Price USD': card.price ?? '',
                'Scryfall Link': card.scryfall_uri
-            });
+            };
+
+            if (colPrice) { rowData['Price USD'] = card.price ?? ''; }
+            if (colRarity) { rowData['Rarity'] = card.rarity; }
+
+            const row = ws.addRow(rowData);
 
             row.fill = themeData.row.fill.default;
 
@@ -354,3 +380,23 @@ export abstract class ExportExcel
       }
    }
 }
+
+/**
+ * Defines the options for {@link ExportExcel}.
+ */
+declare namespace ExportExcel
+{
+   /**
+    * Defines the options for {@link ExportExcel}.
+    */
+   export namespace Options
+   {
+      export {
+         Columns,
+         Sort,
+         Theme
+      }
+   }
+}
+
+export { ExportExcel }
