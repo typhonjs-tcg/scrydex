@@ -1,7 +1,7 @@
 import { isFile }             from '@typhonjs-utils/file-util';
 
 import { CardDB }             from '#scrydex/data/db';
-import { SortOrder }          from '#scrydex/data/sort';
+import { KindSortOrder }      from '#scrydex/data/sort';
 
 import type { BasicLogger }   from "@typhonjs-utils/logger-color";
 
@@ -83,7 +83,7 @@ export async function find(config: { path: string, filter: CardDB.Options.CardFi
          const isProxy = collection.isCardGroup(card, 'proxy') ? `; (Is Proxy)` : ''
 
          logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
-          SortOrder.rarity(card, gameFormat)}; Category: ${SortOrder.categoryName(card)}${isInDeck}${isInExternal}${
+          KindSortOrder.rarity(card, gameFormat)}; Category: ${KindSortOrder.categoryName(card)}${isInDeck}${isInExternal}${
            isProxy}`);
       }
    }

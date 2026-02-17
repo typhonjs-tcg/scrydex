@@ -9,9 +9,9 @@ import { ScryfallData }             from '#scrydex/data/scryfall';
 import { ExportCollection }         from '../ExportCollection';
 
 import {
+   KindSortOrder,
    SortCards,
-   SortedFormat,
-   SortOrder }                      from '#scrydex/data/sort';
+   SortedFormat }                   from '#scrydex/data/sort';
 
 import type { ConfigCmd }           from '../../types-command';
 
@@ -152,7 +152,7 @@ function createSortedFormat(config: ConfigCmd.SortFormat, options:
       if (cardsMarked.length)
       {
          const markedRarity: Set<string> = new Set<string>();
-         for (const card of cardsMarked) { markedRarity.add(SortOrder.rarity(card, options.format)); }
+         for (const card of cardsMarked) { markedRarity.add(KindSortOrder.rarity(card, options.format)); }
 
          logger?.verbose(`  - ${cardsMarked.length} card entries marked for merging in: ${
           [...markedRarity].sort((a, b) => a.localeCompare(b)).join(', ')}`);
