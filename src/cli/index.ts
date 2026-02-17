@@ -5,6 +5,7 @@ import {
    commandConvertCsv,
    commandDiff,
    commandExportCsv,
+   commandExportExcel,
    commandExportLLM,
    commandExportTxt,
    commandFileCompress,
@@ -54,6 +55,19 @@ program
 .example('export-csv ./collection.json --output ./collection.csv')
 .example('export-csv ./sorted-directory --output ./csv-sorted')
 .action(commandExportCsv);
+
+program
+.command('export-excel [path]', 'Export Excel')
+.describe('Exports a Scrydex CardDB file outputting an Excel spreadsheet.')
+.option('--by-kind', 'Sort cards by WUBRG+ categories.')
+.option('--by-type', 'Sorts alphabetically then by normalized type of card.')
+.option('--no-filename', 'Exclude the associated import filename column from the exported Excel spreadsheet.')
+.option('--no-price', 'Exclude the card price column from the exported Excel spreadsheet.')
+.option('--no-rarity', 'Exclude the card rarity column from the exported Excel spreadsheet.')
+.option('--output', 'Provide an output file path for generated Excel spreadsheet; the filename must end with `xlsx`.')
+.option('--theme', 'Options are `light` or `dark`; light theme is default.')
+.example('export-excel ./collection.json --output ./collection.xlsx')
+.action(commandExportExcel);
 
 program
 .command('export-llm [path]', 'Export LLM')

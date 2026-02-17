@@ -11,6 +11,7 @@ import {
    convertCsv,
    diff,
    exportCsv,
+   exportExcel,
    exportLLM,
    exportTxt,
    fileCompress,
@@ -202,6 +203,93 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
    try
    {
       await exportCsv(config);
+   }
+   catch (err: unknown)
+   {
+      if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+      let message = typeof err === 'string' ? err : 'Unknown error';
+
+      if (err instanceof Error) { message = err.message; }
+
+      exit(message);
+   }
+}
+
+/**
+ * Invokes `exportExcel` with the given config.
+ *
+ * @param path - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandExportExcel(path: string, opts: Record<string, any>): Promise<void>
+{
+   if (!isFile(path)) { exit(`'input' option path is not a file.`); }
+
+   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+
+   if (fs.existsSync(opts.output) && isDirectory(opts.output))
+   {
+      exit(`'output' option is a directory.`);
+   }
+
+   if (opts['by-kind'] !== void 0 && typeof opts['by-kind'] !== 'boolean')
+   {
+      exit(`'by-kind' option is not a boolean.`);
+   }
+
+   if (opts['by-type'] !== void 0 && typeof opts['by-type'] !== 'boolean')
+   {
+      exit(`'by-type' option is not a boolean.`);
+   }
+
+   if (opts.filename !== void 0 && typeof opts.filename !== 'boolean')
+   {
+      exit(`'no-filename' option is not a boolean.`);
+   }
+
+   if (opts.price !== void 0 && typeof opts.price !== 'boolean')
+   {
+      exit(`'no-price' option is not a boolean.`);
+   }
+
+   if (opts.rarity !== void 0 && typeof opts.rarity !== 'boolean')
+   {
+      exit(`'no-rarity' option is not a boolean.`);
+   }
+
+   if (opts.theme !== void 0)
+   {
+      if (typeof opts.theme !== 'string') { exit(`'theme' option is not defined.`); }
+
+      if (opts.theme !== 'light' && opts.theme !== 'dark') { exit(`'theme' option is invalid: '${opts.theme}'.`); }
+   }
+
+   // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   const config: ConfigCmd.ExportSpreadsheet = {
+      columns: {
+         filename: typeof opts.filename === 'boolean' ? opts.filename : true,
+         price: typeof opts.price === 'boolean' ? opts.price : true,
+         rarity: typeof opts.rarity === 'boolean' ? opts.rarity : true
+      },
+      logger,
+      output: opts.output,
+      path,
+      sort: {
+         byKind: typeof opts['by-kind'] === 'boolean' ? opts['by-kind'] : false,
+         byType: typeof opts['by-type'] === 'boolean' ? opts['by-type'] : false
+      },
+      theme: opts.theme
+   };
+
+   try
+   {
+      await exportExcel(config);
    }
    catch (err: unknown)
    {
@@ -563,7 +651,9 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       compress: opts.compress ?? false,
       output: opts.output,
       path,
-      sortByType: opts['by-type'] ?? false,
+      sort: {
+         byType: opts['by-type'] ?? false
+      },
       theme
    };
 

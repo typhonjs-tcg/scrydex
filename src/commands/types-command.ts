@@ -2,6 +2,8 @@ import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type { CardDB }        from '#scrydex/data/db';
 
+import type { ExportExcel }   from '#scrydex/data/export';
+
 interface Command
 {
    /**
@@ -84,6 +86,37 @@ interface Export extends Command
 }
 
 /**
+ * Config object for `export-excel` command.
+ */
+interface ExportSpreadsheet extends Command
+{
+   /**
+    * Controls column visibility for _some_ card properties.
+    */
+   columns?: ExportExcel.Options.Columns;
+
+   /**
+    * Output file or directory path for exported data.
+    */
+   output: string;
+
+   /**
+    * Input card JSON DB file or directory path.
+    */
+   path: string;
+
+   /**
+    * Various sort options.
+    */
+   sort?: ExportExcel.Options.Sort;
+
+   /**
+    * Theme name.
+    */
+   theme?: 'light' | 'dark';
+}
+
+/**
  * Config object for `export-llm` command.
  */
 interface ExportLLM extends Command
@@ -159,17 +192,17 @@ interface Sort extends Command
    /**
     * When true, remove existing sorted output before regenerating.
     */
-   clean: boolean;
+   clean?: boolean;
 
    /**
     * A set of CSV file names in the conversion process to mark / highlight for merging.
     */
-   mark: Set<string>;
+   mark?: Set<string>;
 
    /**
     * When true, the output sorted format CardDBs are compressed.
     */
-   compress: boolean;
+   compress?: boolean;
 
    /**
     * Output directory for spreadsheets.
@@ -182,14 +215,14 @@ interface Sort extends Command
    path: string;
 
    /**
-    * When true, sort by type of card after alpha sorting.
+    * Various sort options.
     */
-   sortByType: boolean;
+   sort?: ExportExcel.Options.Sort;
 
    /**
     * Theme name.
     */
-   theme: 'light' | 'dark';
+   theme?: 'light' | 'dark';
 }
 
 /**
@@ -219,6 +252,7 @@ declare namespace ConfigCmd
       Diff,
       Export,
       ExportLLM,
+      ExportSpreadsheet,
       FileCompress,
       Filter,
       Sort,
