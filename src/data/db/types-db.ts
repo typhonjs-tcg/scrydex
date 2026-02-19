@@ -813,7 +813,7 @@ interface Reader
     *
     * @returns All cards in the collection.
     */
-   getAll(): Data.Card[];
+   getAll(): Promise<Data.Card[]>;
 
    /**
     * Builds a quantity map for cards in this card stream.

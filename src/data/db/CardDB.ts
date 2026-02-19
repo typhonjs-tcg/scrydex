@@ -1,5 +1,6 @@
 import { once }               from 'node:events';
 import fs                     from 'node:fs';
+import { text }               from 'node:stream/consumers';
 
 import {
    getFileList,
@@ -531,15 +532,18 @@ class CardStream implements CardDB.Stream.Reader
    }
 
    /**
-    * Return synchronously all card data in the DB.
+    * Return all card data in the DB.
     *
     * Note: Individual entries are not validated for typeof `object` or the Scryfall `object: 'card'` association.
     *
     * @returns All cards in the collection.
     */
-   getAll(): CardDB.Data.Card[]
+   async getAll(): Promise<CardDB.Data.Card[]>
    {
-      const db = JSON.parse(fs.readFileSync(this.#filepath, 'utf-8')) as CardDB.File.JSON;
+      const source = createReadable({ filepath: this.#filepath });
+      const content = await text(source);
+
+      const db = JSON.parse(content) as CardDB.File.JSON;
 
       return Array.isArray(db.cards) ? db.cards : [];
    }
