@@ -31,7 +31,7 @@ abstract class ExportExcel
      Promise<Excel.Workbook | undefined>
    {
       return ExportExcel.cards({
-         cards: db.getAll(),
+         cards: await db.getAll(),
          meta: db.meta,
          theme,
          columns,
