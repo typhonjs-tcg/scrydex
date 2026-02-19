@@ -62,7 +62,8 @@
     "check": "esm-d-ts check src/cli/index.ts -t ./tsconfig.json",
     "docs": "typedoc-pkg --api-link es --link-checker",
     "test-convert": "bun ./src/cli/index.ts convert-csv ./test/fixture/data --output ./test/fixture/output/collection-small.json --db ./test/fixture/data/db-small.json --loglevel debug",
-    "test-export": "bun ./src/cli/index.ts export-csv ./test/fixture/output/collection-small.json --output ./test/fixture/output/collection-small.csv --loglevel debug",
+    "test-export-csv": "bun ./src/cli/index.ts export-csv ./test/fixture/output/collection-small.json --output ./test/fixture/output/collection-small.csv --loglevel debug",
+    "test-export-excel": "bun ./src/cli/index.ts export-excel ./test/fixture/output/collection-small.json --theme dark --by-type --no-filename --no-price --no-rarity --output ./test/fixture/output/collection-small.xlsx --loglevel debug",
     "test-file-compress": "bun ./src/cli/index.ts file-compress ./test/fixture/output/collection-small.json",
     "test-file-decompress": "bun ./src/cli/index.ts file-decompress ./test/fixture/output/collection-small.json.gz",
     "test-filter": "bun ./src/cli/index.ts filter ./test/fixture/output/collection-small.json --border black:borderless --color-identity {W}{U}{G} --formats premodern --output ./test/fixture/output/collection-small-wug.json --loglevel debug",
@@ -89,11 +90,14 @@
     "@typhonjs-build-test/rollup-plugin-pkg-imports": "^0.7.0",
     "@typhonjs-typedoc/typedoc-pkg": "^0.4.0",
     "@typhonjs-config/eslint-config": "^0.6.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
     "bun": "^1.3.0",
     "eslint": "^8.57.0",
     "rollup": "^4.54.0",
     "tslib": "^2.8.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   },
   "typedocOptions": {
     "excludeInternal": true,
