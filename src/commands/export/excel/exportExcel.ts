@@ -35,7 +35,7 @@ export async function exportExcel(config: ConfigCmd.ExportSpreadsheet): Promise<
    const dir = path.dirname(config.output);
 
    // Create directory if base path does not exist.
-   if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root )
+   if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root)
    {
       fs.mkdirSync(dir, { recursive: true });
    }
