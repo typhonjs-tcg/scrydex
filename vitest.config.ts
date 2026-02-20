@@ -15,10 +15,6 @@ export default defineConfig({
       reporters: ['default', 'html'],
       globals: true,
       testTimeout: 40000,
-      // server: {
-      //    watch: {
-      //       ignored: ['./test/fixture/**/*']
-      //    }
-      // }
+      globalSetup: ['./test/src/global-setup.ts']
    }
 });
