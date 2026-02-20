@@ -1,0 +1,58 @@
+Name,Quantity,Set code,Set name,Collector number,Foil,Language,Scryfall ID,ManaBox ID,Purchase price,Misprint,Altered,Condition,Purchase price currency
+Forest,5,one,Phyrexia: All Will Be One,369,foil,en,9d94fa1c-48d1-48bc-b725-5c11a158507b,78730,5.44,false,false,near_mint,USD
+Forest,4,mir,Mirage,348,normal,en,bb6b3f80-20bf-4693-b106-cfb31a3d7f83,38242,1.33,false,false,near_mint,USD
+Forest,2,ice,Ice Age,381,normal,en,b346b784-7bde-49d0-bfa9-56236cbe19d9,39428,1.29,false,false,near_mint,USD
+Forest,3,ice,Ice Age,380,normal,en,fbdcbd97-90a9-45ea-94f6-2a1c6faaf965,39429,0.63,false,false,near_mint,USD
+Forest,43,3ed,Revised Edition,305,normal,en,4d1e4241-42ef-4b51-8f9b-2ab6aca31dbb,41120,0.6,false,false,near_mint,USD
+Forest,5,ice,Ice Age,382,normal,en,768c4d8f-5700-4f0a-9ff2-58422aeb1dac,39427,0.6,false,false,near_mint,USD
+Forest,2,mir,Mirage,347,normal,en,a0ae7a81-9a61-4112-af22-369c525b2eb1,38243,0.51,false,false,near_mint,USD
+Forest,1,mir,Mirage,350,normal,en,95dfef30-acca-4b15-a05e-d33289055218,38240,0.48,false,false,near_mint,USD
+Forest,74,3ed,Revised Edition,306,normal,en,b38ce16b-3258-4019-9e86-156e4738aa89,41119,0.47,false,false,near_mint,USD
+Forest,3,mir,Mirage,349,normal,en,d8a67bf6-818b-4afe-af15-3d955dc5e884,38241,0.38,false,false,near_mint,USD
+Forest,70,3ed,Revised Edition,304,normal,en,b6e1c2e9-5572-4242-985d-f509d628092b,41121,0.37,false,false,near_mint,USD
+Island,5,one,Phyrexia: All Will Be One,366,foil,en,0a6f4848-85b9-4770-9820-516e2a295284,78215,5.75,false,false,near_mint,USD
+Island,5,mir,Mirage,338,normal,en,a39fc1e0-caf0-4cfa-bbf2-fea7ca32c00d,38252,1.16,false,false,near_mint,USD
+Island,1,mir,Mirage,335,normal,en,df84bf1b-8698-4c3e-baa9-926f0efc6a12,38255,0.96,false,false,near_mint,USD
+Island,2,ice,Ice Age,370,normal,en,82f11c42-9d67-4833-9519-e165e6a7e9c4,39439,1.1,false,false,near_mint,USD
+Island,4,ice,Ice Age,369,normal,en,61a467ab-4460-4e5e-94c1-8150bfe0c954,39440,1.02,false,false,near_mint,USD
+Island,43,3ed,Revised Edition,295,normal,en,22f6e971-349d-498b-ae01-ab81ce21772c,41130,0.7,false,false,near_mint,USD
+Island,76,3ed,Revised Edition,296,normal,en,a000777b-e8fe-4fd6-a455-01bc9056a873,41129,0.66,false,false,near_mint,USD
+Island,4,ice,Ice Age,368,normal,en,ef2d6fc9-ddad-4dd2-b218-afa1a5449b7e,39441,0.64,false,false,near_mint,USD
+Island,36,3ed,Revised Edition,297,normal,en,bec8018f-a12c-4adf-9735-c2093298062d,41128,0.55,false,false,near_mint,USD
+Island,3,mir,Mirage,337,normal,en,1e571f07-167f-4a7d-8f98-0c98d7d15e81,38253,0.49,false,false,near_mint,USD
+Mountain,1,ice,Ice Age,376,normal,en,4ecf39c3-3b5f-4263-a7b5-9881bded3494,39433,1.19,false,false,near_mint,USD
+Mountain,3,ice,Ice Age,378,normal,en,17ac61e4-b543-4c37-9bfa-43f0c928152d,39431,1.23,false,false,near_mint,USD
+Mountain,3,mir,Mirage,343,normal,en,97004cdc-0baf-415d-8e87-7f36667c4628,38247,0.76,false,false,near_mint,USD
+Mountain,5,ice,Ice Age,377,normal,en,2eb15b42-be2a-4663-b064-aad6c7cb2714,39432,0.76,false,false,near_mint,USD
+Mountain,4,mir,Mirage,344,normal,en,207a468f-79c3-486e-ac5a-4516361b7b4d,38246,0.64,false,false,near_mint,USD
+Mountain,2,mir,Mirage,345,normal,en,681b9c8a-6140-4086-bc72-37f0058a8e9f,38245,0.59,false,false,near_mint,USD
+Mountain,49,3ed,Revised Edition,303,normal,en,1b0f41e8-cf27-489b-812a-d566a75cf7f7,41122,0.54,false,false,near_mint,USD
+Mountain,67,3ed,Revised Edition,302,normal,en,5a240d1b-8430-4986-850d-32afa0e812b2,41123,0.53,false,false,near_mint,USD
+Mountain,64,3ed,Revised Edition,301,normal,en,30345500-d430-4280-bfe3-de297309f136,41124,0.52,false,false,near_mint,USD
+Plains,5,one,Phyrexia: All Will Be One,365,foil,en,3e82b57f-a886-4423-a921-9932055feb68,78222,7.36,false,false,near_mint,USD
+Plains,3,mir,Mirage,333,normal,en,ac15978d-41e6-4eaa-9456-0de3b912d437,38257,0.89,false,false,near_mint,USD
+Plains,3,ice,Ice Age,366,normal,en,27ac1fc7-0698-4a94-8353-cc4c13bd6ffa,39443,0.93,false,false,near_mint,USD
+Plains,1,mir,Mirage,331,normal,en,888f32ad-3bdd-4c46-b3f0-522ac9763591,38259,0.57,false,false,near_mint,USD
+Plains,1,mir,Mirage,332,normal,en,b078ef66-a83b-4e12-bcba-838bc3809322,38258,0.59,false,false,near_mint,USD
+Plains,3,mir,Mirage,334,normal,en,81bbbf38-5d1a-4013-aff9-6167709897f0,38256,0.58,false,false,near_mint,USD
+Plains,1,ice,Ice Age,364,normal,en,7b68bdb0-41cc-48f6-905e-7da1ff4ba5e0,39445,0.56,false,false,near_mint,USD
+Plains,49,3ed,Revised Edition,292,normal,en,275c03f9-f9d2-45c5-a332-b3bee54e7065,41133,0.43,false,false,near_mint,USD
+Plains,57,3ed,Revised Edition,294,normal,en,a4901260-073a-4d06-8167-c322c55ab210,41131,0.42,false,false,near_mint,USD
+Plains,52,3ed,Revised Edition,293,normal,en,cc0bcdbe-be63-446a-8838-8790bda308a3,41132,0.41,false,false,near_mint,USD
+Plains,5,ice,Ice Age,365,normal,en,df3e94f7-9f97-4652-a1f1-381feb15f688,39444,0.47,false,false,near_mint,USD
+Snow-Covered Forest,2,ice,Ice Age,383,normal,en,4c0ad95c-d62c-4138-ada0-fa39a63a449e,39426,2.33,false,false,near_mint,USD
+Snow-Covered Island,3,ice,Ice Age,371,normal,en,ad8b77cf-b53e-4da3-9c27-3851b7b25a98,39438,3.09,false,false,near_mint,USD
+Snow-Covered Island,1,ice,Ice Age,371,normal,en,ad8b77cf-b53e-4da3-9c27-3851b7b25a98,39438,3.09,false,false,near_mint,USD
+Snow-Covered Mountain,2,ice,Ice Age,379,normal,en,ccd3afb3-5574-4f2d-adbe-969a428f1c63,39430,1.83,false,false,near_mint,USD
+Snow-Covered Plains,1,ice,Ice Age,367,normal,en,cb3ac778-fb45-4fd3-a9af-8a0791f833e8,39442,1.38,false,false,near_mint,USD
+Snow-Covered Swamp,4,ice,Ice Age,372,normal,en,65a3c27f-6b15-49b6-ac89-36cfb79b3b54,39437,1.75,false,false,near_mint,USD
+Swamp,5,one,Phyrexia: All Will Be One,367,foil,en,af92ec23-a252-4ae2-98d7-0dce19d18e35,78243,12.46,false,false,near_mint,USD
+Swamp,1,mir,Mirage,340,normal,en,2c4be2d6-d168-4e67-8d75-a04f637b56dd,38250,1.82,false,false,near_mint,USD
+Swamp,1,mir,Mirage,341,normal,en,65181db5-3fc5-497b-ba61-385efdf740ed,38249,1.06,false,false,near_mint,USD
+Swamp,3,mir,Mirage,339,normal,en,f2d28477-8be1-4caf-8185-64f47905ccb1,38251,1.17,false,false,near_mint,USD
+Swamp,1,ice,Ice Age,373,normal,en,4695653a-5c4c-4ff3-b80c-f4b6c685f370,39436,1.01,false,false,near_mint,USD
+Swamp,42,3ed,Revised Edition,300,normal,en,515eff31-24f6-462e-bbd4-b49540421a75,41125,0.8,false,false,near_mint,USD
+Swamp,2,ice,Ice Age,374,normal,en,6a90b49f-53b3-4ce0-92c1-bcd76d6981ea,39435,0.63,false,false,near_mint,USD
+Swamp,3,mir,Mirage,342,normal,en,5083de34-d127-45df-9252-ff09b5cf8b47,38248,0.55,false,false,near_mint,USD
+Swamp,75,3ed,Revised Edition,298,normal,en,95e936cf-3bbb-4f3b-8e1a-4be1d4702b99,41127,0.55,false,false,near_mint,USD
+Swamp,70,3ed,Revised Edition,299,normal,en,459d175e-2b9c-4f30-be03-4e05cd3c68ef,41126,0.56,false,false,near_mint,USD

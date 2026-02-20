@@ -1,0 +1,1 @@
+[["\u001b[33m[scrydex] Remaining collection / card map unprocessed: 1\u001b[0m"],["\u001b[33m[scrydex] Name: Abduction; Scryfall ID: ac81264d-0e03-44ac-8ff5-049b9aaebcca; Filename: not-found\u001b[0m"],["\u001b[33m[scrydex] No output DB file to write.\u001b[0m"]]
