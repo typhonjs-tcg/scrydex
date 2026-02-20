@@ -6,12 +6,10 @@
     "moduleResolution": "Bundler",
     "target": "ES2024",
     "customConditions": ["node"],
-    "types": ["node"],
+    "types": ["node", "vitest/globals"],
 
     "strict": true
   },
-  "include": [
-    "./src/**/*"
-  ],
+  "include": ["./src/**/*", "test/**/*"],
   "exclude": ["node_modules/*"]
 }

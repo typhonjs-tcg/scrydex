@@ -12,13 +12,13 @@
   "imports": {
     "#scrydex": {
       "types": "./src/index.ts",
-      "default": "./src/index.ts",
-      "replace": "@typhonjs-tcg/scrydex"
+      "replace": "@typhonjs-tcg/scrydex",
+      "default": "./src/index.ts"
     },
     "#scrydex/*": {
       "types": "./src/*/index.ts",
-      "default": "./src/*/index.ts",
-      "replace": "@typhonjs-tcg/scrydex/*"
+      "replace": "@typhonjs-tcg/scrydex/*",
+      "default": "./src/*/index.ts"
     }
   },
   "exports": {
@@ -61,14 +61,9 @@
     "build-npm": "rollup -c scripts/build-npm.js",
     "check": "esm-d-ts check src/cli/index.ts -t ./tsconfig.json",
     "docs": "typedoc-pkg --api-link es --link-checker",
-    "test-convert": "bun ./src/cli/index.ts convert-csv ./test/fixture/data --output ./test/fixture/output/collection-small.json --db ./test/fixture/data/db-small.json --loglevel debug",
-    "test-export-csv": "bun ./src/cli/index.ts export-csv ./test/fixture/output/collection-small.json --output ./test/fixture/output/collection-small.csv --loglevel debug",
-    "test-export-excel": "bun ./src/cli/index.ts export-excel ./test/fixture/output/collection-small.json --theme dark --by-type --no-filename --no-price --no-rarity --output ./test/fixture/output/collection-small.xlsx --loglevel debug",
-    "test-file-compress": "bun ./src/cli/index.ts file-compress ./test/fixture/output/collection-small.json",
-    "test-file-decompress": "bun ./src/cli/index.ts file-decompress ./test/fixture/output/collection-small.json.gz",
-    "test-filter": "bun ./src/cli/index.ts filter ./test/fixture/output/collection-small.json --border black:borderless --color-identity {W}{U}{G} --formats premodern --output ./test/fixture/output/collection-small-wug.json --loglevel debug",
-    "test-scryfall-dl": "bun ./src/cli/index.ts scryfall-download --loglevel debug",
-    "test-sort": "bun ./src/cli/index.ts sort-format ./test/fixture/output/collection-small.json --formats premodern:oldschool:predh:commander --output ./test/fixture/output/sorted --loglevel debug"
+    "test": "vitest --coverage",
+    "test-ui": "vitest --ui --coverage",
+    "test-scryfall-dl": "bun ./src/cli/index.ts scryfall-download --loglevel debug"
   },
   "dependencies": {
     "@typhonjs-utils/file-util": "^0.1.0",
