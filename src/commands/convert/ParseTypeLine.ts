@@ -46,8 +46,11 @@ import type { CardDB } from '#scrydex/data/db';
  * Resolution precedence:
  *   Land > Artifact > Creature > Enchantment > Instant > Sorcery > Planeswalker > Battle
  */
-export class ParseTypeLine
+export abstract class ParseTypeLine
 {
+   /* v8 ignore next 1 */
+   private constructor() {}
+
    static #regexLand = /\bland\b/i;
    static #regexBasic = /\bbasic\b/i;
    static #regexEquipment = /\bequipment\b/i;
@@ -56,8 +59,6 @@ export class ParseTypeLine
    static #regexEnchantment = /\benchantment\b/i;
    static #regexCreature = /\bcreature\b/i;
    static #regexInstant = /\binstant\b/i;
-   static #regexInterrupt = /\binterrupt\b/i;
-   static #regexManaSource = /\bmana source\b/i;
    static #regexSorcery = /\bsorcery\b/i;
    static #regexPlaneswalker = /\bplaneswalker\b/i;
    static #regexVehicle = /\bvehicle\b/i;
@@ -74,6 +75,7 @@ export class ParseTypeLine
     */
    static resolve(card: Record<string, any> | string | null | undefined): string
    {
+      /* v8 ignore next 1 */ // Sanity check.
       if (!card) { throw new Error(`'card' must be a card object or string.`); }
 
       let typeLine: string | null | undefined;
@@ -88,9 +90,11 @@ export class ParseTypeLine
           card.type_line;
 
          // Last fallback possible for when a dual face card doesn't have a type line defined in first face.
+         /* v8 ignore next 1 */ // Sanity check.
          if (!typeLine) { typeLine = card.type_line; }
       }
 
+      /* v8 ignore next 5 */ // Sanity check.
       if (typeof typeLine !== 'string' || typeLine.length === 0)
       {
          throw new Error(
@@ -139,18 +143,8 @@ export class ParseTypeLine
 
       let baseType = null;
 
-      // Legacy types: Interrupt → Instant / Mana Source -> Instant.
-      if (this.#regexInterrupt.test(typeLine))
-      {
-         baseType = 'Instant';
-      }
-      else if (this.#regexManaSource.test(typeLine))
-      {
-         baseType = 'Instant';
-      }
-
       // Main types.
-      else if (this.#regexArtifact.test(typeLine))
+      if (this.#regexArtifact.test(typeLine))
       {
          // Artifact Creature → Artifact - Creature.
          if (this.#regexCreature.test(typeLine))
@@ -202,6 +196,7 @@ export class ParseTypeLine
       }
 
       // Unknown case - return raw type line.
+      /* v8 ignore next 4 */ // Sanity check.
       if (!baseType)
       {
          return typeLine;
