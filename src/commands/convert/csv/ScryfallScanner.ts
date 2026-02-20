@@ -15,8 +15,11 @@ import type { ConfigCmd }        from '../../types-command';
  * Provides thorough resolution and normalization of CSV collection cards with multiple streaming passes over the
  * Scryfall DB.
  */
-export class ScryfallScanner
+export abstract class ScryfallScanner
 {
+   /* v8 ignore next 1 */
+   private constructor() {}
+
    /**
     * @param config -
     *
@@ -41,6 +44,7 @@ export class ScryfallScanner
 
       for await (const scryCard of scryfallDB.asStream())
       {
+         /* v8 ignore next 1 */ // Sanity check
          if (scryCard?.object !== 'card') { continue; }
 
          rarityNormalization.trackRarity(scryCard);
@@ -56,6 +60,7 @@ export class ScryfallScanner
 
          // Properties used to remove semantic duplication in `user_tags`. -------------------------------------------
 
+         /* v8 ignore next 2 */ // Sanity check; `keywords` should always be defined.
          const keywordSet = Array.isArray(scryCard.keywords) ? new Set(scryCard.keywords.map(k => k.toLowerCase())) :
           new Set();
 
@@ -127,7 +132,7 @@ export class ScryfallScanner
                card_faces,
                image_uris: scryCard.image_uris,
                rulings_uri: scryCard.rulings_uri,
-               legalities: scryCard.legalities ?? {},
+               legalities: scryCard.legalities,
                scryfall_uri: scryCard.scryfall_uri,
                oracle_id: scryCard.oracle_id,
                scryfall_id: csvCard.scryfall_id,
