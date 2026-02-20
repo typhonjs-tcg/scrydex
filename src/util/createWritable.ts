@@ -27,10 +27,21 @@ export function createWritable({ filepath, compress }: { filepath: string, compr
 
    const dir = path.dirname(filepath);
 
+   console.log(`!!! createWritable - 0 - filepath: ${filepath}`)
+   console.log(`!!! createWritable - 1 - dir: ${dir}`)
+   console.log(`!!! createWritable - 2 - fs.existsSync(dir): ${fs.existsSync(dir)}`)
+
    // Create directory if base path does not exist.
-   if (!fs.existsSync(dir)) { fs.mkdirSync(dir, { recursive: true }); }
+   if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root)
+   {
+      fs.mkdirSync(dir, { recursive: true });
+   }
+
+   console.log(`!!! createWritable - 3`)
 
    const out = fs.createWriteStream(filepath);
+
+   console.log(`!!! createWritable - 4`)
 
    const sink = compress ? zlib.createGzip({ level: 9 }) : out;
 

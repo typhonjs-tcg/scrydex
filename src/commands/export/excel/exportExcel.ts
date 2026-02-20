@@ -32,10 +32,13 @@ export async function exportExcel(config: ConfigCmd.ExportSpreadsheet): Promise<
       theme: config.theme
    });
 
-   const dirpath = path.dirname(config.output);
+   const dir = path.dirname(config.output);
 
    // Create directory if base path does not exist.
-   if (!fs.existsSync(dirpath)) { fs.mkdirSync(dirpath, { recursive: true }); }
+   if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root )
+   {
+      fs.mkdirSync(dir, { recursive: true });
+   }
 
    await workbook?.xlsx.writeFile(config.output);
 }
