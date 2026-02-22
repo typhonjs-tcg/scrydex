@@ -92,7 +92,7 @@ describe('CLI Commands:', () =>
 
    describe('sort-format', () =>
    {
-      it('basic (premodern:oldschool:predh:commander)', async () =>
+      it('collection (premodern:oldschool:predh:commander)', async () =>
       {
          await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
             output: './test/fixture/output/cli/sort-format/collection',
@@ -103,6 +103,58 @@ describe('CLI Commands:', () =>
 
          await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection',
           'test/fixture/snapshot/cli/sort-format/collection');
+      });
+   });
+
+   describe('export-csv', () =>
+   {
+      it('(premodern:oldschool:predh:commander)', async () =>
+      {
+         await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection', {
+            output: './test/fixture/output/cli/export-csv/collection',
+            loglevel: 'error'
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/export-csv/collection',
+          './test/fixture/snapshot/cli/export-csv/collection');
+      });
+
+      it('coalesce (premodern:oldschool:predh:commander)', async () =>
+      {
+         await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection', {
+            output: './test/fixture/output/cli/export-csv/collection-coalesce',
+            coalesce: true,
+            loglevel: 'error'
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/export-csv/collection-coalesce',
+          './test/fixture/snapshot/cli/export-csv/collection-coalesce');
+      });
+   });
+
+   describe('export-txt', () =>
+   {
+      it('(premodern:oldschool:predh:commander)', async () =>
+      {
+         await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection', {
+            output: './test/fixture/output/cli/export-txt/collection',
+            loglevel: 'error'
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/export-txt/collection',
+          './test/fixture/snapshot/cli/export-txt/collection');
+      });
+
+      it('coalesce (premodern:oldschool:predh:commander)', async () =>
+      {
+         await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection', {
+            output: './test/fixture/output/cli/export-txt/collection-coalesce',
+            coalesce: true,
+            loglevel: 'error'
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/export-txt/collection-coalesce',
+          './test/fixture/snapshot/cli/export-txt/collection-coalesce');
       });
    });
 });

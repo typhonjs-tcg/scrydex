@@ -1,0 +1,56 @@
+5 Forest (ONE) 369 *F*
+4 Forest (MIR) 348
+2 Forest (ICE) 381
+3 Forest (ICE) 380
+43 Forest (3ED) 305
+5 Forest (ICE) 382
+2 Forest (MIR) 347
+1 Forest (MIR) 350
+74 Forest (3ED) 306
+3 Forest (MIR) 349
+70 Forest (3ED) 304
+5 Island (ONE) 366 *F*
+5 Island (MIR) 338
+1 Island (MIR) 335
+2 Island (ICE) 370
+4 Island (ICE) 369
+43 Island (3ED) 295
+76 Island (3ED) 296
+4 Island (ICE) 368
+36 Island (3ED) 297
+3 Island (MIR) 337
+1 Mountain (ICE) 376
+3 Mountain (ICE) 378
+3 Mountain (MIR) 343
+5 Mountain (ICE) 377
+4 Mountain (MIR) 344
+2 Mountain (MIR) 345
+49 Mountain (3ED) 303
+67 Mountain (3ED) 302
+64 Mountain (3ED) 301
+5 Plains (ONE) 365 *F*
+3 Plains (MIR) 333
+3 Plains (ICE) 366
+1 Plains (MIR) 331
+1 Plains (MIR) 332
+3 Plains (MIR) 334
+1 Plains (ICE) 364
+49 Plains (3ED) 292
+57 Plains (3ED) 294
+52 Plains (3ED) 293
+5 Plains (ICE) 365
+2 Snow-Covered Forest (ICE) 383
+4 Snow-Covered Island (ICE) 371
+2 Snow-Covered Mountain (ICE) 379
+1 Snow-Covered Plains (ICE) 367
+4 Snow-Covered Swamp (ICE) 372
+5 Swamp (ONE) 367 *F*
+1 Swamp (MIR) 340
+1 Swamp (MIR) 341
+3 Swamp (MIR) 339
+1 Swamp (ICE) 373
+42 Swamp (3ED) 300
+2 Swamp (ICE) 374
+3 Swamp (MIR) 342
+75 Swamp (3ED) 298
+70 Swamp (3ED) 299

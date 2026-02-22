@@ -1,0 +1,114 @@
+1 Abandoned Campground (DSK) 255
+1 Aberrant Researcher // Perfected Form (INR) 52
+1 Adrestia (ACR) 68
+1 Aerial Surveyor (NEC) 5
+1 Aetherflux Reservoir (KLD) 192
+1 Agadeem's Awakening // Agadeem, the Undercrypt (ZNR) 90
+1 Ajani Fells the Godsire (MH3) 19
+1 Ajani, the Greathearted (WAR) 184
+1 Akroma's Will (M3C) 165
+1 Alela, Cunning Conqueror (WOC) 3
+1 Alive // Well (DGM) 121
+1 All-Seeing Arbiter (SNC) 286
+1 Alpine Meadow (KHM) 248
+1 Altar of Bhaal // Bone Offering (CLB) 109
+1 Aminatou, the Fateshifter (2X2) 468 *E*
+1 Anguished Unmaking (TDC) 279
+1 Arcane Proxy (BRO) 75
+1 Archipelagore (IKO) 41
+1 Argoth, Sanctum of Nature (BRO) 256
+1 Artificer Class (CLB) 663
+1 Ashiok, Dream Render (WAR) 228
+1 Assassin's Trophy (MKM) 187
+1 Atomize (PIP) 94
+1 Atraxa, Grand Unifier (ONE) 196
+1 Atraxa, Praetors' Voice (SLD) 453 *F*
+1 Atris, Oracle of Half-Truths (PTHB) 209s *F*
+1 Avacyn, Angel of Hope (CMM) 14
+1 Azorius Guildgate (RNA) 244
+1 Black Sun's Twilight (ONE) 84
+1 Blackblade Reforged (DMC) 178
+1 Bloodroot Apothecary (BLC) 27
+1 Bolas's Citadel (WAR) 79
+1 Boseiju, Who Endures (NEO) 266
+1 Bountiful Promenade (CLB) 348
+1 Braids, Arisen Nightmare (DMU) 84
+1 Bred for the Hunt (CM2) 151
+1 Brimaz, Blight of Oreskos (MOC) 2
+1 Carrion Grub (DSC) 134
+1 Carth the Lion (MH2) 189
+1 Case of the Crimson Pulse (MKM) 114
+1 Chatterfang, Squirrel General (MH2) 151
+1 Command Tower (MKC) 256
+1 Contaminant Grafter (ONC) 17
+1 Court of Garenbrig (WOC) 25
+1 Crypt Ghast (RVR) 423
+1 Cyclonic Rift (RVR) 40
+1 Damning Verdict (NCC) 15
+1 Darksteel Splicer (MOC) 13
+1 Deadly Rollick (CMM) 695
+1 Deathrite Shaman (SLC) 2012
+1 Deepglow Skate (CMM) 844
+1 Detention Sphere (GK2) 10
+1 Dimir Guildgate (GTC) 241
+1 Displacer Kitten (CLB) 63
+1 Drannith Magistrate (IKO) 11
+1 Drown in Ichor (ONE) 91
+1 Drown in the Loch (CLB) 842
+1 Eerie Ultimatum (IKO) 184
+1 Eiganjo, Seat of the Empire (NEO) 268
+1 Elspeth Conquers Death (THB) 13
+1 Ephemerate (MH1) 7
+1 Epic Downfall (ELD) 85
+2 Esper Sentinel (MH2) 12
+1 Exquisite Blood (LCC) 195
+1 Eye of Malcator (ONE) 50
+1 Ezuri, Stalker of Spheres (ONE) 201
+1 Fierce Guardianship (CMM) 94
+1 Filigree Vector (MOC) 15
+1 Flux Channeler (WAR) 52
+1 Force of Negation (2X2) 50
+1 Fortified Beachhead (PBRO) 262p
+1 Glissa, Herald of Predation (MOM) 226
+1 Guildmages' Forum (GRN) 250
+1 Guildpact Informant (PLST) WAR-271
+1 Gulping Scraptrap (ONE) 96
+1 Heliod, Sun-Crowned (CMM) 29
+1 Indatha Triome (IKO) 248
+1 Innkeeper's Talent (BLB) 180
+1 Invasion of Zendikar // Awakened Skyclave (MOM) 194
+1 Karn, the Great Creator (SLD) 501 *F*
+1 Mana Confluence (JOU) 163
+1 Moldervine Reclamation (C21) 225
+1 Muldrotha, the Gravetide (PLST) DOM-199
+1 Narset, Parter of Veils (SLD) 508 *F*
+1 Painful Truths (PBFZ) 120p *F*
+1 Path of Ancestry (CMM) 423
+1 Prismatic Vista (MH1) 244
+1 Raffine's Tower (SNC) 292
+1 Ranger-Captain of Eos (PLST) MH1-21
+1 Sea of Clouds (BBD) 84
+1 Simic Ascendancy (LCC) 288
+1 Smothering Tithe (CMM) 57
+1 Solitude (MH2) 32
+1 Spara's Headquarters (SNC) 257
+1 Sword of the Animist (CMM) 413
+1 Sword of Truth and Justice (MH1) 229
+1 Tamiyo, the Moon Sage (AVR) 79
+1 Teleportation Circle (AFR) 39
+1 Temple of Silence (PM20) 256s *F*
+1 Thassa's Oracle (PTHB) 73p
+1 The Great Henge (CMM) 294
+1 The Ozolith (IKO) 237
+1 Thieves' Tools (CLB) 152
+1 Undercity Sewers (MKM) 270
+1 Urza's Saga (PLST) MH2-259
+1 Vault of Champions (CMM) 436
+1 Vilis, Broker of Blood (M20) 122
+1 Vorinclex, Monstrous Raider (KHM) 199
+1 Yavimaya, Cradle of Growth (MH2) 261
+1 Yawgmoth, Thran Physician (DMR) 110
+1 You Are Already Dead (NEO) 129
+1 Yuriko, the Tiger's Shadow (C18) 52
+1 Zagoth Triome (IKO) 259
+1 Zameck Guildmage (GTC) 209

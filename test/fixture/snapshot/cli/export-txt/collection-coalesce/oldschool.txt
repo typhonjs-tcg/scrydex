@@ -1,0 +1,80 @@
+4 Amnesia (DRK) 20
+2 Avoid Fate (LEG) 175
+3 Balance (3ED) 3
+4 Basal Thrull (FEM) 34c
+2 Basalt Monolith (3ED) 235
+1 Braingeyser (3ED) 50
+2 City of Shadows (DRK) 116
+1 Clergy of the Holy Nimbus (LEG) 6
+2 Combat Medic (ATH) 4
+2 Combat Medic (FEM) 1c
+1 Copy Artifact (3ED) 53
+1 Curse Artifact (DRK) 43
+1 Darkness (LEG) 94
+1 Demonic Hordes (3ED) 104
+3 Demonic Tutor (3ED) 105
+2 Draconian Cylix (FEM) 86
+1 Drowned (DRK) 24
+1 Electric Eel (DRK) 25
+4 Elven Fortress (FEM) 65c
+2 Elves of Deep Shadow (DRK) 76
+2 Elvish Hunter (FEM) 67a
+1 Elvish Scout (FEM) 68a
+2 Eternal Flame (DRK) 61
+3 Exorcist (DRK) 6
+4 Farrelite Priest (FEM) 4
+2 Fastbond (3ED) 194
+2 Feral Thallid (FEM) 69
+4 Fork (3ED) 153
+4 Gaea's Touch (DRK) 77
+2 Giant Shark (DRK) 29
+1 Goblin Grenade (FEM) 56b
+4 Goblin Kites (FEM) 57
+2 Goblin Wizard (DRK) 69
+1 Granite Gargoyle (3ED) 156
+4 High Tide (FEM) 18b
+4 Holy Light (DRK) 10
+2 Homarid Spawning Bed (FEM) 21
+1 Hornet Cobra (LEG) 190
+2 Hymn to Tourach (FEM) 38a
+4 Hymn to Tourach (FEM) 38d
+1 Icatian Infantry (FEM) 7c
+2 Icatian Infantry (FEM) 7b
+2 Icatian Moneychanger (FEM) 10c
+2 Jandor's Ring (3ED) 256
+3 Karakas (LEG) 303
+5 Kudzu (3ED) 205
+1 Mana Drain (LEG) 65
+1 Mana Vault (3ED) 263
+1 Mana Vortex (DRK) 31
+1 Maze of Ith (DRK) 117
+2 Mind Twist (3ED) 117
+4 Orcish Spy (FEM) 61c
+1 Pendelhaven (LEG) 305
+1 Powerleech (ATQ) 34
+1 Reset (LEG) 73
+4 Roc of Kher Ridges (3ED) 172
+2 Rock Hydra (3ED) 173
+1 Savannah (3ED) 285
+2 Scarwood Goblins (DRK) 94
+1 Scarwood Hag (DRK) 86
+3 Skull of Orm (DRK) 109
+5 Sol Ring (3ED) 274
+1 Squire (DRK) 17
+1 Standing Stones (DRK) 110
+1 Stone Calendar (DRK) 111
+1 Strip Mine (ATQ) 82b
+2 Strip Mine (ATQ) 82d
+1 Tetsuo Umezawa (LEG) 262
+1 Thelonite Monk (FEM) 79
+4 Thorn Thallid (FEM) 80a
+1 Tropical Island (3ED) 288
+1 Typhoon (LEG) 209
+2 Vesuvan Doppelganger (3ED) 88
+4 Vodalian Mage (FEM) 30a
+1 Volcanic Island (3ED) 291
+1 Wall of Caltrops (LEG) 42
+1 Water Wurm (DRK) 38
+1 Wheel of Fortune (3ED) 185
+1 Worms of the Earth (DRK) 56
+1 Zelyon Sword (FEM) 91
