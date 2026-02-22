@@ -32,8 +32,8 @@ describe('CLI Commands:', () =>
             output: './test/fixture/output/cli/convert-csv/inventory.json',
             loglevel: 'error',
             compress: true,
-            'group-external': './test/fixture/input/csv/manabox/groups/group-decks.csv',
-            'group-decks': './test/fixture/input/csv/manabox/groups/group-external.csv',
+            'group-external': './test/fixture/input/csv/manabox/groups/group-external.csv',
+            'group-decks': './test/fixture/input/csv/manabox/groups/group-decks.csv',
             'group-proxy': './test/fixture/input/csv/manabox/groups/group-proxy.csv',
          });
 
@@ -57,8 +57,8 @@ describe('CLI Commands:', () =>
             db: './test/fixture/input/db/scryfall_test_cards.json.gz',
             output: './test/fixture/output/cli/convert-csv/inventory.json',
             loglevel: 'error',
-            'group-external': './test/fixture/input/csv/manabox/groups/group-decks.csv',
-            'group-decks': './test/fixture/input/csv/manabox/groups/group-external.csv',
+            'group-decks': './test/fixture/input/csv/manabox/groups/group-decks.csv',
+            'group-external': './test/fixture/input/csv/manabox/groups/group-external.csv',
             'group-proxy': './test/fixture/input/csv/manabox/groups/group-proxy.csv',
          });
 
