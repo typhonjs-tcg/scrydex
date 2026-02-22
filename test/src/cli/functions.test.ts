@@ -21,7 +21,6 @@ import {
 
 import { AssertData }   from '../util/AssertData';
 
-// describe.sequential('CLI Commands:', { concurrent: false }, () =>
 describe('CLI Commands:', () =>
 {
    describe('convert-csv (commandConvertCsv)', () =>
@@ -96,14 +95,14 @@ describe('CLI Commands:', () =>
       it('basic (premodern:oldschool:predh:commander)', async () =>
       {
          await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
-            output: './test/fixture/output/cli/sort-format/basic',
+            output: './test/fixture/output/cli/sort-format/collection',
             'by-type': true,
             formats: 'premodern:oldschool:predh:commander',
             loglevel: 'error'
          });
 
-         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/basic',
-          'test/fixture/snapshot/cli/sort-format/basic');
+         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection',
+          'test/fixture/snapshot/cli/sort-format/collection');
       });
    });
 });
