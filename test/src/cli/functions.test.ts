@@ -2,7 +2,6 @@ import fs               from 'node:fs';
 
 import {
    assert,
-   expect,
    vi }                 from 'vitest';
 
 import { CardDB }       from '#scrydex/data/db';
@@ -20,8 +19,10 @@ import {
    commandScryfallDownload,
    commandSortFormat }  from '../../../src/cli/functions';
 
+import { AssertData }   from '../util/AssertData';
 
-describe('CLI Command:', () =>
+// describe.sequential('CLI Commands:', { concurrent: false }, () =>
+describe('CLI Commands:', () =>
 {
    describe('convert-csv (commandConvertCsv)', () =>
    {
@@ -87,6 +88,22 @@ describe('CLI Command:', () =>
 
          assert.equal(JSON.stringify(consoleLog),
           fs.readFileSync('./test/fixture/snapshot/cli/convert-csv/not-found-log.txt', 'utf-8'));
+      });
+   });
+
+   describe('sort-format', () =>
+   {
+      it('basic (premodern:oldschool:predh:commander)', async () =>
+      {
+         await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+            output: './test/fixture/output/cli/sort-format/basic',
+            'by-type': true,
+            formats: 'premodern:oldschool:predh:commander',
+            loglevel: 'error'
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/basic',
+          'test/fixture/snapshot/cli/sort-format/basic');
       });
    });
 });
