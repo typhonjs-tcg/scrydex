@@ -3,7 +3,7 @@ import sade             from 'sade';
 
 import {
    commandConvertCsv,
-   commandDiff,
+   // commandDiff,
    commandExportCsv,
    commandExportExcel,
    commandExportLLM,
@@ -39,13 +39,13 @@ program
 .example('convert ./collection-dir --output ./collection-all.json -db ./scryfall.json')
 .action(commandConvertCsv);
 
-program
-.command('diff [baseline] [comparison]', 'Compare CardDBs')
-.describe('Compares two CardDBs or two directories of sorted CardDBs and generates a spreadsheet report of added, removed, and changed cards.')
-.option('--output', 'Provide an output directory for generated diff report spreadsheets.')
-.example('diff ./card-db-a.json ./card-db-b.json --output ./diff-report')
-.example('diff ./sorted-a ./sorted-b --output ./diff-report-sorted')
-.action(commandDiff);
+// program
+// .command('diff [baseline] [comparison]', 'Compare CardDBs')
+// .describe('Compares two CardDBs or two directories of sorted CardDBs and generates a spreadsheet report of added, removed, and changed cards.')
+// .option('--output', 'Provide an output directory for generated diff report spreadsheets.')
+// .example('diff ./card-db-a.json ./card-db-b.json --output ./diff-report')
+// .example('diff ./sorted-a ./sorted-b --output ./diff-report-sorted')
+// .action(commandDiff);
 
 program
 .command('export-csv [path]', 'Export CSV')

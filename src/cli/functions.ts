@@ -9,7 +9,7 @@ import { ColorLogger }        from '@typhonjs-utils/logger-color';
 
 import {
    convertCsv,
-   diff,
+   // diff,
    exportCsv,
    exportExcel,
    exportLLM,
@@ -105,60 +105,60 @@ export async function commandFileCompress(path: string, opts: Record<string, any
    }
 }
 
-/**
- * Invokes `diff` with the given config.
- *
- * @param baseline - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
- *
- * @param comparison - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
- *
- * @param opts - CLI options.
- */
-export async function commandDiff(baseline: string, comparison: string, opts: Record<string, any>): Promise<void>
-{
-   if (!isFile(baseline) && !isDirectory(baseline)) { exit(`'inputA' option path is not a file or directory.`); }
-
-   if (!isFile(comparison) && !isDirectory(comparison)) { exit(`'inputB' option path is not a file or directory.`); }
-
-   if (isFile(baseline) && !isFile(comparison))
-   {
-      exit(`'inputA' option is a file path, but 'inputB' is not a file path.`);
-   }
-
-   if (isDirectory(baseline) && !isDirectory(comparison))
-   {
-      exit(`'inputA' option is a directory path, but 'inputB' is not a directory path.`);
-   }
-
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
-
-   // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
-
-   const config: ConfigCmd.Diff = {
-      baseline,
-      comparison,
-      logger,
-      output: opts.output
-   };
-
-   try
-   {
-      await diff(config);
-   }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
-}
+// /**
+//  * Invokes `diff` with the given config.
+//  *
+//  * @param baseline - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+//  *
+//  * @param comparison - File path of CardDB or directory path to search for _sorted_ JSON CardDBs.
+//  *
+//  * @param opts - CLI options.
+//  */
+// export async function commandDiff(baseline: string, comparison: string, opts: Record<string, any>): Promise<void>
+// {
+//    if (!isFile(baseline) && !isDirectory(baseline)) { exit(`'inputA' option path is not a file or directory.`); }
+//
+//    if (!isFile(comparison) && !isDirectory(comparison)) { exit(`'inputB' option path is not a file or directory.`); }
+//
+//    if (isFile(baseline) && !isFile(comparison))
+//    {
+//       exit(`'inputA' option is a file path, but 'inputB' is not a file path.`);
+//    }
+//
+//    if (isDirectory(baseline) && !isDirectory(comparison))
+//    {
+//       exit(`'inputA' option is a directory path, but 'inputB' is not a directory path.`);
+//    }
+//
+//    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+//
+//    // Set default log level to verbose.
+//    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+//
+//    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+//
+//    const config: ConfigCmd.Diff = {
+//       baseline,
+//       comparison,
+//       logger,
+//       output: opts.output
+//    };
+//
+//    try
+//    {
+//       await diff(config);
+//    }
+//    catch (err: unknown)
+//    {
+//       if (logger.isLevelEnabled('debug')) { console.error(err); }
+//
+//       let message = typeof err === 'string' ? err : 'Unknown error';
+//
+//       if (err instanceof Error) { message = err.message; }
+//
+//       exit(message);
+//    }
+// }
 
 /**
  * Invokes `exportCsv` with the given config.
