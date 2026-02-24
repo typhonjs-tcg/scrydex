@@ -16,6 +16,7 @@ import type { ConfigCmd }     from '../types-command';
  */
 export abstract class ExportCollection
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    static async generate(config: ConfigCmd.Sort, collections: Iterable<AbstractCollection>): Promise<void>

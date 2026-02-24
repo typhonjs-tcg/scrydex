@@ -16,6 +16,7 @@ import type {
  */
 export abstract class ExportLLM
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

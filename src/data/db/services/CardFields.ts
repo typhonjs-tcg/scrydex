@@ -4,6 +4,7 @@ import type { Data }  from '../types-db';
 
 export abstract class CardFields
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

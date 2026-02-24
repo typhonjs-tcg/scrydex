@@ -21,6 +21,7 @@ import type {
  */
 export abstract class CardFilter
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

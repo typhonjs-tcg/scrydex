@@ -9,6 +9,7 @@ import { CardDB }  from '#scrydex/data/db';
  */
 export abstract class Notes
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    // Extract symbols between `{}`.

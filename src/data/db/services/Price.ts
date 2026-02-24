@@ -2,6 +2,7 @@ import type { Data } from '../types-db';
 
 export abstract class Price
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

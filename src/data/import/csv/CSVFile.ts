@@ -37,6 +37,7 @@ import { createWritable }  from '#scrydex/util';
  */
 export abstract class CSVFile
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

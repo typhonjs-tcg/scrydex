@@ -1,7 +1,6 @@
-import type { CardDB } from '#scrydex/data/db';
-
 abstract class ScryfallData
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    static get supportedFormats(): ReadonlySet<string>

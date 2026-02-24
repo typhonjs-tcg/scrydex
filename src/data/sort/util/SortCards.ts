@@ -10,6 +10,7 @@ import type { SortDirection } from '../types-sort';
  */
 export abstract class SortCards
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

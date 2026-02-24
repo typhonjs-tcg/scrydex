@@ -6,6 +6,7 @@ import { ScryfallData } from "#scrydex/data/scryfall";
  */
 export abstract class Validate
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

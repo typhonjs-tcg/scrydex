@@ -9,6 +9,7 @@ import type { Data }    from '../types-db';
  */
 export abstract class PrintCardFields
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

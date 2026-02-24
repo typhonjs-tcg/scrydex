@@ -12,6 +12,7 @@ export abstract class KindSortOrder
    static #regexArtifact = /\bartifact\b/i;
    static #regexLand = /\bland\b/i
 
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

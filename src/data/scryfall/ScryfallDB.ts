@@ -28,6 +28,7 @@ import type {
  */
 abstract class ScryfallDB
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    /**

@@ -24,6 +24,7 @@ import type {
  */
 abstract class ExportExcel
 {
+   /* v8 ignore next 1 */
    private constructor() {}
 
    static async cardDB({ db, theme, columns, sort }: { db: CardDB.Stream.Reader,
