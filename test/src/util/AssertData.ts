@@ -114,6 +114,24 @@ export abstract class AssertData
 
       assert.deepEqual(ExcelCompare.workbookToData(a), ExcelCompare.workbookToData(b));
    }
+
+   /**
+    * Compares two ExcelJS workbooks asserting that worksheet and cell contents are equal.
+    *
+    * @param a - ExcelJS workbook file path.
+    *
+    * @param b - ExcelJS workbook file path.
+    */
+   static async excelWorkbookFiles(a: string, b: string)
+   {
+      const wbResult = new Excel.Workbook();
+      await wbResult.xlsx.readFile(a);
+
+      const wbSnapshot = new Excel.Workbook();
+      await wbSnapshot.xlsx.readFile(b);
+
+      AssertData.excelWorkbook(wbResult, wbSnapshot);
+   }
 }
 
 // Internal implementation -------------------------------------------------------------------------------------------
