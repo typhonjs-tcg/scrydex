@@ -36,7 +36,7 @@ export async function exportLLM(config: ConfigCmd.ExportLLM): Promise<void>
 
       if (config.types)
       {
-         const filepath = `${path.dirname(config.output)}/llmdb.d.ts`;
+         const filepath = path.resolve(path.dirname(config.output), `./llmdb.d.ts`);
 
          const tokensTypes = await ExportLLM.types({ filepath });
 
@@ -78,7 +78,7 @@ export async function exportLLM(config: ConfigCmd.ExportLLM): Promise<void>
 
          if (config.types)
          {
-            const filepath = `${path.dirname(config.output)}/llmdb.d.ts`;
+            const filepath = path.resolve(config.output, `./llmdb.d.ts`);
 
             const tokensTypes = await ExportLLM.types({ filepath });
 
