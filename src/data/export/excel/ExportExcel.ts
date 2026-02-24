@@ -225,7 +225,7 @@ abstract class ExportExcel
                   cell.border = themeData.groups[groupName].border;
                });
 
-               row.getCell('Filename').note = `Group: ${groupName}`;
+               if (colFilename) { row.getCell('Filename').note = `Group: ${groupName}`; }
             }
 
             // Potentially mark merge status for marked filenames / cards.
