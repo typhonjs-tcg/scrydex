@@ -72,15 +72,28 @@ export abstract class AssertData
          }
          else if (file.endsWith('.json'))
          {
-            const result = await CardDB.load({ filepath: actualFilepath });
-            const snapshot = await CardDB.load({ filepath: expectedFilepath });
+            try
+            {
+               // Attempt to compare CardDB if loaded
+               const result = await CardDB.load({ filepath: actualFilepath });
+               const snapshot = await CardDB.load({ filepath: expectedFilepath });
 
-            await AssertData.cardDBStream(result, snapshot);
+               await AssertData.cardDBStream(result, snapshot);
+            }
+            catch
+            {
+               // Otherwise direct file comparison.
+               const actual = fs.readFileSync(actualFilepath, 'utf-8');
+               const expected = fs.readFileSync(expectedFilepath, 'utf-8');
+
+               expect(actual).toBe(expected);
+            }
          }
          else
          {
-            const actual = fs.readFileSync(path.join(actualDir, file), 'utf8');
-            const expected = fs.readFileSync(path.join(expectedDir, file), 'utf8');
+            // Direct file comparison.
+            const actual = fs.readFileSync(actualFilepath, 'utf-8');
+            const expected = fs.readFileSync(expectedFilepath, 'utf-8');
 
             expect(actual).toBe(expected);
          }
