@@ -8,7 +8,7 @@ import { CardDB }       from '#scrydex/data/db';
 
 import {
    commandConvertCsv,
-   commandDiff,
+   // commandDiff,
    commandExportCsv,
    commandExportExcel,
    commandExportLLM,
