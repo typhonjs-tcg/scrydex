@@ -499,7 +499,7 @@ class CardStream implements CardDB.Stream.Reader
     */
    async diff(comparison: CardStream, streamOptions?: CardDB.Stream.StreamOptions): Promise<CardDB.Stream.Diff>
    {
-      // Build identity → quantity maps for both streams.
+      // Build identity to quantity maps for both streams.
       const mapB = await this.getQuantityMap(streamOptions);
       const mapC = await comparison.getQuantityMap(streamOptions);
 
