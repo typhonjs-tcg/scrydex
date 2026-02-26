@@ -90,19 +90,33 @@ describe('CLI Commands:', () =>
       });
    });
 
-   describe('sort-format', () =>
+   describe('sort-format (premodern:oldschool:predh:commander)', () =>
    {
-      it('collection (premodern:oldschool:predh:commander)', async () =>
+      it('collection', async () =>
       {
          await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
             output: './test/fixture/output/cli/sort-format/collection',
-            'by-type': true,
             formats: 'premodern:oldschool:predh:commander',
-            loglevel: 'error'
+            loglevel: 'error',
+            'by-type': true
          });
 
          await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection',
           'test/fixture/snapshot/cli/sort-format/collection');
+      });
+
+      it('collection (high-value)', async () =>
+      {
+         await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+            output: './test/fixture/output/cli/sort-format/collection-high-value',
+            formats: 'premodern:oldschool:predh:commander',
+            loglevel: 'error',
+            'by-type': true,
+            'high-value': '>=10'
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection-high-value',
+          'test/fixture/snapshot/cli/sort-format/collection-high-value');
       });
    });
 
