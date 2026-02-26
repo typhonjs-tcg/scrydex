@@ -528,6 +528,8 @@ export async function commandFind(path: string, query: string, opts: Record<stri
    }
 }
 
+/* v8 ignore start */ // Scryfall DB download not covered in automated tests.
+
 /**
  * Invokes `scryfallDownload` with the given config.
  *
@@ -574,6 +576,8 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
       exit(message);
    }
 }
+
+/* v8 ignore stop */
 
 /**
  * Invokes `sort` with the given config.

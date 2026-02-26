@@ -8,7 +8,10 @@ export default defineConfig({
       include: ['./test/src/**/*.test.ts'],
       coverage: {
          include: ['src/**'],
-         exclude: ['test/**'],
+         exclude: [
+            'test/**',
+            'src/data/scryfall/scryfallDownload.ts'
+         ],
          provider: 'v8',
          reporter: ['text', 'json', 'html']
       },
