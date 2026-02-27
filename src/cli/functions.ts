@@ -33,6 +33,26 @@ import type { ScryfallDB }    from '#scrydex/data/scryfall';
  */
 const logger: ColorLogger = new ColorLogger({ tag: 'scrydex' });
 
+/* v8 ignore start */
+
+/**
+ * Handles exceptions from Scrydex SDK.
+ *
+ * @param err - Possible error
+ */
+function handleException(err: unknown)
+{
+   if (logger.isLevelEnabled('debug')) { console.error(err); }
+
+   let message = typeof err === 'string' ? err : 'Unknown error';
+
+   if (err instanceof Error) { message = err.message; }
+
+   exit(message);
+}
+
+/* v8 ignore stop */
+
 /**
  * Invokes `convert` with the given config.
  *
@@ -44,7 +64,7 @@ export async function commandConvertCsv(path: string, opts: Record<string, any>)
 {
    const config = validateConvert(path, opts);
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -52,17 +72,9 @@ export async function commandConvertCsv(path: string, opts: Record<string, any>)
    try
    {
       await convertCsv(config);
+      /* v8 ignore next 2 */
    }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /**
@@ -78,7 +90,7 @@ export async function commandFileCompress(path: string, opts: Record<string, any
 
    if (opts.mode !== 'compress' && opts.mode !== 'decompress') { exit(`'mode' option invalid.`); }
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -92,17 +104,9 @@ export async function commandFileCompress(path: string, opts: Record<string, any
    try
    {
       await fileCompress(config);
+      /* v8 ignore next 2 */
    }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 // /**
@@ -130,9 +134,9 @@ export async function commandFileCompress(path: string, opts: Record<string, any
 //       exit(`'inputA' option is a directory path, but 'inputB' is not a directory path.`);
 //    }
 //
-//    if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+//    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 //
-//    // Set default log level to verbose.
+//    /* v8 ignore next 1 */ // Set default log level to verbose.
 //    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 //
 //    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -147,17 +151,9 @@ export async function commandFileCompress(path: string, opts: Record<string, any
 //    try
 //    {
 //       await diff(config);
+//       /* v8 ignore next 2 */
 //    }
-//    catch (err: unknown)
-//    {
-//       if (logger.isLevelEnabled('debug')) { console.error(err); }
-//
-//       let message = typeof err === 'string' ? err : 'Unknown error';
-//
-//       if (err instanceof Error) { message = err.message; }
-//
-//       exit(message);
-//    }
+//    catch (err: unknown) { handleException(err); }
 // }
 
 /**
@@ -171,7 +167,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
 {
    if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
 
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -188,7 +184,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
       exit(`'coalesce' option is not a boolean.`);
    }
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -203,17 +199,9 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
    try
    {
       await exportCsv(config);
+      /* v8 ignore next 2 */
    }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /**
@@ -227,7 +215,7 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
 {
    if (!isFile(path)) { exit(`'input' option path is not a file.`); }
 
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -266,7 +254,7 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
       if (opts.theme !== 'light' && opts.theme !== 'dark') { exit(`'theme' option is invalid: '${opts.theme}'.`); }
    }
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -290,17 +278,9 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
    try
    {
       await exportExcel(config);
+      /* v8 ignore next 2 */
    }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /**
@@ -314,7 +294,7 @@ export async function commandExportLLM(path: string, opts: Record<string, any>):
 {
    if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
 
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -336,7 +316,7 @@ export async function commandExportLLM(path: string, opts: Record<string, any>):
       exit(`'types' option is not a boolean.`);
    }
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -352,17 +332,9 @@ export async function commandExportLLM(path: string, opts: Record<string, any>):
    try
    {
       await exportLLM(config);
+      /* v8 ignore next 2 */
    }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /**
@@ -376,7 +348,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
 {
    if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
 
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -393,7 +365,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
       exit(`'coalesce' option is not a boolean.`);
    }
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -408,17 +380,9 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
    try
    {
       await exportTxt(config);
+      /* v8 ignore next 2 */
    }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /**
@@ -432,7 +396,7 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
 {
    if (!isFile(path)) { exit(`'input' option is not a file.`); }
 
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (isDirectory(opts.output)) { exit(`'output' option is an already existing directory.`); }
 
@@ -442,7 +406,7 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -469,17 +433,9 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
    try
    {
       await filter(config);
+      /* v8 ignore next 2 */
    }
-   catch (err: unknown)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /**
@@ -515,17 +471,9 @@ export async function commandFind(path: string, query: string, opts: Record<stri
    try
    {
       await find(config);
+      /* v8 ignore next 2 */
    }
-   catch (err)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /* v8 ignore start */ // Scryfall DB download not covered in automated tests.
@@ -556,7 +504,7 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
       logger
    };
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -564,17 +512,9 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
    try
    {
       await scryfallDownload(config);
+      /* v8 ignore next 2 */
    }
-   catch (err)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 /* v8 ignore stop */
@@ -590,7 +530,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
 {
    if (!isFile(path)) { exit(`'input' option path is not a file.`); }
 
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
@@ -661,7 +601,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       theme
    };
 
-   // Set default log level to verbose.
+   /* v8 ignore next 1 */ // Set default log level to verbose.
    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
 
    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
@@ -669,17 +609,9 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
    try
    {
       await sortFormat(config);
+      /* v8 ignore next 2 */
    }
-   catch (err)
-   {
-      if (logger.isLevelEnabled('debug')) { console.error(err); }
-
-      let message = typeof err === 'string' ? err : 'Unknown error';
-
-      if (err instanceof Error) { message = err.message; }
-
-      exit(message);
-   }
+   catch (err: unknown) { handleException(err); }
 }
 
 // Internal Implementation -------------------------------------------------------------------------------------------
@@ -728,7 +660,7 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
-   if (opts.output === void 0) { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    return {
       compress: opts.compress ?? false,
