@@ -53,17 +53,17 @@ describe('CLI Command Errors:', () =>
    {
       it(`invalid 'path'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('INVALID PATH', {});
          }).rejects.toThrow('process.exit: 1');
 
-         checkExit(`'path' option is not a file or directory path.`);
+         checkExit(`'[path]' option is not a file or directory path.`);
       });
 
       it(`invalid 'db'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', { db: 'INVALID PATH' });
          }).rejects.toThrow('process.exit: 1');
@@ -73,7 +73,7 @@ describe('CLI Command Errors:', () =>
 
       it(`invalid 'group-decks'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
                db: './test/fixture/input/db/scryfall_test_cards.json.gz',
@@ -86,7 +86,7 @@ describe('CLI Command Errors:', () =>
 
       it(`invalid 'group-external'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
                db: './test/fixture/input/db/scryfall_test_cards.json.gz',
@@ -99,7 +99,7 @@ describe('CLI Command Errors:', () =>
 
       it(`invalid 'group-proxy'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
                db: './test/fixture/input/db/scryfall_test_cards.json.gz',
@@ -112,7 +112,7 @@ describe('CLI Command Errors:', () =>
 
       it(`invalid 'compress'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
                db: './test/fixture/input/db/scryfall_test_cards.json.gz',
@@ -125,7 +125,7 @@ describe('CLI Command Errors:', () =>
 
       it(`invalid 'loglevel'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
                db: './test/fixture/input/db/scryfall_test_cards.json.gz',
@@ -138,7 +138,7 @@ describe('CLI Command Errors:', () =>
 
       it(`invalid 'output'`, async () =>
       {
-         expect(async () =>
+         await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
                db: './test/fixture/input/db/scryfall_test_cards.json.gz',
@@ -147,6 +147,196 @@ describe('CLI Command Errors:', () =>
          }).rejects.toThrow('process.exit: 1');
 
          checkExit(`'output' option is not defined.`);
+      });
+   });
+
+   describe('export-csv', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportCsv('INVALID PATH', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file or directory path.`);
+      });
+
+      it(`invalid 'output'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not defined.`);
+      });
+
+      it(`invalid 'output' (file mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/snapshot/cli/export-csv/collection'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is a file; 'output' option must also be a file.`);
+      });
+
+      it(`invalid 'output' (dir mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: './test/fixture/snapshot/cli/export-csv/collection/commander.csv'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is a directory; 'output' option must also be a directory.`);
+      });
+
+      it(`invalid 'coalesce'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: './test/fixture/snapshot/cli/export-csv/collection',
+               coalesce: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'coalesce' option is not a boolean.`);
+      });
+   });
+
+   describe('export-excel', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('INVALID PATH', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file path.`);
+      });
+
+      it(`invalid 'output'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not defined.`);
+      });
+
+      it(`invalid 'output' (dir mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/snapshot',
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is a directory.`);
+      });
+
+      it(`invalid 'by-kind'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/output/cli/export-excel/dummy.xlsx',
+               'by-kind': null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'by-kind' option is not a boolean.`);
+      });
+
+      it(`invalid 'by-type'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/output/cli/export-excel/dummy.xlsx',
+               'by-type': null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'by-type' option is not a boolean.`);
+      });
+
+      it(`invalid 'no-filename'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/output/cli/export-excel/dummy.xlsx',
+               filename: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'no-filename' option is not a boolean.`);
+      });
+
+      it(`invalid 'no-price'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/output/cli/export-excel/dummy.xlsx',
+               price: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'no-price' option is not a boolean.`);
+      });
+
+      it(`invalid 'no-rarity'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/output/cli/export-excel/dummy.xlsx',
+               rarity: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'no-rarity' option is not a boolean.`);
+      });
+
+      it(`invalid 'theme' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/output/cli/export-excel/dummy.xlsx',
+               theme: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'theme' option is not a string.`);
+      });
+
+      it(`invalid 'theme' (unknown)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/output/cli/export-excel/dummy.xlsx',
+               theme: 'unknown'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'theme' option is invalid: 'unknown'.`);
       });
    });
 });
