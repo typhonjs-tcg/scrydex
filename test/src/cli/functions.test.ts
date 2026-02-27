@@ -8,7 +8,7 @@ import { CardDB }       from '#scrydex/data/db';
 
 import {
    commandConvertCsv,
-   // commandDiff,
+   // commandDiff, (pending implementation completion)
    commandExportCsv,
    commandExportExcel,
    commandExportLLM,
@@ -16,14 +16,14 @@ import {
    commandFileCompress,
    commandFilter,
    commandFind,
-   commandScryfallDownload,
+   // commandScryfallDownload, (not tested)
    commandSortFormat }  from '../../../src/cli/functions';
 
 import { AssertData }   from '../util/AssertData';
 
 describe('CLI Commands:', () =>
 {
-   describe('convert-csv (commandConvertCsv)', () =>
+   describe('convert-csv', () =>
    {
       it('compressed', async () => {
          await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
@@ -90,39 +90,9 @@ describe('CLI Commands:', () =>
       });
    });
 
-   describe('sort-format (premodern:oldschool:predh:commander)', () =>
-   {
-      it('collection', async () =>
-      {
-         await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
-            output: './test/fixture/output/cli/sort-format/collection',
-            formats: 'premodern:oldschool:predh:commander',
-            loglevel: 'error',
-            'by-type': true
-         });
-
-         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection',
-          'test/fixture/snapshot/cli/sort-format/collection');
-      });
-
-      it('collection (high-value)', async () =>
-      {
-         await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
-            output: './test/fixture/output/cli/sort-format/collection-high-value',
-            formats: 'premodern:oldschool:predh:commander',
-            loglevel: 'error',
-            'by-type': true,
-            'high-value': '>=10'
-         });
-
-         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection-high-value',
-          'test/fixture/snapshot/cli/sort-format/collection-high-value');
-      });
-   });
-
    describe('export-csv', () =>
    {
-      it('(premodern:oldschool:predh:commander)', async () =>
+      it('default (collection)', async () =>
       {
          await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection', {
             output: './test/fixture/output/cli/export-csv/collection',
@@ -133,7 +103,7 @@ describe('CLI Commands:', () =>
           './test/fixture/snapshot/cli/export-csv/collection');
       });
 
-      it('coalesce (premodern:oldschool:predh:commander)', async () =>
+      it('coalesce (collection)', async () =>
       {
          await commandExportCsv('./test/fixture/snapshot/cli/sort-format/collection', {
             output: './test/fixture/output/cli/export-csv/collection-coalesce',
@@ -283,6 +253,36 @@ describe('CLI Commands:', () =>
 
          await AssertData.directoryEqual('./test/fixture/output/cli/export-txt/collection-coalesce',
           './test/fixture/snapshot/cli/export-txt/collection-coalesce');
+      });
+   });
+
+   describe('sort-format (premodern:oldschool:predh:commander)', () =>
+   {
+      it('collection', async () =>
+      {
+         await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+            output: './test/fixture/output/cli/sort-format/collection',
+            formats: 'premodern:oldschool:predh:commander',
+            loglevel: 'error',
+            'by-type': true
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection',
+          'test/fixture/snapshot/cli/sort-format/collection');
+      });
+
+      it('collection (high-value)', async () =>
+      {
+         await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+            output: './test/fixture/output/cli/sort-format/collection-high-value',
+            formats: 'premodern:oldschool:predh:commander',
+            loglevel: 'error',
+            'by-type': true,
+            'high-value': '>=10'
+         });
+
+         await AssertData.directoryEqual('./test/fixture/output/cli/sort-format/collection-high-value',
+          'test/fixture/snapshot/cli/sort-format/collection-high-value');
       });
    });
 });
