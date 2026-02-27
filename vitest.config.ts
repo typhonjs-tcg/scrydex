@@ -10,6 +10,8 @@ export default defineConfig({
          include: ['src/**'],
          exclude: [
             'test/**',
+            'src/cli/index.ts',
+            'src/cli/wrap.ts',
             'src/data/scryfall/scryfallDownload.ts'
          ],
          provider: 'v8',
