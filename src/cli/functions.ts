@@ -165,18 +165,18 @@ export async function commandFileCompress(path: string, opts: Record<string, any
  */
 export async function commandExportCsv(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
-      exit(`'input' option is a file; 'output' option must also be a file.`);
+      exit(`'[path]' option is a file; 'output' option must also be a file.`);
    }
 
    if (isDirectory(path) && fs.existsSync(opts.output) && isFile(opts.output))
    {
-      exit(`'input' option is a directory; 'output' option must also be a directory.`);
+      exit(`'[path]' option is a directory; 'output' option must also be a directory.`);
    }
 
    if (opts.coalesce !== void 0 && typeof opts.coalesce !== 'boolean')
@@ -213,7 +213,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
  */
 export async function commandExportExcel(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(path)) { exit(`'input' option path is not a file.`); }
+   if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
@@ -249,7 +249,7 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
 
    if (opts.theme !== void 0)
    {
-      if (typeof opts.theme !== 'string') { exit(`'theme' option is not defined.`); }
+      if (typeof opts.theme !== 'string') { exit(`'theme' option is not a string.`); }
 
       if (opts.theme !== 'light' && opts.theme !== 'dark') { exit(`'theme' option is invalid: '${opts.theme}'.`); }
    }
@@ -292,18 +292,18 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
  */
 export async function commandExportLLM(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
-      exit(`'input' option is a file; 'output' option must also be a file.`);
+      exit(`'[path]' option is a file; 'output' option must also be a file.`);
    }
 
    if (isDirectory(path) && fs.existsSync(opts.output) && isFile(opts.output))
    {
-      exit(`'input' option is a directory; 'output' option must also be a directory.`);
+      exit(`'[path]' option is a directory; 'output' option must also be a directory.`);
    }
 
    if (opts['oracle-text'] !== void 0 && typeof opts['oracle-text'] !== 'boolean')
@@ -346,18 +346,18 @@ export async function commandExportLLM(path: string, opts: Record<string, any>):
  */
 export async function commandExportTxt(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
-      exit(`'input' option is a file; 'output' option must also be a file.`);
+      exit(`'[path]' option is a file; 'output' option must also be a file.`);
    }
 
    if (isDirectory(path) && fs.existsSync(opts.output) && isFile(opts.output))
    {
-      exit(`'input' option is a directory; 'output' option must also be a directory.`);
+      exit(`'[path]' option is a directory; 'output' option must also be a directory.`);
    }
 
    if (opts.coalesce !== void 0 && typeof opts.coalesce !== 'boolean')
@@ -394,7 +394,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
  */
 export async function commandFilter(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(path)) { exit(`'input' option is not a file.`); }
+   if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
@@ -449,7 +449,7 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
  */
 export async function commandFind(path: string, query: string, opts: Record<string, any>)
 {
-   if (!isFile(path) && !isDirectory(path)) { exit(`'input' option path is not a file or directory.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (query !== void 0 && typeof query !== 'string') { exit(`'query' option must be a string.`); }
 
@@ -528,7 +528,7 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
  */
 export async function commandSortFormat(path: string, opts: Record<string, any>): Promise<void>
 {
-   if (!isFile(path)) { exit(`'input' option path is not a file.`); }
+   if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
 
@@ -638,7 +638,7 @@ function exit(message: string): never
  */
 function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Convert
 {
-   if (!isFile(path) && !isDirectory(path)) { exit(`'path' option is not a file or directory path.`); }
+   if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
    if (!isFile(opts.db)) { exit(`'db' option is not a file path.`); }
 
    if (opts['group-decks'] !== void 0 && !isFile(opts['group-decks']) && !isDirectory(opts['group-decks']))
