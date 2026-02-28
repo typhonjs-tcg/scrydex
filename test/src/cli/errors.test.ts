@@ -146,7 +146,7 @@ describe('CLI Command Errors:', () =>
             });
          }).rejects.toThrow('process.exit: 1');
 
-         checkExit(`'output' option is not defined.`);
+         checkExit(`'output' option is not a string.`);
       });
    });
 
@@ -171,7 +171,7 @@ describe('CLI Command Errors:', () =>
             });
          }).rejects.toThrow('process.exit: 1');
 
-         checkExit(`'output' option is not defined.`);
+         checkExit(`'output' option is not a string.`);
       });
 
       it(`invalid 'output' (file mismatch)`, async () =>
@@ -233,7 +233,7 @@ describe('CLI Command Errors:', () =>
             });
          }).rejects.toThrow('process.exit: 1');
 
-         checkExit(`'output' option is not defined.`);
+         checkExit(`'output' option is not a string.`);
       });
 
       it(`invalid 'output' (dir mismatch)`, async () =>
@@ -361,7 +361,7 @@ describe('CLI Command Errors:', () =>
             });
          }).rejects.toThrow('process.exit: 1');
 
-         checkExit(`'output' option is not defined.`);
+         checkExit(`'output' option is not a string.`);
       });
 
       it(`invalid 'output' (file mismatch)`, async () =>
@@ -436,7 +436,7 @@ describe('CLI Command Errors:', () =>
             });
          }).rejects.toThrow('process.exit: 1');
 
-         checkExit(`'output' option is not defined.`);
+         checkExit(`'output' option is not a string.`);
       });
 
       it(`invalid 'output' (file mismatch)`, async () =>
@@ -474,6 +474,221 @@ describe('CLI Command Errors:', () =>
          }).rejects.toThrow('process.exit: 1');
 
          checkExit(`'coalesce' option is not a boolean.`);
+      });
+   });
+
+   describe('sort-format', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('INVALID PATH', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file path.`);
+      });
+
+      it(`invalid 'output'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not a string.`);
+      });
+
+      it(`invalid 'loglevel'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               loglevel: 'INVALID'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'loglevel' option is invalid.`);
+      });
+
+      it(`invalid 'by-type'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               'by-type': null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'by-type' option is not a boolean.`);
+      });
+
+      it(`invalid 'compress'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               compress: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'compress' option is not a boolean.`);
+      });
+
+      it(`invalid 'formats' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'formats' option is not a string.`);
+      });
+
+      it(`invalid 'formats' (unknown)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'unknown'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'formats' option contains an invalid format: unknown`);
+      });
+
+      it(`invalid 'formats' (duplicate)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern:premodern'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'formats' option contains duplicate format: premodern`);
+      });
+
+      it(`invalid 'clean'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               clean: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'clean' option is not a boolean.`);
+      });
+
+      it(`invalid 'high-value' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               'high-value': null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'high-value' option is not a string.`);
+      });
+
+      it(`invalid 'high-value' (bad parse)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               'high-value': 'INVALID'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'high-value' option is invalid: INVALID`);
+      });
+
+      it(`invalid 'high-value' (not > or >=)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               'high-value': '<5'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'high-value' option must be '>' or '>=' price comparison.`);
+      });
+
+      it(`invalid 'high-value' (not >1)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               'high-value': '>0.5'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'high-value' option must be a positive threshold strictly greater than 1.`);
+      });
+
+      it(`invalid 'mark' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               mark: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'mark' option is not a string.`);
+      });
+
+      it(`invalid 'theme' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               theme: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'theme' option is not a string.`);
+      });
+
+      it(`invalid 'theme' (unknown)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandSortFormat('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/sort-format/collection',
+               formats: 'premodern',
+               theme: 'unknown'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'theme' option is invalid: 'unknown'.`);
       });
    });
 });
