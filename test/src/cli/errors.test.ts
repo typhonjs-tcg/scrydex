@@ -414,4 +414,66 @@ describe('CLI Command Errors:', () =>
          checkExit(`'types' option is not a boolean.`);
       });
    });
+
+   describe('export-txt', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportTxt('INVALID PATH', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file or directory path.`);
+      });
+
+      it(`invalid 'output'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not defined.`);
+      });
+
+      it(`invalid 'output' (file mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/snapshot/cli/export-txt/collection'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is a file; 'output' option must also be a file.`);
+      });
+
+      it(`invalid 'output' (dir mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: './test/fixture/snapshot/cli/export-txt/collection/commander.txt'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is a directory; 'output' option must also be a directory.`);
+      });
+
+      it(`invalid 'coalesce'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: './test/fixture/snapshot/cli/export-txt/collection',
+               coalesce: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'coalesce' option is not a boolean.`);
+      });
+   });
 });
