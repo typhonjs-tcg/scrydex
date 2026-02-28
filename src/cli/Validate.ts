@@ -27,14 +27,14 @@ export abstract class Validate
       if (typeof regexInput === 'string')
       {
          // Verify pattern match fields.
-         if (opts.b !== void 0 && typeof opts.b !== 'boolean') { return `'b' option must be a boolean.`; }
-         if (opts.i !== void 0 && typeof opts.i !== 'boolean') { return `'i' option must be a boolean.`; }
-         if (opts.exact !== void 0 && typeof opts.exact !== 'boolean') { return `'exact' option must be a boolean.`; }
+         if (opts.b !== void 0 && typeof opts.b !== 'boolean') { return `'b' option is not a boolean.`; }
+         if (opts.i !== void 0 && typeof opts.i !== 'boolean') { return `'i' option is not a boolean.`; }
+         if (opts.exact !== void 0 && typeof opts.exact !== 'boolean') { return `'exact' option is not a boolean.`; }
 
          // Verify search surface fields.
-         if (opts.name !== void 0 && typeof opts.name !== 'boolean') { return `'name' option must be a boolean.`; }
-         if (opts.oracle !== void 0 && typeof opts.oracle !== 'boolean') { return `'oracle' option must be a boolean.`; }
-         if (opts.type !== void 0 && typeof opts.type !== 'boolean') { return `'type' option must be a boolean.`; }
+         if (opts.name !== void 0 && typeof opts.name !== 'boolean') { return `'name' option is not a boolean.`; }
+         if (opts.oracle !== void 0 && typeof opts.oracle !== 'boolean') { return `'oracle' option is not a boolean.`; }
+         if (opts.type !== void 0 && typeof opts.type !== 'boolean') { return `'type' option is not a boolean.`; }
 
          const regexFields: string[] = [];
 
@@ -104,7 +104,7 @@ export abstract class Validate
 
       if (opts['color-identity'] !== void 0)
       {
-         if (typeof opts['color-identity'] !== 'string') { return `'color-identity' option must be a string.`; }
+         if (typeof opts['color-identity'] !== 'string') { return `'color-identity' option is not a string.`; }
 
          const colorIdentity = ScryfallData.parseManaCostColors(opts['color-identity']);
          if (colorIdentity.size === 0)
@@ -146,7 +146,7 @@ export abstract class Validate
 
       if (opts['mana-cost'] !== void 0)
       {
-         if (typeof opts['mana-cost'] !== 'string') { return `'mana-cost' option must be a string.`; }
+         if (typeof opts['mana-cost'] !== 'string') { return `'mana-cost' option is not a string.`; }
 
          result.properties.manaCost = opts['mana-cost'];
       }
@@ -155,7 +155,7 @@ export abstract class Validate
       {
          if (typeof opts.price !== 'string')
          {
-            return `'price' option must be a string. Ensure quotes are used IE ">10"`;
+            return `'price' option is not a string. Ensure quotes are used IE ">10"`;
          }
 
          const priceFilter = CardDB.Price.parseFilter(opts.price);
@@ -177,7 +177,7 @@ export abstract class Validate
     */
    static gameFormats(formats: unknown): string[] | string
    {
-      if (typeof formats !== 'string') { return `'formats' option must be a string.`; }
+      if (typeof formats !== 'string') { return `'formats' option is not a string.`; }
 
       const result = formats.split(':');
 
@@ -211,7 +211,7 @@ export abstract class Validate
     */
    static #validateBorder(borders: unknown): Set<string> | string
    {
-      if (typeof borders !== 'string') { return `'border' option must be a string.`; }
+      if (typeof borders !== 'string') { return `'border' option is not a string.`; }
 
       const entries = borders.split(':');
 
@@ -238,7 +238,7 @@ export abstract class Validate
     */
    static #validateKeywords(keywords: unknown): RegExp[] | string
    {
-      if (typeof keywords !== 'string') { return `'keywords' option must be a string.`; }
+      if (typeof keywords !== 'string') { return `'keywords' option is not a string.`; }
 
       const result = keywords.split(':');
 
