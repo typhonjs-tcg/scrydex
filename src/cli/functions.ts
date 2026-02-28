@@ -134,7 +134,7 @@ export async function commandFileCompress(path: string, opts: Record<string, any
 //       exit(`'inputA' option is a directory path, but 'inputB' is not a directory path.`);
 //    }
 //
-//    if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+//    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 //
 //    /* v8 ignore next 1 */ // Set default log level to verbose.
 //    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
@@ -167,7 +167,7 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
 {
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
-   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -215,7 +215,7 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
 {
    if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
-   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
    if (fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -294,7 +294,7 @@ export async function commandExportLLM(path: string, opts: Record<string, any>):
 {
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
-   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -348,7 +348,7 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
 {
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
-   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
    if (isFile(path) && fs.existsSync(opts.output) && isDirectory(opts.output))
    {
@@ -396,7 +396,7 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
 {
    if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
-   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
    if (isDirectory(opts.output)) { exit(`'output' option is an already existing directory.`); }
 
@@ -530,7 +530,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
 {
    if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
-   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
@@ -541,8 +541,6 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
 
    if (opts.compress !== void 0 && typeof opts.compress !== 'boolean') { exit(`'compress' option is not a boolean.`); }
 
-   if (typeof opts.formats !== 'string') { exit(`'formats' option is not defined.`); }
-
    const formats = Validate.gameFormats(opts.formats);
 
    if (typeof formats === 'string') { exit(formats); }
@@ -551,7 +549,7 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
 
    if (opts['high-value'] !== void 0 && typeof opts['high-value'] !== 'string')
    {
-      exit(`'high-value' option is not defined.`);
+      exit(`'high-value' option is not a string.`);
    }
 
    let highValue: CardDB.Data.PriceExpression | null = null;
@@ -573,13 +571,13 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       }
    }
 
-   if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not defined.`); }
+   if (opts.mark !== void 0 && typeof opts.mark !== 'string') { exit(`'mark' option is not a string.`); }
 
    const mark: Set<string> = typeof opts.mark === 'string' ? new Set(opts.mark.split(':')) : new Set();
 
    if (opts.theme !== void 0)
    {
-      if (typeof opts.theme !== 'string') { exit(`'theme' option is not defined.`); }
+      if (typeof opts.theme !== 'string') { exit(`'theme' option is not a string.`); }
 
       if (opts.theme !== 'light' && opts.theme !== 'dark') { exit(`'theme' option is invalid: '${opts.theme}'.`); }
    }
@@ -660,7 +658,7 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
-   if (typeof opts.output !== 'string') { exit(`'output' option is not defined.`); }
+   if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
    return {
       compress: opts.compress ?? false,
