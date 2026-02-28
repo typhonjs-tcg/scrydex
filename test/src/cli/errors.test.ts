@@ -339,4 +339,79 @@ describe('CLI Command Errors:', () =>
          checkExit(`'theme' option is invalid: 'unknown'.`);
       });
    });
+
+   describe('export-llm', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportLLM('INVALID PATH', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file or directory path.`);
+      });
+
+      it(`invalid 'output'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportLLM('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not defined.`);
+      });
+
+      it(`invalid 'output' (file mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportLLM('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/snapshot',
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is a file; 'output' option must also be a file.`);
+      });
+
+      it(`invalid 'output' (dir mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportLLM('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: './test/fixture/snapshot/cli/sort-format/collection/commander/commander.json',
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is a directory; 'output' option must also be a directory.`);
+      });
+
+      it(`invalid 'no-oracle-text'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportLLM('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: './test/fixture/output/cli/export-llm/dummy',
+               'oracle-text': null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'no-oracle-text' option is not a boolean.`);
+      });
+
+      it(`invalid 'types'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportLLM('./test/fixture/snapshot/cli/sort-format/collection', {
+               output: './test/fixture/output/cli/export-llm/dummy',
+               types: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'types' option is not a boolean.`);
+      });
+   });
 });
