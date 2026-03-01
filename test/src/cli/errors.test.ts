@@ -1,8 +1,8 @@
 import {
-   vi,
-   expect,
+   afterEach,
    beforeEach,
-   afterEach }          from 'vitest';
+   expect,
+   vi }                 from 'vitest';
 
 import {
    commandConvertCsv,
@@ -474,6 +474,315 @@ describe('CLI Command Errors:', () =>
          }).rejects.toThrow('process.exit: 1');
 
          checkExit(`'coalesce' option is not a boolean.`);
+      });
+   });
+
+   describe('find', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('INVALID PATH', '', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file or directory path.`);
+      });
+
+      it(`invalid 'query'`, async () =>
+      {
+         await expect(async () =>
+         {
+            // @ts-expect-error
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', null, {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'query' option is not a string.`);
+      });
+
+      it(`invalid 'loglevel'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'INVALID'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'loglevel' option is invalid.`);
+      });
+
+      it(`invalid 'b' / word boundary`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               b: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'b' option is not a boolean.`);
+      });
+
+      it(`invalid 'i' / case insensitive`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               i: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'i' option is not a boolean.`);
+      });
+
+      it(`invalid 'exact'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               exact: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'exact' option is not a boolean.`);
+      });
+
+      it(`invalid 'name'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               name: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'name' option is not a boolean.`);
+      });
+
+      it(`invalid 'oracle'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               oracle: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'oracle' option is not a boolean.`);
+      });
+
+      it(`invalid 'type'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               type: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'type' option is not a boolean.`);
+      });
+
+      it(`invalid 'regex'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               regex: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'regex' option is not a boolean.`);
+      });
+
+      it(`invalid 'border' (not a string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               border: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'border' option is not a string.`);
+      });
+
+      it(`invalid 'border' (unknown)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               border: 'unknown'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'border' option contains an invalid value: unknown`);
+      });
+
+      it(`invalid 'border' (duplicate)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               border: 'black:black'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'border' option contains duplicate value: black`);
+      });
+
+      it(`invalid 'color-identity' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               'color-identity': null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'color-identity' option is not a string.`);
+      });
+
+      it(`invalid 'color-identity' (not valid)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               'color-identity': '{INVALID}'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'color-identity' option contains no valid WUBRG colors: {INVALID}`);
+      });
+
+      it(`invalid 'cmc' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               cmc: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'cmc' option must be 0 to a positive number.`);
+      });
+
+      it(`invalid 'cmc' (negative)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               cmc: '-1'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'cmc' option must be 0 to a positive number.`);
+      });
+
+      it(`invalid 'formats'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               formats: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'formats' option is not a string.`);
+      });
+
+      it(`invalid 'keywords' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               keywords: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'keywords' option is not a string.`);
+      });
+
+      it(`invalid 'keywords' (empty string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               keywords: ''
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'keywords' option contains empty / zero length entry.`);
+      });
+
+      it(`invalid 'keywords' (duplicate)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               keywords: 'flying:flying'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'keywords' option contains duplicate value: flying`);
+      });
+
+      it(`invalid 'mana-cost'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               'mana-cost': null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'mana-cost' option is not a string.`);
+      });
+
+      it(`invalid 'price' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               price: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'price' option is not a string.`);
+      });
+
+      it(`invalid 'price' (not filter)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+               loglevel: 'error',
+               price: 'INVALID'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'price' option is an invalid price filter.`);
       });
    });
 

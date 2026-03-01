@@ -1,7 +1,10 @@
 import fs               from 'node:fs';
 
 import {
+   afterEach,
    assert,
+   beforeEach,
+   expect,
    vi }                 from 'vitest';
 
 import { CardDB }       from '#scrydex/data/db';
@@ -232,7 +235,7 @@ describe('CLI Commands:', () =>
 
    describe('export-txt', () =>
    {
-      it('(premodern:oldschool:predh:commander)', async () =>
+      it('default (collection)', async () =>
       {
          await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection', {
             output: './test/fixture/output/cli/export-txt/collection',
@@ -243,7 +246,7 @@ describe('CLI Commands:', () =>
           './test/fixture/snapshot/cli/export-txt/collection');
       });
 
-      it('coalesce (premodern:oldschool:predh:commander)', async () =>
+      it('coalesce (collection)', async () =>
       {
          await commandExportTxt('./test/fixture/snapshot/cli/sort-format/collection', {
             output: './test/fixture/output/cli/export-txt/collection-coalesce',
@@ -253,6 +256,152 @@ describe('CLI Commands:', () =>
 
          await AssertData.directoryEqual('./test/fixture/output/cli/export-txt/collection-coalesce',
           './test/fixture/snapshot/cli/export-txt/collection-coalesce');
+      });
+   });
+
+   describe('find', () =>
+   {
+      let logSpy: ReturnType<typeof vi.spyOn>;
+      let logResult: any[][] = [];
+
+      beforeEach(() =>
+      {
+         logResult = [];
+         logSpy = vi.spyOn(console, 'log').mockImplementation((...args) => logResult.push(args));
+      });
+
+      afterEach(() => logSpy.mockRestore());
+
+      it('default-query', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', 'Smothering Tithe', {});
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query.json');
+      });
+
+      it('default-query-boundary', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', 'Tomb', {
+            b: true
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-boundary.json');
+      });
+
+      it('default-query-insensitive', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', 'FORCE OF', {
+            i: true
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-insensitive.json');
+      });
+
+      it('default-query-exact', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', 'Urborg', {
+            exact: true
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-exact.json');
+      });
+
+      it('default-query-border-format', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+            border: 'black',
+            formats: 'oldschool'
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-border-format.json');
+      });
+
+      it('default-query-cmc', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+            cmc: '8'
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-cmc.json');
+      });
+
+      it('default-query-keywords', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+            keywords: 'goad'
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-keywords.json');
+      });
+
+      it('default-query-keywords', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+            'mana-cost': '{2}{W}{U}'
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-mana-cost.json');
+      });
+
+      it('default-query-price', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', '', {
+            price: '>500'
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query-price.json');
+      });
+
+      it('name-query', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', 'Smothering Tithe', {
+            name: true
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/default-query.json');
+      });
+
+      it('oracle-query', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection',
+            `As long as your devotion to white is less than five, Heliod isn't a creature.`, {
+            oracle: true
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/oracle-query.json');
+      });
+
+      it('type-query', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection',
+            'Elemental Incarnation', {
+            type: true
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/type-query.json');
+      });
+
+      it('type-query-color-identity', async () =>
+      {
+         await commandFind('./test/fixture/snapshot/cli/sort-format/collection', 'Creature', {
+            type: true,
+            'color-identity': '{W}{U}'
+         });
+
+         await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+          './test/fixture/snapshot/cli/find/type-query-color-identity.json');
       });
    });
 
