@@ -10,6 +10,18 @@ export abstract class Validate
    private constructor() {}
 
    /**
+    * Escapes regex string.
+    *
+    * @param str - Target string.
+    *
+    * @returns Escaped query.
+    */
+   static #escapeRegex(str: string): string
+   {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+   }
+
+   /**
     * Validates CLI options for all filter operations.
     *
     * @param opts - CLI options.
@@ -30,6 +42,7 @@ export abstract class Validate
          if (opts.b !== void 0 && typeof opts.b !== 'boolean') { return `'b' option is not a boolean.`; }
          if (opts.i !== void 0 && typeof opts.i !== 'boolean') { return `'i' option is not a boolean.`; }
          if (opts.exact !== void 0 && typeof opts.exact !== 'boolean') { return `'exact' option is not a boolean.`; }
+         if (opts.regex !== void 0 && typeof opts.regex !== 'boolean') { return `'regex' option is not a boolean.`; }
 
          // Verify search surface fields.
          if (opts.name !== void 0 && typeof opts.name !== 'boolean') { return `'name' option is not a boolean.`; }
@@ -51,7 +64,7 @@ export abstract class Validate
             if (opts.type) { regexFields.push('type_line'); }
          }
 
-         let searchText = regexInput;
+         let searchText = this.#escapeRegex(regexInput);
 
          // Wrap w/ word boundaries.
          if (opts.b) { searchText = `\\b${searchText}\\b`; }
@@ -64,6 +77,7 @@ export abstract class Validate
          try
          {
             regex = new RegExp(searchText, opts.i ? 'i' : void 0);
+            /* v8 ignore start */ // `searchText` is escaped and _should_ never trigger an exception.
          }
          catch (err: unknown)
          {
@@ -73,6 +87,7 @@ export abstract class Validate
 
             return message;
          }
+         /* v8 ignore stop */
 
          if (regex && regexInput.length)
          {
@@ -219,9 +234,9 @@ export abstract class Validate
 
       for (const border of entries)
       {
-         if (seen.has(border)) { return `'border' option contains duplicate border: ${border}`; }
+         if (seen.has(border)) { return `'border' option contains duplicate value: ${border}`; }
 
-         if (!this.#supportedBorder.has(border)) { return `'border' option contains an invalid format: ${border}`; }
+         if (!this.#supportedBorder.has(border)) { return `'border' option contains an invalid value: ${border}`; }
 
          seen.add(border);
       }
@@ -232,11 +247,13 @@ export abstract class Validate
    /**
     * Parse and validate `keywords` into separate RegExp instances.
     *
-    * @param keywords -
+    * @param keywords - CLI keywords to parse.
+    *
+    * @param [escape] - Whether to escape keywords; default: true.
     *
     * @returns Parsed `keywords` or error string.
     */
-   static #validateKeywords(keywords: unknown): RegExp[] | string
+   static #validateKeywords(keywords: unknown, escape: boolean = true): RegExp[] | string
    {
       if (typeof keywords !== 'string') { return `'keywords' option is not a string.`; }
 
@@ -248,9 +265,9 @@ export abstract class Validate
       {
          if (keyword.length === 0) { return `'keywords' option contains empty / zero length entry.`; }
 
-         if (seen.has(keyword)) { return `'keywords' option contains duplicate keyword: ${keyword}`; }
+         if (seen.has(keyword)) { return `'keywords' option contains duplicate value: ${keyword}`; }
 
-         seen.set(keyword, new RegExp(`\\b${keyword}\\b`, 'i'));
+         seen.set(keyword, new RegExp(`\\b${this.#escapeRegex(keyword)}\\b`, 'i'));
       }
 
       return [...seen.values()];
