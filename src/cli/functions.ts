@@ -451,7 +451,7 @@ export async function commandFind(path: string, query: string, opts: Record<stri
 {
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
-   if (query !== void 0 && typeof query !== 'string') { exit(`'query' option must be a string.`); }
+   if (query !== void 0 && typeof query !== 'string') { exit(`'query' option is not a string.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
