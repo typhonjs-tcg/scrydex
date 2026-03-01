@@ -1,0 +1,14 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to find sorted Scrydex CardDBs in directory: ./test/fixture/snapshot/cli/sort-format/collection\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Searching 5 card collections: basic-land, commander, oldschool, predh, premodern\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Grand Arbiter Augustin IV; Quantity: 1; Collection: predh; Rarity: rare; Category: Multicolor\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Unbender Tine; Quantity: 1; Collection: predh; Rarity: uncommon; Category: Multicolor\u001b[0m"
+  ]
+]

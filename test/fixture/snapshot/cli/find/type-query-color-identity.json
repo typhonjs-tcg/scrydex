@@ -1,0 +1,197 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to find sorted Scrydex CardDBs in directory: ./test/fixture/snapshot/cli/sort-format/collection\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Searching 5 card collections: basic-land, commander, oldschool, predh, premodern\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Aberrant Researcher // Perfected Form; Quantity: 1; Collection: commander; Rarity: uncommon; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Aberrant Researcher // Perfected Form; Quantity: 1; Collection: commander; Rarity: uncommon; Category: U; In External: group-external\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: All-Seeing Arbiter; Quantity: 1; Collection: commander; Rarity: mythic; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Arcane Proxy; Quantity: 1; Collection: commander; Rarity: mythic; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Archipelagore; Quantity: 1; Collection: commander; Rarity: uncommon; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Avacyn, Angel of Hope; Quantity: 1; Collection: commander; Rarity: mythic; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Darksteel Splicer; Quantity: 1; Collection: commander; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Deepglow Skate; Quantity: 1; Collection: commander; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Displacer Kitten; Quantity: 1; Collection: commander; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Drannith Magistrate; Quantity: 1; Collection: commander; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Esper Sentinel; Quantity: 2; Collection: commander; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Filigree Vector; Quantity: 1; Collection: commander; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Flux Channeler; Quantity: 1; Collection: commander; Rarity: uncommon; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Guildpact Informant; Quantity: 1; Collection: commander; Rarity: common; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Heliod, Sun-Crowned; Quantity: 1; Collection: commander; Rarity: mythic; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Ranger-Captain of Eos; Quantity: 1; Collection: commander; Rarity: mythic; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Solitude; Quantity: 1; Collection: commander; Rarity: mythic; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Thassa's Oracle; Quantity: 1; Collection: commander; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Clergy of the Holy Nimbus; Quantity: 1; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Combat Medic; Quantity: 2; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Combat Medic; Quantity: 2; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Exorcist; Quantity: 3; Collection: oldschool; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Farrelite Priest; Quantity: 4; Collection: oldschool; Rarity: uncommon; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Giant Shark; Quantity: 2; Collection: oldschool; Rarity: common; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Icatian Infantry; Quantity: 1; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Icatian Infantry; Quantity: 2; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Icatian Moneychanger; Quantity: 2; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Squire; Quantity: 1; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Vesuvan Doppelganger; Quantity: 2; Collection: oldschool; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Vodalian Mage; Quantity: 4; Collection: oldschool; Rarity: common; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Wall of Caltrops; Quantity: 1; Collection: oldschool; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Water Wurm; Quantity: 1; Collection: oldschool; Rarity: common; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Arcum Dagsson; Quantity: 1; Collection: predh; Rarity: mythic; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Blighted Agent; Quantity: 1; Collection: predh; Rarity: common; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Blightsteel Colossus; Quantity: 1; Collection: predh; Rarity: mythic; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Consecrated Sphinx; Quantity: 1; Collection: predh; Rarity: mythic; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Core Prowler; Quantity: 1; Collection: predh; Rarity: uncommon; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Corpse Cur; Quantity: 1; Collection: predh; Rarity: common; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Darien, King of Kjeldor; Quantity: 1; Collection: predh; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Elesh Norn, Grand Cenobite; Quantity: 1; Collection: predh; Rarity: mythic; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Grand Arbiter Augustin IV; Quantity: 1; Collection: predh; Rarity: rare; Category: Multicolor\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Leonin Relic-Warder; Quantity: 1; Collection: predh; Rarity: uncommon; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Myr Retriever; Quantity: 1; Collection: predh; Rarity: common; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Phyrexian Ingester; Quantity: 1; Collection: predh; Rarity: uncommon; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Phyrexian Metamorph; Quantity: 1; Collection: predh; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Spellskite; Quantity: 1; Collection: predh; Rarity: rare; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Stoneforge Mystic; Quantity: 1; Collection: predh; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Talas Explorer; Quantity: 1; Collection: predh; Rarity: common; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Tine Shrike; Quantity: 1; Collection: predh; Rarity: common; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Wall of Omens; Quantity: 1; Collection: predh; Rarity: uncommon; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Abu Ja'far; Quantity: 2; Collection: premodern; Rarity: uncommon; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Abu Ja'far; Quantity: 1; Collection: premodern; Rarity: uncommon; Category: W; In Deck: group-decks\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Academy Rector; Quantity: 1; Collection: premodern; Rarity: rare; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Academy Rector; Quantity: 1; Collection: premodern; Rarity: rare; Category: W; In Deck: group-decks\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Aura Thief; Quantity: 4; Collection: premodern; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Clay Statue; Quantity: 1; Collection: premodern; Rarity: common; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Great Whale; Quantity: 1; Collection: premodern; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Mishra's War Machine; Quantity: 2; Collection: premodern; Rarity: rare; Category: Artifact (Colorless)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Mist Dragon; Quantity: 1; Collection: premodern; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Palinchron; Quantity: 1; Collection: premodern; Rarity: rare; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Skyshroud Condor; Quantity: 1; Collection: premodern; Rarity: uncommon; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Wall of Water; Quantity: 6; Collection: premodern; Rarity: uncommon; Category: U\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Watchdog; Quantity: 1; Collection: premodern; Rarity: uncommon; Category: Artifact (Colorless)\u001b[0m"
+  ]
+]

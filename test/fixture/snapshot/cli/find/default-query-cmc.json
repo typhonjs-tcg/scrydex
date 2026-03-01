@@ -1,0 +1,14 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to find sorted Scrydex CardDBs in directory: ./test/fixture/snapshot/cli/sort-format/collection\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Searching 5 card collections: basic-land, commander, oldschool, predh, premodern\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Avacyn, Angel of Hope; Quantity: 1; Collection: commander; Rarity: mythic; Category: W\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Vilis, Broker of Blood; Quantity: 1; Collection: commander; Rarity: rare; Category: B\u001b[0m"
+  ]
+]
