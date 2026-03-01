@@ -278,8 +278,6 @@ describe('CLI Commands:', () =>
             loglevel: 'info'
          });
 
-         console.error(`!!!!! default-query - 1 logResult: `, JSON.stringify(logResult, null, 2));
-
          await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
           '../../fixture/snapshot/cli/find/default-query.json');
       });
