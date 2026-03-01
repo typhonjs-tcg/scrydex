@@ -120,10 +120,10 @@ program
 program
 .command('find [path] [query]', 'Find Card')
 .describe(
- 'Finds a card by text / regular expression from a sorted format directory or file path to a single CardDB.\n' +
+ 'Search for cards matching a query within a CardDB file or sorted format directory.\n' +
   '    You may omit `[query]` and provide just `[path]` when only using independent filter options.')
-.option('-i', 'Case insensitive search.')
 .option('-b', 'Enforce word boundaries on search.')
+.option('-i', 'Case insensitive search.')
 .option('--exact', 'Match the search query exactly.')
 .option('--oracle', 'Match the search query against the card oracle text.')
 .option('--name', 'Match the search query against the card name (default).')
@@ -134,7 +134,7 @@ program
 .option('--formats', 'Provide a colon separated list of legal game formats.')
 .option('--keywords', 'Provide a colon separated list of keywords such as `Flying` or `Cumulative upkeep`.')
 .option('--mana-cost', 'Provide the exact encoded symbol match such as `{1}{G}` to match mana cost.')
-.option('--price', 'Provide a price comparison expression (IE ">=10", "<2.50") or "null" for unpriced cards..')
+.option('--price', 'Provide a price comparison expression (IE ">=10", "<2.50") or "null" for unpriced cards.')
 .example('find "Demonic Tutor" ./sorted-directory')
 .action(commandFind);
 
