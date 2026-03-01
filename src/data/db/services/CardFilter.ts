@@ -203,10 +203,14 @@ export abstract class CardFilter
 
          for (const keywordRegex of config.properties.keywords)
          {
+            let result = false;
+
             for (const keyword of card.keywords)
             {
-               if (!keywordRegex.test(keyword)) { return false; }
+               if (keywordRegex.test(keyword)) { result = true; break; }
             }
+
+            if (!result) { return false; }
          }
       }
 
@@ -215,11 +219,14 @@ export abstract class CardFilter
          if (card.card_faces)
          {
             const manaCostParts = CardFields.partsManaCost(card);
+
             let result = false;
+
             for (const manaCost of manaCostParts)
             {
                if (config.properties.manaCost === manaCost) { result = true; break; }
             }
+
             if (!result) { return false; }
          }
          else if (config.properties.manaCost !== card.mana_cost)
