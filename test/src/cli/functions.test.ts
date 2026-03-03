@@ -7,8 +7,6 @@ import {
    expect,
    vi }                 from 'vitest';
 
-import { CardDB }       from '#scrydex/data/db';
-
 import {
    commandConvertCsv,
    // commandDiff, (pending implementation completion)
@@ -39,19 +37,8 @@ describe('CLI Commands:', () =>
             'group-proxy': './test/fixture/input/csv/manabox/groups/group-proxy.csv',
          });
 
-         const result = await CardDB.load({ filepath: './test/fixture/output/cli/convert-csv/inventory.json.gz' });
-         const snapshot = await CardDB.load({ filepath: './test/fixture/snapshot/cli/convert-csv/inventory.json.gz' });
-
-         assert.isDefined(result);
-         assert.isDefined(snapshot);
-
-         const cardsResult = await result.getAll();
-         const cardsSnapshot = await snapshot.getAll();
-
-         assert.isArray(cardsResult);
-         assert.isArray(cardsSnapshot);
-
-         assert.deepEqual(cardsResult, cardsSnapshot);
+         await AssertData.cardDBFiles('./test/fixture/output/cli/convert-csv/inventory.json.gz',
+          './test/fixture/snapshot/cli/convert-csv/inventory.json.gz');
       });
 
       it('uncompressed', async () => {
@@ -64,16 +51,8 @@ describe('CLI Commands:', () =>
             'group-proxy': './test/fixture/input/csv/manabox/groups/group-proxy.csv',
          });
 
-         const result = await CardDB.load({ filepath: './test/fixture/output/cli/convert-csv/inventory.json' });
-         const snapshot = await CardDB.load({ filepath: './test/fixture/snapshot/cli/convert-csv/inventory.json' });
-
-         const cardsResult = await result.getAll();
-         const cardsSnapshot = await snapshot.getAll();
-
-         assert.isArray(cardsResult);
-         assert.isArray(cardsSnapshot);
-
-         assert.deepEqual(cardsResult, cardsSnapshot);
+         await AssertData.cardDBFiles('./test/fixture/output/cli/convert-csv/inventory.json',
+          './test/fixture/snapshot/cli/convert-csv/inventory.json');
       });
 
       it('not found (DB missing card)', async () => {
