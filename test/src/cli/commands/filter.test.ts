@@ -5,7 +5,9 @@ import {
 import { commandFilter }   from '../../../../src/cli/functions';
 import { AssertData }      from '../../util/AssertData';
 
-describe('filter', () =>
+import { testConfig }      from '../../testConfig';
+
+describe.runIf(testConfig['filter'])('filter', () =>
 {
    it('inventory (formats/border/cmc)', async () =>
    {

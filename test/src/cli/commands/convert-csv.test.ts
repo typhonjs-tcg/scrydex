@@ -7,7 +7,9 @@ import {
 import { commandConvertCsv }  from '../../../../src/cli/functions';
 import { AssertData }         from '../../util/AssertData';
 
-describe('convert-csv', () =>
+import { testConfig }         from '../../testConfig';
+
+describe.runIf(testConfig['convert-csv'])('convert-csv', () =>
 {
    it('compressed', async () => {
       await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {

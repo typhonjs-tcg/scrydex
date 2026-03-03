@@ -17,7 +17,9 @@ import {
    // commandScryfallDownload, (not tested)
    commandSortFormat }  from '../../../src/cli/functions';
 
-describe('CLI Command Errors:', () =>
+import { testConfig }   from '../testConfig';
+
+describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
 {
    let errorSpy: ReturnType<typeof vi.spyOn>;
    let exitSpy: ReturnType<typeof vi.spyOn>;
@@ -26,7 +28,7 @@ describe('CLI Command Errors:', () =>
    {
       errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      exitSpy = vi.spyOn(process, 'exit').mockImplementation((code?: number) =>
+      exitSpy = vi.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined) =>
       {
          throw new Error(`process.exit: ${code}`);
       }) as any;

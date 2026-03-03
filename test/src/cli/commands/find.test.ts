@@ -6,7 +6,9 @@ import {
 
 import { commandFind }  from '../../../../src/cli/functions';
 
-describe('find', () =>
+import { testConfig }   from '../../testConfig';
+
+describe.runIf(testConfig['find'])('find', () =>
 {
    let logSpy: ReturnType<typeof vi.spyOn>;
    let logResult: any[][] = [];

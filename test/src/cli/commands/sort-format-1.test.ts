@@ -1,7 +1,9 @@
 import { commandSortFormat }  from '../../../../src/cli/functions';
 import { AssertData }         from '../../util/AssertData';
 
-describe('sort-format 1 (premodern:oldschool:predh:commander)', () =>
+import { testConfig }         from '../../testConfig';
+
+describe.runIf(testConfig['sort-format-1'])('sort-format-1 (premodern:oldschool:predh:commander)', () =>
 {
    it('collection', async () =>
    {

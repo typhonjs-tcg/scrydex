@@ -1,7 +1,9 @@
 import { commandExportCsv }   from '../../../../src/cli/functions';
 import { AssertData }         from '../../util/AssertData';
 
-describe('export-csv', () =>
+import { testConfig }         from '../../testConfig';
+
+describe.runIf(testConfig['export-csv'])('export-csv', () =>
 {
    it('default (collection)', async () =>
    {

@@ -1,7 +1,9 @@
 import { commandExportExcel } from '../../../../src/cli/functions';
 import { AssertData }         from '../../util/AssertData';
 
-describe('export-excel', () =>
+import { testConfig }         from '../../testConfig';
+
+describe.runIf(testConfig['export-excel'])('export-excel', () =>
 {
    it('default', async () =>
    {

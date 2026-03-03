@@ -1,7 +1,9 @@
 import { commandExportLLM }   from '../../../../src/cli/functions';
 import { AssertData }         from '../../util/AssertData';
 
-describe('export-llm', () =>
+import { testConfig }         from '../../testConfig';
+
+describe.runIf(testConfig['export-llm'])('export-llm', () =>
 {
    it('default (collection)', async () =>
    {
