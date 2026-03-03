@@ -66,6 +66,36 @@ export abstract class CSVFile
    }
 
    /**
+    * Get CSV column headers defined on the first line of a CSV file.
+    *
+    * @param options - Options.
+    *
+    * @param options.filepath - A valid CSV file path.
+    *
+    * @returns An array of parsed column headers.
+    */
+   static async getHeaders({ filepath }: { filepath: string }): Promise<string[]>
+   {
+      return new Promise((resolve, reject) =>
+      {
+         const parser = parse({
+            skip_empty_lines: true,
+            trim: true,
+            columns: (header) =>
+            {
+               resolve(header);
+               parser.destroy();
+               return header;
+            }
+         })
+
+         parser.on('error', reject);
+
+         fs.createReadStream(filepath).pipe(parser);
+      });
+   }
+
+   /**
     * Save CSV row data to the given file path.
     *
     * @param options - Options.
