@@ -16,6 +16,21 @@ import { CardDB }       from '#scrydex/data/db';
 export abstract class AssertData
 {
    /**
+    * Compares two CardDB file paths / streams asserting for equality of card entries.
+    *
+    * @param a - CardDB file path.
+    *
+    * @param b - CardDB file path.
+    */
+   static async cardDBFiles(a: string, b: string)
+   {
+      assert.isDefined(a);
+      assert.isDefined(b);
+
+      await this.cardDBStream(await CardDB.load({ filepath: a }), await CardDB.load({ filepath: b }));
+   }
+
+   /**
     * Compares two CardDB streams asserting for equality of card entries.
     *
     * @param a - CardDB stream
