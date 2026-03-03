@@ -477,6 +477,81 @@ describe('CLI Command Errors:', () =>
       });
    });
 
+   describe('filter', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('INVALID PATH', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file path.`);
+      });
+
+      it(`invalid 'output' (not string)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not a string.`);
+      });
+
+      it(`invalid 'output' (existing directory)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/snapshot/cli/convert-csv'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is an already existing directory.`);
+      });
+
+      it(`invalid 'compress'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/filter/dummy',
+               compress: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'compress' option is not a boolean.`);
+      });
+
+      it(`invalid 'loglevel'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/filter/dummy',
+               loglevel: 'INVALID'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'loglevel' option is invalid.`);
+      });
+
+      it(`invalid filter options (no options)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: './test/fixture/output/cli/filter/no-filter.json'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`Aborting: No filter criteria provided.`);
+      });
+   });
+
    describe('find', () =>
    {
       it(`invalid 'path'`, async () =>
