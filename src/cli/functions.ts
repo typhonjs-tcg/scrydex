@@ -400,8 +400,6 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
 
    if (isDirectory(opts.output)) { exit(`'output' option is an already existing directory.`); }
 
-   if (!isDirectory(dirname(opts.output))) { exit(`'output' option path has an invalid directory.`); }
-
    if (opts.compress !== void 0 && typeof opts.compress !== 'boolean') { exit(`'compress' option is not a boolean.`); }
 
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
@@ -415,12 +413,6 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
 
    // A string indicates validation error is detected.
    if (typeof filterOptions === 'string') { exit(filterOptions); }
-
-   // Abort as no filtering options are provided.
-   if (Object.keys(filterOptions).length === 0)
-   {
-      exit(`Aborting as no filtering options provided.`);
-   }
 
    const config: ConfigCmd.Filter = {
       compress: opts.compress ?? false,

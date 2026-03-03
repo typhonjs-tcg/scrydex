@@ -33,6 +33,7 @@ export abstract class Validate
    static filterOptions(opts: Record<string, any>, regexInput?: string): CardDB.Options.CardFilter | string
    {
       const result: CardDB.Options.CardFilter = { properties: {} };
+      let hasResults = false;
 
       // Validate regex checks ---------------------------------------------------------------------------------------
 
@@ -101,7 +102,9 @@ export abstract class Validate
                   exact: opts.exact ?? false,
                   wordBoundary: opts.b ?? false
                }
-            }
+            };
+
+            hasResults = true;
          }
       }
 
@@ -115,6 +118,7 @@ export abstract class Validate
          if (typeof validationResult === 'string') { return validationResult; }
 
          result.properties.border = validationResult;
+         hasResults = true;
       }
 
       if (opts['color-identity'] !== void 0)
@@ -128,6 +132,7 @@ export abstract class Validate
          }
 
          result.properties.colorIdentity = colorIdentity;
+         hasResults = true;
       }
 
       if (opts.cmc !== void 0)
@@ -136,6 +141,7 @@ export abstract class Validate
          if (!Number.isFinite(cmc) || cmc < 0) { return `'cmc' option must be 0 to a positive number.`; }
 
          result.properties.cmc = cmc;
+         hasResults = true;
       }
 
       if (opts.formats !== void 0)
@@ -146,6 +152,7 @@ export abstract class Validate
          if (typeof validationResult === 'string' ) { return validationResult; }
 
          result.properties.formats = validationResult;
+         hasResults = true;
       }
 
 
@@ -157,6 +164,7 @@ export abstract class Validate
          if (typeof validationResult === 'string' ) { return validationResult; }
 
          result.properties.keywords = validationResult;
+         hasResults = true;
       }
 
       if (opts['mana-cost'] !== void 0)
@@ -164,6 +172,7 @@ export abstract class Validate
          if (typeof opts['mana-cost'] !== 'string') { return `'mana-cost' option is not a string.`; }
 
          result.properties.manaCost = opts['mana-cost'];
+         hasResults = true;
       }
 
       if (opts.price !== void 0)
@@ -178,7 +187,10 @@ export abstract class Validate
          if (!priceFilter) { return `'price' option is an invalid price filter.` }
 
          result.properties.price = priceFilter;
+         hasResults = true;
       }
+
+      if (!hasResults) { return `Aborting: No filter criteria provided.`; }
 
       return result;
    }
