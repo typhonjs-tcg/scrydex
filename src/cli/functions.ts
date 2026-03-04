@@ -1,5 +1,4 @@
 import fs                     from 'node:fs';
-import { dirname }            from 'node:path';
 
 import {
    isDirectory,
