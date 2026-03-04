@@ -162,6 +162,7 @@ export abstract class ScryfallScanner
          logger?.warn(`Remaining collection / card map unprocessed: ${collection.size}`);
          for (const card of collection.values())
          {
+            /* v8 ignore next 2 */ // Covered in tests; except sanity case fallback for `<UNKNOWN>`.
             logger?.warn(`Name: ${card.name ?? '<UNKNOWN>'}; Scryfall ID: ${
              card.scryfall_id ?? '<UNKNOWN>'}; Filename: ${card.filename ?? '<UNKNOWN>'}`);
          }

@@ -100,6 +100,8 @@ export class RarityNormalization
          for (const key of keys)
          {
             const changeData = this.#rarityChangeMap.get(key);
+
+            /* v8 ignore next 1 */ // Sanity check.
             if (!changeData) { continue; }
 
             logger?.verbose(
@@ -132,6 +134,7 @@ export class RarityNormalization
 
       for await (const scryCard of scryfallDB.asStream())
       {
+         /* v8 ignore next 1 */ // Sanity check.
          if (scryCard?.object !== 'card') { continue; }
 
          if (scryCard.lang === 'en' && typeof scryCard.oracle_id === 'string' && collection.has(scryCard.id))
@@ -202,6 +205,7 @@ export class RarityNormalization
 
       if (rarityInfo?.l)
       {
+         /* v8 ignore next 1 */ // For `??` sanity case.
          card.rarity_recent = this.#rarityCodeMap.get(rarityInfo?.l.r) ?? card.rarity;
 
          // Special case for pre-Mirrodin block cards when the latest rarity
@@ -211,8 +215,10 @@ export class RarityNormalization
             {
                this.#rarityChangeMap.set(card.name, {
                   orig_rarity: card.rarity_orig,
+                  /* v8 ignore next 1 */ // For `??` sanity case.
                   orig_set: rarityInfo?.e?.s ?? '<Unknown>',
                   recent_rarity: card.rarity_recent,
+                  /* v8 ignore next 1 */ // For `??` sanity case.
                   recent_set: rarityInfo?.l?.s ?? '<Unknown>'
                });
             }
