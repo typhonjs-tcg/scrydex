@@ -14,6 +14,7 @@ export const testConfig = {
    'export-excel': cli && true,
    'export-llm': cli && true,
    'export-txt': cli && true,
+   'file-compress': cli && true,
    filter: cli && true,
    find: cli && true,
    'sort-format-1': cli && true,

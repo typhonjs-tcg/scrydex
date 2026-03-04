@@ -1,0 +1,8 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to decompress: ./test/fixture/output/cli/file-compress/compressed.json.gz\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Wrote decompressed file to: ./test/fixture/output/cli/file-compress/compressed.json\u001b[0m"
+  ]
+]

@@ -479,6 +479,31 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
       });
    });
 
+   describe('file-compress', () =>
+   {
+      it(`invalid 'path'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFileCompress('INVALID PATH', {});
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'[path]' option is not a file path.`);
+      });
+
+      it(`invalid 'mode'`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFileCompress('./test/fixture/snapshot/cli/file-compress/copy/decompressed.json', {
+               mode: null
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'mode' option invalid.`);
+      });
+   });
+
    describe('filter', () =>
    {
       it(`invalid 'path'`, async () =>

@@ -1,0 +1,8 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to compress: ./test/fixture/output/cli/file-compress/compressed.json.gz\u001b[0m"
+  ],
+  [
+    "\u001b[33m[scrydex] No operation as file is already compressed.\u001b[0m"
+  ]
+]
