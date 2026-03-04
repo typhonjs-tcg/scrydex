@@ -1,4 +1,6 @@
-import { isFile }             from '@typhonjs-utils/file-util';
+import {
+   isDirectory,
+   isFile }                   from '@typhonjs-utils/file-util';
 
 import { CardDB }             from '#scrydex/data/db';
 import { KindSortOrder }      from '#scrydex/data/sort';
@@ -22,7 +24,13 @@ export async function find(config: { path: string, filter: CardDB.Options.CardFi
    {
       logger.info(`Attempting to load Scrydex CardDB: ${config.path}`);
 
-      const singleCollection = await CardDB.load({ filepath: config.path });
+      let singleCollection: CardDB.Stream.Reader | undefined;
+
+      try
+      {
+         singleCollection = await CardDB.load({ filepath: config.path });
+      }
+      catch {}
 
       if (!singleCollection)
       {
@@ -32,7 +40,7 @@ export async function find(config: { path: string, filter: CardDB.Options.CardFi
 
       collections = [singleCollection];
    }
-   else
+   else if (isDirectory(config.path))
    {
       logger.info(`Attempting to find sorted Scrydex CardDBs in directory: ${config.path}`);
 
@@ -47,7 +55,14 @@ export async function find(config: { path: string, filter: CardDB.Options.CardFi
          logger.info(`No 'sorted' or 'sorted_format' card collections found.`);
          return;
       }
+      /* v8 ignore start */ // Else block is a sanity case for direct SDK usage.
    }
+   else
+   {
+      logger.info(`'path' option is not a file or directory path.`);
+      return;
+   }
+   /* v8 ignore stop */
 
    logger.info(`Searching ${collections.length} card collections: ${
     collections.map((entry) => entry.meta.name).join(', ')}`);
@@ -83,8 +98,8 @@ export async function find(config: { path: string, filter: CardDB.Options.CardFi
          const isProxy = collection.isCardGroup(card, 'proxy') ? `; (Is Proxy)` : ''
 
          logger.info(`Name: ${card.name}; Quantity: ${card.quantity}; Collection: ${collection.meta.name}; Rarity: ${
-          KindSortOrder.rarity(card, gameFormat)}; Category: ${KindSortOrder.categoryName(card)}${isInDeck}${isInExternal}${
-           isProxy}`);
+          KindSortOrder.rarity(card, gameFormat)}; Category: ${KindSortOrder.categoryName(card)}${isInDeck}${
+           isInExternal}${isProxy}`);
       }
    }
 }
