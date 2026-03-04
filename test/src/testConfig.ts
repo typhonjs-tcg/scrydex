@@ -1,5 +1,5 @@
 // Test CLI commands.
-const cli = false;
+const cli = true;
 
 /**
  * Defines which test files to run. Keys coordinate with test file names.
