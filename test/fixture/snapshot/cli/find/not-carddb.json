@@ -1,0 +1,8 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to load Scrydex CardDB: ./test/fixture/snapshot/cli/find/empty-dir/empty.txt\u001b[0m"
+  ],
+  [
+    "\u001b[31m[scrydex] No card collection found.\u001b[0m"
+  ]
+]

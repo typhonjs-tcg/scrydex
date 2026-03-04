@@ -1,0 +1,8 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to find sorted Scrydex CardDBs in directory: ./test/fixture/snapshot/cli/find/empty-dir\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] No 'sorted' or 'sorted_format' card collections found.\u001b[0m"
+  ]
+]

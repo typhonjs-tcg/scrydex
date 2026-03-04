@@ -1,0 +1,50 @@
+[
+  [
+    "\u001b[32m[scrydex] Attempting to load Scrydex CardDB: ./test/fixture/snapshot/cli/convert-csv/inventory.json\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Searching 1 card collections: inventory\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 43; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 5; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 1; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 5; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 2; Collection: inventory; Rarity: common; Category: Land (Basic); (Is Proxy)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 2; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 2; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 74; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 70; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 4; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 3; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Forest; Quantity: 3; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Karplusan Forest; Quantity: 1; Collection: inventory; Rarity: rare; Category: Land\u001b[0m"
+  ],
+  [
+    "\u001b[32m[scrydex] Name: Snow-Covered Forest; Quantity: 2; Collection: inventory; Rarity: common; Category: Land (Basic)\u001b[0m"
+  ]
+]

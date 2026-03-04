@@ -21,6 +21,37 @@ describe.runIf(testConfig['find'])('find', () =>
 
    afterEach(() => logSpy.mockRestore());
 
+
+   it('not-carddb', async () =>
+   {
+      await commandFind('./test/fixture/snapshot/cli/find/empty-dir/empty.txt', 'Island', {
+         loglevel: 'info'
+      });
+
+      await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+       '../../../fixture/snapshot/cli/find/not-carddb.json');
+   });
+
+   it('no-collections-empty-dir', async () =>
+   {
+      await commandFind('./test/fixture/snapshot/cli/find/empty-dir', 'Island', {
+         loglevel: 'info'
+      });
+
+      await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+       '../../../fixture/snapshot/cli/find/no-collections-empty-dir.json');
+   });
+
+   it('inventory-with-proxy', async () =>
+   {
+      await commandFind('./test/fixture/snapshot/cli/convert-csv/inventory.json', 'Forest', {
+         loglevel: 'info'
+      });
+
+      await expect(JSON.stringify(logResult, null, 2)).toMatchFileSnapshot(
+         '../../../fixture/snapshot/cli/find/inventory-with-proxy.json');
+   });
+
    it('default-query', async () =>
    {
       await commandFind('./test/fixture/snapshot/cli/sort-format/collection', 'Smothering Tithe', {
