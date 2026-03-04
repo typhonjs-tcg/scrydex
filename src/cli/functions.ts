@@ -76,38 +76,6 @@ export async function commandConvertCsv(path: string, opts: Record<string, any>)
    catch (err: unknown) { handleException(err); }
 }
 
-/**
- * Invokes `fileCompress` with the given config.
- *
- * @param path - File path target.
- *
- * @param opts - CLI options.
- */
-export async function commandFileCompress(path: string, opts: Record<string, any>): Promise<void>
-{
-   if (!isFile(path)) { exit(`'path' option is not a file.`); }
-
-   if (opts.mode !== 'compress' && opts.mode !== 'decompress') { exit(`'mode' option invalid.`); }
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
-
-   const config: ConfigCmd.FileCompress = {
-      logger,
-      mode: opts.mode,
-      path
-   };
-
-   try
-   {
-      await fileCompress(config);
-      /* v8 ignore next 2 */
-   }
-   catch (err: unknown) { handleException(err); }
-}
-
 // /**
 //  * Invokes `diff` with the given config.
 //  *
@@ -379,6 +347,38 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
    try
    {
       await exportTxt(config);
+      /* v8 ignore next 2 */
+   }
+   catch (err: unknown) { handleException(err); }
+}
+
+/**
+ * Invokes `fileCompress` with the given config.
+ *
+ * @param path - File path target.
+ *
+ * @param opts - CLI options.
+ */
+export async function commandFileCompress(path: string, opts: Record<string, any>): Promise<void>
+{
+   if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
+
+   if (opts.mode !== 'compress' && opts.mode !== 'decompress') { exit(`'mode' option invalid.`); }
+
+   /* v8 ignore next 1 */ // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
+
+   const config: ConfigCmd.FileCompress = {
+      logger,
+      mode: opts.mode,
+      path
+   };
+
+   try
+   {
+      await fileCompress(config);
       /* v8 ignore next 2 */
    }
    catch (err: unknown) { handleException(err); }
