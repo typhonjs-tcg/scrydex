@@ -1,7 +1,5 @@
-import fs                     from 'node:fs';
-
 import {
-   assert,
+   expect,
    vi }                       from 'vitest';
 
 import { commandConvertCsv }  from '../../../../src/cli/functions';
@@ -52,7 +50,7 @@ describe.runIf(testConfig['convert-csv'])('convert-csv', () =>
 
       vi.restoreAllMocks();
 
-      assert.equal(JSON.stringify(consoleLog),
-       fs.readFileSync('./test/fixture/snapshot/cli/convert-csv/not-found-log.txt', 'utf-8'));
+      await expect(JSON.stringify(consoleLog)).toMatchFileSnapshot(
+       '../../../fixture/snapshot/cli/convert-csv/not-found-log.txt');
    });
 });
