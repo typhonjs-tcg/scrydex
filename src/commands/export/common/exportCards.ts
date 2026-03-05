@@ -42,6 +42,7 @@ export async function* exportCards({ config, db }:
 
       for await (const card of db.asStream({ isExportable: true }))
       {
+         /* v8 ignore start */ // Sanity check.
          if (typeof card.quantity !== 'number' || !Number.isInteger(card.quantity) || card.quantity <= 0)
          {
             logger?.warn(`Skipping card (${card.name}) from '${db.meta.name}' due to invalid quantity: ${
@@ -49,6 +50,7 @@ export async function* exportCards({ config, db }:
 
             continue;
          }
+         /* v8 ignore stop */
 
          yield card;
       }
