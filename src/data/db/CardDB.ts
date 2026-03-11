@@ -1,5 +1,4 @@
 import { once }               from 'node:events';
-import fs                     from 'node:fs';
 import { text }               from 'node:stream/consumers';
 
 import {
