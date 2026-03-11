@@ -1,6 +1,8 @@
-import type { CardDB }              from '#scrydex/data/db';
+import type {
+   CardDB,
+   ScryfallDB }                     from '#scrydex/data/db';
+
 import type { ImportCollection }    from '#scrydex/data/import';
-import type { ScryfallDB }          from '#scrydex/data/scryfall';
 
 import type { ConfigCmd }           from '../types-command';
 

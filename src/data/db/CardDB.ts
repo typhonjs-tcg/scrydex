@@ -18,7 +18,7 @@ import { streamValues }       from 'stream-json/streamers/StreamValues';
 
 import { VERSION }            from '#scrydex';
 
-import { ScryfallData }       from '#scrydex/data/scryfall';
+import { ScryfallData }       from './scryfall';
 
 import {
    baseFilename,

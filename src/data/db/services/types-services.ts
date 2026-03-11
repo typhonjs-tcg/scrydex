@@ -1,8 +1,8 @@
 import type {
    BasicLogger,
-   LogLevel }                 from "@typhonjs-utils/logger-color";
+   LogLevel }                 from '@typhonjs-utils/logger-color';
 
-import type { ScryfallData }  from "#scrydex/data/scryfall";
+import type { ScryfallData }  from '#scrydex/data/db';
 
 import type {
    Data,

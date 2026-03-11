@@ -1,4 +1,4 @@
-import { ScryfallData }       from '#scrydex/data/scryfall';
+import { ScryfallData }       from '#scrydex/data/db';
 import { isFiniteNumber }     from '#scrydex/util';
 
 import type { CardDB }        from '#scrydex/data/db';

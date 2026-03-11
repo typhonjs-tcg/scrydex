@@ -1,6 +1,6 @@
-import { ScryfallData } from '#scrydex/data/scryfall';
+import { ScryfallData } from '../scryfall';
 
-import type { Data }  from '../types-db';
+import type { Data }    from '../types-db';
 
 export abstract class CardFields
 {

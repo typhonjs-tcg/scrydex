@@ -3,8 +3,9 @@ import path                         from 'node:path';
 
 import { isDirectory }              from '@typhonjs-utils/file-util';
 
-import { CardDB }                   from '#scrydex/data/db';
-import { ScryfallData }             from '#scrydex/data/scryfall';
+import {
+   CardDB,
+   ScryfallData }                   from '#scrydex/data/db';
 
 import { ExportCollection }         from '../ExportCollection';
 

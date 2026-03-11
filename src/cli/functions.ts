@@ -17,15 +17,16 @@ import {
    filter,
    sortFormat }               from '#scrydex/commands';
 
-import { CardDB }             from '#scrydex/data/db';
-import { scryfallDownload }   from '#scrydex/data/scryfall';
+import {
+   CardDB,
+   scryfallDownload }         from '#scrydex/data/db';
 
 import { find }               from './commands/find';
 
 import { Validate }           from './Validate';
 
 import type { ConfigCmd }     from '#scrydex/commands';
-import type { ScryfallDB }    from '#scrydex/data/scryfall';
+import type { ScryfallDB }    from '#scrydex/data/db';
 
 /**
  * Provides a ColorLogger instance for all CLI command usage.

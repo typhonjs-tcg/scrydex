@@ -2,7 +2,7 @@ import fs                  from 'node:fs';
 import path                from 'node:path';
 import { parse }           from 'csv-parse';
 
-import { ScryfallData }    from '#scrydex/data/scryfall';
+import { ScryfallData }    from '#scrydex/data/db';
 
 import type { CSVCard }    from '../types-import';
 

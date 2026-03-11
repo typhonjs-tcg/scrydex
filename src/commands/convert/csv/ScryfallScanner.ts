@@ -1,5 +1,6 @@
-import { CardDB }                from '#scrydex/data/db';
-import { ScryfallDB }            from '#scrydex/data/scryfall';
+import {
+   CardDB,
+   ScryfallDB }                  from '#scrydex/data/db';
 
 import { RarityNormalization }   from '../RarityNormalization';
 import { ParseCardFaces }        from '../ParseCardFaces';

@@ -1,5 +1,6 @@
-import { CardDB }       from '#scrydex/data/db';
-import { ScryfallData } from "#scrydex/data/scryfall";
+import {
+   CardDB,
+   ScryfallData } from '#scrydex/data/db';
 
 /**
  * CLI option validation.

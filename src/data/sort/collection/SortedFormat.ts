@@ -1,4 +1,4 @@
-import { ScryfallData }       from '#scrydex/data/scryfall';
+import { ScryfallData }       from '#scrydex/data/db';
 
 import { AbstractCollection } from './AbstractCollection';
 import { SortedKind }         from './category/SortedKind';

@@ -1,10 +1,8 @@
 import { isObject }              from '@typhonjs-utils/object';
 
-import { ScryfallData }          from '#scrydex/data/scryfall';
-
 import { CardFields }            from './CardFields';
-
 import { Price }                 from './Price';
+import { ScryfallData }          from '../scryfall';
 
 import type {
    BasicLogger,

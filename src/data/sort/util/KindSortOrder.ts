@@ -1,6 +1,6 @@
 import { CardDB }             from '#scrydex/data/db';
 
-import type { ScryfallData }  from '#scrydex/data/scryfall';
+import type { ScryfallData }  from '#scrydex/data/db';
 
 import type { CardSorted }    from '../types-sort';
 

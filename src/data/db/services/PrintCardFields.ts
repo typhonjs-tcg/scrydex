@@ -1,6 +1,5 @@
-import { ScryfallData } from '#scrydex/data/scryfall';
-
 import { CardFields }   from './CardFields';
+import { ScryfallData } from '../scryfall';
 
 import type { Data }    from '../types-db';
 
