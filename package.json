@@ -38,9 +38,13 @@
       "types": "./dist-npm/data/import/index.d.ts",
       "import": "./dist-npm/data/import/index.js"
     },
-    "./data/export": {
-      "types": "./dist-npm/data/export/index.d.ts",
-      "import": "./dist-npm/data/export/index.js"
+    "./data/export/excel": {
+      "types": "./dist-npm/data/export/excel/index.d.ts",
+      "import": "./dist-npm/data/export/excel/index.js"
+    },
+    "./data/export/llm": {
+      "types": "./dist-npm/data/export/llm/index.d.ts",
+      "import": "./dist-npm/data/export/llm/index.js"
     },
     "./data/sort": {
       "types": "./dist-npm/data/sort/index.d.ts",
