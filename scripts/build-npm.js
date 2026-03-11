@@ -5,7 +5,7 @@ import { generateDTS }     from '@typhonjs-build-test/esm-d-ts';
 import { importsLocal }    from '@typhonjs-build-test/rollup-plugin-pkg-imports';
 
 // Produce sourcemaps or not.
-const s_SOURCEMAP = true;
+const s_SOURCEMAP = false;
 
 const s_DTS_OPTIONS = { tsconfig: './tsconfig.json' };
 
@@ -92,10 +92,18 @@ export default () =>
          plugins: [
             importsLocal(),
             resolve({ preferBuiltins: true }),
-            commonjs(),
+            commonjs({
+               strictRequires: true,
+               transformMixedEsModules: true
+            }),
             typescript({ include: ['src/data/export/excel/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
-         ]
+         ],
+         treeshake: {
+            moduleSideEffects: false,
+            propertyReadSideEffects: false,
+            tryCatchDeoptimization: false
+         }
       },
       {
          input: 'src/data/export/llm/index.ts',
