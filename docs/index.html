@@ -6,6 +6,85 @@
 <a href="https://typhonjs-tcg.github.io/scrydex/"><img src="https://img.shields.io/badge/API%20Documentation-476ff0" alt="API Docs"></a>
 <a href="https://typhonjs.io/discord/"><img src="https://img.shields.io/discord/737953117999726592?label=TyphonJS%20Discord" alt="Discord"></a>
 <a href="https://www.twitch.tv/typhonrt"><img src="https://img.shields.io/twitch/status/typhonrt?style=social" alt="Twitch"></a></p>
-<p>SDK &amp; CLI for Magic The Gathering collection management to work with Scryfall offline.</p>
-<p>More details soon...</p>
-</div></div><div class="col-sidebar" tabindex="-1"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked=""><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected" checked=""><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div></div><div class="site-menu" tabindex="-1"><nav class="tsd-navigation"><a href="modules.html">@typhonjs-tcg/scrydex</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"></ul></nav></div></div></div></main></body></html>
+<p>Note: This project is still in active development with an initial release very soon.
+The best way to stay in touch is to join the <a href="https://typhonjs.io/discord/">TyphonJS Discord</a>
+and keep tabs in the <code>typhonjs-tcg</code> / <code>#scrydex</code> channel.</p>
+<p>Scrydex is a <strong>high-performance Magic: The Gathering collection toolkit</strong>
+for converting, organizing, and exporting MTG card data. Scrydex provides both
+a <strong>CLI tool</strong> and a <strong>TypeScript SDK</strong>, enabling collectors and developers to
+integrate MTG collection data into reliable long-term workflows. Scrydex emphasizes
+<strong>canonical card data</strong>, <strong>deterministic sorting</strong>, and <strong>portable open formats</strong>,
+ensuring that a collection can remain usable and maintainable for years to come.</p>
+<p>It converts exports from deck builders and collection apps into <strong>canonical,
+feature-rich datasets</strong> powered by the official <a href="https://scryfall.com/">Scryfall card database</a>.
+The entire workflow can run <strong>fully offline</strong> using local Scryfall bulk data,
+allowing collectors to build reproducible MTG data pipelines without relying
+on external services.</p>
+<p>Scrydex focuses on <strong>final mile collection management</strong> transforming
+limited CSV exports presently from <a href="https://www.manabox.app/">ManaBox</a> and
+<a href="https://archidekt.com/">Archidekt</a> into <strong>rich, normalized collection databases</strong>
+suitable for:</p>
+<ul>
+<li>Rich spreadsheet reporting and inventory tracking providing:
+<ul>
+<li>Precise physical collection organization with rarity normalization.</li>
+<li>Segmentation by the game formats you play.</li>
+<li>Highlighting of newly acquired cards.</li>
+<li>Color coded collection, binder, deck separation.</li>
+<li>Identification of high-value cards for binder storage.</li>
+</ul>
+</li>
+<li>Long-term archival storage.</li>
+<li>Export to CSV / text formats.</li>
+<li>Export to streamlined JSON datasets for LLM / AI analysis reducing token consumption.</li>
+<li>Analytics and custom tooling.</li>
+<li>Reproducible data pipelines.</li>
+</ul>
+<p>At the core of Scrydex is <strong>CardDB</strong>, a structured JSON collection format that
+preserves the <strong>maximum amount of card metadata</strong> available from Scryfall.
+Unlike typical CSV collection exports that contain only a handful of fields,
+CardDB records include full card identity, oracle data, set information,
+rarity, type details, and additional metadata that can power advanced
+queries, reporting, and custom applications.</p>
+<h2 id="core-principles" class="tsd-anchor-link">Core Principles<a href="#core-principles" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Scrydex is designed around a small set of guiding principles:</p>
+<ul>
+<li>
+<p><strong>Canonical Data</strong>
+Collections are resolved against the official Scryfall dataset to ensure
+consistent and accurate card metadata.</p>
+</li>
+<li>
+<p><strong>Deterministic Workflows</strong>
+Scrydex emphasizes reproducible pipelines so the same inputs always produce
+the same structured collection output.</p>
+</li>
+<li>
+<p><strong>Offline First</strong>
+All operations can run locally using Scryfall bulk data, enabling reliable
+collection management without depending on external services.</p>
+</li>
+<li>
+<p><strong>Rich Data Preservation</strong>
+The CardDB format stores significantly more information than typical CSV
+exports, enabling advanced queries, analytics, and long-term archival use.</p>
+</li>
+<li>
+<p><strong>Open and Portable Formats</strong>
+Collection data is stored in structured JSON designed to remain usable
+across tools, scripts, and future software systems.</p>
+</li>
+</ul>
+<h3 id="import-limitations" class="tsd-anchor-link">Import Limitations<a href="#import-limitations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Currently Scrydex supports CSV exports from <strong>ManaBox</strong> and <strong>Archidekt</strong>.</p>
+<p>The primary requirement for importing a collection is that each card entry
+includes a <strong>Scryfall ID</strong> along with the card quantity. This identifier
+allows Scrydex to reliably resolve cards against the local Scryfall dataset
+and enrich the collection with full canonical metadata.</p>
+<p>Unfortunately there is <strong>no universal CSV standard</strong> for MTG collection
+services and many apps do not include Scryfall card identifiers in their
+exports. Without a stable identifier it becomes difficult to deterministically
+match cards across sets, printings, and variants.</p>
+<p>Support for additional collection services may be added in the future.</p>
+<p>For the best compatibility today, it is recommended to use a collection
+service that includes <strong>Scryfall IDs in its export data</strong> such as ManaBox
+or Archidekt.</p>
+</div></div><div class="col-sidebar" tabindex="-1"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked=""><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected" checked=""><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open="" class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details" tabindex="-1"><a href="#core-principles"><span>Core <wbr>Principles</span></a><ul><li><a href="#import-limitations"><span>Import <wbr>Limitations</span></a></li></ul></div></details></div><div class="site-menu" tabindex="-1"><nav class="tsd-navigation"><a href="modules.html">@typhonjs-tcg/scrydex</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"></ul></nav></div></div></div></main></body></html>
