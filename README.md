@@ -24,7 +24,7 @@ The entire workflow can run **fully offline** using local Scryfall bulk data,
 allowing collectors to build reproducible MTG data pipelines without relying
 on external services.
 
-Scrydex focuses on **final mile of collection management** transforming
+Scrydex focuses on **final mile collection management** transforming
 limited CSV exports presently from [ManaBox](https://www.manabox.app/) and
 [Archidekt](https://archidekt.com/) into **rich, normalized collection databases**
 suitable for:
