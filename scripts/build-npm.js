@@ -9,7 +9,7 @@ const s_SOURCEMAP = true;
 
 const s_DTS_OPTIONS = { tsconfig: './tsconfig.json' };
 
-const s_EXTERNAL = [/csv-/g, 'sade', /@typhonjs*/g];
+const s_EXTERNAL = [/csv-/g, 'node:stream', 'sade', /@typhonjs*/g];
 
 // These bundles are for the Node distribution.
 export default () =>
@@ -81,10 +81,10 @@ export default () =>
          ]
       },
       {
-         input: 'src/data/export/index.ts',
+         input: 'src/data/export/excel/index.ts',
          external: s_EXTERNAL,
          output: [{
-            file: `./dist-npm/data/export/index.js`,
+            file: `./dist-npm/data/export/excel/index.js`,
             format: 'es',
             generatedCode: { constBindings: true },
             sourcemap: s_SOURCEMAP,
@@ -93,7 +93,23 @@ export default () =>
             importsLocal(),
             resolve({ preferBuiltins: true }),
             commonjs(),
-            typescript({ include: ['src/data/export/**/*'] }),
+            typescript({ include: ['src/data/export/excel/**/*'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
+         input: 'src/data/export/llm/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/data/export/llm/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/data/export/llm/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
          ]
       },
