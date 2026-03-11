@@ -4,7 +4,7 @@ import path                   from 'node:path';
 import { isDirectory }        from '@typhonjs-utils/file-util';
 
 import { CardDB }             from '#scrydex/data/db';
-import { ExportExcel }        from '#scrydex/data/export';
+import { ExportExcel }        from '#scrydex/data/export/excel';
 
 import type {
    AbstractCollection }       from '#scrydex/data/sort';

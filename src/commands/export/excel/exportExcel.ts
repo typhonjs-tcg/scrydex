@@ -2,7 +2,7 @@ import fs                  from 'node:fs';
 import path                from 'node:path';
 
 import { CardDB }          from '#scrydex/data/db';
-import { ExportExcel }     from '#scrydex/data/export';
+import { ExportExcel }     from '#scrydex/data/export/excel';
 
 import type { ConfigCmd }  from '../../types-command';
 

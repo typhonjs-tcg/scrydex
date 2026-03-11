@@ -5,7 +5,7 @@ import {
    isFile }                from '@typhonjs-utils/file-util';
 
 import { CardDB }          from '#scrydex/data/db';
-import { ExportLLM }       from '#scrydex/data/export';
+import { ExportLLM }       from '#scrydex/data/export/llm';
 
 import type { ConfigCmd }  from '../../types-command';
 

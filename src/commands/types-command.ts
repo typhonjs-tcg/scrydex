@@ -1,7 +1,7 @@
 import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
 import type { CardDB }        from '#scrydex/data/db';
-import type { ExportExcel }   from '#scrydex/data/export';
+import type { ExportExcel }   from '#scrydex/data/export/excel';
 
 interface Command
 {
