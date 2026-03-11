@@ -1,3 +1,4 @@
+import commonjs            from '@rollup/plugin-commonjs';
 import resolve             from '@rollup/plugin-node-resolve';
 import typescript          from '@rollup/plugin-typescript';
 import { generateDTS }     from '@typhonjs-build-test/esm-d-ts';
@@ -8,7 +9,7 @@ const s_SOURCEMAP = true;
 
 const s_DTS_OPTIONS = { tsconfig: './tsconfig.json' };
 
-const s_EXTERNAL = [/csv-/g, 'exceljs', 'node:stream', 'sade', /stream-/g, /@typhonjs*/g];
+const s_EXTERNAL = [/csv-/g, 'sade', /@typhonjs*/g];
 
 // These bundles are for the Node distribution.
 export default () =>
@@ -73,7 +74,8 @@ export default () =>
          }],
          plugins: [
             importsLocal(),
-            resolve(),
+            resolve({ preferBuiltins: true }),
+            commonjs(),
             typescript({ include: ['src/data/db/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
          ]
@@ -89,7 +91,8 @@ export default () =>
          }],
          plugins: [
             importsLocal(),
-            resolve(),
+            resolve({ preferBuiltins: true }),
+            commonjs(),
             typescript({ include: ['src/data/export/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
          ]
@@ -107,22 +110,6 @@ export default () =>
             importsLocal(),
             resolve(),
             typescript({ include: ['src/data/import/**/*'] }),
-            generateDTS.plugin(s_DTS_OPTIONS)
-         ]
-      },
-      {
-         input: 'src/data/scryfall/index.ts',
-         external: s_EXTERNAL,
-         output: [{
-            file: `./dist-npm/data/scryfall/index.js`,
-            format: 'es',
-            generatedCode: { constBindings: true },
-            sourcemap: s_SOURCEMAP,
-         }],
-         plugins: [
-            importsLocal(),
-            resolve(),
-            typescript({ include: ['src/data/scryfall/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
          ]
       },
