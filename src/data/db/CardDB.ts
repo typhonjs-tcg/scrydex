@@ -48,6 +48,9 @@ import type { Services }      from './services/types-services';
  */
 class CardDB
 {
+   /* v8 ignore next 1 */
+   private constructor() {}
+
    static get CardFields(): Services.CardFields { return CardFields; }
 
    static get CardFilter(): Services.CardFilter { return CardFilter; }
