@@ -4,8 +4,15 @@
 # Explicitly mark binary files.
 *.png binary
 *.jpg binary
+*.jpeg binary
+*.gif binary
 *.ico binary
+*.webp binary
 *.xcf binary
 
 # Compressed / archives
 *.gz binary
+*.ods binary
+*.xls binary
+*.xlsm binary
+*.xlsx binary
