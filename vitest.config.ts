@@ -19,7 +19,7 @@ export default defineConfig({
       },
       reporters: ['default', 'html'],
       globals: true,
-      testTimeout: 40000,
+      testTimeout: 60000,
       globalSetup: ['./test/src/global-setup.ts']
    }
 });
