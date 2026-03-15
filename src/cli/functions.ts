@@ -402,6 +402,18 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
 
    if (opts.compress !== void 0 && typeof opts.compress !== 'boolean') { exit(`'compress' option is not a boolean.`); }
 
+   const compress = opts.compress ?? false;
+
+   if (!compress && !opts.output.endsWith('.json'))
+   {
+      exit(`'output' option is not a file path ending in '.json'.`);
+   }
+
+   if (compress && !opts.output.endsWith('.json.gz'))
+   {
+      exit(`'output' option is not a file path ending in '.json.gz'.`);
+   }
+
    if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    /* v8 ignore next 1 */ // Set default log level to verbose.
@@ -415,7 +427,7 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
    if (typeof filterOptions === 'string') { exit(filterOptions); }
 
    const config: ConfigCmd.Filter = {
-      compress: opts.compress ?? false,
+      compress,
       filter: filterOptions as CardDB.Options.CardFilter,
       logger,
       output: opts.output,
@@ -652,8 +664,20 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
+   const compress = opts.compress ?? false;
+
+   if (!compress && !opts.output.endsWith('.json'))
+   {
+      exit(`'output' option is not a file path ending in '.json'.`);
+   }
+
+   if (compress && !opts.output.endsWith('.json.gz'))
+   {
+      exit(`'output' option is not a file path ending in '.json.gz'.`);
+   }
+
    return {
-      compress: opts.compress ?? false,
+      compress,
       db: opts.db,
       groups: {
          decks: opts['group-decks'],
