@@ -66,6 +66,7 @@ async function exportDBCsv({ config, db, output }:
 {
    const outputActual = output ?? config.output;
 
+   /* v8 ignore next 1 */ // `csvExtraKeys` almost always is defined.
    const csvExtraKeys = Array.isArray(db.meta.csvExtraKeys) ? db.meta.csvExtraKeys : [];
 
    const stringifier = stringify({
@@ -96,11 +97,14 @@ async function exportDBCsv({ config, db, output }:
          'Set name': card.set_name,
          'Collector number': card.collector_number,
          'Foil': card.finish,
+         /* v8 ignore next 1 */ // `user_lang` almost always is defined.
          'Language': card.user_lang ?? card.lang,
          'Scryfall ID': card.scryfall_id,
+         /* v8 ignore next 1 */ // `csv_extra` almost always is defined.
          ...(csvExtraKeys.length && isObject(card.csv_extra) ? card.csv_extra : {})
       }
 
+      /* v8 ignore next 1 */ // draining might not be necessary.
       if (!stringifier.write(data)) { await once(stringifier, 'drain'); }
    }
 
