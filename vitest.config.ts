@@ -12,7 +12,7 @@ export default defineConfig({
             'test/**',
             'src/cli/index.ts',
             'src/cli/wrap.ts',
-            'src/data/scryfall/scryfallDownload.ts'
+            'src/data/db/scryfall/scryfallDownload.ts'
          ],
          provider: 'v8',
          reporter: ['text', 'json', 'html']
