@@ -62,12 +62,9 @@ function handleException(err: unknown)
  */
 export async function commandConvertCsv(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    const config = validateConvert(path, opts);
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    try
    {
@@ -88,6 +85,8 @@ export async function commandConvertCsv(path: string, opts: Record<string, any>)
 //  */
 // export async function commandDiff(baseline: string, comparison: string, opts: Record<string, any>): Promise<void>
 // {
+//    validateCommon(opts);
+//
 //    if (!isFile(baseline) && !isDirectory(baseline)) { exit(`'inputA' option path is not a file or directory.`); }
 //
 //    if (!isFile(comparison) && !isDirectory(comparison)) { exit(`'inputB' option path is not a file or directory.`); }
@@ -103,11 +102,6 @@ export async function commandConvertCsv(path: string, opts: Record<string, any>)
 //    }
 //
 //    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
-//
-//    /* v8 ignore next 1 */ // Set default log level to verbose.
-//    const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-//
-//    if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 //
 //    const config: ConfigCmd.Diff = {
 //       baseline,
@@ -133,6 +127,8 @@ export async function commandConvertCsv(path: string, opts: Record<string, any>)
  */
 export async function commandExportCsv(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
@@ -151,11 +147,6 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
    {
       exit(`'coalesce' option is not a boolean.`);
    }
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.Export = {
       coalesce: opts.coalesce ?? false,
@@ -181,6 +172,8 @@ export async function commandExportCsv(path: string, opts: Record<string, any>):
  */
 export async function commandExportExcel(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
@@ -222,11 +215,6 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
       if (opts.theme !== 'light' && opts.theme !== 'dark') { exit(`'theme' option is invalid: '${opts.theme}'.`); }
    }
 
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
-
    const config: ConfigCmd.ExportSpreadsheet = {
       columns: {
          filename: typeof opts.filename === 'boolean' ? opts.filename : true,
@@ -260,6 +248,8 @@ export async function commandExportExcel(path: string, opts: Record<string, any>
  */
 export async function commandExportLLM(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
@@ -283,11 +273,6 @@ export async function commandExportLLM(path: string, opts: Record<string, any>):
    {
       exit(`'types' option is not a boolean.`);
    }
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.ExportLLM = {
       logger,
@@ -314,6 +299,8 @@ export async function commandExportLLM(path: string, opts: Record<string, any>):
  */
 export async function commandExportTxt(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
@@ -332,11 +319,6 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
    {
       exit(`'coalesce' option is not a boolean.`);
    }
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.Export = {
       coalesce: opts.coalesce ?? false,
@@ -362,14 +344,11 @@ export async function commandExportTxt(path: string, opts: Record<string, any>):
  */
 export async function commandFileCompress(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
    if (opts.mode !== 'compress' && opts.mode !== 'decompress') { exit(`'mode' option invalid.`); }
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const config: ConfigCmd.FileCompress = {
       logger,
@@ -394,6 +373,8 @@ export async function commandFileCompress(path: string, opts: Record<string, any
  */
 export async function commandFilter(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
@@ -413,13 +394,6 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
    {
       exit(`'output' option is not a file path ending in '.json.gz'.`);
    }
-
-   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    const filterOptions = Validate.filterOptions(opts);
 
@@ -453,13 +427,11 @@ export async function commandFilter(path: string, opts: Record<string, any>): Pr
  */
 export async function commandFind(path: string, query: string, opts: Record<string, any>)
 {
+   validateCommon(opts);
+
    if (!isFile(path) && !isDirectory(path)) { exit(`'[path]' option is not a file or directory path.`); }
 
    if (query !== void 0 && typeof query !== 'string') { exit(`'query' option is not a string.`); }
-
-   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
-
-   if (logger.isValidLevel(opts.loglevel)) { logger.setLogLevel(opts.loglevel); }
 
    const filter = Validate.filterOptions(opts, query);
 
@@ -489,6 +461,8 @@ export async function commandFind(path: string, query: string, opts: Record<stri
  */
 export async function commandScryfallDownload(opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (opts['all-cards'] !== void 0 && typeof opts['all-cards'] !== 'boolean')
    {
       exit(`'all-cards' option is not a boolean.`);
@@ -499,19 +473,12 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
       exit(`'force' option is not a boolean.`);
    }
 
-   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
-
    const config = {
       dbType: (opts['all-cards'] ? 'all_cards' : 'default_cards') as ScryfallDB.File.DBType,
       dirpath: './db',
       force: opts.force as boolean ?? false,
       logger
    };
-
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 
    try
    {
@@ -532,11 +499,11 @@ export async function commandScryfallDownload(opts: Record<string, any>): Promis
  */
 export async function commandSortFormat(path: string, opts: Record<string, any>): Promise<void>
 {
+   validateCommon(opts);
+
    if (!isFile(path)) { exit(`'[path]' option is not a file path.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
-
-   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (opts['by-type'] !== void 0 && typeof opts['by-type'] !== 'boolean')
    {
@@ -603,11 +570,6 @@ export async function commandSortFormat(path: string, opts: Record<string, any>)
       theme
    };
 
-   /* v8 ignore next 1 */ // Set default log level to verbose.
-   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
-
-   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
-
    try
    {
       await sortFormat(config);
@@ -627,6 +589,21 @@ function exit(message: string): never
 {
    console.error(`[31m[scrydex] ${message}[0m`);
    process.exit(1);
+}
+
+/**
+ * Validate common CLI options.
+ *
+ * @param opts - CLI options.
+ */
+function validateCommon(opts: Record<string, any>)
+{
+   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
+
+   /* v8 ignore next 1 */ // Set default log level to verbose.
+   const loglevel = typeof opts.loglevel === 'string' ? opts.loglevel : 'verbose';
+
+   if (logger.isValidLevel(loglevel)) { logger.setLogLevel(loglevel); }
 }
 
 /**
@@ -659,8 +636,6 @@ function validateConvert(path: string, opts: Record<string, any>): ConfigCmd.Con
    }
 
    if (opts.compress !== void 0 && typeof opts.compress !== 'boolean') { exit(`'compress' option is not a boolean.`); }
-
-   if (opts.loglevel !== void 0 && !logger.isValidLevel(opts.loglevel)) { exit(`'loglevel' option is invalid.`); }
 
    if (typeof opts.output !== 'string') { exit(`'output' option is not a string.`); }
 
