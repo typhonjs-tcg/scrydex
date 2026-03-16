@@ -1,9 +1,10 @@
+import fs                     from 'node:fs';
+import { expect, vi }         from 'vitest';
+
 import { commandExportCsv }   from '../../../../src/cli/functions';
 import { AssertData }         from '../../util/AssertData';
 
 import { testConfig }         from '../../testConfig';
-import {expect, vi} from "vitest";
-import fs from "node:fs";
 
 describe.runIf(testConfig['export-csv'])('export-csv', () =>
 {
