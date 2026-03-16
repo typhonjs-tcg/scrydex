@@ -12,7 +12,7 @@ describe.runIf(testConfig['convert-csv'])('convert-csv', () =>
    it('compressed', async () => {
       await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
          db: './test/fixture/input/db/scryfall_test_cards.json.gz',
-         output: './test/fixture/output/cli/convert-csv/inventory.json',
+         output: './test/fixture/output/cli/convert-csv/inventory.json.gz',
          loglevel: 'error',
          compress: true,
          'group-external': './test/fixture/input/csv/manabox/groups/group-external.csv',

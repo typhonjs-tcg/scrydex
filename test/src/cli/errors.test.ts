@@ -130,7 +130,7 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          await expect(async () =>
          {
             await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
-               db: './test/fixture/input/db/scryfall_test_cards.json.gz',
+               db: './test/fixture/input/db/scryfall_test_cards.json',
                loglevel: 'INVALID'
             });
          }).rejects.toThrow('process.exit: 1');
@@ -138,7 +138,7 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          checkExit(`'loglevel' option is invalid.`);
       });
 
-      it(`invalid 'output'`, async () =>
+      it(`invalid 'output' (not string)`, async () =>
       {
          await expect(async () =>
          {
@@ -149,6 +149,33 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          }).rejects.toThrow('process.exit: 1');
 
          checkExit(`'output' option is not a string.`);
+      });
+
+      it(`invalid 'output' (not '.json')`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
+               db: './test/fixture/input/db/scryfall_test_cards.json.gz',
+               output: 'invalid.txt'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not a file path ending in '.json'.`);
+      });
+
+      it(`invalid 'output' (not '.json.gz')`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandConvertCsv('./test/fixture/input/csv/manabox/collection', {
+               db: './test/fixture/input/db/scryfall_test_cards.json.gz',
+               output: 'invalid.txt',
+               compress: true
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not a file path ending in '.json.gz'.`);
       });
    });
 
@@ -164,7 +191,7 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          checkExit(`'[path]' option is not a file or directory path.`);
       });
 
-      it(`invalid 'output'`, async () =>
+      it(`invalid 'output' (not string)`, async () =>
       {
          await expect(async () =>
          {
@@ -226,7 +253,7 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          checkExit(`'[path]' option is not a file path.`);
       });
 
-      it(`invalid 'output'`, async () =>
+      it(`invalid 'output' (not string)`, async () =>
       {
          await expect(async () =>
          {
@@ -354,7 +381,7 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          checkExit(`'[path]' option is not a file or directory path.`);
       });
 
-      it(`invalid 'output'`, async () =>
+      it(`invalid 'output' (not string)`, async () =>
       {
          await expect(async () =>
          {
@@ -429,7 +456,7 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          checkExit(`'[path]' option is not a file or directory path.`);
       });
 
-      it(`invalid 'output'`, async () =>
+      it(`invalid 'output' (not string)`, async () =>
       {
          await expect(async () =>
          {
@@ -526,6 +553,31 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          }).rejects.toThrow('process.exit: 1');
 
          checkExit(`'output' option is not a string.`);
+      });
+
+      it(`invalid 'output' (not '.json')`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: 'invalid.txt'
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not a file path ending in '.json'.`);
+      });
+
+      it(`invalid 'output' (not '.json.gz')`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandFilter('./test/fixture/snapshot/cli/convert-csv/inventory.json', {
+               output: 'invalid.txt',
+               compress: true
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`'output' option is not a file path ending in '.json.gz'.`);
       });
 
       it(`invalid 'output' (existing directory)`, async () =>
@@ -900,7 +952,7 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          checkExit(`'[path]' option is not a file path.`);
       });
 
-      it(`invalid 'output'`, async () =>
+      it(`invalid 'output' (not string)`, async () =>
       {
          await expect(async () =>
          {
