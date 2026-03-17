@@ -55,7 +55,7 @@ async function cleanOutputDir(config: ConfigCmd.SortFormat): Promise<void>
    {
       const dirpath = path.dirname(dbFile.filepath);
 
-      // Ignore deeper directories.
+      /* v8 ignore next 1 */ // Ignore deeper directories / sanity case.
       if (path.relative(config.output, dirpath).includes(path.sep)) { continue; }
 
       fs.rmSync(dirpath, { recursive: true, force: true });
@@ -217,6 +217,7 @@ async function presortCards(config: ConfigCmd.SortFormat, db: CardDB.Stream.Read
 function splitHighValue(config: ConfigCmd.SortFormat, cards: CardDB.Data.Card[]):
  { cardsLow: CardDB.Data.Card[], cardsHigh: CardDB.Data.Card[] }
 {
+   /* v8 ignore next 1 */ // Sanity case / should never reach.
    if (!config.highValue) { return { cardsLow: cards, cardsHigh: [] }; }
 
    const cardsLow: CardDB.Data.Card[] = [];
