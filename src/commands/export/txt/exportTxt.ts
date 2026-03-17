@@ -70,6 +70,7 @@ async function exportDBTxt({ config, db, output }:
 
       const line =`${card.quantity} ${card.name} (${card.set.toUpperCase()}) ${card.collector_number}${finish}\n`;
 
+      /* v8 ignore next 1 */ // draining might not be necessary.
       if (!out.write(line)) { await once(out, 'drain'); }
    }
 
