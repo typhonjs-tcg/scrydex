@@ -23,11 +23,13 @@ import type { Writable }   from 'node:stream';
  */
 export function createWritable({ filepath, compress }: { filepath: string, compress?: boolean }): Writable
 {
+   /* v8 ignore next 1 */ // Sanity case.
    if (isDirectory(filepath)) { throw new Error(`'filepath' is an existing directory.`); }
 
    const dir = path.dirname(filepath);
 
    // Create directory if base path does not exist.
+   /* v8 ignore next 1 */ // sanity cases for dir path.
    if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root)
    {
       fs.mkdirSync(dir, { recursive: true });
