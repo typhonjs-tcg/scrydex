@@ -277,6 +277,18 @@ describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
          checkExit(`'output' option is a directory.`);
       });
 
+      it(`invalid 'output' (extension mismatch)`, async () =>
+      {
+         await expect(async () =>
+         {
+            await commandExportExcel('./test/fixture/snapshot/cli/sort-format/collection/commander/commander.json', {
+               output: './test/fixture/snapshot/cli/export-excel/bad-filename.txt',
+            });
+         }).rejects.toThrow('process.exit: 1');
+
+         checkExit(`[scrydex] 'output' file path must have 'xlsx' file extension.`);
+      });
+
       it(`invalid 'by-kind'`, async () =>
       {
          await expect(async () =>

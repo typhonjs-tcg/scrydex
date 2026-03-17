@@ -15,9 +15,7 @@ export async function exportExcel(config: ConfigCmd.ExportSpreadsheet): Promise<
 {
    const logger = config.logger;
 
-   if (typeof config.output !== 'string') { throw new TypeError(`'output' is not a string.`); }
-
-   if (!config.output.endsWith('xlsx')) { throw new Error(`'output' file name must have 'xlsx' file extension.`); }
+   if (!config?.output?.endsWith('xlsx')) { throw new Error(`'output' file path must have 'xlsx' file extension.`); }
 
    logger?.verbose(`Loading file path: ${config.path}`);
 
@@ -35,6 +33,7 @@ export async function exportExcel(config: ConfigCmd.ExportSpreadsheet): Promise<
    const dir = path.dirname(config.output);
 
    // Create directory if base path does not exist.
+   /* v8 ignore next 1 */ // sanity cases for dir path.
    if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root)
    {
       fs.mkdirSync(dir, { recursive: true });
