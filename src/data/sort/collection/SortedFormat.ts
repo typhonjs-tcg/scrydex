@@ -51,6 +51,7 @@ export class SortedFormat extends AbstractCollection
     */
    getSortOptions(): Readonly<SortOptions> | undefined
    {
+      /* v8 ignore next 1 */ // Sanity case.
       return this.#sortOptions ? { ...this.#sortOptions } : {};
    }
 
@@ -94,6 +95,7 @@ export class SortedFormat extends AbstractCollection
     */
    static #sortRarity(cards: CardSorted[], format?: ScryfallData.GameFormat): Map<string, CardCategory>
    {
+      /* v8 ignore next 1 */ // Sanity case.
       if (cards.length === 0) { return new Map<string, CardCategory>(); }
 
       const sortedCategories = new Map<string, CardCategory>();

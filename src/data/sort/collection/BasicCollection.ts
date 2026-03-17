@@ -33,6 +33,7 @@ export class BasicCollection extends AbstractCollection
       super({
          cards,
          categories: BasicCollection.#createCategories(cards, sortByKind),
+         /* v8 ignore next 1 */ // `dirpath` unused in CLI.
          dirpath: typeof dirpath === 'string' ? dirpath : '',
          meta,
       });
@@ -45,6 +46,7 @@ export class BasicCollection extends AbstractCollection
     */
    getSortOptions(): Readonly<SortOptions> | undefined
    {
+      /* v8 ignore next 1 */ // Sanity case.
       return this.#sortOptions ? { ...this.#sortOptions } : {};
    }
 
@@ -72,6 +74,7 @@ export class BasicCollection extends AbstractCollection
    static #createCategories(cards: CardSorted[], sortByKind?: boolean):
     Map<string, CardCategory>
    {
+      /* v8 ignore next 1 */ // Sanity case.
       if (cards.length === 0) { return new Map<string, CardCategory>(); }
 
       const categories = new Map<string, CardCategory>();
