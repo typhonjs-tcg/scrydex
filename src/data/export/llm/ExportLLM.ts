@@ -38,6 +38,7 @@ export abstract class ExportLLM
     { db: CardDB.Stream.Reader, filepath: string, oracleText?: boolean, streamOptions?: CardDB.Stream.StreamOptions }):
      Promise<number>
    {
+      /* v8 ignore next 1 */ // Sanity case.
       oracleText = oracleText ?? true;
 
       const counter = new TokenEstimateStream();
@@ -118,6 +119,7 @@ export abstract class ExportLLM
     */
    static async types({ filepath }: { filepath: string }): Promise<number>
    {
+      /* v8 ignore next 1 */ // Sanity case not hit by CLI.
       if (!filepath?.endsWith('.d.ts')) { throw new Error(`'filepath' must end with '.d.ts'.`); }
 
       const counter = new TokenEstimateStream();
