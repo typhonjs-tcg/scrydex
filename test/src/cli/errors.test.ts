@@ -19,7 +19,7 @@ import {
 
 import { testConfig }   from '../testConfig';
 
-describe.runIf(testConfig['errors'])('CLI Command Errors:', () =>
+describe.runIf(testConfig['cliErrors'])('CLI Command Errors:', () =>
 {
    let errorSpy: ReturnType<typeof vi.spyOn>;
    let exitSpy: ReturnType<typeof vi.spyOn>;
