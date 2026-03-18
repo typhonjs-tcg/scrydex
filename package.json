@@ -19,6 +19,14 @@
       "types": "./src/*/index.ts",
       "replace": "@typhonjs-tcg/scrydex/*",
       "default": "./src/*/index.ts"
+    },
+    "#test/config": {
+      "types": "./test/src/testConfig.ts",
+      "default": "./test/src/testConfig.ts"
+    },
+    "#test/util": {
+      "types": "./test/src/util/index.ts",
+      "default": "./test/src/util/index.ts"
     }
   },
   "exports": {

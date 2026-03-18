@@ -1,3 +1,6 @@
+// Test API
+const api = true;
+
 // Test CLI commands.
 const cli = true;
 
@@ -5,8 +8,15 @@ const cli = true;
  * Defines which test files to run. Keys coordinate with test file names.
  */
 export const testConfig = {
+   // API errors
+   apiErrors: api && true,
+
+   // API tests
+   collectionCards: api && true,
+   collectionEmpty: api && true,
+
    // CLI errors
-   errors: cli && true,
+   cliErrors: cli && true,
 
    // CLI commands
    'convert-csv': cli && true,
