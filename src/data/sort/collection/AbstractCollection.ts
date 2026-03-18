@@ -191,11 +191,11 @@ export abstract class AbstractCollection
    }
 
    /**
-    * Does this collection have a specific sorted category.
+    * Does this collection have a specific card category.
     *
-    * @param key - SortedCategory key / name.
+    * @param key - CardCategory key / name.
     *
-    * @returns Whether this collection has the sorted category.
+    * @returns Whether this collection has the card category.
     */
    has(key: string): boolean
    {
@@ -205,7 +205,7 @@ export abstract class AbstractCollection
    /**
     * Checks the meta _external_ file names for a card file name match.
     *
-    * @param card -
+    * @param card - Card to test.
     *
     * @param group - External card group to test for inclusion.
     */
