@@ -2,9 +2,9 @@ import fs                     from 'node:fs';
 import { expect, vi }         from 'vitest';
 
 import { commandExportCsv }   from '../../../../src/cli/functions';
-import { AssertData }         from '../../util/AssertData';
 
-import { testConfig }         from '../../testConfig';
+import { testConfig }         from '#test/config';
+import { AssertData }         from '#test/util';
 
 describe.runIf(testConfig['export-csv'])('export-csv', () =>
 {

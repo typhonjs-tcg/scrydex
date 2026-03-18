@@ -1,7 +1,7 @@
 import { commandSortFormat }  from '../../../../src/cli/functions';
-import { AssertData }         from '../../util/AssertData';
 
-import { testConfig }         from '../../testConfig';
+import { testConfig }         from '#test/config';
+import { AssertData }         from '#test/util';
 
 describe.runIf(testConfig['sort-format-2'])('sort-format-2 (premodern:oldschool:predh:commander)', () =>
 {

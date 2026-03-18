@@ -1,9 +1,9 @@
-import {expect, vi} from 'vitest';
+import { expect, vi }         from 'vitest';
 
 import { commandExportLLM }   from '../../../../src/cli/functions';
-import { AssertData }         from '../../util/AssertData';
 
-import { testConfig }         from '../../testConfig';
+import { testConfig }         from '#test/config';
+import { AssertData }         from '#test/util';
 
 describe.runIf(testConfig['export-llm'])('export-llm', () =>
 {

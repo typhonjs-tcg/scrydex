@@ -7,9 +7,9 @@ import {
    vi }                          from 'vitest';
 
 import { commandFileCompress }   from '../../../../src/cli/functions';
-import { AssertData }            from '../../util/AssertData';
 
-import { testConfig }            from '../../testConfig';
+import { testConfig }            from '#test/config';
+import { AssertData }            from '#test/util';
 
 describe.runIf(testConfig['file-compress'])('file-compress / file-decompress', () =>
 {

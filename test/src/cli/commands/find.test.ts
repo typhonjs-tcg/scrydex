@@ -6,7 +6,7 @@ import {
 
 import { commandFind }  from '../../../../src/cli/functions';
 
-import { testConfig }   from '../../testConfig';
+import { testConfig }   from '#test/config';
 
 describe.runIf(testConfig['find'])('find', () =>
 {
