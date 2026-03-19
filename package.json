@@ -46,6 +46,10 @@
       "types": "./dist-npm/data/import/index.d.ts",
       "import": "./dist-npm/data/import/index.js"
     },
+    "./data/import/csv": {
+      "types": "./dist-npm/data/import/csv/index.d.ts",
+      "import": "./dist-npm/data/import/csv/index.js"
+    },
     "./data/export/excel": {
       "types": "./dist-npm/data/export/excel/index.d.ts",
       "import": "./dist-npm/data/export/excel/index.js"
@@ -87,8 +91,8 @@
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/node": "^20.19.35",
     "@types/stream-json": "^1.7.8",
-    "@typhonjs-build-test/esm-d-ts": "^0.3.0-next.16",
-    "@typhonjs-build-test/rollup-plugin-pkg-imports": "^0.7.0",
+    "@typhonjs-build-test/esm-d-ts": "^0.3.0-next.17",
+    "@typhonjs-build-test/rollup-plugin-pkg-imports": "^0.8.0",
     "@typhonjs-typedoc/typedoc-pkg": "^0.4.0",
     "@typhonjs-config/eslint-config": "^0.6.0",
     "@vitest/coverage-v8": "^3.2.4",

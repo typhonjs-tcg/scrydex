@@ -138,6 +138,22 @@ export default () =>
          ]
       },
       {
+         input: 'src/data/import/csv/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/data/import/csv/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/data/import/csv/**/*'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
          input: 'src/data/sort/index.ts',
          external: s_EXTERNAL,
          output: [{
