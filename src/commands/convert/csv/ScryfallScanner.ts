@@ -8,7 +8,7 @@ import { ParseTypeLine }         from '../ParseTypeLine';
 
 import type {
    CSVCard,
-   CSVCollection }               from '#scrydex/data/import';
+   CSVCollection }               from '#scrydex/data/import/csv';
 
 import type { ConfigCmd }        from '../../types-command';
 

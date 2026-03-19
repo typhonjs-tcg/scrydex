@@ -1,4 +1,4 @@
-import { CSVCollection }   from '#scrydex/data/import';
+import { CSVCollection }   from '#scrydex/data/import/csv';
 
 import { ScryfallScanner } from './ScryfallScanner';
 

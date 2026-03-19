@@ -1,6 +1,6 @@
 import type { BasicLogger }   from '@typhonjs-utils/logger-color';
 
-import type { CSVCard }       from '#scrydex/data/import';
+import type { CSVCard }       from '#scrydex/data/import/csv';
 import type { ScryfallData }  from './scryfall';
 
 // Namespace Data ----------------------------------------------------------------------------------------------------
