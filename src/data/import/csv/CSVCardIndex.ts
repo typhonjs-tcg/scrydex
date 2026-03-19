@@ -1,10 +1,10 @@
-import fs                  from 'node:fs';
 import path                from 'node:path';
-import { parse }           from 'csv-parse';
 
 import { ScryfallData }    from '#scrydex/data/db';
 
-import type { CSVCard }    from '../types-import';
+import { CSVFile }         from './CSVFile';
+
+import type { CSVCard }    from './types-csv';
 
 /**
  * Parses and stores intermediate card data from a single CSV file.
@@ -29,11 +29,13 @@ export class CSVCardIndex
    #filename: string = '';
 
    /**
-    * @param filepath - CSV filepath to load.
+    * @param options - Options.
+    *
+    * @param options.filepath - CSV filepath to load.
     *
     * @returns Import index of CSV card data.
     */
-   static async fromCSV(filepath: string): Promise<CSVCardIndex>
+   static async fromCSV({ filepath }: { filepath: string }): Promise<CSVCardIndex>
    {
       const cardIndex = new CSVCardIndex();
 
@@ -41,26 +43,23 @@ export class CSVCardIndex
 
       cardIndex.#filename = filename;
 
-      // Read and extract Scryfall IDs.
-      const parser = fs.createReadStream(filepath).pipe(parse({
-         columns: true,
-         skip_empty_lines: true,
-         trim: true
-      }));
+      const headers = new Set(await CSVFile.getHeaders({ filepath }));
+
+      // This checks for required ManaBox or Archidekt CSV fields.
+      if ((!headers.has('Quantity') && !headers.has('quantity')) ||
+       (!headers.has('Scryfall ID') && !headers.has('scryfall ID')))
+      {
+         throw new Error(
+          `CSV file does not have required 'Quantity / quantity' or 'Scryfall ID / scryfall ID' fields:\n${filepath}`);
+      }
+
+      const controller = new AbortController();
 
       let rowCntr = 1;
 
-      for await (const row of parser)
+      for await (const row of CSVFile.asStream({ filepath, signal: controller.signal }))
       {
          rowCntr++;
-
-         // This handles ManaBox and Archidekt CSV fields.
-         if ((row['Quantity'] === void 0 && row['quantity'] === void 0) ||
-          (row['Scryfall ID'] === void 0 && row['scryfall ID'] === void 0))
-         {
-            parser.destroy(
-             new Error(`CSV file does not have required 'Quantity' or 'Scryfall ID' fields:\n${filepath}`));
-         }
 
          const name = row['Name'] ?? row['card name'];
          const quantity = Number(row['Quantity'] ?? row['quantity']);
@@ -73,13 +72,13 @@ export class CSVCardIndex
 
          if (!Number.isInteger(quantity) || quantity < 1)
          {
-            parser.destroy(new Error(`CSV file on row '${rowCntr}' has invalid quantity '${
+            controller.abort(new Error(`CSV file on row '${rowCntr}' has invalid quantity '${
              row['Quantity'] ?? row['quantity']}':\n${filepath}`));
          }
 
          if (!this.#regexUUID.test(scryfall_id))
          {
-            parser.destroy(
+            controller.abort(
              new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
          }
 

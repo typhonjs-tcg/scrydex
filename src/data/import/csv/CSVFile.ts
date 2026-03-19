@@ -10,7 +10,9 @@ import { isObject }        from '@typhonjs-utils/object';
 import { parse }           from 'csv-parse';
 import { stringify }       from 'csv-stringify';
 
-import { createWritable }  from '#scrydex/util';
+import {
+   createReadable,
+   createWritable }        from '#scrydex/util';
 
 /**
  * Provides a basic API to stream and serialize a CSV file allowing custom programs performing simple filtering /
@@ -19,7 +21,7 @@ import { createWritable }  from '#scrydex/util';
  * @example
  * ```js
  * \// This example processes a Manabox CSV file altering the original `Purchase price` column data.
- * import { CSVFile } from '@typhonjs-tcg/scrydex/data/import';
+ * import { CSVFile } from '@typhonjs-tcg/scrydex/data/import/csv';
  *
  * const rows = [];
  *
@@ -47,21 +49,56 @@ export abstract class CSVFile
     *
     * @param options.filepath - A valid CSV file path.
     *
+    * @param [options.signal] - {@link AbortSignal} via {@link AbortController} to stop iteration and cleanup streaming.
+    *
     * @returns Asynchronous iterator over each row as an object keyed by column header name.
     */
-   static async *asStream({ filepath }: { filepath: string }): AsyncIterable<{ [key: string]: string }>
+   static async *asStream({ filepath, signal }: { filepath: string, signal?: AbortSignal }):
+    AsyncIterable<{ [key: string]: string }>
    {
       if (!isFile(filepath)) { throw new Error(`'filepath' is not a valid file path.`); }
 
-      const parser = fs.createReadStream(filepath).pipe(parse({
+      const stream = createReadable({ filepath });
+
+      const parser = stream.pipe(parse({
          columns: true,
          skip_empty_lines: true,
          trim: true
       }));
 
-      for await (const row of parser)
+      const abort = (err?: any) =>
       {
-         yield row as { [key: string]: string };
+         stream.destroy?.(err);
+         parser.destroy?.(err);
+      };
+
+      if (signal)
+      {
+         if (signal.aborted)
+         {
+            abort(signal.reason);
+            throw signal.reason;
+         }
+
+         signal.addEventListener('abort', () => abort(signal.reason), { once: true });
+      }
+
+      try
+      {
+         for await (const row of parser)
+         {
+            if (signal?.aborted)
+            {
+               abort(signal.reason);
+               throw signal.reason;
+            }
+
+            yield row as { [key: string]: string };
+         }
+      }
+      finally
+      {
+         abort();
       }
    }
 
@@ -91,7 +128,14 @@ export abstract class CSVFile
 
          parser.on('error', reject);
 
-         fs.createReadStream(filepath).pipe(parser);
+         try
+         {
+            createReadable({ filepath }).pipe(parser);
+         }
+         catch (err)
+         {
+            reject(err);
+         }
       });
    }
 

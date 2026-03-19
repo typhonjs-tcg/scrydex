@@ -1,19 +1,19 @@
 import {
    getFileList,
    isDirectory,
-   isFile }                   from '@typhonjs-utils/file-util';
+   isFile }                      from '@typhonjs-utils/file-util';
 
-import { isObject }           from '@typhonjs-utils/object';
+import { isObject }              from '@typhonjs-utils/object';
 
-import { CardDB }             from '#scrydex/data/db';
+import { CardDB }                from '#scrydex/data/db';
 
-import { CSVCardIndex }       from './CSVCardIndex';
+import { CSVCardIndex }          from './CSVCardIndex';
 
-import type { BasicLogger }   from '@typhonjs-utils/logger-color';
+import type { BasicLogger }      from '@typhonjs-utils/logger-color';
 
-import type {
-   CSVCard,
-   ImportCollection }         from '../types-import';
+import type { ImportCollection } from '#scrydex/data/import';
+
+import type { CSVCard }          from './types-csv';
 
 export class CSVCollection implements ImportCollection
 {
@@ -250,11 +250,11 @@ export class CSVCollection implements ImportCollection
 
          const files = await getFileList({ dir: path, includeFile: /\.csv$/, sort: true, resolve: true });
 
-         for (const file of files)
+         for (const filepath of files)
          {
-            logger?.verbose(`Loading file path: ${file}`);
+            logger?.verbose(`Loading file path: ${filepath}`);
 
-            const cardIndex = await CSVCardIndex.fromCSV(file);
+            const cardIndex = await CSVCardIndex.fromCSV({ filepath });
 
             if (group)
             {
@@ -272,7 +272,7 @@ export class CSVCollection implements ImportCollection
       {
          logger?.verbose(`Loading file path: ${path}`);
 
-         const cardIndex = await CSVCardIndex.fromCSV(path);
+         const cardIndex = await CSVCardIndex.fromCSV({ filepath: path });
 
          if (group)
          {
