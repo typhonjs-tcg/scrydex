@@ -81,14 +81,14 @@ describe.runIf(testConfig['importCSV'])('CSVFile', () =>
                signal: controller.signal
             })[Symbol.asyncIterator]();
 
-            // Step 1: get first row
+            // Step 1: get first row.
             const first = await iter.next();
             expect(first.done).toBe(false);
 
-            // Step 2: abort AFTER a yield boundary
+            // Step 2: abort AFTER a yield boundary.
             controller.abort(new Error('aborted between iterations'));
 
-            // Step 3: trigger next pull → MUST hit the branch
+            // Step 3: trigger next pull - MUST hit the branch.
             await expect(iter.next()).rejects.toThrow('aborted between iterations');
 
             expect(destroySpy).toHaveBeenCalled();
