@@ -73,6 +73,11 @@ export abstract class CSVFile
          parser.destroy?.(err);
       };
 
+      const errorHandler = (err: any) => abort(err);
+
+      stream.on('error', errorHandler);
+      parser.on('error', errorHandler);
+
       if (signal) { signal.addEventListener('abort', () => abort(signal.reason), { once: true }); }
 
       // Use manual iteration and not `for await` so we can check `AbortSignal` before awaiting parser.next(). This
