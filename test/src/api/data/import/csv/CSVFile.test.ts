@@ -26,15 +26,18 @@ describe.runIf(testConfig['importCSV'])('CSVFile', () =>
          it('signal abort - initial', async () =>
          {
             const controller = new AbortController();
-            controller.abort(new Error('aborted - initial'));
+            controller.abort();
 
             const createReadStreamSpy = vi.spyOn(fs, 'createReadStream');
 
-            await expect(async () => CSVFile.asStream({
+            const iter = CSVFile.asStream({
                filepath: './test/fixture/input/csv/manabox/collection/premodern.csv',
                signal: controller.signal
-            }).next()).rejects.toThrow('aborted - initial');
+            });
 
+            const result = await iter.next();
+
+            expect(result.done).toBe(true);
             expect(createReadStreamSpy).not.toHaveBeenCalled();
             createReadStreamSpy.mockRestore();
          });
@@ -54,15 +57,12 @@ describe.runIf(testConfig['importCSV'])('CSVFile', () =>
                signal: controller.signal
             });
 
-            await expect(async () =>
+            for await (const row of stream)
             {
-               for await (const row of stream)
-               {
-                  if (++cntr >= 3) { controller.abort(new Error('aborted - 3 iterations')); }
+               if (++cntr >= 3) { controller.abort(); }
 
-                  rows.push(row);
-               }
-            }).rejects.toThrow('aborted - 3 iterations');
+               rows.push(row);
+            }
 
             expect(rows.length).toBe(3);
 
@@ -86,10 +86,43 @@ describe.runIf(testConfig['importCSV'])('CSVFile', () =>
             expect(first.done).toBe(false);
 
             // Step 2: abort AFTER a yield boundary.
-            controller.abort(new Error('aborted between iterations'));
+            controller.abort();
+
+            const result = await iter.next();
 
             // Step 3: trigger next pull - MUST hit the branch.
-            await expect(iter.next()).rejects.toThrow('aborted between iterations');
+            expect(result.done).toBe(true);
+
+            expect(destroySpy).toHaveBeenCalled();
+            destroySpy.mockRestore();
+         });
+
+         it('throw - 3 iterations', async () =>
+         {
+            const controller = new AbortController();
+
+            const rows = [];
+
+            let cntr = 0;
+
+            const destroySpy = vi.spyOn(fs.ReadStream.prototype, 'destroy');
+
+            const stream = CSVFile.asStream({
+               filepath: './test/fixture/input/csv/manabox/collection/premodern.csv',
+               signal: controller.signal
+            });
+
+            await expect(async () =>
+            {
+               for await (const row of stream)
+               {
+                  rows.push(row);
+
+                  if (++cntr >= 3) { throw new Error('thrown - 3 iterations'); }
+               }
+            }).rejects.toThrow('thrown - 3 iterations');
+
+            expect(rows.length).toBe(3);
 
             expect(destroySpy).toHaveBeenCalled();
             destroySpy.mockRestore();

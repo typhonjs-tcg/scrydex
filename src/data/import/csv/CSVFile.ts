@@ -11,7 +11,11 @@ import { stringify }       from 'csv-stringify';
 
 import {
    createReadable,
-   createWritable }        from '#scrydex/util';
+   createWritable,
+
+   handleAborted,
+   isAborted,
+   subscribeAbortStreams } from '#scrydex/util';
 
 /**
  * Provides a basic API to stream and serialize a CSV file allowing custom programs performing simple filtering /
@@ -57,7 +61,7 @@ export abstract class CSVFile
    {
       if (!isFile(filepath)) { throw new Error(`'filepath' is not a valid file path.`); }
 
-      if (signal?.aborted) { throw signal.reason; }
+      if (isAborted(signal)) { return; }
 
       const stream = createReadable({ filepath });
 
@@ -78,7 +82,7 @@ export abstract class CSVFile
       stream.on('error', errorHandler);
       parser.on('error', errorHandler);
 
-      if (signal) { signal.addEventListener('abort', () => abort(signal.reason), { once: true }); }
+      const unsubscribeAbort = subscribeAbortStreams(signal, stream, parser);
 
       // Use manual iteration and not `for await` so we can check `AbortSignal` before awaiting parser.next(). This
       // ensures immediate cancellation, avoids stalls, and makes the abort path deterministic / testable.
@@ -89,21 +93,18 @@ export abstract class CSVFile
 
          while (true)
          {
-            if (signal?.aborted)
-            {
-               abort(signal.reason);
-               throw signal.reason;
-            }
+            if (handleAborted(signal, abort)) { return; }
 
             const { value, done } = await iter.next();
 
-            if (done) break;
+            if (done) { break; }
 
             yield value as { [key: string]: string };
          }
       }
       finally
       {
+         unsubscribeAbort();
          abort();
       }
    }
