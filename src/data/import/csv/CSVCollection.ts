@@ -76,14 +76,6 @@ export class CSVCollection implements ImportCollection
    }
 
    /**
-    * @returns The `groups` CSV file name sets.
-    */
-   get groupsSet(): CardDB.File.MetadataGroups<Set<string>>
-   {
-      return this.#groups;
-   }
-
-   /**
     * @returns Total count of all unique cards in the collection
     */
    get size(): number
