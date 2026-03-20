@@ -1,5 +1,4 @@
 import { once }            from 'node:events';
-import fs                  from 'node:fs';
 
 import {
    isDirectory,
@@ -54,9 +53,11 @@ export abstract class CSVFile
     * @returns Asynchronous iterator over each row as an object keyed by column header name.
     */
    static async *asStream({ filepath, signal }: { filepath: string, signal?: AbortSignal }):
-    AsyncIterable<{ [key: string]: string }>
+    AsyncGenerator<{ [key: string]: string }>
    {
       if (!isFile(filepath)) { throw new Error(`'filepath' is not a valid file path.`); }
+
+      if (signal?.aborted) { throw signal.reason; }
 
       const stream = createReadable({ filepath });
 
@@ -72,20 +73,16 @@ export abstract class CSVFile
          parser.destroy?.(err);
       };
 
-      if (signal)
-      {
-         if (signal.aborted)
-         {
-            abort(signal.reason);
-            throw signal.reason;
-         }
+      if (signal) { signal.addEventListener('abort', () => abort(signal.reason), { once: true }); }
 
-         signal.addEventListener('abort', () => abort(signal.reason), { once: true });
-      }
+      // Use manual iteration and not `for await` so we can check `AbortSignal` before awaiting parser.next(). This
+      // ensures immediate cancellation, avoids stalls, and makes the abort path deterministic / testable.
 
       try
       {
-         for await (const row of parser)
+         const iter = parser[Symbol.asyncIterator]();
+
+         while (true)
          {
             if (signal?.aborted)
             {
@@ -93,7 +90,11 @@ export abstract class CSVFile
                throw signal.reason;
             }
 
-            yield row as { [key: string]: string };
+            const { value, done } = await iter.next();
+
+            if (done) break;
+
+            yield value as { [key: string]: string };
          }
       }
       finally
@@ -113,6 +114,10 @@ export abstract class CSVFile
     */
    static async getHeaders({ filepath }: { filepath: string }): Promise<string[]>
    {
+      if (!isFile(filepath)) { throw new Error(`'filepath' is not a valid file path.`); }
+
+      const stream = createReadable({ filepath });
+
       return new Promise((resolve, reject) =>
       {
          const parser = parse({
@@ -128,15 +133,28 @@ export abstract class CSVFile
 
          parser.on('error', reject);
 
-         try
-         {
-            createReadable({ filepath }).pipe(parser);
-         }
-         catch (err)
-         {
-            reject(err);
-         }
+         stream.pipe(parser);
       });
+   }
+
+   /**
+    * Return all rows of the given CSV file path.
+    *
+    * @param options - Options.
+    *
+    * @param options.filepath - Output CSV file path.
+    *
+    * @returns An array of rows as an object keyed by column header name.
+    */
+   static async getRows({ filepath }: { filepath: string }): Promise<{ [key: string]: string }[]>
+   {
+      if (!isFile(filepath)) { throw new Error(`'filepath' is not a valid file path.`); }
+
+      const rows: { [key: string]: string }[] = [];
+
+      for await (const row of this.asStream({ filepath })) { rows.push(row as { [key: string]: string }); }
+
+      return rows;
    }
 
    /**
@@ -150,8 +168,10 @@ export abstract class CSVFile
     */
    static async save({ filepath, rows }: { filepath: string, rows: { [key: string]: string }[] }): Promise<void>
    {
-      if (isDirectory(filepath)) { throw new Error(`'filepath' is not a valid file path.`); }
+      if (typeof filepath !== 'string') { throw new Error(`'filepath is not a string.`); }
+      if (isDirectory(filepath)) { throw new Error(`'filepath' is an existing directory.`); }
       if (!Array.isArray(rows)) { throw new TypeError(`'rows' is not an array.`); }
+      if (rows.length === 0) { throw new Error(`'rows' is an empty array.`); }
       if (!isObject(rows[0])) { throw new TypeError(`'rows[0]' is not an object.`); }
 
       const columns = Object.keys(rows[0]);
@@ -163,15 +183,33 @@ export abstract class CSVFile
 
       const out = createWritable({ filepath });
 
+      const errorHandler = (err: any) =>
+      {
+         stringifier.destroy(err);
+         out.destroy(err);
+      };
+
+      stringifier.on('error', errorHandler);
+      out.on('error', errorHandler);
+
       stringifier.pipe(out);
 
-      for (const row of rows)
+      try
       {
-         if (!stringifier.write(row)) { await once(stringifier, 'drain'); }
+         for (const row of rows)
+         {
+            /* v8 ignore next 1 */ // Sanity case.
+            if (!stringifier.write(row)) { await once(stringifier, 'drain'); }
+         }
+
+         stringifier.end();
+
+         await once(out, 'finish');
       }
-
-      stringifier.end();
-
-      await once(out, 'finish');
+      finally
+      {
+         stringifier.destroy();
+         out.destroy();
+      }
    }
 }
