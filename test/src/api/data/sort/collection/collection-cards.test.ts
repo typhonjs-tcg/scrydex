@@ -7,7 +7,7 @@ import {
 import { testConfig }      from '#test/config';
 import { TestData }        from '#test/util';
 
-describe.runIf(testConfig['collectionCards'])('Card collections (w/ cards)', () =>
+describe.runIf(testConfig['sortCollectionCards'])('Card collections (w/ cards)', () =>
 {
    describe('AbstractCollection', () =>
    {

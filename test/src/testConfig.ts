@@ -12,8 +12,9 @@ export const testConfig = {
    apiErrors: api && true,
 
    // API tests
-   collectionCards: api && true,
-   collectionEmpty: api && true,
+   importCSV: api && true,
+   sortCollectionCards: api && true,
+   sortCollectionEmpty: api && true,
 
    // CLI errors
    cliErrors: cli && true,

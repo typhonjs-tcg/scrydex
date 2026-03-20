@@ -5,7 +5,7 @@ import { BasicCollection } from '#scrydex/data/sort';
 import { testConfig }      from '#test/config';
 import { TestData }        from '#test/util';
 
-describe.runIf(testConfig['collectionEmpty'])('Card collections (empty)', () =>
+describe.runIf(testConfig['sortCollectionEmpty'])('Card collections (empty)', () =>
 {
    describe('AbstractCollection', () =>
    {
