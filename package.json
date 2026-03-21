@@ -84,7 +84,7 @@
     "build-exec": "bun scripts/build-exec.js",
     "build-npm": "rollup -c scripts/build-npm.js",
     "check": "esm-d-ts check src/cli/index.ts -t ./tsconfig.json --loglevel debug",
-    "docs": "typedoc-pkg --api-link es --link-checker",
+    "docs": "typedoc-pkg --api-link es:dom --link-checker",
     "test": "vitest --coverage",
     "test-ui": "vitest --ui --coverage",
     "test-scryfall-dl": "bun ./src/cli/index.ts scryfall-download --loglevel debug"
