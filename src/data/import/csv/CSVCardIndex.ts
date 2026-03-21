@@ -50,7 +50,8 @@ export class CSVCardIndex
        (!headers.has('Scryfall ID') && !headers.has('scryfall ID')))
       {
          throw new Error(
-          `CSV file does not have required 'Quantity / quantity' or 'Scryfall ID / scryfall ID' fields:\n${filepath}`);
+          `CSV file does not have required 'Quantity / quantity' or 'Scryfall ID / scryfall ID' header fields:\n${
+           filepath}`);
       }
 
       const controller = new AbortController();
@@ -61,8 +62,12 @@ export class CSVCardIndex
       {
          rowCntr++;
 
+         // Currently only shared Archidekt / ManaBox fields are parsed.
+
+         /* v8 ignore next 7 */ // This will be replaced with more robust parsing.
          const name = row['Name'] ?? row['card name'];
-         const quantity = Number(row['Quantity'] ?? row['quantity']);
+         const quantityStr = row['Quantity'] ?? row['quantity'];
+         const quantity = Number(quantityStr);
          const scryfall_id = row['Scryfall ID'] ?? row['scryfall ID'];
          const user_lang = ScryfallData.normalizeLangCode(row['Language'] ?? row['language']);
          const finish = ScryfallData.normalizeFinish(row['Foil'] ?? row['foil'] ?? row['Finish'] ?? row['finish']) ??
@@ -72,14 +77,16 @@ export class CSVCardIndex
 
          if (!Number.isInteger(quantity) || quantity < 1)
          {
-            controller.abort(new Error(`CSV file on row '${rowCntr}' has invalid quantity '${
-             row['Quantity'] ?? row['quantity']}':\n${filepath}`));
+            controller.abort();
+
+            throw new Error(`CSV file on row '${rowCntr}' has invalid quantity '${quantityStr}':\n${filepath}`)
          }
 
          if (!this.#regexUUID.test(scryfall_id))
          {
-            controller.abort(
-             new Error(`CSV file on row '${rowCntr}' has invalid UUID '${scryfall_id}':\n${filepath}`));
+            controller.abort();
+
+            throw new Error(`CSV file on row '${rowCntr}' has invalid Scryfall ID '${scryfall_id}':\n${filepath}`)
          }
 
          // Delete parsed column data. -------------------------------------------------------------------------------
