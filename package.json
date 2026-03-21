@@ -62,16 +62,28 @@
       "types": "./dist-npm/data/sort/index.d.ts",
       "import": "./dist-npm/data/sort/index.js"
     },
-    "./util": {
-      "types": "./dist-npm/util/index.d.ts",
-      "import": "./dist-npm/util/index.js"
+    "./util/abort": {
+      "types": "./dist-npm/util/abort/index.d.ts",
+      "import": "./dist-npm/util/abort/index.js"
+    },
+    "./util/file": {
+      "types": "./dist-npm/util/file/index.d.ts",
+      "import": "./dist-npm/util/file/index.js"
+    },
+    "./util/math": {
+      "types": "./dist-npm/util/math/index.d.ts",
+      "import": "./dist-npm/util/math/index.js"
+    },
+    "./util/string": {
+      "types": "./dist-npm/util/string/index.d.ts",
+      "import": "./dist-npm/util/string/index.js"
     }
   },
   "scripts": {
     "eslint": "eslint .",
     "build-exec": "bun scripts/build-exec.js",
     "build-npm": "rollup -c scripts/build-npm.js",
-    "check": "esm-d-ts check src/cli/index.ts -t ./tsconfig.json",
+    "check": "esm-d-ts check src/cli/index.ts -t ./tsconfig.json --loglevel debug",
     "docs": "typedoc-pkg --api-link es --link-checker",
     "test": "vitest --coverage",
     "test-ui": "vitest --ui --coverage",

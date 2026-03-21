@@ -1,5 +1,5 @@
 import { CardDB }          from '#scrydex/data/db';
-import { capitalizeStr }   from '#scrydex/util';
+import { capitalizeStr }   from '#scrydex/util/string';
 
 import type {
    CardCategory,

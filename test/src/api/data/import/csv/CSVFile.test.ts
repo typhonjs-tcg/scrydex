@@ -6,7 +6,7 @@ import {
    vi }                 from 'vitest';
 
 import { CSVFile }      from '#scrydex/data/import/csv';
-import * as utilModule  from '#scrydex/util';
+import * as utilModule  from '#scrydex/util/file';
 
 import { testConfig }   from '#test/config';
 

@@ -16,7 +16,7 @@ import { pick }            from 'stream-json/filters/Pick';
 import { streamArray }     from 'stream-json/streamers/StreamArray';
 import { streamValues }    from 'stream-json/streamers/StreamValues';
 
-import { createReadable }  from '#scrydex/util';
+import { createReadable }  from '#scrydex/util/file';
 
 import type {
    File,

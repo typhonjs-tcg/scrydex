@@ -170,10 +170,10 @@ export default () =>
          ]
       },
       {
-         input: 'src/util/index.ts',
+         input: 'src/util/abort/index.ts',
          external: s_EXTERNAL,
          output: [{
-            file: `./dist-npm/util/index.js`,
+            file: `./dist-npm/util/abort/index.js`,
             format: 'es',
             generatedCode: { constBindings: true },
             sourcemap: s_SOURCEMAP,
@@ -181,7 +181,55 @@ export default () =>
          plugins: [
             importsLocal(),
             resolve(),
-            typescript({ include: ['src/util/**/*'] }),
+            typescript({ include: ['src/util/abort/**/*'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
+         input: 'src/util/file/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/util/file/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/util/file/**/*'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
+         input: 'src/util/math/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/util/math/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/util/math/**/*'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
+         input: 'src/util/string/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/util/string/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/util/string/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
          ]
       }

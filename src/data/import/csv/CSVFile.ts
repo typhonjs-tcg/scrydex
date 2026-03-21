@@ -10,12 +10,13 @@ import { parse }           from 'csv-parse';
 import { stringify }       from 'csv-stringify';
 
 import {
-   createReadable,
-   createWritable,
-
    handleAborted,
    isAborted,
-   subscribeAbortStreams } from '#scrydex/util';
+   subscribeAbortStreams } from '#scrydex/util/abort';
+
+import {
+   createReadable,
+   createWritable }        from '#scrydex/util/file';
 
 /**
  * Provides a basic API to stream and serialize a CSV file allowing custom programs performing simple filtering /

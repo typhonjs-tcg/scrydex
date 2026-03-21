@@ -25,7 +25,7 @@ import {
    createReadable,
    createWritable,
    isFileGzip,
-   normalizeFilepath }        from '#scrydex/util';
+   normalizeFilepath }        from '#scrydex/util/file';
 
 import {
    CardFields,

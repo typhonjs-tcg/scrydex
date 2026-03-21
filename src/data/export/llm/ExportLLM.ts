@@ -1,7 +1,7 @@
 import { once }            from 'node:events';
 import { Transform }       from 'node:stream';
 
-import { createWritable }  from '#scrydex/util';
+import { createWritable }  from '#scrydex/util/file';
 
 import type { CardDB }     from '#scrydex/data/db';
 

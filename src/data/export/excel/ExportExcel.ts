@@ -2,7 +2,7 @@ import Excel               from 'exceljs';
 
 import { CardDB }          from '#scrydex/data/db';
 import { BasicCollection } from '#scrydex/data/sort';
-import { capitalizeStr }   from '#scrydex/util';
+import { capitalizeStr }   from '#scrydex/util/string';
 
 import { Notes }           from './Notes';
 import { Themes }          from './Themes';

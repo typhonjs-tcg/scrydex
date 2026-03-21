@@ -6,7 +6,7 @@ import { Transform }       from 'node:stream';
 import { isFile }          from '@typhonjs-utils/file-util';
 
 import { VERSION }         from '#scrydex';
-import { createWritable }  from "#scrydex/util";
+import { createWritable }  from '#scrydex/util/file';
 
 import { ScryfallDB }      from './ScryfallDB';
 

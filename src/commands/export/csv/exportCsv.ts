@@ -9,7 +9,7 @@ import { isObject }        from '@typhonjs-utils/object';
 import { stringify }       from 'csv-stringify';
 
 import { CardDB }          from '#scrydex/data/db';
-import { createWritable }  from '#scrydex/util';
+import { createWritable }  from '#scrydex/util/file';
 
 import {
    exportCards,

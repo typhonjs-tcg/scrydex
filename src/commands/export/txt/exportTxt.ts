@@ -5,7 +5,7 @@ import {
    isFile }                from '@typhonjs-utils/file-util';
 
 import { CardDB }          from '#scrydex/data/db';
-import { createWritable }  from '#scrydex/util';
+import { createWritable }  from '#scrydex/util/file';
 
 import {
    exportCards,
