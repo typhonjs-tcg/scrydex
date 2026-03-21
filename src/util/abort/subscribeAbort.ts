@@ -17,7 +17,7 @@
  *
  * @example
  * ```ts
- * const unsubscribe = subscribeAbortSignal(signal, (reason) =>
+ * const unsubscribe = subscribeAbort(signal, (reason) =>
  * {
  *    stream.destroy(reason);
  * });
@@ -37,7 +37,7 @@
  * const controller = new AbortController();
  * controller.abort('stop');
  *
- * subscribeAbortSignal(controller.signal, (reason) =>
+ * subscribeAbort(controller.signal, (reason) =>
  * {
  *    console.log(reason); // 'stop'
  * });

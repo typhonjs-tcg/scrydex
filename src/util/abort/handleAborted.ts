@@ -18,7 +18,7 @@
  *
  * for await (const row of stream)
  * {
- *    if (handleAbort(signal, abort)) { return; }
+ *    if (handleAborted(signal, abort)) { return; }
  *
  *    // process row
  * }
