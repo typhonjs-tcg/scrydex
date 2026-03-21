@@ -15,6 +15,7 @@ export const testConfig = {
    importCSV: api && true,
    sortCollectionCards: api && true,
    sortCollectionEmpty: api && true,
+   utilAbort: api && true,
 
    // CLI errors
    cliErrors: cli && true,
