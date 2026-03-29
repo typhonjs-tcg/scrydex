@@ -1,5 +1,7 @@
-export * from './baseFilename';
-export * from './createReadable';
-export * from './createWritable';
-export * from './isFileGzip';
-export * from './normalizeFilepath';
+export {
+   createReadable,
+   createWritable,
+   isFileGzip }   from '@typhonjs-utils/file-util'
+
+export *          from './baseFilename';
+export *          from './normalizeFilepath';
