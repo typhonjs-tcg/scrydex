@@ -1,0 +1,32 @@
+Quantity,Name,Category,Secondary categories,Scryfall ID
+2,Ancient Tomb,Land,"",2189b1cb-94c4-4477-a5ef-17a1ae2c6708
+1,Brain Freeze,Mill,"",59a43ef5-08f0-44fc-802d-b6cfd56b7d1f
+1,Brain Freeze,Sideboard,"Mill",59a43ef5-08f0-44fc-802d-b6cfd56b7d1f
+4,Cabal Ritual,Ramp,"",5403b49d-03a7-4cc3-af3c-df098c1c9c2e
+1,Chain of Vapor,Removal,"",30f6b4a2-5780-46e9-b239-459d2cf37743
+1,Chain of Vapor,Sideboard,"Removal",30f6b4a2-5780-46e9-b239-459d2cf37743
+1,Crippling Fatigue,Sideboard,"Removal",0bb53a87-ba48-4c77-b284-3be321c8836e
+3,Cunning Wish,Tutor,"",ca097675-5e82-493d-beab-9fc11efd7492
+4,Dark Ritual,Ramp,"",0690f724-eb95-416b-b064-f1239e2a30e8
+1,Deep Analysis,Draw,"",01e3c2e9-d8df-4a7a-be86-7be8c6254fa2
+4,Defense Grid,Sideboard,"Stax",5c2592c9-7e64-40c1-a9cb-c0994094a1e0
+1,Fact or Fiction,Sideboard,"Draw",7fd4d018-dcf3-4439-8445-02d66e44f7d3
+4,Gemstone Mine,Land,"",09507f7f-c58f-4f57-b878-b39811a5b619
+1,Hunting Pack,Sideboard,"Tokens",8b0f5d29-5342-4591-bdc9-c2bc9289ed41
+1,Hurkyl's Recall,Sideboard,"Bounce",f32373dd-06d8-45d1-8777-3b1411bcb30a
+4,Ill-Gotten Gains,Discard,"",826230ad-6b2b-42a0-9d6f-ed07d3554efd
+1,Intuition,Sideboard,"Tutor",c99f6785-e5a1-4fdc-9fb5-e1a372e7e848
+3,Intuition,Tutor,"",c99f6785-e5a1-4fdc-9fb5-e1a372e7e848
+5,Island,Land,"",bff33e91-8e52-43f2-b8ae-603b456b08fc
+4,Lion's Eye Diamond,Ramp,"",63bacc32-d6ba-420c-9b49-299c08e5fb39
+4,Lotus Petal,Ramp,"",6c877da3-68fa-41d0-8a24-8c79fcd8ecc1
+4,Mental Note,Draw,"",1f343724-6ecd-494f-8bfc-93676af4e173
+4,Merchant Scroll,Tutor,"",d4133ceb-6176-411a-9eb8-51721c1bb435
+4,Opt,Draw,"",958262ec-8e52-40cf-a9fd-a60e42643e15
+2,Orim's Chant,Sideboard,"Protection",055afa78-b969-498f-a3ad-c792426e5ee6
+1,Peek,Draw,"",f50843cc-20ac-4746-816e-f2630aa31594
+4,Polluted Delta,Land,"",0f7585c8-9e21-4eef-afc1-2852de23db2f
+1,Rain of Filth,Sideboard,"Ramp",1cf07d5a-6618-48e2-a9f0-669b75bb6e85
+1,Rushing River,Sideboard,"Removal",52ddf7bf-de9c-4657-8d5b-79869d36fa63
+2,Sleight of Hand,Draw,"",f3405184-dcda-4bb6-ade6-c2a87bc3296d
+1,Swamp,Land,"",a3544148-49b2-4320-8e3a-5bab81e0f7fd
