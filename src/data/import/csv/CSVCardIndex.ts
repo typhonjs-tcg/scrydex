@@ -144,6 +144,8 @@ export class CSVCardIndex
          addTags(row.Category ?? row.category);
          addTags(row['Secondary Categories'] ?? row['secondary categories']);
 
+         const user_tags = [...userTagSet];
+
          // Save any additional raw unprocessed CSV data. ------------------------------------------------------------
 
          const csv_extra = row;
@@ -166,7 +168,7 @@ export class CSVCardIndex
                scryfall_id,
                filename,
                user_lang,
-               user_tags: [...userTagSet],
+               user_tags,
                csv_extra
             });
          }
