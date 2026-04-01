@@ -152,26 +152,17 @@ export class CSVCardIndex
 
          // Serialize data -------------------------------------------------------------------------------------------
 
-         const existingCard = cardIndex.getVariant({ scryfall_id, finish, user_lang });
-
-         if (existingCard)
-         {
-            existingCard.quantity += quantity;
-         }
-         else
-         {
-            cardIndex.add({
-               object: 'card',
-               name,
-               finish,
-               quantity,
-               scryfall_id,
-               filename,
-               user_lang,
-               user_tags,
-               csv_extra
-            });
-         }
+         cardIndex.add({
+            object: 'card',
+            name,
+            finish,
+            quantity,
+            scryfall_id,
+            filename,
+            user_lang,
+            user_tags,
+            csv_extra
+         });
       }
 
       return cardIndex;
