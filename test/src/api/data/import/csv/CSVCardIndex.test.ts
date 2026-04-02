@@ -6,7 +6,7 @@ import { CSVCardIndex } from '#scrydex/data/import/csv';
 
 import { testConfig }   from '#test/config';
 
-describe.runIf(testConfig['importCSV'])('CSVFile', () =>
+describe.runIf(testConfig['importCSV'])('CSVCardIndex', () =>
 {
    describe('errors', () =>
    {
