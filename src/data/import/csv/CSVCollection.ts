@@ -3,9 +3,13 @@ import {
    isDirectory,
    isFile }                      from '@typhonjs-utils/file-util';
 
-import { isObject }              from '@typhonjs-utils/object';
+import {
+   isIterable,
+   isObject }                    from '@typhonjs-utils/object';
 
-import { CardDB }                from '#scrydex/data/db';
+import {
+   CardDB,
+   ScryfallData }                from '#scrydex/data/db';
 
 import { CSVCardIndex }          from './CSVCardIndex';
 
@@ -41,7 +45,7 @@ export class CSVCollection implements ImportCollection
     * @returns A new collection of all CSV card data.
     */
    static async load({ path, groups, logger }:
-    { path: string, groups: CardDB.File.MetadataGroups<string>, logger?: BasicLogger }): Promise<CSVCollection>
+    { path: string, groups?: CardDB.File.MetadataGroups<string>, logger?: BasicLogger }): Promise<CSVCollection>
    {
       const collection = new CSVCollection();
 
@@ -67,9 +71,10 @@ export class CSVCollection implements ImportCollection
    get groups(): CardDB.File.MetadataGroups
    {
       const groups: CardDB.File.MetadataGroups = {};
+
       for (const group in this.#groups)
       {
-         if (CardDB.isGroupKind(group)) { groups[group] = [...this.#groups[group] ?? []]; }
+         if (CardDB.isGroupKind(group) && isIterable(this.#groups[group])) { groups[group] = [...this.#groups[group]]; }
       }
 
       return groups;
@@ -85,6 +90,14 @@ export class CSVCollection implements ImportCollection
       for (let i = 0; i < this.#index.length; i++) { result += this.#index[i].size; }
 
       return result;
+   }
+
+   /**
+    * Clear all card data stored in all indexes.
+    */
+   clear()
+   {
+      this.#index = [];
    }
 
    /**
@@ -136,21 +149,27 @@ export class CSVCollection implements ImportCollection
    }
 
    /**
-    * Returns the group name this card belongs to if any..
+    * Returns the group name(s) this card belongs to if any..
     *
     * @param card -
     */
-   getCardGroup(card: CSVCard): keyof CardDB.File.MetadataGroups | undefined
+   getCardGroups(card: CSVCard): Set<keyof CardDB.File.MetadataGroups> | undefined
    {
+      let result: Set<keyof CardDB.File.MetadataGroups> | undefined = void 0;
+
+      if (!this.hasVariant(card)) { return result; }
+
       for (const group in this.#groups)
       {
          if (this.#groups?.[group as keyof CardDB.File.MetadataGroups]?.has(card.filename))
          {
-            return group as keyof CardDB.File.MetadataGroups;
+            if (!result) { result = new Set(); }
+
+            result.add(group as keyof CardDB.File.MetadataGroups);
          }
       }
 
-      return void 0;
+      return result;
    }
 
    /**
@@ -163,6 +182,27 @@ export class CSVCollection implements ImportCollection
       for (let i = 0; i < this.#index.length; i++)
       {
          if (this.#index[i].has(key)) { return true; }
+      }
+
+      return false;
+   }
+
+   /**
+    * Does this collection contain a specific variant by Scryfall ID?
+    *
+    * @param query - Specific variant query.
+    *
+    * @param query.scryfall_id - Scryfall ID
+    *
+    * @param [query.finish] - Finish; default: `normal`.
+    *
+    * @param [query.user_lang] - User defined language code; default: `en`.
+    */
+   hasVariant(query: { scryfall_id: string, finish?: ScryfallData.CardFinish, user_lang?: string }): boolean
+   {
+      for (let i = 0; i < this.#index.length; i++)
+      {
+         if (this.#index[i].hasVariant(query)) { return true; }
       }
 
       return false;
