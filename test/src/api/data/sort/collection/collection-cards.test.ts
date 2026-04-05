@@ -1,8 +1,7 @@
 import { expect }          from 'vitest';
 
-import {
-   BasicCollection,
-   SortedKind }            from '#scrydex/data/sort';
+import { BasicCollection } from '#scrydex/data/sort/collection';
+import { SortedKind }      from '#scrydex/data/sort/collection/category';
 
 import { testConfig }      from '#test/config';
 import { TestData }        from '#test/util';
