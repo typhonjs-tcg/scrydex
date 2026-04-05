@@ -1,20 +1,21 @@
-import fs                           from 'node:fs';
-import path                         from 'node:path';
+import fs                     from 'node:fs';
+import path                   from 'node:path';
 
-import { isDirectory }              from '@typhonjs-utils/file-util';
+import { isDirectory }        from '@typhonjs-utils/file-util';
 
 import {
    CardDB,
-   ScryfallData }                   from '#scrydex/data/db';
+   ScryfallData }             from '#scrydex/data/db';
 
-import { ExportCollection }         from '../ExportCollection';
+import { SortedFormat }       from '#scrydex/data/sort/collection';
 
 import {
    KindSortOrder,
-   SortCards,
-   SortedFormat }                   from '#scrydex/data/sort';
+   SortCards }                from '#scrydex/data/sort/util';
 
-import type { ConfigCmd }           from '../../types-command';
+import { ExportCollection }   from '../ExportCollection';
+
+import type { ConfigCmd }     from '../../types-command';
 
 /**
  * Sorts a Scryfall card collection exporting spreadsheets by format legalities.

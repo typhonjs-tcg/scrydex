@@ -1,6 +1,6 @@
-import type {
-   CardSection,
-   CardSorted }   from '../../../types-sort';
+import type { CardSorted }    from '#scrydex/data/sort/collection';
+
+import type { CardSection }   from './types-section';
 
 /**
  * Provides a basic card section implementation.

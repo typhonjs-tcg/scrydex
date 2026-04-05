@@ -76,7 +76,7 @@ abstract class ScryfallData
     *
     * No guarantees are made about release order or canonical meaning.
     *
-    * For sorting by collector number see {@link @typhonjs-tcg/scrydex/data/sort!SortCards.byCollectorNumber}.
+    * For sorting by collector number see {@link @typhonjs-tcg/scrydex/data/sort/util!SortCards.byCollectorNumber}.
     */
    static parseCollectorNumber(value: string): ScryfallData.ParsedCollectorNumber
    {
@@ -501,7 +501,7 @@ declare namespace ScryfallData
     *
     * All extracted fields are advisory and should be treated as heuristics only.
     *
-    * @see {@link @typhonjs-tcg/scrydex/data/sort!SortCards}
+    * @see {@link @typhonjs-tcg/scrydex/data/sort/util!SortCards}
     */
    export interface ParsedCollectorNumber
    {

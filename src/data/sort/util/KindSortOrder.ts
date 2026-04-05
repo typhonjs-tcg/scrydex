@@ -1,8 +1,7 @@
 import { CardDB }             from '#scrydex/data/db';
 
 import type { ScryfallData }  from '#scrydex/data/db';
-
-import type { CardSorted }    from '../types-sort';
+import type { CardSorted }    from '#scrydex/data/sort/collection';
 
 /**
  * Provides card data related to sort order for rarity and card category.

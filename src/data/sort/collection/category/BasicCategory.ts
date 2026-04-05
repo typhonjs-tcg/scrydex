@@ -1,11 +1,11 @@
-import { BasicSection }    from './section';
+import { BasicSection }       from '#scrydex/data/sort/collection/category/section';
 
-import { SortCards }       from '../../util/SortCards';
+import { SortCards }          from '#scrydex/data/sort/util';
 
-import type {
-   CardCategory,
-   CardSection,
-   CardSorted }            from '../../types-sort';
+import type { CardSorted }    from '#scrydex/data/sort/collection';
+import type { CardSection }   from '#scrydex/data/sort/collection/category/section';
+
+import type { CardCategory }  from './types-category';
 
 /**
  * Provides a {@link CardCategory} implementation that groups cards into WUBRG+ sub-categories.

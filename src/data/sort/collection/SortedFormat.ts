@@ -1,15 +1,17 @@
 import { ScryfallData }       from '#scrydex/data/db';
+import { SortedKind }         from '#scrydex/data/sort/collection/category';
+import { KindSortOrder }      from '#scrydex/data/sort/util';
 
 import { AbstractCollection } from './AbstractCollection';
-import { SortedKind }         from './category/SortedKind';
-import { KindSortOrder }      from '../util/KindSortOrder';
 
 import type { CardDB }        from '#scrydex/data/db';
 
 import type {
+   CardCategory }             from '#scrydex/data/sort/collection/category';
+
+import type {
    CardSorted,
-   CardCategory,
-   SortOptions }              from '../types-sort';
+   SortOptions }              from './types-collection';
 
 /**
  *

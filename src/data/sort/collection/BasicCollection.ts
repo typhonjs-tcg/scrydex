@@ -2,14 +2,16 @@ import { AbstractCollection } from './AbstractCollection';
 
 import {
    BasicCategory,
-   SortedKind }               from './category';
+   SortedKind }               from '#scrydex/data/sort/collection/category';
 
 import type { CardDB }        from '#scrydex/data/db';
 
 import type {
+   CardCategory }             from '#scrydex/data/sort/collection/category';
+
+import type {
    CardSorted,
-   CardCategory,
-   SortOptions }              from '../types-sort';
+   SortOptions }              from './types-collection';
 
 /**
  *

@@ -1,7 +1,7 @@
 import Excel               from 'exceljs';
 
 import { CardDB }          from '#scrydex/data/db';
-import { BasicCollection } from '#scrydex/data/sort';
+import { BasicCollection } from '#scrydex/data/sort/collection';
 import { capitalizeStr }   from '#scrydex/util/string';
 
 import { Notes }           from './Notes';
@@ -11,8 +11,10 @@ import type {
    Worksheet }             from 'exceljs';
 
 import type {
-   AbstractCollection,
-   CardCategory }          from '#scrydex/data/sort';
+   AbstractCollection }    from '#scrydex/data/sort/collection';
+
+import type {
+   CardCategory }          from '#scrydex/data/sort/collection/category';
 
 import type {
    Columns,

@@ -7,7 +7,7 @@ import { CardDB }             from '#scrydex/data/db';
 import { ExportExcel }        from '#scrydex/data/export/excel';
 
 import type {
-   AbstractCollection }       from '#scrydex/data/sort';
+   AbstractCollection }       from '#scrydex/data/sort/collection';
 
 import type { ConfigCmd }     from '../types-command';
 

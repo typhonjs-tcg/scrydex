@@ -1,60 +1,6 @@
 import type { CardDB } from '#scrydex/data/db';
 
 /**
- * Defines the interface for a collection of cards with sub-category sorting.
- */
-interface CardCategory<T = CardSorted>
-{
-   /**
-    * @returns Name of the collection of cards.
-    */
-   readonly name: string;
-
-   /**
-    * @returns The total amount of cards in collection.
-    */
-   readonly size: number;
-
-   /**
-    * @param card - Card to add.
-    */
-   add(card: T): void;
-
-   /**
-    * @returns Values iterator for all categories / cards.
-    */
-   values(): IterableIterator<CardSection<T>>;
-
-   /**
-    * Sorts this category.
-    *
-    * @param options - Sort options.
-    */
-   sort(options: SortOptions): void;
-}
-
-/**
- * Defines an individual sorted category.
- */
-interface CardSection<T = CardSorted>
-{
-   /**
-    * All cards in category.
-    */
-   readonly cards: T[];
-
-   /**
-    * Full name of category.
-    */
-   readonly nameFull: string;
-
-   /**
-    * Abbreviated short name for category.
-    */
-   readonly nameShort: string;
-}
-
-/**
  * Additional data added to cards when sorting.
  */
 interface CardSorted extends CardDB.Data.Card
@@ -64,11 +10,6 @@ interface CardSorted extends CardDB.Data.Card
     */
    mark?: 'error' | 'ok' | 'warning';
 }
-
-/**
- * Defines ascending or descending sort order.
- */
-type SortDirection = 'asc' | 'desc';
 
 /**
  * Sorting configuration flags used during collection sorting and export.
@@ -105,8 +46,6 @@ interface SortOptions
 }
 
 export {
-   type CardCategory,
-   type CardSection,
-   type CardSorted,
-   type SortDirection,
-   type SortOptions };
+   CardSorted,
+   SortOptions
+}

@@ -3,7 +3,7 @@ import {
    isFile }                   from '@typhonjs-utils/file-util';
 
 import { CardDB }             from '#scrydex/data/db';
-import { KindSortOrder }      from '#scrydex/data/sort';
+import { KindSortOrder }      from '#scrydex/data/sort/util';
 
 import type { BasicLogger }   from "@typhonjs-utils/logger-color";
 

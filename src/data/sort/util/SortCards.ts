@@ -3,7 +3,10 @@ import { isFiniteNumber }     from '#scrydex/util/math';
 
 import type { CardDB }        from '#scrydex/data/db';
 
-import type { SortDirection } from '../types-sort';
+/**
+ * Defines ascending or descending sort order.
+ */
+export type SortDirection = 'asc' | 'desc';
 
 /**
  * Provides various sorting and partitioning of lists of {@link CardDB.Data.Card} instances.

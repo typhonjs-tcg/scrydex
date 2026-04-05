@@ -1,10 +1,11 @@
-import { CardDB }          from '#scrydex/data/db';
-import { capitalizeStr }   from '#scrydex/util/string';
+import { CardDB }             from '#scrydex/data/db';
+import { capitalizeStr }      from '#scrydex/util/string';
+
+import type { CardCategory }  from '#scrydex/data/sort/collection/category';
 
 import type {
-   CardCategory,
    CardSorted,
-   SortOptions }           from '../types-sort';
+   SortOptions }              from './types-collection';
 
 /**
  * Base class for a sorted collection of cards by categories.
