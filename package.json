@@ -58,9 +58,21 @@
       "types": "./dist-npm/data/export/llm/index.d.ts",
       "import": "./dist-npm/data/export/llm/index.js"
     },
-    "./data/sort": {
-      "types": "./dist-npm/data/sort/index.d.ts",
-      "import": "./dist-npm/data/sort/index.js"
+    "./data/sort/collection": {
+      "types": "./dist-npm/data/sort/collection/index.d.ts",
+      "import": "./dist-npm/data/sort/collection/index.js"
+    },
+    "./data/sort/collection/category": {
+      "types": "./dist-npm/data/sort/collection/category/index.d.ts",
+      "import": "./dist-npm/data/sort/collection/category/index.js"
+    },
+    "./data/sort/collection/category/section": {
+      "types": "./dist-npm/data/sort/collection/category/section/index.d.ts",
+      "import": "./dist-npm/data/sort/collection/category/section/index.js"
+    },
+    "./data/sort/util": {
+      "types": "./dist-npm/data/sort/util/index.d.ts",
+      "import": "./dist-npm/data/sort/util/index.js"
     },
     "./util/abort": {
       "types": "./dist-npm/util/abort/index.d.ts",
@@ -90,7 +102,7 @@
     "test-scryfall-dl": "bun ./src/cli/index.ts scryfall-download --loglevel debug"
   },
   "dependencies": {
-    "@typhonjs-utils/file-util": "^0.2.0",
+    "@typhonjs-utils/file-util": "^0.3.0",
     "@typhonjs-utils/logger-color": "^0.2.0",
     "@typhonjs-utils/object": "^0.5.0",
     "csv-parse": "^6.1.0",

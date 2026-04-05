@@ -154,10 +154,10 @@ export default () =>
          ]
       },
       {
-         input: 'src/data/sort/index.ts',
+         input: 'src/data/sort/collection/index.ts',
          external: s_EXTERNAL,
          output: [{
-            file: `./dist-npm/data/sort/index.js`,
+            file: `./dist-npm/data/sort/collection/index.js`,
             format: 'es',
             generatedCode: { constBindings: true },
             sourcemap: s_SOURCEMAP,
@@ -165,7 +165,55 @@ export default () =>
          plugins: [
             importsLocal(),
             resolve(),
-            typescript({ include: ['src/data/sort/**/*'] }),
+            typescript({ include: ['src/data/sort/collection/*.ts'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
+         input: 'src/data/sort/collection/category/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/data/sort/collection/category/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/data/sort/collection/category/*.ts'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
+         input: 'src/data/sort/collection/category/section/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/data/sort/collection/category/section/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/data/sort/collection/category/section/*.ts'] }),
+            generateDTS.plugin(s_DTS_OPTIONS)
+         ]
+      },
+      {
+         input: 'src/data/sort/util/index.ts',
+         external: s_EXTERNAL,
+         output: [{
+            file: `./dist-npm/data/sort/util/index.js`,
+            format: 'es',
+            generatedCode: { constBindings: true },
+            sourcemap: s_SOURCEMAP,
+         }],
+         plugins: [
+            importsLocal(),
+            resolve(),
+            typescript({ include: ['src/data/sort/util/**/*'] }),
             generateDTS.plugin(s_DTS_OPTIONS)
          ]
       },
