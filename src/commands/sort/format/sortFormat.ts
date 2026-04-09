@@ -80,6 +80,7 @@ async function generate(config: ConfigCmd.SortFormat): Promise<SortedFormat[]>
 
    for (const [name, cards] of presortFormat)
    {
+      /* v8 ignore next 1 */ // Sanity case.
       if (cards.length === 0) { continue; }
 
       const format = ScryfallData.isSupportedFormat(name) ? name : void 0;
