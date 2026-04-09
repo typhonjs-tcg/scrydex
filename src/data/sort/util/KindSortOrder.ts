@@ -37,6 +37,7 @@ export abstract class KindSortOrder
 
                switch (colorManaCost.size)
                {
+                  /* v8 ignore next 2 */ // As of 4/8/26 there are no 0 CMC Devoid cards.
                   case 0:
                      return this.#categoryColorless(card);
 
@@ -75,6 +76,7 @@ export abstract class KindSortOrder
     */
    static rarity(card: CardDB.Data.Card, format?: ScryfallData.GameFormat)
    {
+      /* v8 ignore next 1 */ // Rarity normalization is always present sanity fallback `?? card.rarity` is not hit.
       return (format === 'oldschool' || format === 'premodern' ? card.rarity_orig : card.rarity_recent) ?? card.rarity;
    }
 
