@@ -1,5 +1,7 @@
 1 Abandoned Campground (DSK) 255
 1 Aberrant Researcher // Perfected Form (INR) 52
+1 Abstruse Appropriation (MH3) 177
+1 Abstruse Interference (OGW) 40
 1 Adrestia (ACR) 68
 1 Aerial Surveyor (NEC) 5
 1 Aetherflux Reservoir (KLD) 192
@@ -41,6 +43,7 @@
 1 Chatterfang, Squirrel General (MH2) 151
 1 Command Tower (MKC) 256
 1 Contaminant Grafter (ONC) 17
+1 Corrupted Crossroads (OGW) 169
 1 Court of Garenbrig (WOC) 25
 1 Crypt Ghast (RVR) 423
 1 Cyclonic Rift (RVR) 40
