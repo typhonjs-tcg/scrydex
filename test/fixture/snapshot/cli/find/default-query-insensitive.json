@@ -3,7 +3,7 @@
     "\u001b[32m[scrydex] Attempting to find sorted Scrydex CardDBs in directory: ./test/fixture/snapshot/cli/sort-format/collection\u001b[0m"
   ],
   [
-    "\u001b[32m[scrydex] Searching 5 card collections: basic-land, commander, oldschool, predh, premodern\u001b[0m"
+    "\u001b[32m[scrydex] Searching 6 card collections: basic-land, commander, oldschool, predh, premodern, unsorted\u001b[0m"
   ],
   [
     "\u001b[32m[scrydex] Name: Force of Negation; Quantity: 1; Collection: commander; Rarity: rare; Category: U\u001b[0m"

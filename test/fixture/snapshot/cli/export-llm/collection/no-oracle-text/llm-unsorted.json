@@ -1,0 +1,4 @@
+[
+  {"object":"llm_card","name":"Demonic Attorney","quantity":1,"norm_type":"Sorcery","rarity":"rare","cmc":3,"colors":["B"],"color_identity":["B"],"game_changer":false,"keywords":[],"reserved":true,"mana_cost":"{1}{B}{B}","type_line":"Sorcery","user_tags":[],"scryfall_id":"6ece570a-f480-40fd-a2b1-26a89c44e732"},
+  {"object":"llm_card","name":"Phyrexian Librarian","quantity":1,"norm_type":"Creature","rarity":"uncommon","cmc":4,"colors":["B"],"color_identity":["B"],"game_changer":false,"keywords":["Flying","Trample"],"reserved":false,"mana_cost":"{3}{B}","power":"3","toughness":"3","type_line":"Creature — Phyrexian Horror","user_tags":[],"scryfall_id":"340903b7-992c-43c2-9ee5-a1d76819fccf"}
+]
