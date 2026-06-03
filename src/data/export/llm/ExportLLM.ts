@@ -82,8 +82,11 @@ export abstract class ExportLLM
             loyalty: card.loyalty,
             reserved: card.reserved,
             mana_cost: card.mana_cost,
+            price: card.price,
             power: card.power,
             produced_mana: card.produced_mana,
+            set: card.set,
+            set_name: card.set_name,
             toughness: card.toughness,
             type_line: card.type_line,
             oracle_text: oracleText ? card.oracle_text : void 0,
@@ -200,7 +203,7 @@ export interface LLMCard
    /**
     * Discriminator identifying this record as a card.
     */
-   object: 'card';
+   object: 'llm_card';
 
    /**
     * An array of Card Face objects, if this card is multifaced.
@@ -268,6 +271,11 @@ export interface LLMCard
    oracle_text?: string;
 
    /**
+    * Scryfall card price.
+    */
+   price?: string | null;
+
+   /**
     * This card’s power, if any. Note that some cards have powers that are not numeric, such as *.
     */
    power?: string | null;
@@ -291,6 +299,16 @@ export interface LLMCard
     * Scryfall ID / UUID.
     */
    scryfall_id: string;
+
+   /**
+    * Set code.
+    */
+   set?: string;
+
+   /**
+    * Set name.
+    */
+   set_name?: string;
 
    /**
     * This card’s toughness, if any. Note that some cards have toughnesses that are not numeric, such as *.
@@ -323,7 +341,7 @@ export interface LLMCardFace
    /**
     * Discriminator identifying this record as a card face.
     */
-   object: 'card_face';
+   object: 'llm_card_face';
 
    /**
     * This card face colors.

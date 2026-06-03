@@ -104,6 +104,11 @@ export interface LLMCard
    oracle_text?: string;
 
    /**
+    * Scryfall card price.
+    */
+   price?: string | null;
+
+   /**
     * This card’s power, if any. Note that some cards have powers that are not numeric, such as *.
     */
    power?: string | null;
@@ -127,6 +132,16 @@ export interface LLMCard
     * Scryfall ID / UUID.
     */
    scryfall_id: string;
+
+   /**
+    * Set code.
+    */
+   set?: string;
+
+   /**
+    * Set name.
+    */
+   set_name?: string;
 
    /**
     * This card’s toughness, if any. Note that some cards have toughnesses that are not numeric, such as *.
